@@ -29,7 +29,7 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
 //User.relationship( { ref : 'Post', path : 'author' } );
 //User.relationship( { ref : 'Assessment', path : 'creator' } );
 //User.relationship( { ref : 'Role', path : 'user' } );
-User.relationship( { path: 'roles', ref: 'Role', refPath: 'user', label : 'Active as'});
+User.relationship( { path: 'personas', ref: 'Persona', refPath: 'user', label : 'Active as'});
 /**
  * Registration
  */

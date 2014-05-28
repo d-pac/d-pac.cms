@@ -4,11 +4,11 @@ var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
 
-var Role = new keystone.List( 'Role', {
+var Persona = new keystone.List( 'Persona', {
   map     : { name : 'createdAt' }  
 } );
 
-Role.add( {
+Persona.add( {
   type : {
     type     : Types.Select,
     options  : 'Assessor, Assessee',
@@ -28,13 +28,13 @@ Role.add( {
   createdAt   : { type : Date, default : Date.now }
 } );
 
-Role.schema.virtual( 'isAssessor' ).get( function(){
+Persona.schema.virtual( 'isAssessor' ).get( function(){
   return 'Assessor' === this.name;
 } );
 
-Role.schema.virtual( 'isAssessee' ).get( function(){
+Persona.schema.virtual( 'isAssessee' ).get( function(){
   return 'Assessee' === this.name;
 } );
 
-Role.defaultColumns = 'type, user, assessment';
-Role.register();
+Persona.defaultColumns = 'type, user, assessment';
+Persona.register();

@@ -26,7 +26,7 @@ Assessment.add( {
   }
 } );
 
-Assessment.relationship({path: 'roles', ref:'Role', refPath:'assessment', label:'Participants'});
+Assessment.relationship({path: 'personas', ref:'Persona', refPath:'assessment', label:'Participants'});
 
 Assessment.defaultColumns = 'title, creator';
 Assessment.register();
