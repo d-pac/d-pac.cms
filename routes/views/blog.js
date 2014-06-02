@@ -89,4 +89,4 @@ exports = module.exports = function( req,
   // Render the view
   view.render( 'blog' );
 
-}
+};

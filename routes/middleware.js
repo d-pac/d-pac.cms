@@ -54,7 +54,7 @@ exports.flashMessages = function( req,
   };
 
   res.locals.messages = _.any( flashMessages, function( msgs ){
-    return msgs.length
+    return msgs.length;
   } )
     ? flashMessages
     : false;
@@ -78,4 +78,4 @@ exports.requireUser = function( req,
     next();
   }
 
-}
+};

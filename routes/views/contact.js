@@ -37,4 +37,4 @@ exports = module.exports = function( req,
 
   view.render( 'contact' );
 
-}
+};

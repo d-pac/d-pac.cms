@@ -30,7 +30,8 @@ module.exports = function(grunt) {
 		jshint: {
 			options: {
 				reporter: require('jshint-stylish'),
-				force: true
+				force: false,
+        jshintrc : '.jshintrc'
 			},
 			all: [ 'routes/**/*.js',
 						 'models/**/*.js'
