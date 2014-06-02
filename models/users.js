@@ -26,10 +26,16 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
  * Relationships
  */
 
-//User.relationship( { ref : 'Post', path : 'author' } );
-//User.relationship( { ref : 'Assessment', path : 'creator' } );
-//User.relationship( { ref : 'Role', path : 'user' } );
-User.relationship( { path: 'personas', ref: 'Persona', refPath: 'user', label : 'Active as'});
+User.relationship( {
+  //"field" name in _this_ model
+  path    : 'personas',
+  //_other_ model name
+  ref     : 'Persona',
+  //relationship field in _other_ model
+  refPath : 'user',
+  //label to be used in Admin GUI
+  label   : 'Active as'
+} );
 /**
  * Registration
  */
