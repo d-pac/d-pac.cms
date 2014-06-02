@@ -6,6 +6,7 @@ lib-cov
 *.pid
 *.gz
 atlassian-*
+uploads
 
 pids
 logs
