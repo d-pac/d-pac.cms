@@ -36,6 +36,14 @@ User.relationship( {
   //label to be used in Admin GUI
   label   : 'Active as'
 } );
+
+User.relationship({
+  path : 'representations',
+  ref : 'Representation',
+  refPath : 'owner',
+  label : 'Representations'
+})
+
 /**
  * Registration
  */

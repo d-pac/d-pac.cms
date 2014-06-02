@@ -56,7 +56,7 @@ keystone.set('routes', require('./routes'));
 
 keystone.set('nav', {
 	'content': ['posts', 'post-categories', 'enquiries'],
-  'assessments' : ['assessments', 'personas'],
+  'assessments' : ['assessments', 'personas', 'representations'],
 	'users': 'users'
 });
 

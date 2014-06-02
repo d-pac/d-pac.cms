@@ -1,11 +1,11 @@
 'use strict';
 
 var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
+    keystone = require( 'keystone' ),
+    Types = keystone.Field.Types;
 
 var Assessment = new keystone.List( 'Assessment', {
-  map     : { name : 'title' }  
+  map : { name : 'title' }
 } );
 
 Assessment.add( {
@@ -26,17 +26,25 @@ Assessment.add( {
   }
 } );
 
-Assessment.relationship({
+Assessment.relationship( {
   //"field" name in _this_ model
-  path: 'personas', 
+  path    : 'personas',
   //_other_ model name
-  ref:'Persona',
+  ref     : 'Persona',
   //relationship field in _other_ model
-  refPath:'assessment',
+  refPath : 'assessment',
   //label to be used in Admin GUI
-  label:'Participants'
-});
+  label   : 'Participants'
+} );
+
+Assessment.relationship( {
+  path    : 'representations',
+  ref     : 'Representation',
+  refPath : 'assessment',
+  label   : 'Representations'
+} );
 
 Assessment.defaultColumns = 'title, creator';
 Assessment.register();
+
 
