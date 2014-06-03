@@ -154,20 +154,7 @@ code</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e1" source="n3" target="n0">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="30.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-90.0" y="121.421875"/>
-            <y:Point x="-120.0" y="121.421875"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e2" source="n4" target="n1">
+    <edge id="e1" source="n4" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="-54.125" sy="0.0" tx="-54.125" ty="-21.0"/>
@@ -177,7 +164,7 @@ code</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e3" source="n4" target="n2">
+    <edge id="e2" source="n4" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="7.5"/>
@@ -187,12 +174,12 @@ code</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e4" source="n0" target="n4">
+    <edge id="e3" source="n0" target="n2">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="60.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-60.0" y="130.5"/>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
+            <y:Point x="444.25" y="-45.15625"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
@@ -200,12 +187,14 @@ code</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e5" source="n3" target="n4">
+    <edge id="e4" source="n0" target="n1">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="49.07500000000016" sy="0.0" tx="-12.125" ty="19.5">
-            <y:Point x="-70.92499999999984" y="150.0"/>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
+            <y:Point x="-120.0" y="165.0"/>
+            <y:Point x="30.0" y="165.0"/>
+            <y:Point x="30.0" y="308.5"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
