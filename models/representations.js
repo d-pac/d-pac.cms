@@ -4,7 +4,11 @@ var _ = require( 'underscore' ),
     keystone = require( 'keystone' ),
     Types = keystone.Field.Types;
 
-var Representation = new keystone.List( 'Representation' );
+var Representation = new keystone.List( 'Representation', {
+  map : {
+    name : 'id'
+  }
+} );
 
 Representation.add( {
   file  : {
@@ -13,21 +17,26 @@ Representation.add( {
     required : true,
     initial : false
   },
-  owner : {
+  assessee : {
     type     : Types.Relationship,
     ref      : 'User',
     index    : true,
     required : true,
     initial  : true
   },
-  assessment : {
+  assessment : { 
     type : Types.Relationship,
     ref : 'Assessment',
-    index : true,
-    require : true,
-    initial : true
+    initial : true,
+    required : true,
+    index : true
+  },
+  createdAt: { 
+    type: Date, 
+    default: Date.now,
+    noedit : true
   }
 } );
 
-Representation.defaultColumns = 'owner, file';
+Representation.defaultColumns = 'name, assessee, assessment, file';
 Representation.register();

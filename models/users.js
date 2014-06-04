@@ -12,23 +12,7 @@ var User = new keystone.List( 'User' );
 User.add( {
   name     : { type : Types.Name, required : true, index : true },
   email    : { type : Types.Email, initial : true, required : true, index : true },
-  password : { type : Types.Password, initial : true, required : false },
-  participant : {
-    assessee : {
-      type : Types.Relationship,
-      ref : 'Assessment',
-      many : true,
-      initial : false,
-      required : false
-    },
-    assessor : {
-      type : Types.Relationship,
-      ref : 'Assessment',
-      many : true,
-      initial : false,
-      required : false
-    }
-  }
+  password : { type : Types.Password, initial : true, required : false }
 }, 'Permissions', {
   isAdmin : { type : Boolean, label : 'Can access Keystone' }
 } );
@@ -38,15 +22,6 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
   return this.isAdmin;
 } );
 
-/**
- * Relationships
- */
-User.relationship({
-  path : 'representations',
-  ref : 'Representation',
-  refPath : 'owner',
-  label : 'Representations'
-});
 
 /**
  * Registration
