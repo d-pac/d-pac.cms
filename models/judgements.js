@@ -57,7 +57,7 @@ Judgement.add( {
   }  
 } );
 
-Judgement.defaultColumns = 'name, assessor, assessment, representation, rank';
+Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, rank';
 Judgement.register();
 
 

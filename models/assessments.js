@@ -33,6 +33,27 @@ Assessment.relationship( {
   label   : 'Representations'
 } );
 
+Assessment.relationship( {
+  path    : 'assessees',
+  ref     : 'Assessee',
+  refPath : 'assessment',
+  label   : 'Assessees'
+} );
+
+Assessment.relationship( {
+  path    : 'assessors',
+  ref     : 'Assessor',
+  refPath : 'assessment',
+  label   : 'Assessors'
+} );
+
+Assessment.relationship( {
+  path    : 'comparisons',
+  ref     : 'Comparison',
+  refPath : 'assessment',
+  label   : 'Comparisons'
+} );
+
 Assessment.defaultColumns = 'title, creator';
 Assessment.register();
 

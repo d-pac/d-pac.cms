@@ -35,6 +35,13 @@ Comparison.add( {
   }  
 } );
 
+Comparison.relationship( {
+  path    : 'judgements',
+  ref     : 'Judgement',
+  refPath : 'comparison',
+  label   : 'Judgements'
+} );
+
 Comparison.defaultColumns = 'name, assessor, assessment';
 Comparison.register();
 
