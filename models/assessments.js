@@ -27,17 +27,6 @@ Assessment.add( {
 } );
 
 Assessment.relationship( {
-  //"field" name in _this_ model
-  path    : 'personas',
-  //_other_ model name
-  ref     : 'Persona',
-  //relationship field in _other_ model
-  refPath : 'assessment',
-  //label to be used in Admin GUI
-  label   : 'Participants'
-} );
-
-Assessment.relationship( {
   path    : 'representations',
   ref     : 'Representation',
   refPath : 'assessment',
