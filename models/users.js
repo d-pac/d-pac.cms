@@ -22,6 +22,8 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
   return this.isAdmin;
 } );
 
+User.schema.plugin(require('mongoose-random')(), { path: '_r' });
+
 
 /**
  * Registration

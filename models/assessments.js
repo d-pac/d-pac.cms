@@ -54,6 +54,7 @@ Assessment.relationship( {
   label   : 'Comparisons'
 } );
 
+Assessment.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Assessment.defaultColumns = 'title, creator';
 Assessment.register();
 

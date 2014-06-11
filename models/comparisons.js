@@ -41,7 +41,7 @@ Comparison.relationship( {
   refPath : 'comparison',
   label   : 'Judgements'
 } );
-
+//Comparison.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Comparison.defaultColumns = 'name, assessor, assessment';
 Comparison.register();
 

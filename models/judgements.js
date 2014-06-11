@@ -56,7 +56,7 @@ Judgement.add( {
     noedit : true
   }  
 } );
-
+//Judgement.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, rank';
 Judgement.register();
 

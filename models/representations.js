@@ -37,6 +37,6 @@ Representation.add( {
     noedit : true
   }
 } );
-
+Representation.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Representation.defaultColumns = 'name, assessee, assessment, file';
 Representation.register();

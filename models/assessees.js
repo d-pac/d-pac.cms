@@ -35,7 +35,7 @@ Assessee.add( {
     noedit : true
   }
 } );
-
+//Assessee.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Assessee.defaultColumns = 'name, user, assessment, score';
 Assessee.register();
 

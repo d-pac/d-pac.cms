@@ -30,7 +30,7 @@ Assessor.add( {
     noedit : true
   }
 } );
-
+//Assessor.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Assessor.defaultColumns = 'name, user, assessment';
 Assessor.register();
 

@@ -6,7 +6,8 @@
     "keystone": "~0.2.15",
     "async": "~0.8.0",
     "underscore": "~1.6.0",
-    "dotenv": "0.2.8"
+    "dotenv": "0.2.8",
+    "mongoose-random": "0.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
@@ -19,7 +20,8 @@
     "time-grunt": "~0.3.1",
     "grunt-concurrent": "~0.5.0",
     "grunt-nodemon": "~0.2.1",
-    "open": "0.0.5"
+    "open": "0.0.5",
+    "faker": "^1.0.0"
   },
   "engines": {
     "node": ">=0.10.22",
