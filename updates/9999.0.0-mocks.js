@@ -172,7 +172,13 @@ function createRepresentationForAssessee( assessee,
                                           done ){
   var newRepresentation = new Representation.model( {
     assessee   : assessee.user,
-    assessment : assessee.assessment
+    assessment : assessee.assessment,
+    file : {
+      filename : faker.Lorem.words(1) + '.png',
+      path : faker.Lorem.words(1),
+      size : _.random(100, 3000),
+      filetype : 'image/png'
+    }
   } );
   newRepresentation.save( createCallback( 'a representation', done ) );
 }
