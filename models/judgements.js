@@ -46,6 +46,10 @@ Judgement.add( {
     type : Types.Html,
     wysiwyg: true
   },
+  notes : {
+    type : Types.Html,
+    wysiwyg: true
+  },
   passed : {
     type : Types.Boolean,
     default : false
