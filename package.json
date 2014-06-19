@@ -8,7 +8,7 @@
     "underscore": "~1.6.0",
     "dotenv": "0.2.8",
     "mongoose-random": "0.0.2",
-    "keystone-rest": "0.0.4"
+    "keystone-rest": "git://github.com/creynders/keystone-rest"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
