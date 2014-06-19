@@ -21,8 +21,7 @@
 var _ = require( 'underscore' ),
     keystone = require( 'keystone' ),
     middleware = require( './middleware' ),
-    keystoneRest = require( 'keystone-rest' ),
-    User = keystone.list( 'User' ),
+    restAPI = require('./rest' ),
     importRoutes = keystone.importer( __dirname );
 
 // Common Middleware
@@ -34,11 +33,7 @@ var routes = {
   views : importRoutes( './views' )
 };
 
-// Expose Attribute model via REST api
-keystoneRest.exposeRoutes( User, {
-  get    : { omit : ['password'] },
-  put    : { omit : ['password'] }
-} );
+
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
@@ -49,10 +44,7 @@ exports = module.exports = function( app ){
   app.get( '/blog/post/:post', routes.views.post );
   app.all( '/contact', routes.views.contact );
 
-  _.each( keystoneRest.routes, function( route ){
-    app[route.method]( route.route, route.handler );
-  } );
-
+  restAPI.register(app);
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);
 
