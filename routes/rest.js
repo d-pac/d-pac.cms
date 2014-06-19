@@ -2,10 +2,8 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' );
 var keystoneRest = require( 'keystone-rest' );
-var User = keystone.list( 'User' );
 
-// Expose User model via REST api
-keystoneRest.exposeRoutes( User, {
+keystoneRest.exposeRoutes( keystone.list( 'User' ), {
   get    : { omit : ['password'] },
   put    : { omit : ['password'] }
 } );
