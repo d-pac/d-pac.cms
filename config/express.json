@@ -4,7 +4,7 @@
   },
   "dev": {
     "options": {
-      "script": "keystone.js",
+      "script": "<%= paths.entrypoint %>",
       "debug": true
     }
   }

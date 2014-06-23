@@ -10,7 +10,7 @@
   },
   "express": {
     "files": [
-      "keystone.js",
+      "<%= paths.entrypoint %>",
       "public/js/lib/**/*.{js,json}"
     ],
     "tasks": [

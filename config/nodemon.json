@@ -1,6 +1,6 @@
 {
   "debug": {
-    "script": "keystone.js",
+    "script": "<%= paths.entrypoint %>",
     "options": {
       "nodeArgs": [
         "--debug"

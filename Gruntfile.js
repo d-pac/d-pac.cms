@@ -15,7 +15,10 @@ module.exports = function( grunt ){
 
   // Project configuration.
   grunt.initConfig( require( 'load-grunt-configs' )( grunt, {
-    pkg : grunt.file.readJSON( 'package.json' )
+    pkg : grunt.file.readJSON( 'package.json' ),
+    paths : {
+      entrypoint : "server.js"
+    }
   } ) );
 
   // load jshint
