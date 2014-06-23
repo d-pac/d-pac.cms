@@ -28,47 +28,10 @@ Comparison.add( {
     type    : Types.Html,
     wysiwyg : true
   },
-  logs                : {
-    durations : {
-      judgement      : {
-        type    : Number,
-        default : 0
-      },
-      seqJudgement   : {
-        type    : Number,
-        default : 0
-      },
-      comparative    : {
-        type    : Number,
-        default : 0
-      },
-      seqComparative : {
-        type    : Number,
-        default : 0
-      },
-      passFail       : {
-        type    : Number,
-        default : 0
-      },
-      seqPassFail    : {
-        type    : Number,
-        default : 0
-      }
-    },
-    seqs      : {
-      judgement   : {
-        type    : Number,
-        default : 0
-      },
-      comparative : {
-        type    : Number,
-        default : 0
-      },
-      passFail    : {
-        type    : Number,
-        default : 0
-      }
-    }
+  timelogs            : {
+    type : Types.Relationship,
+    ref  : 'Timelog',
+    many : true
   },
   createdAt           : {
     type    : Date,
