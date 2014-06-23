@@ -1,0 +1,32 @@
+{
+  "js": {
+    "files": [
+      "model/**/*.js",
+      "routes/**/*.js"
+    ],
+    "tasks": [
+      "jshint:all"
+    ]
+  },
+  "express": {
+    "files": [
+      "keystone.js",
+      "public/js/lib/**/*.{js,json}"
+    ],
+    "tasks": [
+      "jshint:server",
+      "concurrent:dev"
+    ]
+  },
+  "livereload": {
+    "files": [
+      "public/styles/**/*.css",
+      "public/styles/**/*.less",
+      "templates/**/*.jade",
+      "node_modules/keystone/templates/**/*.jade"
+    ],
+    "options": {
+      "livereload": true
+    }
+  }
+}
