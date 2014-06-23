@@ -1,8 +1,7 @@
 'use strict()';
 
-var config = {
-  port : 3000
-};
+var dotenv = require( 'dotenv' );
+dotenv.load();
 
 module.exports = function( grunt ){
   // Time how long tasks take. Can help when optimizing build times
@@ -13,13 +12,16 @@ module.exports = function( grunt ){
 
   } );
 
-  // Project configuration.
-  grunt.initConfig( require( 'load-grunt-configs' )( grunt, {
-    pkg : grunt.file.readJSON( 'package.json' ),
+  var configs = require( 'load-grunt-configs' )( grunt, {
+    pkg   : grunt.file.readJSON( 'package.json' ),
     paths : {
       entrypoint : "server.js"
-    }
-  } ) );
+    },
+    env   : process.env
+  } );
+  
+  // Project configuration.
+  grunt.initConfig( configs );
 
   // load jshint
   grunt.registerTask( 'lint', function( target ){
@@ -40,5 +42,7 @@ module.exports = function( grunt ){
     grunt.log.warn( 'The `server` task has been deprecated. Use `grunt serve` to start a server.' );
     grunt.task.run( ['serve:' + target] );
   } );
+
+  grunt.registerTask( 'deploy', ['rsync'] );
 
 };
