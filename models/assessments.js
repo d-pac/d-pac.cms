@@ -34,27 +34,20 @@ Assessment.relationship( {
 } );
 
 Assessment.relationship( {
-  path    : 'assessees',
-  ref     : 'Assessee',
-  refPath : 'assessment',
-  label   : 'Assessees'
-} );
-
-Assessment.relationship( {
-  path    : 'assessors',
-  ref     : 'Assessor',
-  refPath : 'assessment',
-  label   : 'Assessors'
-} );
-
-Assessment.relationship( {
   path    : 'comparisons',
   ref     : 'Comparison',
   refPath : 'assessment',
   label   : 'Comparisons'
 } );
 
-Assessment.schema.plugin(require('mongoose-random')(), { path: '_r' });
+Assessment.relationship( {
+  path    : 'personas',
+  ref     : 'Persona',
+  refPath : 'assessment',
+  label   : 'Personas'
+} );
+
+Assessment.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
 Assessment.defaultColumns = 'title, creator';
 Assessment.register();
 

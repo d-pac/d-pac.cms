@@ -1,6 +1,6 @@
 var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
+    keystone = require( 'keystone' ),
+    Types = keystone.Field.Types;
 
 /**
  * Users
@@ -22,8 +22,14 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
   return this.isAdmin;
 } );
 
-User.schema.plugin(require('mongoose-random')(), { path: '_r' });
+User.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
 
+User.relationship( {
+  path    : 'personas',
+  ref     : 'Persona',
+  refPath : 'user',
+  label   : 'Personas'
+} );
 
 /**
  * Registration
