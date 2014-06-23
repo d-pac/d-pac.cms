@@ -19,6 +19,12 @@ Assessment.add( {
     wysiwyg : true,
     height  : 400
   },
+  state       : {
+    type    : Types.Select,
+    options : 'draft, published, archived',
+    default : 'draft',
+    index   : true
+  },
   creator     : {
     type  : Types.Relationship,
     ref   : 'User',
