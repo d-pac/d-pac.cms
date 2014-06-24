@@ -33,6 +33,11 @@ Persona.add( {
     required : true,
     initial  : true,
     collaps  : true
+  },
+  createdAt           : {
+    type    : Date,
+    default : Date.now,
+    noedit  : true
   }
 } );
 

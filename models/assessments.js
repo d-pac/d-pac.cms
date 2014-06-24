@@ -29,6 +29,11 @@ Assessment.add( {
     type  : Types.Relationship,
     ref   : 'User',
     index : true
+  },
+  createdAt   : {
+    type    : Date,
+    default : Date.now,
+    noedit  : true
   }
 } );
 

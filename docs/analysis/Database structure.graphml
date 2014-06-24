@@ -82,7 +82,8 @@ isAdmin</y:AttributeLabel>
 assessor : &lt;User&gt;
 assessment: &lt;Assessment&gt;
 comparativeFeedback
-timelogs : &lt;Timelog&gt;</y:AttributeLabel>
+timelogs : &lt;Timelog&gt;
+createdAt: &lt;DateTime&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -92,10 +93,10 @@ timelogs : &lt;Timelog&gt;</y:AttributeLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="146.0" width="213.0" x="73.5" y="215.0"/>
+          <y:Geometry height="135.0" width="213.0" x="73.5" y="-130.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="64.80419921875" x="74.097900390625" y="3.0">Assessor<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="57.3330078125" x="77.83349609375" y="3.0">Persona<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -104,10 +105,11 @@ timelogs : &lt;Timelog&gt;</y:AttributeLabel>
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>_id
+role : [Assessor, Assessee]
 user: &lt;User&gt;
 createdAt: &lt;DateTime&gt;
 assessment : &lt;Assessment&gt;
-...</y:AttributeLabel>
+</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -117,33 +119,7 @@ assessment : &lt;Assessment&gt;
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="135.0" width="213.0" x="73.5" y="-130.0"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="65.826171875" x="73.5869140625" y="3.0">Assessee<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>_id
-user: &lt;User&gt;
-createdAt: &lt;DateTime&gt;
-assessment : &lt;Assessment&gt;
-score : &lt;Number&gt;
-...</y:AttributeLabel>
-            <y:MethodLabel/>
-          </y:UML>
-        </y:UMLClassNode>
-      </data>
-    </node>
-    <node id="n5">
-      <data key="d4"/>
-      <data key="d6">
-        <y:UMLClassNode>
-          <y:Geometry height="90.0" width="213.0" x="-46.5" y="69.84375"/>
+          <y:Geometry height="119.6875" width="213.0" x="-46.5" y="69.84375"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="84.62158203125" x="64.189208984375" y="3.0">Assessment<y:LabelModel>
@@ -155,19 +131,20 @@ score : &lt;Number&gt;
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>_id
-creator_id
-title
-description</y:AttributeLabel>
+creator : &lt;User&gt;
+title: &lt;String&gt;
+description: &lt;String&gt;
+createdAt: &lt;DateTime&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n6">
+    <node id="n5">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="161.0" width="213.0" x="-376.5" y="112.5"/>
+          <y:Geometry height="201.94827586206895" width="213.0" x="-376.5" y="112.5"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="76.81396484375" x="68.093017578125" y="3.0">Judgement<y:LabelModel>
@@ -186,13 +163,14 @@ comparison : &lt;Comparison&gt;
 rank: &lt;Number&gt;
 individualFeedback: &lt;TextArea&gt;
 pass : &lt;Boolean&gt;
-timelogs : &lt;TimeLog&gt;</y:AttributeLabel>
+timelogs : &lt;TimeLog&gt;
+createdAt: &lt;DateTime&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n7">
+    <node id="n6">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
@@ -210,13 +188,14 @@ timelogs : &lt;TimeLog&gt;</y:AttributeLabel>
             <y:AttributeLabel>_id
 type: &lt;String&gt;
 duration: &lt;Number&gt;
-times : &lt;TimeRange&gt;</y:AttributeLabel>
+times : &lt;TimeRange&gt;
+createdAt : &lt;DateTime&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n8">
+    <node id="n7">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
@@ -239,7 +218,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:UMLClassNode>
       </data>
     </node>
-    <edge id="e0" source="n4" target="n1">
+    <edge id="e0" source="n3" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-15.15625">
@@ -252,20 +231,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e1" source="n3" target="n1">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="-60.0" ty="30.0">
-            <y:Point x="360.0" y="288.0"/>
-            <y:Point x="360.0" y="120.0"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="crows_foot_many_optional" target="crows_foot_one_mandatory"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e2" source="n4" target="n5">
+    <edge id="e1" source="n3" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -278,24 +244,11 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e3" source="n3" target="n5">
+    <edge id="e2" source="n4" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="180.0" y="180.0"/>
-            <y:Point x="60.0" y="180.0"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="crows_foot_many_optional" target="crows_foot_one_mandatory"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e4" source="n5" target="n1">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="284.5" y="114.84375"/>
+            <y:Point x="284.5" y="129.6875"/>
             <y:Point x="284.5" y="90.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
@@ -304,7 +257,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e5" source="n0" target="n1">
+    <edge id="e3" source="n0" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -318,7 +271,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e6" source="n2" target="n1">
+    <edge id="e4" source="n2" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="8.75" sy="42.25" tx="0.0" ty="0.0">
@@ -330,20 +283,20 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e7" source="n0" target="n5">
+    <edge id="e5" source="n0" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="90.0" sy="0.0" tx="-90.0" ty="-24.84375"/>
+          <y:Path sx="90.0" sy="0.0" tx="-90.0" ty="-33.03873697916667"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="crows_foot_many_optional" target="crows_foot_one_mandatory"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e8" source="n2" target="n5">
+    <edge id="e6" source="n2" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="119.71830985915491" sy="0.0" tx="-80.0" ty="17.15625">
+          <y:Path sx="119.71830985915491" sy="0.0" tx="-80.0" ty="22.815429687500004">
             <y:Point x="-0.28169014084508603" y="210.0"/>
             <y:Point x="-20.0" y="210.0"/>
           </y:Path>
@@ -353,12 +306,12 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e9" source="n6" target="n5">
+    <edge id="e7" source="n5" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-120.0" y="193.0"/>
-            <y:Point x="-120.0" y="114.84375"/>
+            <y:Point x="-120.0" y="213.47413793103448"/>
+            <y:Point x="-120.0" y="129.6875"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="crows_foot_many_optional" target="crows_foot_one_mandatory"/>
@@ -366,10 +319,10 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e10" source="n6" target="n1">
+    <edge id="e8" source="n5" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-57.624393203883415" sy="-1.6171116504855831" tx="30.0" ty="30.0">
+          <y:Path sx="-57.624393203883415" sy="-2.0284031657889945" tx="30.0" ty="30.0">
             <y:Point x="-327.6243932038834" y="750.0"/>
             <y:Point x="540.0" y="750.0"/>
           </y:Path>
@@ -379,7 +332,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e11" source="n6" target="n0">
+    <edge id="e9" source="n5" target="n0">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -391,7 +344,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e12" source="n6" target="n2">
+    <edge id="e10" source="n5" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="73.0" sy="0.0" tx="-77.0" ty="-30.0"/>
@@ -401,7 +354,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e13" source="n1" target="n0">
+    <edge id="e11" source="n1" target="n0">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -416,12 +369,12 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e14" source="n5" target="n0">
+    <edge id="e12" source="n4" target="n0">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="-33.29035194174759" tx="0.0" ty="30.72421116504853">
-            <y:Point x="-120.0" y="81.55339805825241"/>
+          <y:Path sx="0.0" sy="-44.271544422532386" tx="0.0" ty="30.72421116504853">
+            <y:Point x="-120.0" y="85.41595557746761"/>
           </y:Path>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="plain"/>
@@ -429,12 +382,12 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e15" source="n5" target="n2">
+    <edge id="e13" source="n4" target="n2">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="35.15625" tx="30.0" ty="-30.0">
-            <y:Point x="-90.0" y="150.0"/>
+          <y:Path sx="0.0" sy="46.7529296875" tx="30.0" ty="-30.0">
+            <y:Point x="-90.0" y="176.4404296875"/>
           </y:Path>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="plain"/>
@@ -442,23 +395,23 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e16" source="n2" target="n6">
+    <edge id="e14" source="n2" target="n5">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-107.0242718446602" sy="0.0" tx="42.975728155339795" ty="47.0"/>
+          <y:Path sx="-107.0242718446602" sy="0.0" tx="42.975728155339795" ty="58.95384450631826"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="plain"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e17" source="n5" target="n4">
+    <edge id="e15" source="n4" target="n3">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="-29.598604368932058" tx="30.0" ty="45.15625">
-            <y:Point x="210.0" y="85.24514563106794"/>
+          <y:Path sx="0.0" sy="-39.36203289340618" tx="30.0" ty="45.15625">
+            <y:Point x="210.0" y="90.32546710659382"/>
           </y:Path>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="plain"/>
@@ -466,21 +419,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e18" source="n5" target="n3">
-      <data key="d8"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="35.15625" tx="60.0" ty="-48.0">
-            <y:Point x="240.0" y="150.0"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="dashed" width="1.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e19" source="n6" target="n7">
-      <data key="d9"/>
+    <edge id="e16" source="n5" target="n6">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -492,8 +431,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e20" source="n2" target="n7">
-      <data key="d9"/>
+    <edge id="e17" source="n2" target="n6">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-60.0"/>
@@ -503,8 +441,7 @@ end: &lt;DateTime&gt;</y:AttributeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e21" source="n7" target="n8">
-      <data key="d9"/>
+    <edge id="e18" source="n6" target="n7">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="3.34375"/>

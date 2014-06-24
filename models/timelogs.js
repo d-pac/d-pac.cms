@@ -37,6 +37,11 @@ Timelog.add( {
     required : true,
     index    : true,
     many     : true
+  },
+  createdAt           : {
+    type    : Date,
+    default : Date.now,
+    noedit  : true
   }
 } );
 //Timelog.schema.plugin(require('mongoose-random')(), { path: '_r' });
