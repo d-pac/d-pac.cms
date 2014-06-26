@@ -21,8 +21,16 @@ Timerange.add( {
     initial  : true
   }
 } );
+
+Timerange.relationship( {
+  path    : 'timelog',
+  ref     : 'Timelog',
+  refPath : 'times',
+  label   : 'Time log'
+} );
+
 //Timerange.schema.plugin(require('mongoose-random')(), { path: '_r' });
-Timerange.defaultColumns = 'name, type, duration, score';
+Timerange.defaultColumns = 'name, begin, end';
 Timerange.register();
 
 

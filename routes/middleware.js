@@ -72,8 +72,18 @@ exports.requireUser = function( req,
                                 next ){
 
   if( !req.user ){
-    req.flash( 'error', 'Please sign in to access this page.' );
-    res.redirect( '/keystone/signin' );
+    res.format({
+      'text/html' : function(){
+        req.flash( 'error', 'Please sign in to access this page.' );
+        res.redirect( '/keystone/signin' );
+      },
+      'application/json' : function(){
+        res.send(401, {
+          message : "Not allowed",
+          status : 401
+        });
+      }
+    });
   }else{
     next();
   }

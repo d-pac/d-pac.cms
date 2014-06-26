@@ -29,7 +29,8 @@ keystone.pre( 'render', middleware.flashMessages );
 
 // Import Route Controllers
 var routes = {
-  views : importRoutes( './views' )
+  views : importRoutes( './views' ),
+  api : importRoutes( './api' )
 };
 
 
@@ -42,6 +43,9 @@ exports = module.exports = function( app ){
   app.get( '/blog/:category?', routes.views.blog );
   app.get( '/blog/post/:post', routes.views.post );
   app.all( '/contact', routes.views.contact );
+  
+  //REST API
+  app.get( '/api/comparisons', middleware.requireUser, routes.api.comparisons.create );
 
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);
