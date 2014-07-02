@@ -24,7 +24,8 @@
     "faker": "^1.0.0",
     "jit-grunt": "^0.7.0",
     "load-grunt-configs": "^0.4.0",
-    "grunt-bump": "0.0.14"
+    "grunt-bump": "0.0.14",
+    "semver": "^2.3.1"
   },
   "engines": {
     "node": ">=0.10.22",
