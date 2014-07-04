@@ -55,6 +55,8 @@ module.exports = function( grunt ){
  		]);
  	});
 
+  grunt.registerTask( 'publish', ['gh-pages'] );
+
   grunt.registerTask( 'deploy', ['rsync'] );
 
 };
