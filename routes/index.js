@@ -19,9 +19,9 @@
  */
 
 var _ = require( 'underscore' ),
-    keystone = require( 'keystone' ),
-    middleware = require( './middleware' ),
-    importRoutes = keystone.importer( __dirname );
+  keystone = require( 'keystone' ),
+  middleware = require( './middleware' ),
+  importRoutes = keystone.importer( __dirname );
 
 // Common Middleware
 keystone.pre( 'routes', middleware.initLocals );
@@ -30,10 +30,8 @@ keystone.pre( 'render', middleware.flashMessages );
 // Import Route Controllers
 var routes = {
   views : importRoutes( './views' ),
-  api : importRoutes( './api' )
+  api   : importRoutes( './api' )
 };
-
-
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
@@ -43,9 +41,11 @@ exports = module.exports = function( app ){
   app.get( '/blog/:category?', routes.views.blog );
   app.get( '/blog/post/:post', routes.views.post );
   app.all( '/contact', routes.views.contact );
-  
+
   //REST API
-  app.get( '/api/comparisons', middleware.requireUser, routes.api.comparisons.create );
+  app.all( '/api*', keystone.initAPI, middleware.requireUser );
+  app.all( '/api/users/:id', middleware.parseMe, middleware.requireSelf );
+  app.get( '/api/users/:id', routes.api.users.retrieve );
 
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);

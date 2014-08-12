@@ -24,6 +24,14 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
 
 User.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
 
+User.schema.set('toJSON',{
+  virtuals : true,
+  transform : function(doc, model, options){
+    model = _.pick(model, 'id', 'name', 'email');
+    return model;
+  }
+});
+
 User.relationship( {
   path    : 'personas',
   ref     : 'Persona',
