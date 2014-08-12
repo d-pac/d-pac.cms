@@ -1,14 +1,90 @@
 # REST API
 
-## Comparisons
+## Logged in user
 
-### Create
+### Retrieve
 
-POST /api/comparisons
-creates a new comparison for a specific user.
-You must be loggedin as the user with id `:id` to be able to create the comparison object
+#### Request
 
-### Update
+```shell
+GET /api/me
+```
 
-PUT /api/comparisons/:id
-updates comparison
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+```
+```json
+{
+  "_id": "53a984cca87b4b7d57a99858",
+  "email": "john.doe@example.com",
+  "name": {
+    "first": "John",
+    "last": "Doe"
+  }
+}
+```
+
+### Full Update
+
+#### Request
+
+```shell
+PUT /api/me
+```
+```json
+{
+  "email": "changedemail@example.com"
+  "name": {
+    "first": "John",
+    "last": "Doe"
+  },
+  "password": "$2a$10$oHOoaOUZG9tuXpHlsTY9DOH.3Swtg4YZQjBXk5U1wblPsNVyNcz6i"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+```
+```json
+{
+  "_id": "53a984cca87b4b7d57a99858",
+  "email": "changedemail@example.com",
+  "name": {
+    "first": "John",
+    "last": "Doe"
+  }
+}
+```
+
+### Partial Update
+
+#### Request
+
+```shell
+PATCH /api/me
+```
+```json
+{
+  "email": "changedemail@example.com"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+```
+```json
+{
+  "_id": "53a984cca87b4b7d57a99858",
+  "email": "changedemail@example.com",
+  "name": {
+    "first": "John",
+    "last": "Doe"
+  }
+}
+```
