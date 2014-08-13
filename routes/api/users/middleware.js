@@ -1,10 +1,11 @@
 'use strict';
 
-
+var debug = require('debug')('dpac:api.users.middleware');
 
 exports.parseUserId = function( req,
                                 res,
                                 next ){
+  debug('parseUserId');
   var userId;
   if( 'undefined' !== typeof req.params.id ){
     if( req.params.id === 'me' ){
@@ -23,6 +24,7 @@ exports.parseUserId = function( req,
 exports.requireSelf = function( req,
                                 res,
                                 next ){
+  debug('requireSelf');
   var id = res.locals.user.id;
   if( req.user.isAdmin || (id && id === req.user.id) ){
     next();

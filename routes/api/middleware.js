@@ -1,11 +1,12 @@
 'use strict';
 
 var errors = require( 'errors' );
+var debug = require('debug')('dpac:api.middleware');
 
 exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
-
+  debug('initAPI');
   res.apiResponse = function( status ){
     if( req.query.callback ){
       res.jsonp( status );
@@ -29,6 +30,7 @@ exports.initAPI = function initAPI( req,
 exports.requireUser = function( req,
                                 res,
                                 next ){
+  debug('requireUser');
   if( !req.user ){
     res.apiError( new errors.Http401Error() );
   }else{
