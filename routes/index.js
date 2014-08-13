@@ -56,6 +56,9 @@ exports = module.exports = function( app ){
   app.patch( '/api/users/:id', api.users.controller.update );
 
   app.all( '/api/users*', api.middleware.methodNotAllowed );
+
+  app.all( '/api*', api.middleware.handleError );
+
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);
 

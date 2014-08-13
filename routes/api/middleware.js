@@ -1,12 +1,12 @@
 'use strict';
 
 var errors = require( 'errors' );
-var debug = require('debug')('dpac:api.middleware');
+var debug = require( 'debug' )( 'dpac:api.middleware' );
 
 exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
-  debug('initAPI');
+  debug( 'initAPI' );
   res.apiResponse = function( status ){
     if( req.query.callback ){
       res.jsonp( status );
@@ -30,7 +30,7 @@ exports.initAPI = function initAPI( req,
 exports.requireUser = function( req,
                                 res,
                                 next ){
-  debug('requireUser');
+  debug( 'requireUser' );
   if( !req.user ){
     res.apiError( new errors.Http401Error() );
   }else{
@@ -41,16 +41,28 @@ exports.requireUser = function( req,
 exports.methodNotAllowed = function( req,
                                      res,
                                      next ){
-  res.apiError( new errors.Http406Error() );
+  return res.apiError( new errors.Http406Error() );
 };
 
-exports.requireAdmin = function(req,
-  res,
-  next){
-  debug('requireAdmin');
-  if( !req.user.isAdmin){
-    res.apiError( new errors.Http401Error() );
+exports.requireAdmin = function( req,
+                                 res,
+                                 next ){
+  debug( 'requireAdmin' );
+  if( !req.user.isAdmin ){
+    return res.apiError( new errors.Http401Error() );
   }else{
     next();
+  }
+};
+
+exports.handleError = function( err,
+                                req,
+                                res,
+                                next ){
+  console.error( err );
+  if( (err.name && 'CastError' === err.name) && (err.path && '_id' === err.path ) ){
+    return res.apiError( new errors.Http404Error() );
+  }else{
+    return res.apiError( new errors.Http500Error() );
   }
 };
