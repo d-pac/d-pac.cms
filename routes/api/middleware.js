@@ -43,3 +43,14 @@ exports.methodNotAllowed = function( req,
                                      next ){
   res.apiError( new errors.Http406Error() );
 };
+
+exports.requireAdmin = function(req,
+  res,
+  next){
+  debug('requireAdmin');
+  if( !req.user.isAdmin){
+    res.apiError( new errors.Http401Error() );
+  }else{
+    next();
+  }
+};
