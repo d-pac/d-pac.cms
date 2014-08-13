@@ -8,7 +8,8 @@
     "underscore": "~1.6.0",
     "dotenv": "0.2.8",
     "mongoose-random": "0.0.2",
-    "keystone-rest": "^0.0.6"
+    "keystone-rest": "^0.0.6",
+    "errors": "^0.2.0"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

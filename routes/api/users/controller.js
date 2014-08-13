@@ -1,6 +1,7 @@
 'use strict';
 var keystone = require( 'keystone' ),
   async = require( 'async' );
+var errors = require( 'errors' );
 var User = keystone.list( 'User' );
 
 module.exports.retrieve = function( req,
@@ -9,7 +10,7 @@ module.exports.retrieve = function( req,
   User.model.findById( res.locals.user.id, function( err,
                                                      user ){
     if( err || !user ){
-      return res.apiError( 404, "Resource not found");
+      return res.apiError( new errors.Http404Error() );
     }
     return res.apiResponse( user.toJSON() );
   } );

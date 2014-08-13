@@ -1,8 +1,10 @@
 'use strict';
 
+var errors = require( 'errors' );
+
 exports.initAPI = function initAPI( req,
-                  res,
-                  next ){
+                                    res,
+                                    next ){
 
   res.apiResponse = function( status ){
     if( req.query.callback ){
@@ -12,11 +14,9 @@ exports.initAPI = function initAPI( req,
     }
   };
 
-  res.apiError = function( status,
-                           message ){
-    status = status || 500;
-    res.status( status );
-    res.apiResponse( { status : status, message : message || "Internal Server Error" } );
+  res.apiError = function( error ){
+    res.status( error.status );
+    res.apiResponse( error );
   };
 
   next();
@@ -30,7 +30,7 @@ exports.requireUser = function( req,
                                 res,
                                 next ){
   if( !req.user ){
-    res.apiError( 401, "Not allowed");
+    res.apiError( new errors.Http401Error() );
   }else{
     next();
   }
@@ -39,5 +39,5 @@ exports.requireUser = function( req,
 exports.methodNotAllowed = function( req,
                                      res,
                                      next ){
-  res.apiError( 406, "Method not allowed");
+  res.apiError( new errors.Http406Error() );
 };

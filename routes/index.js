@@ -22,6 +22,7 @@ var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   middleware = require( './middleware' ),
   importRoutes = keystone.importer( __dirname );
+var errors = require( 'errors' );
 
 // Common Middleware
 keystone.pre( 'routes', middleware.initLocals );
@@ -35,7 +36,7 @@ var routes = {
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
-
+  //console.log(errors);
   // Views
   app.get( '/', routes.views.index );
   app.get( '/blog/:category?', routes.views.blog );
