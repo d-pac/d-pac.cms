@@ -1,4 +1,5 @@
 'use strict';
+var _ = require( 'underscore' )
 var keystone = require( 'keystone' ),
   async = require( 'async' );
 var errors = require( 'errors' );
@@ -45,15 +46,30 @@ module.exports.update = function( req,
                                   res,
                                   next ){
   debug( 'update' );
-  User.findByIdAndUpdate( res.locals.user.id, req.body ).exec( function( err,
-                                                                         user ){
+  //don't use findByIdAndUpdate, since the schema pre save handler isn't called
+  //i.e. passwords would be saved in plain text!!
+  User.findById( res.locals.user.id ).exec( function( err,
+                                                      user ){
+    if( err ){
+      return next( err );
+    }
+    if( !user ){
+      return res.apiError( new errors.Http404Error() );
+    }
+
+    user.getUpdateHandler( req, res ).process( req.body, {
+      fields      : _.keys( _.pick(req.body, 'name', 'email', 'password' ) ),
+      flashErrors : false
+    }, function( err,
+                 processor ){
       if( err ){
         return next( err );
       }
+      var user = processor.item;
       if( !user ){
-        return res.apiError( new errors.Http404Error() );
+        return res.apiError( new errors.Http500Error() );
       }
       return res.apiResponse( user );
-    }
-  );
+    } );
+  } );
 };
