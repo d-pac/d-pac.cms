@@ -42,11 +42,17 @@ exports = module.exports = function( app ){
   app.get( '/blog/post/:post', routes.views.post );
   app.all( '/contact', routes.views.contact );
 
-  //REST API
-  app.all( '/api*', keystone.initAPI, middleware.requireUser );
-  app.all( '/api/users/:id', middleware.parseMe, middleware.requireSelf );
-  app.get( '/api/users/:id', routes.api.users.retrieve );
+  // # REST API
+  var api = routes.api;
+  app.all( '/api*', api.middleware.initAPI, api.middleware.requireUser );
 
+  // ## Users
+  app.all( '/api/users/:id', api.users.middleware.parseUserId, api.users.middleware.requireSelf );
+
+  app.get( '/api/users/:id', api.users.controller.retrieve );
+  app.patch( '/api/users/:id', api.users.controller.update );
+
+  app.all( '/api/users*', api.middleware.methodNotAllowed );
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);
 

@@ -18,6 +18,8 @@ keystone.init( {
   'static'  : 'public',
   'favicon' : 'public/favicon.ico',
 
+  'logger' : process.env.LOGGER || 'dev',
+
   'views'       : 'templates/views',
   'view engine' : 'jade',
 

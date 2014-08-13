@@ -3,7 +3,7 @@
 var async = require( 'async' ),
     keystone = require( 'keystone' );
 
-var comparisons = require( '../../services/domain/comparisons' );
+var comparisons = require( '../../../services/domain/comparisons' );
 
 //var Comparison = keystone.list('Comparison');
 //var Timelog = keystone.list('Timelog');
@@ -19,17 +19,17 @@ exports.create = function( req,
 //  var item = new Comparison.model();
 //  item.assessor = req.user;
 //  //assessor: current user
-//  
+//
 //  //assessment: first assessment in queue
-//  
+//
 //  //timelogs : new timelogs model
 //  item.timelogs = [
 //      new Timelog.model()
 //  ];
-//  
+//
 //  item.judgements = [
 //      new Judgement.model()
 //  ];
-//  
+//
   //judgements: 2 new judgements, met representations
 };
