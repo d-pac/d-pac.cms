@@ -75,7 +75,7 @@ exports.handleError = function( err,
 
   switch( err.name ){
     case 'ValidationError':
-      return res.apiError( new errors.Http403Error( { wrapped : err } ) );
+      return res.apiError( new errors.Http422Error( { reason : err } ) );
     case 'CastError':
       if( err.path && '_id' === err.path ){
         return res.apiError( new errors.Http404Error() );
