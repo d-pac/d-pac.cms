@@ -57,9 +57,10 @@ exports = module.exports = function( app ){
   //retrieve
   app.get( '/api/users/:id', api.users.controller.retrieve );
   //update
+  app.put( '/api/users/:id', api.users.controller.replace );
   app.patch( '/api/users/:id', api.users.controller.update );
 
-  app.all( '/api/users*', api.middleware.factories.onlyAllow('GET, PATCH') );
+  app.all( '/api/users*', api.middleware.factories.onlyAllow('GET, PATCH, PUT') );
 
   app.all( '/api*', api.middleware.handleError );
 

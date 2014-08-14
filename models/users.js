@@ -39,6 +39,10 @@ User.relationship( {
   label   : 'Personas'
 } );
 
+User.PUBLIC = [
+  'name', 'email', 'password'
+];
+
 /**
  * Registration
  */

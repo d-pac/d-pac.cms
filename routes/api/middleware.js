@@ -46,16 +46,6 @@ exports.requireUser = function( req,
   return next( output );
 };
 
-exports.factories.onlyAllow = function( methods ){
-  return function methodNotAllowed( req,
-                                    res,
-                                    next ){
-    debug( 'methodNotAllowed' );
-    res.set('Allow', methods);
-    return next( new errors.Http405Error() );
-  };
-};
-
 exports.requireAdmin = function( req,
                                  res,
                                  next ){
@@ -90,4 +80,14 @@ exports.handleError = function( err,
       return res.apiError( new errors.Http500Error() );
   }
 
+};
+
+exports.factories.onlyAllow = function( methods ){
+  return function methodNotAllowed( req,
+                                    res,
+                                    next ){
+    debug( 'methodNotAllowed' );
+    res.set('Allow', methods);
+    return next( new errors.Http405Error() );
+  };
 };

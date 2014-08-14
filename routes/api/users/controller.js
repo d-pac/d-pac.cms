@@ -4,14 +4,15 @@ var keystone = require( 'keystone' ),
   async = require( 'async' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.users.controller' );
-var User = keystone.list( 'User' ).model;
+var apiUtils = require( '../apiUtils' );
+var User = keystone.list( 'User' );
 
 module.exports.list = function( req,
                                 res,
                                 next ){
   debug( 'list' );
-  User.find().exec( function( err,
-                              users ){
+  User.model.find().exec( function( err,
+                                    users ){
     if( err ){
       return next( err );
     }
@@ -30,8 +31,8 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  User.findById( res.locals.user.id ).exec( function( err,
-                                                      user ){
+  User.model.findById( res.locals.user.id ).exec( function( err,
+                                                            user ){
     if( err ){
       return next( err );
     }
@@ -42,14 +43,14 @@ module.exports.retrieve = function( req,
   } );
 };
 
-module.exports.update = function( req,
-                                  res,
-                                  next ){
+var update = module.exports.update = function( req,
+                                               res,
+                                               next ){
   debug( 'update' );
   //don't use findByIdAndUpdate, since the schema pre save handler isn't called
   //i.e. passwords would be saved in plain text!!
-  User.findById( res.locals.user.id ).exec( function( err,
-                                                      user ){
+  User.model.findById( res.locals.user.id ).exec( function( err,
+                                                            user ){
     if( err ){
       return next( err );
     }
@@ -58,7 +59,7 @@ module.exports.update = function( req,
     }
 
     user.getUpdateHandler( req, res ).process( req.body, {
-      fields      : _.keys( _.pick(req.body, 'name', 'email', 'password' ) ),
+      fields      : _.keys( _.pick( req.body, User.PUBLIC ) ),
       flashErrors : false
     }, function( err,
                  processor ){
@@ -72,4 +73,16 @@ module.exports.update = function( req,
       return res.apiResponse( user );
     } );
   } );
+};
+
+module.exports.replace = function( req,
+                                   res,
+                                   next ){
+  debug( 'replace' );
+
+  if( apiUtils.hasKeys( req.body, User.PUBLIC ) ){
+    return update( req, res, next );
+  }else{
+    return next( new errors.Http422Error( { reason : 'Partial Entity' } ) );
+  }
 };
