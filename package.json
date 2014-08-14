@@ -3,10 +3,10 @@
   "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "keystone": "^0.2.25",
-    "async": "~0.8.0",
+    "keystone": "^0.2.26",
+    "async": "^0.8.0",
     "underscore": "~1.6.0",
-    "dotenv": "0.2.8",
+    "dotenv": "^0.2.8",
     "mongoose-random": "0.0.2",
     "errors": "^0.2.0",
     "debug": "^1.0.4"
