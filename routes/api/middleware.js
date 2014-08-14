@@ -12,7 +12,7 @@ function isHttpError( err ){
 exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
-  debug( 'initAPI' );
+  debug( '#initAPI' );
   res.apiResponse = function( status ){
     if( req.query.callback ){
       res.jsonp( status );
@@ -36,7 +36,7 @@ exports.initAPI = function initAPI( req,
 exports.requireUser = function( req,
                                 res,
                                 next ){
-  debug( 'requireUser' );
+  debug( '#requireUser' );
   var output;
   if( !req.user ){
     output = new errors.Http401Error();
@@ -47,13 +47,14 @@ exports.requireUser = function( req,
 exports.methodNotAllowed = function( req,
                                      res,
                                      next ){
+  debug( '#methodNotAllowed' );
   return next( new errors.Http406Error() );
 };
 
 exports.requireAdmin = function( req,
                                  res,
                                  next ){
-  debug( 'requireAdmin' );
+  debug( '#requireAdmin' );
   var output;
   if( !req.user.isAdmin ){
     output = new errors.Http401Error();
