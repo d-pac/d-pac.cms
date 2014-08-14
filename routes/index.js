@@ -55,7 +55,7 @@ exports = module.exports = function( app ){
   app.get( '/api/users/:id', api.users.controller.retrieve );
   app.patch( '/api/users/:id', api.users.controller.update );
 
-  app.all( '/api/users*', api.middleware.methodNotAllowed );
+  app.all( '/api/users*', api.middleware.onlyAllow('GET, PATCH') );
 
   app.all( '/api*', api.middleware.handleError );
 

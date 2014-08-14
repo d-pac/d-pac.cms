@@ -1,5 +1,5 @@
 'use strict';
-
+var keystone = require( 'keystone' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.middleware' );
 
@@ -44,11 +44,14 @@ exports.requireUser = function( req,
   return next( output );
 };
 
-exports.methodNotAllowed = function( req,
-                                     res,
-                                     next ){
-  debug( '#methodNotAllowed' );
-  return next( new errors.Http405Error() );
+exports.onlyAllow = function( methods ){
+  return function methodNotAllowed( req,
+                                    res,
+                                    next ){
+    debug( 'methodNotAllowed' );
+    res.set('Allow', methods);
+    return next( new errors.Http405Error() );
+  };
 };
 
 exports.requireAdmin = function( req,
