@@ -1,6 +1,7 @@
 'use strict';
 
 var debug = require('debug')('dpac:api.users.middleware');
+var errors = require('errors');
 
 exports.parseUserId = function( req,
                                 res,
@@ -27,11 +28,8 @@ exports.requireSelf = function( req,
   debug('#requireSelf');
   var id = res.locals.user.id;
   if( req.user.isAdmin || (id && id === req.user.id) ){
-    next();
+    return next();
   }else{
-    res.send( 401, {
-      message : "Not allowed",
-      status  : 401
-    } );
+    return next( new errors.Http401Error() );
   }
 };
