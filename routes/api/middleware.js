@@ -9,6 +9,8 @@ function isHttpError( err ){
 }
 //--
 
+exports.factories = {};
+
 exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
@@ -44,7 +46,7 @@ exports.requireUser = function( req,
   return next( output );
 };
 
-exports.onlyAllow = function( methods ){
+exports.factories.onlyAllow = function( methods ){
   return function methodNotAllowed( req,
                                     res,
                                     next ){

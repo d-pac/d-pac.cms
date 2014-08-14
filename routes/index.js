@@ -48,14 +48,18 @@ exports = module.exports = function( app ){
   app.all( '/api*', api.middleware.initAPI, api.middleware.requireUser );
 
   // ## Users
+
+  //list
   app.get('/api/users', api.middleware.requireAdmin, api.users.controller.list);
 
   app.all( '/api/users/:id', api.users.middleware.parseUserId, api.users.middleware.requireSelf );
 
+  //retrieve
   app.get( '/api/users/:id', api.users.controller.retrieve );
+  //update
   app.patch( '/api/users/:id', api.users.controller.update );
 
-  app.all( '/api/users*', api.middleware.onlyAllow('GET, PATCH') );
+  app.all( '/api/users*', api.middleware.factories.onlyAllow('GET, PATCH') );
 
   app.all( '/api*', api.middleware.handleError );
 
