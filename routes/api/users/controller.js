@@ -1,5 +1,5 @@
 'use strict';
-var _ = require( 'underscore' )
+var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   async = require( 'async' );
 var errors = require( 'errors' );
@@ -16,7 +16,7 @@ module.exports.list = function( req,
       return next( err );
     }
     if( !users ){
-      return res.apiError( new errors.Http404Error() );
+      return next( new errors.Http404Error() );
     }
     var results = { };
     users.forEach( function( user ){
@@ -36,7 +36,7 @@ module.exports.retrieve = function( req,
       return next( err );
     }
     if( !user ){
-      return res.apiError( new errors.Http404Error() );
+      return next( new errors.Http404Error() );
     }
     return res.apiResponse( user );
   } );
@@ -67,7 +67,7 @@ module.exports.update = function( req,
       }
       var user = processor.item;
       if( !user ){
-        return res.apiError( new errors.Http500Error() );
+        return next( new errors.Http500Error() );
       }
       return res.apiResponse( user );
     } );

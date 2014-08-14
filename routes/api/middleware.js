@@ -3,6 +3,12 @@
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.middleware' );
 
+//-- taken from 'errors' module
+function isHttpError( err ){
+  return err && err.hasOwnProperty( 'explanation' ) && err.hasOwnProperty( 'code' );
+}
+//--
+
 exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
@@ -31,38 +37,51 @@ exports.requireUser = function( req,
                                 res,
                                 next ){
   debug( 'requireUser' );
+  var output;
   if( !req.user ){
-    res.apiError( new errors.Http401Error() );
-  }else{
-    next();
+    output = new errors.Http401Error();
   }
+  return next( output );
 };
 
 exports.methodNotAllowed = function( req,
                                      res,
                                      next ){
-  return res.apiError( new errors.Http406Error() );
+  return next( new errors.Http406Error() );
 };
 
 exports.requireAdmin = function( req,
                                  res,
                                  next ){
   debug( 'requireAdmin' );
+  var output;
   if( !req.user.isAdmin ){
-    return res.apiError( new errors.Http401Error() );
-  }else{
-    next();
+    output = new errors.Http401Error();
   }
+  return next( output );
 };
 
 exports.handleError = function( err,
                                 req,
                                 res,
                                 next ){
+  debug( '#handleError' );
   console.error( err );
-  if( (err.name && 'CastError' === err.name) && (err.path && '_id' === err.path ) ){
-    return res.apiError( new errors.Http404Error() );
-  }else{
-    return res.apiError( new errors.Http500Error() );
+
+  if( isHttpError( err ) ){
+    return res.apiError( err );
   }
+
+  switch( err.name ){
+    case 'ValidationError':
+      return res.apiError( new errors.Http400Error( { wrapped : err } ) );
+    case 'CastError':
+      if( err.path && '_id' === err.path ){
+        return res.apiError( new errors.Http404Error() );
+      }
+    /* falls through */
+    default:
+      return res.apiError( new errors.Http500Error() );
+  }
+
 };
