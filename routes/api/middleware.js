@@ -48,7 +48,7 @@ exports.methodNotAllowed = function( req,
                                      res,
                                      next ){
   debug( '#methodNotAllowed' );
-  return next( new errors.Http406Error() );
+  return next( new errors.Http405Error() );
 };
 
 exports.requireAdmin = function( req,
@@ -75,7 +75,7 @@ exports.handleError = function( err,
 
   switch( err.name ){
     case 'ValidationError':
-      return res.apiError( new errors.Http400Error( { wrapped : err } ) );
+      return res.apiError( new errors.Http403Error( { wrapped : err } ) );
     case 'CastError':
       if( err.path && '_id' === err.path ){
         return res.apiError( new errors.Http404Error() );
