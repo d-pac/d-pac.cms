@@ -8,5 +8,14 @@
     "options": {
       "logConcurrentOutput": true
     }
+  },
+  "blind":{
+    "tasks": [
+      "nodemon",
+      "node-inspector"
+    ],
+    "options": {
+      "logConcurrentOutput": true
+    }
   }
 }
