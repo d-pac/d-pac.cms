@@ -45,11 +45,17 @@ exports = module.exports = function( app ){
 
   // # REST API
   var api = routes.api;
-  app.all( '/api*', api.middleware.initAPI, api.middleware.requireUser );
+  app.all( '/api*', api.middleware.initAPI );
+
+  // ## Auth
+
+  app.post('/api/auth/actions/signin', api.auth.controller.signin);
+  app.post('/api/auth/actions/signout', api.auth.controller.signout);
 
   // ## Users
 
   //list
+  app.all('/api/users*', api.middleware.requireUser);
   app.get('/api/users', api.middleware.requireAdmin, api.users.controller.list);
 
   app.all( '/api/users/:id', api.users.middleware.parseUserId, api.users.middleware.requireSelf );
@@ -62,7 +68,7 @@ exports = module.exports = function( app ){
 
   app.all( '/api/users*', api.middleware.factories.onlyAllow('GET, PATCH, PUT') );
 
-  app.all( '/api*', api.middleware.handleError );
+  app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);

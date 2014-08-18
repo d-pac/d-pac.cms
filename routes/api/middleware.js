@@ -15,17 +15,20 @@ exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
   debug( '#initAPI' );
-  res.apiResponse = function( status ){
+  res.apiResponse = function( status, data ){
+    if(!data){
+      data = status;
+      status = 200;
+    }
     if( req.query.callback ){
-      res.jsonp( status );
+      res.jsonp( status, data );
     }else{
-      res.json( status );
+      res.json( status, data );
     }
   };
 
   res.apiError = function( error ){
-    res.status( error.status );
-    res.apiResponse( error );
+    res.apiResponse( error.status, error );
   };
 
   next();
@@ -80,6 +83,12 @@ exports.handleError = function( err,
       return res.apiError( new errors.Http500Error() );
   }
 
+};
+
+exports.notFound = function(req,
+  res,
+  next){
+  return res.apiError(new errors.Http404Error());
 };
 
 exports.factories.onlyAllow = function( methods ){
