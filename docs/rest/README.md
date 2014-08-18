@@ -7,7 +7,7 @@
 #### Request
 
 ```shell
-GET /api/me
+GET /api/users/me
 ```
 
 #### Response
@@ -31,7 +31,7 @@ HTTP/1.1 200 OK
 #### Request
 
 ```shell
-PUT /api/me
+PUT /api/users/me
 ```
 ```json
 {
@@ -65,7 +65,7 @@ HTTP/1.1 200 OK
 #### Request
 
 ```shell
-PATCH /api/me
+PATCH /api/users/me
 ```
 ```json
 {
