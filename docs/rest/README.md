@@ -1,5 +1,50 @@
 # REST API
 
+## Authentication
+
+### Signin
+
+#### Request
+
+```shell
+POST /api/auth/actions/signin
+```
+```json
+{
+    "email": "john.doe@example.com",
+    "password": "42"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+```
+```json
+{
+  "id": "53a984cca87b4b7d57a99858",
+  "email": "john.doe@example.com",
+  "name": {
+    "first": "John",
+    "last": "Doe"
+  }
+}
+```
+
+### Signout
+
+#### Request
+
+```shell
+POST /api/auth/actions/signout
+```
+
+#### Response
+```shell
+HTTP/1.1 204 No Content
+```
+
 ## Logged in user
 
 ### Retrieve
@@ -17,7 +62,7 @@ HTTP/1.1 200 OK
 ```
 ```json
 {
-  "_id": "53a984cca87b4b7d57a99858",
+  "id": "53a984cca87b4b7d57a99858",
   "email": "john.doe@example.com",
   "name": {
     "first": "John",
@@ -51,7 +96,7 @@ HTTP/1.1 200 OK
 ```
 ```json
 {
-  "_id": "53a984cca87b4b7d57a99858",
+  "id": "53a984cca87b4b7d57a99858",
   "email": "changedemail@example.com",
   "name": {
     "first": "John",
@@ -91,7 +136,7 @@ HTTP/1.1 200 OK
 ```
 ```json
 {
-  "_id": "53a984cca87b4b7d57a99858",
+  "id": "53a984cca87b4b7d57a99858",
   "email": "changedemail@example.com",
   "name": {
     "first": "John",
