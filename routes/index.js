@@ -24,6 +24,7 @@ var _ = require( 'underscore' ),
   importRoutes = keystone.importer( __dirname );
 var errors = require( 'errors' );
 
+
 // Common Middleware
 keystone.pre( 'routes', middleware.initLocals );
 keystone.pre( 'render', middleware.flashMessages );
@@ -45,18 +46,18 @@ exports = module.exports = function( app ){
 
   // # REST API
   var api = routes.api;
-  app.all( '/api*', api.middleware.initAPI );
+  app.all( '/api*', api.middleware.initAPI, api.middleware.factories.initCORS() );
 
   // ## Auth
 
-  app.post('/api/auth/actions/signin', api.auth.controller.signin);
-  app.post('/api/auth/actions/signout', api.auth.controller.signout);
+  app.post( '/api/auth/actions/signin', api.auth.controller.signin );
+  app.post( '/api/auth/actions/signout', api.auth.controller.signout );
 
   // ## Users
 
   //list
-  app.all('/api/users*', api.middleware.requireUser);
-  app.get('/api/users', api.middleware.requireAdmin, api.users.controller.list);
+  app.all( '/api/users*', api.middleware.requireUser );
+  app.get( '/api/users', api.middleware.requireAdmin, api.users.controller.list );
 
   app.all( '/api/users/:id', api.users.middleware.parseUserId, api.users.middleware.requireSelf );
 
@@ -66,7 +67,7 @@ exports = module.exports = function( app ){
   app.put( '/api/users/:id', api.users.controller.replace );
   app.patch( '/api/users/:id', api.users.controller.update );
 
-  app.all( '/api/users*', api.middleware.factories.onlyAllow('GET, PATCH, PUT') );
+  app.all( '/api/users*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
 
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 

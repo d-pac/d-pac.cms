@@ -2,6 +2,7 @@
 var keystone = require( 'keystone' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.middleware' );
+var cors = require('cors');
 
 //-- taken from 'errors' module
 function isHttpError( err ){
@@ -9,14 +10,15 @@ function isHttpError( err ){
 }
 //--
 
-exports.factories = {};
+exports.factories = { };
 
 exports.initAPI = function initAPI( req,
                                     res,
                                     next ){
   debug( '#initAPI' );
-  res.apiResponse = function( status, data ){
-    if(!data){
+  res.apiResponse = function( status,
+                              data ){
+    if( !data ){
       data = status;
       status = 200;
     }
@@ -31,7 +33,22 @@ exports.initAPI = function initAPI( req,
     res.apiResponse( error.status, error );
   };
 
+  //console.log(req.headers);
+
   next();
+};
+
+exports.factories.initCORS = function(){
+  var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
+  var corsOpts = {
+    origin: function(origin, callback){
+      callback(null, allowedOrigins.indexOf(origin)>-1 );
+    },
+    methods: process.env.CORS_ALLOWED_METHODS,
+    allowedHeaders: process.env.CORS_ALLOWED_HEADERS,
+    credentials: true
+  };
+  return cors(corsOpts);
 };
 
 /**
@@ -85,10 +102,10 @@ exports.handleError = function( err,
 
 };
 
-exports.notFound = function(req,
-  res,
-  next){
-  return res.apiError(new errors.Http404Error());
+exports.notFound = function( req,
+                             res,
+                             next ){
+  return res.apiError( new errors.Http404Error() );
 };
 
 exports.factories.onlyAllow = function( methods ){
@@ -96,7 +113,7 @@ exports.factories.onlyAllow = function( methods ){
                                     res,
                                     next ){
     debug( 'methodNotAllowed' );
-    res.set('Allow', methods);
+    res.set( 'Allow', methods );
     return next( new errors.Http405Error() );
   };
 };
