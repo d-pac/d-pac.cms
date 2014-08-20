@@ -11,7 +11,7 @@
 var _ = require( 'underscore' ),
   querystring = require( 'querystring' ),
   keystone = require( 'keystone' );
-
+var debug = require( 'debug' )( 'dpac:api.middleware' );
 /**
  Initialises the standard view locals
 
@@ -61,5 +61,16 @@ exports.flashMessages = function( req,
 
   next();
 
+};
+
+exports.reflectReq = function( req,
+                               res,
+                               next ){
+  debug('REQUEST:', {
+    METHOD  : req.method,
+    HEADERS : req.headers,
+    BODY    : req.body,
+  }  );
+  next();
 };
 

@@ -2,12 +2,38 @@
 
 ## Authentication
 
-### Signin
+### Get status
+
+Retrieves the session of the user.
 
 #### Request
 
 ```shell
-POST /api/auth/actions/signin
+GET /api/session
+```
+
+#### Response
+
+* When not logged in:
+
+```shell
+HTTP/1.1 401 Unauthorized
+```
+
+* When logged in:
+
+```shell
+HTTP/1.1 204 No content
+```
+
+### Signin
+
+#### Request
+
+(Re-)creates a session.
+
+```shell
+POST /api/session
 ```
 ```json
 {
@@ -20,6 +46,10 @@ POST /api/auth/actions/signin
 
 ```shell
 HTTP/1.1 200 OK
+Access-Control-Allow-Origin: <ORIGIN>
+Access-Control-Allow-Credentials: true
+Set-Cookie: keystone.uid=<TOKEN>; Path=/; HttpOnly
+Set-Cookie: keystone.sid=<TOKEN>; Path=/; HttpOnly
 ```
 ```json
 {
@@ -36,11 +66,14 @@ HTTP/1.1 200 OK
 
 #### Request
 
+Destroys the current session.
+
 ```shell
-POST /api/auth/actions/signout
+DELETE /api/session
 ```
 
 #### Response
+
 ```shell
 HTTP/1.1 204 No Content
 ```

@@ -38,19 +38,6 @@ exports.initAPI = function initAPI( req,
   next();
 };
 
-exports.factories.initCORS = function(){
-  var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
-  var corsOpts = {
-    origin: function(origin, callback){
-      callback(null, allowedOrigins.indexOf(origin)>-1 );
-    },
-    methods: process.env.CORS_ALLOWED_METHODS,
-    allowedHeaders: process.env.CORS_ALLOWED_HEADERS,
-    credentials: true
-  };
-  return cors(corsOpts);
-};
-
 /**
  Prevents people from accessing protected pages when they're not signed in
  */
@@ -117,3 +104,17 @@ exports.factories.onlyAllow = function( methods ){
     return next( new errors.Http405Error() );
   };
 };
+
+exports.factories.initCORS = function(){
+  var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
+  var corsOpts = {
+    origin: function(origin, callback){
+      callback(null, allowedOrigins.indexOf(origin)>-1 );
+    },
+    methods: process.env.CORS_ALLOWED_METHODS,
+    allowedHeaders: process.env.CORS_ALLOWED_HEADERS,
+    credentials: true
+  };
+  return cors(corsOpts);
+};
+

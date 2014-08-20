@@ -24,7 +24,6 @@ var _ = require( 'underscore' ),
   importRoutes = keystone.importer( __dirname );
 var errors = require( 'errors' );
 
-
 // Common Middleware
 keystone.pre( 'routes', middleware.initLocals );
 keystone.pre( 'render', middleware.flashMessages );
@@ -46,12 +45,13 @@ exports = module.exports = function( app ){
 
   // # REST API
   var api = routes.api;
-  app.all( '/api*', api.middleware.initAPI, api.middleware.factories.initCORS() );
+  app.all( '/api*', middleware.reflectReq, api.middleware.initAPI, api.middleware.factories.initCORS() );
 
-  // ## Auth
+  // ## Session
 
-  app.post( '/api/auth/actions/signin', api.auth.controller.signin );
-  app.post( '/api/auth/actions/signout', api.auth.controller.signout );
+  app.get( '/api/session', api.session.controller.retrieve );
+  app.post( '/api/session', api.session.controller.create );
+  app.del( '/api/session', api.middleware.requireUser, api.session.controller.destroy );
 
   // ## Users
 
