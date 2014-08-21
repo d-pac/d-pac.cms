@@ -1,16 +1,24 @@
 'use strict';
 var keystone = require( 'keystone' );
 var debug = require( 'debug' )( 'dpac:api.session.controller' );
+var _ = require('underscore');
 var errors = require( 'errors' );
 
 module.exports.retrieve = function( req,
                                     res,
                                     next ){
-  debug('retrieve');
-  if(req.user){
-    return res.apiResponse(204); //No content
+  debug( 'retrieve' );
+  if( req.user ){
+    return res.apiResponse( _.extend({
+      _csrf : keystone.security.csrf.getToken( req, res )
+    }, req.user) );
   }else{
-    return res.apiError(new errors.Http401Error());
+    return res.apiError( new errors.Http401Error( {
+      reason : {
+        name    : "AuthenticationError",
+        message : "No session exists."
+      }
+    } ) );
   }
 };
 
@@ -20,7 +28,9 @@ module.exports.create = function( req,
   debug( 'create' );
   keystone.session.signin( req.body, req, res, function( user ){
     debug( 'signed in', user.id );
-    return res.apiResponse( user );
+    return res.apiResponse( _.extend({
+      _csrf : keystone.security.csrf.getToken( req, res )
+    }, req.user) );
   }, function( err ){
     if( err ){
       return next( err );
