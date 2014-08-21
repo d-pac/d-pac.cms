@@ -2,7 +2,7 @@
 
 ## Authentication
 
-### Get status
+### Get session
 
 Retrieves the session of the user.
 
@@ -12,18 +12,43 @@ Retrieves the session of the user.
 GET /api/session
 ```
 
-#### Response
+#### Response, session already exists:
 
-* When not logged in:
+```shell
+HTTP/1.1 200 Ok
+Access-Control-Allow-Origin: <ORIGIN>
+Access-Control-Allow-Credentials: true
+Set-Cookie: keystone.uid=<TOKEN>; Path=/; HttpOnly
+Set-Cookie: keystone.sid=<TOKEN>; Path=/; HttpOnly
+```
+```json
+{
+    "id": "53a984cca87b4b7d57a99858",
+    "email": "john.doe@example.com",
+    "name": {
+        "first": "John",
+        "last": "Doe"
+    },
+    "_csrf": "<CSFR TOKEN>",
+}
+```
+
+#### Response, session doesn't exist:
 
 ```shell
 HTTP/1.1 401 Unauthorized
 ```
-
-* When logged in:
-
-```shell
-HTTP/1.1 204 No content
+```json
+{
+    "code": "401",
+    "status": "401",
+    "name": "Http401Error",
+    "message": "Unauthorized",
+    "reason": {
+          "name"    : "AuthenticationError",
+          "message" : "No session exists."
+    }
+}
 ```
 
 ### Signin
@@ -42,7 +67,7 @@ POST /api/session
 }
 ```
 
-#### Response
+#### Response: Success
 
 ```shell
 HTTP/1.1 200 OK
@@ -53,12 +78,31 @@ Set-Cookie: keystone.sid=<TOKEN>; Path=/; HttpOnly
 ```
 ```json
 {
-  "id": "53a984cca87b4b7d57a99858",
-  "email": "john.doe@example.com",
-  "name": {
-    "first": "John",
-    "last": "Doe"
-  }
+    "id": "53a984cca87b4b7d57a99858",
+    "email": "john.doe@example.com",
+    "name": {
+        "first": "John",
+        "last": "Doe"
+    },
+    "_csrf": "<CSRF TOKEN>"
+}
+```
+
+#### Response: Failure
+
+```shell
+HTTP/1.1 401 Unauthorized
+```
+```json
+{
+    "code": "401",
+    "status": "401",
+    "name": "Http401Error",
+    "message": "Unauthorized",
+    "reason": {
+          "name"    : "AuthenticationError",
+          "message" : "Bad credentials."
+    }
 }
 ```
 
@@ -85,7 +129,7 @@ HTTP/1.1 204 No Content
 #### Request
 
 ```shell
-GET /api/users/me
+GET /api/users/me?_csrf=<CSRF TOKEN>
 ```
 
 #### Response
@@ -118,7 +162,8 @@ PUT /api/users/me
     "first": "John",
     "last": "Doe"
   },
-  "password": "$2a$10$oHOoaOUZG9tuXpHlsTY9DOH.3Swtg4YZQjBXk5U1wblPsNVyNcz6i"
+  "password": "$2a$10$oHOoaOUZG9tuXpHlsTY9DOH.3Swtg4YZQjBXk5U1wblPsNVyNcz6i",
+  "_csrf": "<CSRF TOKEN>"
 }
 ```
 
@@ -147,7 +192,8 @@ PATCH /api/users/me
 ```
 ```json
 {
-  "email": "changedemail@example.com"
+  "email": "changedemail@example.com",
+  "_csrf": "<CSRF TOKEN>"
 }
 ```
 
