@@ -69,8 +69,8 @@ exports.reflectReq = function( req,
   debug('REQUEST:', {
     METHOD  : req.method,
     HEADERS : req.headers,
-    BODY    : req.body,
+    QUERY : req.query,
+    BODY    : req.body
   }  );
   next();
 };
-
