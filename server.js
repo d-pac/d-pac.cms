@@ -72,7 +72,8 @@ keystone.set( 'nav', {
   ],
   'users'       : [
     'users',
-    'personas'
+    'personas',
+    'organizations'
   ]
 } );
 

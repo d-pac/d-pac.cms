@@ -10,11 +10,33 @@ var _ = require( 'underscore' ),
 var User = new keystone.List( 'User' );
 
 User.add( {
-  name     : { type : Types.Name, required : true, index : true },
-  email    : { type : Types.Email, initial : true, required : true, index : true },
-  password : { type : Types.Password, initial : true, required : false }
+  name     : {
+    type : Types.Name,
+    required : true,
+    index : true
+  },
+  organization       : {
+    type     : Types.Relationship,
+    ref      : 'Organization',
+    index    : true,
+    initial  : true
+  },
+  email    : {
+    type : Types.Email,
+    initial : true,
+    required : true,
+    index : true
+  },
+  password : {
+    type : Types.Password,
+    initial : true,
+    required : false
+  }
 }, 'Permissions', {
-  isAdmin : { type : Boolean, label : 'Can access Keystone' }
+  isAdmin : {
+    type : Boolean,
+    label : 'Can access Keystone'
+  }
 } );
 
 // Provide access to Keystone
