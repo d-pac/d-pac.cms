@@ -1,5 +1,5 @@
 'use strict';
-
+var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
     Types = keystone.Field.Types;
 
@@ -46,6 +46,14 @@ Comparison.relationship( {
   refPath : 'comparison',
   label   : 'Judgements'
 } );
+
+Comparison.schema.set('toJSON',{
+  virtuals : true,
+  transform : function(doc, model, options){
+    model = _.pick(model, 'id', 'assessor', 'assessment');
+    return model;
+  }
+});
 
 //Comparison.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Comparison.defaultColumns = 'name, assessor, assessment';

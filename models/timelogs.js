@@ -2,6 +2,7 @@
 
 var keystone = require( 'keystone' ),
     Types = keystone.Field.Types;
+var comparisonSteps = require('./helpers/constants' ).comparisonSteps;
 
 var Timelog = new keystone.List( 'Timelog', {
   map : {
@@ -11,16 +12,8 @@ var Timelog = new keystone.List( 'Timelog', {
 
 Timelog.add( {
   type      : {
-    type     : Types.Select, options : [
-      { value : 'judgement', label : "Judgement" },
-      { value : 'judgementSEQ', label : "Judgement SEQ" },
-      { value : 'comparative', label : "Comparative Feedback" },
-      { value : 'comparativeSEQ', label : "Comparative Feedback SEQ" },
-      { value : 'passfail', label : "Pass/Fail" },
-      { value : 'passfailSEQ', label : "Pass/Fail SEQ" },
-      { value : 'individual', label : "Individual Feedback" },
-      { value : 'individualSEQ', label : "Individual Feedback SEQ" }
-    ],
+    type     : Types.Select,
+    options : comparisonSteps,
     required : true,
     initial  : true
   },

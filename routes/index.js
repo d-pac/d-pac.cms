@@ -47,29 +47,38 @@ exports = module.exports = function( app ){
   var api = routes.api;
   app.all( '/api*', middleware.reflectReq, api.middleware.initAPI, api.middleware.factories.initCORS() );
 
-  // ## Session
+  //session:retrieve
+  app.get( '/api/session', api.sessions.retrieve );
 
-  app.get( '/api/session', api.session.controller.retrieve );
-  app.post( '/api/session', api.session.controller.create );
-  app.del( '/api/session', api.middleware.requireUser, api.session.controller.destroy );
+  //sessions:create
+  app.post( '/api/session', api.sessions.create );
 
-  // ## Users
+  //sessions:destroy
+  app.del( '/api/session', api.middleware.requireUser, api.sessions.destroy );
 
-  //list
+  //users:list
   app.all( '/api/users*', api.middleware.requireUser );
-  app.get( '/api/users', api.middleware.requireAdmin, api.users.controller.list );
+  app.get( '/api/users', api.middleware.requireAdmin, api.users.list );
 
-  app.all( '/api/users/:id', api.users.middleware.parseUserId, api.users.middleware.requireSelf );
+  //users:retrieve
+  app.all( '/api/users/:id', api.middleware.parseUserId, api.middleware.requireSelf );
+  app.get( '/api/users/:id', api.users.retrieve );
 
-  //retrieve
-  app.get( '/api/users/:id', api.users.controller.retrieve );
-  //update
-  app.put( '/api/users/:id', api.users.controller.replace );
-  app.patch( '/api/users/:id', api.users.controller.update );
+  //users:update
+  app.put( '/api/users/:id', api.users.replace );
+  app.patch( '/api/users/:id', api.users.update );
 
+  //users:fallthrough
   app.all( '/api/users*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
 
+  //comparisons:retrieve
+
+  //api:fallthrough
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
+
+  // ## Comparisons
+
+  //
 
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);

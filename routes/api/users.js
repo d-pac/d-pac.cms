@@ -4,7 +4,7 @@ var keystone = require( 'keystone' ),
   async = require( 'async' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.users.controller' );
-var apiUtils = require( '../apiUtils' );
+var apiUtils = require( './utils' );
 var User = keystone.list( 'User' );
 
 module.exports.list = function( req,
