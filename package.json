@@ -10,6 +10,7 @@
     "errors": "^0.2.0",
     "keystone": "^0.2.26",
     "mongoose-random": "0.0.2",
+    "serpa": "0.0.1",
     "underscore": "~1.6.0"
   },
   "devDependencies": {

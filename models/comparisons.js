@@ -38,8 +38,12 @@ Comparison.add( {
   state                : {
     type     : Types.Select,
     options  : comparisonSteps,
-    required : true,
     initial  : true
+  },
+  active : {
+    type : Types.Boolean,
+    default : true,
+    initial : true
   }
 } );
 
