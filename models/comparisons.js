@@ -1,7 +1,8 @@
 'use strict';
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  Types = keystone.Field.Types;
+var comparisonSteps = require( './helpers/constants' ).comparisonSteps;
 
 var Comparison = new keystone.List( 'Comparison', {
   map : {
@@ -33,6 +34,12 @@ Comparison.add( {
     ref  : 'Timelog',
     many : true
   },
+  state                : {
+    type     : Types.Select,
+    options  : comparisonSteps,
+    required : true,
+    initial  : true
+  },
   createdAt           : {
     type    : Date,
     default : Date.now,
@@ -47,13 +54,15 @@ Comparison.relationship( {
   label   : 'Judgements'
 } );
 
-Comparison.schema.set('toJSON',{
-  virtuals : true,
-  transform : function(doc, model, options){
-    model = _.pick(model, 'id', 'assessor', 'assessment');
+Comparison.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', 'assessor', 'assessment' );
     return model;
   }
-});
+} );
 
 //Comparison.schema.plugin(require('mongoose-random')(), { path: '_r' });
 Comparison.defaultColumns = 'name, assessor, assessment';
