@@ -1,23 +1,25 @@
 'use strict';
 
 var _ = require( 'underscore' ),
-    keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  keystone = require( 'keystone' ),
+  Types = keystone.Field.Types;
 
 var Representation = new keystone.List( 'Representation', {
-  map : {
+  map   : {
     name : 'id'
   },
-  track: true
+  track : true
 } );
 
-Representation.add( {
-  file  : {
-    type : Types.LocalFile,
-    dest : 'public/uploads',
+var config = {
+
+  file : {
+    type     : Types.LocalFile,
+    dest     : 'public/uploads',
     required : true,
-    initial : false
+    initial  : false
   },
+
   assessee : {
     type     : Types.Relationship,
     ref      : 'User',
@@ -25,14 +27,30 @@ Representation.add( {
     required : true,
     initial  : true
   },
+
   assessment : {
-    type : Types.Relationship,
-    ref : 'Assessment',
-    initial : true,
+    type     : Types.Relationship,
+    ref      : 'Assessment',
+    initial  : true,
     required : true,
-    index : true
+    index    : true
+  }
+
+};
+
+Representation.add( config );
+
+var jsonFields = _.keys( config );
+
+Representation.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
   }
 } );
-Representation.schema.plugin(require('mongoose-random')(), { path: '_r' });
+
 Representation.defaultColumns = 'name, assessee, assessment, file';
 Representation.register();

@@ -1,30 +1,34 @@
 'use strict';
 
+var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
-var comparisonSteps = require('./helpers/constants' ).comparisonSteps;
+  Types = keystone.Field.Types;
+var comparisonSteps = require( './helpers/constants' ).comparisonSteps;
 
 var Timelog = new keystone.List( 'Timelog', {
-  map : {
+  map   : {
     name : 'id'
   },
-  track: true
+  track : true
 } );
 
-Timelog.add( {
-  type      : {
+var config = {
+
+  type : {
     type     : Types.Select,
-    options : comparisonSteps,
+    options  : comparisonSteps,
     required : true,
     initial  : true
   },
-  duration  : {
+
+  duration : {
     type     : Number,
     default  : 0,
     required : true,
     initial  : true
   },
-  times     : {
+
+  times : {
     type     : Types.Relationship,
     ref      : 'Timerange',
     initial  : true,
@@ -32,8 +36,23 @@ Timelog.add( {
     index    : true,
     many     : true
   }
+
+};
+
+Timelog.add( config );
+
+var jsonFields = _.keys( config );
+
+Timelog.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
+  }
 } );
-//Timelog.schema.plugin(require('mongoose-random')(), { path: '_r' });
+
 Timelog.defaultColumns = 'name, type, duration';
 Timelog.register();
 

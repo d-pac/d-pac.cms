@@ -1,6 +1,6 @@
 var _ = require( 'underscore' ),
-    keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  keystone = require( 'keystone' ),
+  Types = keystone.Field.Types;
 
 /**
  * Users
@@ -9,32 +9,34 @@ var _ = require( 'underscore' ),
 
 var User = new keystone.List( 'User' );
 
-User.add( {
-  name     : {
-    type : Types.Name,
+var config = {
+  name         : {
+    type     : Types.Name,
     required : true,
-    index : true
+    index    : true
   },
-  organization       : {
-    type     : Types.Relationship,
-    ref      : 'Organization',
-    index    : true,
-    initial  : true
+  organization : {
+    type    : Types.Relationship,
+    ref     : 'Organization',
+    index   : true,
+    initial : true
   },
-  email    : {
-    type : Types.Email,
-    initial : true,
+  email        : {
+    type     : Types.Email,
+    initial  : true,
     required : true,
-    index : true
+    index    : true
   },
-  password : {
-    type : Types.Password,
-    initial : true,
+  password     : {
+    type     : Types.Password,
+    initial  : true,
     required : false
   }
-}, 'Permissions', {
+};
+
+User.add( config, 'Permissions', {
   isAdmin : {
-    type : Boolean,
+    type  : Boolean,
     label : 'Can access Keystone'
   }
 } );
@@ -44,21 +46,23 @@ User.schema.virtual( 'canAccessKeystone' ).get( function(){
   return this.isAdmin;
 } );
 
-User.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
-
-User.schema.set('toJSON',{
-  virtuals : true,
-  transform : function(doc, model, options){
-    model = _.pick(model, 'id', 'name', 'email');
-    return model;
-  }
-});
-
 User.relationship( {
   path    : 'personas',
   ref     : 'Persona',
   refPath : 'user',
   label   : 'Personas'
+} );
+
+var jsonFields = _.keys( _.omit( config, 'password' ) );
+
+User.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
+  }
 } );
 
 User.PUBLIC = [

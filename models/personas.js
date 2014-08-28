@@ -1,25 +1,27 @@
 'use strict';
 
 var _ = require( 'underscore' ),
-    keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  keystone = require( 'keystone' ),
+  Types = keystone.Field.Types;
 
 var Persona = new keystone.List( 'Persona', {
-  map : {
+  map   : {
     name : 'id'
   },
-  track: true
+  track : true
 } );
 
-Persona.add( {
-  role       : {
+var config = {
+
+  role : {
     type     : Types.Select,
     options  : 'assessor, assessee',
     index    : true,
     required : true,
     initial  : true
   },
-  user       : {
+
+  user : {
     type     : Types.Relationship,
     ref      : 'User',
     index    : true,
@@ -27,6 +29,7 @@ Persona.add( {
     initial  : true,
     collapse : true
   },
+
   assessment : {
     type     : Types.Relationship,
     ref      : 'Assessment',
@@ -34,6 +37,21 @@ Persona.add( {
     required : true,
     initial  : true,
     collaps  : true
+  }
+
+};
+
+Persona.add( config );
+
+var jsonFields = _.keys( config );
+
+Persona.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
   }
 } );
 

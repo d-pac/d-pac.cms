@@ -1,67 +1,92 @@
 'use strict';
 
+var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  Types = keystone.Field.Types;
 
 var Judgement = new keystone.List( 'Judgement', {
-  map : {
+  map   : {
     name : 'id'
   },
-  track: true
+  track : true
 } );
 
-Judgement.add( {
-  assessor           : {
+var config = {
+
+  assessor : {
     type     : Types.Relationship,
     ref      : 'User',
     index    : true,
     required : true,
     initial  : true
   },
-  assessment         : {
+
+  assessment : {
     type     : Types.Relationship,
     ref      : 'Assessment',
     initial  : true,
     required : true,
     index    : true
   },
-  representation     : {
+
+  representation : {
     type     : Types.Relationship,
     ref      : 'Representation',
     initial  : true,
     required : true,
     index    : true
   },
-  comparison         : {
+
+  comparison : {
     type     : Types.Relationship,
     ref      : 'Comparison',
     initial  : true,
     required : true,
     index    : true
   },
-  rank               : {
+
+  rank : {
     type    : Types.Number,
     default : -1
   },
+
   individualFeedback : {
     type    : Types.Html,
     wysiwyg : true
   },
-  notes              : {
+
+  notes : {
     type    : Types.Html,
     wysiwyg : true
   },
-  passed             : {
+
+  passed : {
     type    : Types.Boolean,
     default : false
   },
-  timelogs           : {
+
+  timelogs : {
     type : Types.Relationship,
     ref  : 'Timelog',
     many : true
   }
+
+};
+
+Judgement.add( config );
+
+var jsonFields = _.keys( config );
+
+Judgement.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
+  }
 } );
-//Judgement.schema.plugin(require('mongoose-random')(), { path: '_r' });
+
 Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, rank';
 Judgement.register();
 

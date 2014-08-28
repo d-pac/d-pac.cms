@@ -11,24 +11,30 @@ var Assessment = new keystone.List( 'Assessment', {
   track : true
 } );
 
-Assessment.add( {
-  title       : {
+var config = {
+
+  title : {
     type     : Types.Text,
     required : true,
     initial  : true
   },
+
   description : {
     type    : Types.Html,
     wysiwyg : true,
     height  : 400
   },
-  state       : {
+
+  state : {
     type    : Types.Select,
     options : 'draft, published, archived',
     default : 'draft',
     index   : true
   }
-} );
+
+};
+
+Assessment.add(config);
 
 Assessment.relationship( {
   path    : 'representations',
@@ -51,7 +57,20 @@ Assessment.relationship( {
   label   : 'Personas'
 } );
 
-Assessment.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
+//Assessment.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
+
+var jsonFields = _.keys(config);
+
+Assessment.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
+  }
+} );
+
 Assessment.defaultColumns = 'title, creator';
 Assessment.register();
 

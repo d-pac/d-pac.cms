@@ -16,7 +16,14 @@ function createJudgementTask( opts,
       representation : representation,
       comparison     : opts.comparison
     } );
-    judgement.save( done );
+    opts.judgements.push(judgement);
+    judgement.save( function(err, judgement){
+      if(err){
+        return done(err);
+      }
+
+      done(null, judgement);
+    } );
   };
 }
 
@@ -33,38 +40,30 @@ function createComparisonTask( opts ){
     var comparison = new Comparison.model( {
       assessor   : opts.assessor,
       assessment : opts.assessment,
-      active     : true,
-      judgements : []
+      active     : true
     } );
     opts.comparison = comparison;
-    comparison.save( done );
+    comparison.save( function(err, comparison){
+      if(err){
+        return done(err);
+      }
+      done(null, comparison);
+    } );
   };
 }
 
-module.exports = function createAggregateComparison( opts ){
+module.exports = function createAggregateComparison( opts, next ){
 
   debug( 'createAggregateComparison', opts );
+  opts.judgements = [];
   var tasks = [createComparisonTask( opts )].concat( createJudgementTasks( opts ) );
 
   async.series( tasks, function( err,
                                  results ){
-    console.log( results );
+    var aggregate = opts.comparison.toJSON();
+    //aggregate.judgements = opts.judgements;
+    console.log(aggregate);
+    //done(null, aggregate);
   } );
-
-  //async.series( [
-  //  function( cb ){
-  //    comparison = new Comparison( {
-  //      assessor   : opts.user,
-  //      assessment : opts.assessment,
-  //      active     : true
-  //    } );
-  //    comparison.save( cb );
-  //  },
-  //  function( cb ){
-  //  }
-  //], function( err,
-  //             results ){
-  //
-  //} );
 
 };

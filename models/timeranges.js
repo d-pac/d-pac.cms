@@ -1,27 +1,33 @@
 'use strict';
 
+var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  Types = keystone.Field.Types;
 
 var Timerange = new keystone.List( 'Timerange', {
-  map : {
+  map   : {
     name : 'id'
   },
-  track: true
+  track : true
 } );
 
-Timerange.add( {
-  begin      : {
+var config = {
+
+  begin : {
     type     : Date,
     required : true,
     initial  : true
   },
-  end  : {
+
+  end : {
     type     : Date,
     required : true,
     initial  : true
   }
-} );
+
+};
+
+Timerange.add( config );
 
 Timerange.relationship( {
   path    : 'timelog',
@@ -30,7 +36,18 @@ Timerange.relationship( {
   label   : 'Time log'
 } );
 
-//Timerange.schema.plugin(require('mongoose-random')(), { path: '_r' });
+var jsonFields = _.keys( config );
+
+Timerange.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, 'id', jsonFields );
+    return model;
+  }
+} );
+
 Timerange.defaultColumns = 'name, begin, end';
 Timerange.register();
 
