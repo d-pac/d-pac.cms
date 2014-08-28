@@ -1,5 +1,6 @@
 'use strict';
 
+var debug = require('debug')( 'dpac:api.comparisons' );
 var async = require( 'async' ),
   keystone = require( 'keystone' );
 
@@ -16,6 +17,7 @@ exports.actions = { };
 exports.actions.retrieveCurrent = function( req,
                                             res,
                                             next ){
+  debug('#retrieveCurrent');
   Comparison.model.findOne( {
     assessor : req.user.id,
     active   : true
@@ -35,6 +37,7 @@ exports.actions.retrieveCurrent = function( req,
 exports.actions.retrieveNext = function( req,
                                          res,
                                          next ){
+  debug('#retrieveNext');
   var assessment = req.param('assessment');
 
   /*

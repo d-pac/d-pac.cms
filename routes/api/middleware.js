@@ -127,6 +127,20 @@ exports.requireSelf = function( req,
   }
 };
 
+exports.verifyCSRF = function( req,
+                               res,
+                               next ){
+
+  if( "true" === process.env.CSRF_DISABLED || keystone.security.csrf.validate( req ) ){
+    return next();
+  }
+
+  return next( new errors.Http403Error( {
+    reason : "Failed CSRF authentication"
+  } ) );
+
+};
+
 exports.factories.onlyAllow = function( methods ){
   return function methodNotAllowed( req,
                                     res,
@@ -157,7 +171,7 @@ exports.factories.requireParam = function( paramName ){
                    next ){
     debug( '#verifyRequiredParam' );
     if( 'undefined' === typeof req.param( paramName ) ){
-      return next( new errors.Http403Error( {
+      return next( new errors.Http400Error( {
         reason : "Missing parameter: " + paramName
       } ) );
     }
@@ -169,7 +183,7 @@ exports.factories.requirePersona = function( role ){
   return function( req,
                    res,
                    next ){
-    debug('#verifyPersona');
+    debug( '#verifyPersona' );
     Persona.model.findOne( {
       role       : role,
       assessment : req.param( 'assessment' ),

@@ -1,6 +1,6 @@
 'use strict';
 var keystone = require( 'keystone' );
-var debug = require( 'debug' )( 'dpac:api.session.controller' );
+var debug = require( 'debug' )( 'dpac:api.sessions' );
 var _ = require( 'underscore' );
 var errors = require( 'errors' );
 
@@ -11,7 +11,7 @@ module.exports.retrieve = function( req,
   if( req.user ){
     return res.apiResponse( _.extend( {
       _csrf : keystone.security.csrf.getToken( req, res )
-    }, req.user ) );
+    }, req.user.toJSON() ) );
   }else{
     return res.apiError( new errors.Http401Error( {
       reason : {

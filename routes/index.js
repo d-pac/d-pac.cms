@@ -54,40 +54,40 @@ exports = module.exports = function( app ){
 
   //session:retrieve
   app.get( '/api/session', api.sessions.retrieve );
-
+  //sessions:setup
+  app.all( '/api/session', api.middleware.verifyCSRF);
   //sessions:create
   app.post( '/api/session', api.sessions.create );
-
   //sessions:destroy
   app.del( '/api/session',
     api.middleware.requireUser,
     api.sessions.destroy );
 
+  //users:setup
+  app.all( '/api/users*',
+    api.middleware.requireUser,
+    api.middleware.verifyCSRF );
   //users:list
-  app.all( '/api/users*', api.middleware.requireUser );
   app.get( '/api/users',
     api.middleware.requireAdmin,
     api.users.list );
-
   //users:retrieve
   app.all( '/api/users/:id',
     api.middleware.parseUserId,
     api.middleware.requireSelf );
   app.get( '/api/users/:id', api.users.retrieve );
-
   //users:update
   app.put( '/api/users/:id', api.users.replace );
   app.patch( '/api/users/:id', api.users.update );
-
   //users:fallthrough
   app.all( '/api/users*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
 
   //comparisons:setup
-  app.all( '/api/comparisons*', api.middleware.requireUser );
-
+  app.all( '/api/comparisons*',
+    api.middleware.requireUser,
+    api.middleware.verifyCSRF );
   //comparisons:retrieve:current
   app.get( '/api/comparisons/actions/current', api.comparisons.actions.retrieveCurrent );
-
   //comparisons:retrieve:next
   app.get( '/api/comparisons/actions/next',
     api.middleware.factories.requireParam( 'assessment' ),
