@@ -6,7 +6,8 @@ var keystone = require( 'keystone' ),
 var Judgement = new keystone.List( 'Judgement', {
   map : {
     name : 'id'
-  }
+  },
+  track: true
 } );
 
 Judgement.add( {
@@ -58,11 +59,6 @@ Judgement.add( {
     type : Types.Relationship,
     ref  : 'Timelog',
     many : true
-  },
-  createdAt          : {
-    type    : Date,
-    default : Date.now,
-    noedit  : true
   }
 } );
 //Judgement.schema.plugin(require('mongoose-random')(), { path: '_r' });

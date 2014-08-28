@@ -7,7 +7,8 @@ var comparisonSteps = require( './helpers/constants' ).comparisonSteps;
 var Comparison = new keystone.List( 'Comparison', {
   map : {
     name : 'id'
-  }
+  },
+  track: true
 } );
 
 Comparison.add( {
@@ -39,11 +40,6 @@ Comparison.add( {
     options  : comparisonSteps,
     required : true,
     initial  : true
-  },
-  createdAt           : {
-    type    : Date,
-    default : Date.now,
-    noedit  : true
   }
 } );
 

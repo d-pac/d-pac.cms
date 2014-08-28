@@ -7,7 +7,8 @@ var _ = require( 'underscore' ),
 var Persona = new keystone.List( 'Persona', {
   map : {
     name : 'id'
-  }
+  },
+  track: true
 } );
 
 Persona.add( {
@@ -33,11 +34,6 @@ Persona.add( {
     required : true,
     initial  : true,
     collaps  : true
-  },
-  createdAt           : {
-    type    : Date,
-    default : Date.now,
-    noedit  : true
   }
 } );
 

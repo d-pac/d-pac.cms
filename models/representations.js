@@ -7,7 +7,8 @@ var _ = require( 'underscore' ),
 var Representation = new keystone.List( 'Representation', {
   map : {
     name : 'id'
-  }
+  },
+  track: true
 } );
 
 Representation.add( {
@@ -24,17 +25,12 @@ Representation.add( {
     required : true,
     initial  : true
   },
-  assessment : { 
+  assessment : {
     type : Types.Relationship,
     ref : 'Assessment',
     initial : true,
     required : true,
     index : true
-  },
-  createdAt: { 
-    type: Date, 
-    default: Date.now,
-    noedit : true
   }
 } );
 Representation.schema.plugin(require('mongoose-random')(), { path: '_r' });

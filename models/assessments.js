@@ -1,11 +1,14 @@
 'use strict';
 
 var _ = require( 'underscore' ),
-    keystone = require( 'keystone' ),
-    Types = keystone.Field.Types;
+  keystone = require( 'keystone' ),
+  Types = keystone.Field.Types;
 
 var Assessment = new keystone.List( 'Assessment', {
-  map : { name : 'title' }
+  map   : {
+    name : 'title'
+  },
+  track : true
 } );
 
 Assessment.add( {
@@ -24,16 +27,6 @@ Assessment.add( {
     options : 'draft, published, archived',
     default : 'draft',
     index   : true
-  },
-  creator     : {
-    type  : Types.Relationship,
-    ref   : 'User',
-    index : true
-  },
-  createdAt   : {
-    type    : Date,
-    default : Date.now,
-    noedit  : true
   }
 } );
 

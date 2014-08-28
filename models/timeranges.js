@@ -6,7 +6,8 @@ var keystone = require( 'keystone' ),
 var Timerange = new keystone.List( 'Timerange', {
   map : {
     name : 'id'
-  }
+  },
+  track: true
 } );
 
 Timerange.add( {

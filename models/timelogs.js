@@ -7,7 +7,8 @@ var comparisonSteps = require('./helpers/constants' ).comparisonSteps;
 var Timelog = new keystone.List( 'Timelog', {
   map : {
     name : 'id'
-  }
+  },
+  track: true
 } );
 
 Timelog.add( {
@@ -30,11 +31,6 @@ Timelog.add( {
     required : true,
     index    : true,
     many     : true
-  },
-  createdAt           : {
-    type    : Date,
-    default : Date.now,
-    noedit  : true
   }
 } );
 //Timelog.schema.plugin(require('mongoose-random')(), { path: '_r' });
