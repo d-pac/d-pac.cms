@@ -83,7 +83,8 @@ assessor : &lt;User&gt;
 assessment: &lt;Assessment&gt;
 comparativeFeedback
 timelogs : V&lt;Timelog&gt;
-createdAt: &lt;DateTime&gt;</y:AttributeLabel>
+state : &lt;String&gt;
+active : &lt;Boolean&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -107,7 +108,6 @@ createdAt: &lt;DateTime&gt;</y:AttributeLabel>
             <y:AttributeLabel>_id
 role : [Assessor, Assessee]
 user: &lt;User&gt;
-createdAt: &lt;DateTime&gt;
 assessment : &lt;Assessment&gt;
 </y:AttributeLabel>
             <y:MethodLabel/>
@@ -134,7 +134,6 @@ assessment : &lt;Assessment&gt;
 creator : &lt;User&gt;
 title: &lt;String&gt;
 description: &lt;String&gt;
-createdAt: &lt;DateTime&gt;
 children: V&lt;Assessment&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
@@ -164,8 +163,7 @@ comparison : &lt;Comparison&gt;
 rank: &lt;Number&gt;
 individualFeedback: &lt;TextArea&gt;
 pass : [Pass, Fail, Undetermined]
-timelogs : V&lt;TimeLog&gt;
-createdAt: &lt;DateTime&gt;</y:AttributeLabel>
+timelogs : V&lt;TimeLog&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -189,8 +187,7 @@ createdAt: &lt;DateTime&gt;</y:AttributeLabel>
             <y:AttributeLabel>_id
 type: &lt;String&gt;
 duration: &lt;Number&gt;
-times : V&lt;TimeRange&gt;
-createdAt : &lt;DateTime&gt;</y:AttributeLabel>
+times : V&lt;TimeRange&gt;</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -214,32 +211,6 @@ createdAt : &lt;DateTime&gt;</y:AttributeLabel>
             <y:AttributeLabel>_id
 begin: &lt;DateTime&gt;
 end: &lt;DateTime&gt;</y:AttributeLabel>
-            <y:MethodLabel/>
-          </y:UML>
-        </y:UMLClassNode>
-      </data>
-    </node>
-    <node id="n8">
-      <data key="d4"/>
-      <data key="d6">
-        <y:UMLClassNode>
-          <y:Geometry height="146.0" width="213.0" x="283.5" y="326.25"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="98.02783203125" x="57.486083984375" y="3.0">AssessorState<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>_id
-assessor: &lt;User&gt;
-comparison: &lt;Comparison&gt;
-state
-active: &lt;Boolean&gt;
-</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -478,33 +449,7 @@ active: &lt;Boolean&gt;
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e19" source="n2" target="n8">
-      <data key="d9"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="-22.419540229885" tx="0.0" ty="0.0">
-            <y:Point x="90.0" y="427.580459770115"/>
-            <y:Point x="90.0" y="399.25"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="crows_foot_one_mandatory" target="crows_foot_one_mandatory"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e20" source="n1" target="n8">
-      <data key="d9"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="-60.0" sy="0.0" tx="60.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="crows_foot_one_mandatory" target="crows_foot_one_mandatory"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e21" source="n4" target="n4">
-      <data key="d9"/>
+    <edge id="e19" source="n4" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="44.985632183908024" ty="20.3125">
