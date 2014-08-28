@@ -50,6 +50,6 @@ module.exports.destroy = function( req,
                                    next ){
   debug( 'destroy' );
   keystone.session.signout( req, res, function(){
-    return res.apiResponse( 204, { } );
+    return res.apiResponse( 204 );
   } );
 };

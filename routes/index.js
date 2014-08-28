@@ -45,7 +45,12 @@ exports = module.exports = function( app ){
 
   // # REST API
   var api = routes.api;
-  app.all( '/api*', middleware.reflectReq, api.middleware.initAPI, api.middleware.factories.initCORS() );
+
+  //api:setup
+  app.all( '/api*',
+    middleware.reflectReq,
+    api.middleware.initAPI,
+    api.middleware.factories.initCORS() );
 
   //session:retrieve
   app.get( '/api/session', api.sessions.retrieve );
@@ -54,14 +59,20 @@ exports = module.exports = function( app ){
   app.post( '/api/session', api.sessions.create );
 
   //sessions:destroy
-  app.del( '/api/session', api.middleware.requireUser, api.sessions.destroy );
+  app.del( '/api/session',
+    api.middleware.requireUser,
+    api.sessions.destroy );
 
   //users:list
   app.all( '/api/users*', api.middleware.requireUser );
-  app.get( '/api/users', api.middleware.requireAdmin, api.users.list );
+  app.get( '/api/users',
+    api.middleware.requireAdmin,
+    api.users.list );
 
   //users:retrieve
-  app.all( '/api/users/:id', api.middleware.parseUserId, api.middleware.requireSelf );
+  app.all( '/api/users/:id',
+    api.middleware.parseUserId,
+    api.middleware.requireSelf );
   app.get( '/api/users/:id', api.users.retrieve );
 
   //users:update
@@ -71,7 +82,18 @@ exports = module.exports = function( app ){
   //users:fallthrough
   app.all( '/api/users*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
 
-  //comparisons:retrieve
+  //comparisons:setup
+  app.all( '/api/comparisons*', api.middleware.requireUser );
+
+  //comparisons:retrieve:current
+  app.get( '/api/comparisons/actions/current', api.comparisons.actions.retrieveCurrent );
+
+  //comparisons:retrieve:next
+  app.get( '/api/comparisons/actions/next',
+    api.middleware.factories.requireParam( 'assessment' ),
+    api.middleware.factories.requirePersona( 'assessor' ),
+    api.comparisons.actions.retrieveNext
+  );
 
   //api:fallthrough
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );

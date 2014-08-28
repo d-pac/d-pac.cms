@@ -224,6 +224,33 @@ HTTP/1.1 200 OK
 }
 ```
 
+## Comparisons
+
+### Retrieve current (active) comparison for the logged in user
+
+#### Request
+
+```shell
+GET /api/comparisons/actions/current
+```
+
+#### Response: found
+
+```shell
+HTTP/1.1 200 OK
+```
+```json
+{
+
+}
+```
+
+#### Response: not found
+
+```shell
+HTTP/1.1 204 OK
+```
+
 
 ## Errors
 
@@ -244,6 +271,12 @@ Depending on the requested operation and largely based on the guidelines as laid
 ### 401 Unauthorized
 
 > Authentication is required and has failed or has not yet been provided.
+
+### 403 Forbidden
+
+> The request was a valid request, but the server is refusing to respond to it. Unlike a 401 Unauthorized response, authenticating will make no difference.
+
+These errors include failure to comply due to a missing parameter.
 
 ### 404 Not Found
 

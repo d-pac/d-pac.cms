@@ -14,7 +14,7 @@ var Persona = new keystone.List( 'Persona', {
 Persona.add( {
   role       : {
     type     : Types.Select,
-    options  : 'Assessor, Assessee',
+    options  : 'assessor, assessee',
     index    : true,
     required : true,
     initial  : true
