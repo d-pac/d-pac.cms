@@ -89,6 +89,11 @@ exports = module.exports = function( app ){
   //me/comparison:fallthrough
   app.all( '/api/me/comparison*', api.middleware.factories.onlyAllow( 'GET, POST' ) );
 
+  //me/assessments:list
+  app.get( '/api/me/assessments', api.me.retrieveAssessments );
+  //me/comparison:fallthrough
+  app.all( '/api/me/assessments*', api.middleware.factories.onlyAllow( 'GET' ) );
+
   //api:fallthrough
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
