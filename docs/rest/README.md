@@ -9,7 +9,7 @@ Retrieves the session of the user.
 #### Request
 
 ```shell
-GET /api/session
+GET /api/me/session
 ```
 
 #### Response, session already exists:
@@ -58,7 +58,7 @@ HTTP/1.1 401 Unauthorized
 (Re-)creates a session.
 
 ```shell
-POST /api/session
+POST /api/me/session
 ```
 ```json
 {
@@ -113,7 +113,7 @@ HTTP/1.1 401 Unauthorized
 Destroys the current session.
 
 ```shell
-DELETE /api/session
+DELETE /api/me/session
 ```
 
 #### Response
@@ -129,7 +129,7 @@ HTTP/1.1 204 No Content
 #### Request
 
 ```shell
-GET /api/users/me?_csrf=<CSRF TOKEN>
+GET /api/me/account
 ```
 
 #### Response
@@ -153,7 +153,7 @@ HTTP/1.1 200 OK
 #### Request
 
 ```shell
-PUT /api/users/me
+PUT /api/me/account
 ```
 ```json
 {
@@ -162,7 +162,8 @@ PUT /api/users/me
     "first": "John",
     "last": "Doe"
   },
-  "password": "$2a$10$oHOoaOUZG9tuXpHlsTY9DOH.3Swtg4YZQjBXk5U1wblPsNVyNcz6i",
+  "password": "HolyShizzle!"
+  "password_confirm": "HolyShizzle!"
   "_csrf": "<CSRF TOKEN>"
 }
 ```
@@ -188,7 +189,7 @@ HTTP/1.1 200 OK
 #### Request
 
 ```shell
-PATCH /api/users/me
+PATCH /api/me/account
 ```
 ```json
 {
@@ -231,7 +232,7 @@ HTTP/1.1 200 OK
 #### Request
 
 ```shell
-GET /api/comparisons/actions/current
+GET /api/me/comparison
 ```
 
 #### Response: found
@@ -251,6 +252,29 @@ HTTP/1.1 200 OK
 HTTP/1.1 204 OK
 ```
 
+### Create an (active) comparison for the logged in user
+
+#### Request
+
+```shell
+POST /api/me/comparison
+```
+```json
+{
+  "assessment" : "53a984cca87b4b7d57a99858"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+```
+```json
+{
+
+}
+```
 
 ## Errors
 
