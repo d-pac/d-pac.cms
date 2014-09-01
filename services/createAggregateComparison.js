@@ -16,13 +16,14 @@ function createJudgementTask( opts,
       representation : representation,
       comparison     : opts.comparison
     } );
-    opts.judgements.push(judgement);
-    judgement.save( function(err, judgement){
-      if(err){
-        return done(err);
+    opts.judgements.push( judgement );
+    judgement.save( function( err,
+                              judgement ){
+      if( err ){
+        return done( err );
       }
 
-      done(null, judgement);
+      done( null, judgement );
     } );
   };
 }
@@ -43,27 +44,34 @@ function createComparisonTask( opts ){
       active     : true
     } );
     opts.comparison = comparison;
-    comparison.save( function(err, comparison){
-      if(err){
-        return done(err);
+    comparison.save( function( err,
+                               comparison ){
+      if( err ){
+        return done( err );
       }
-      done(null, comparison);
+      done( null, comparison );
     } );
   };
 }
 
-module.exports = function createAggregateComparison( opts, next ){
+module.exports = function createAggregateComparison( aggregate,
+                                                     next ){
 
-  debug( 'createAggregateComparison', opts );
-  opts.judgements = [];
-  var tasks = [createComparisonTask( opts )].concat( createJudgementTasks( opts ) );
+  debug( 'createAggregateComparison', aggregate );
+  aggregate.judgements = [];
+  var tasks = [createComparisonTask( aggregate )].concat( createJudgementTasks( aggregate ) );
 
   async.series( tasks, function( err,
                                  results ){
-    var aggregate = opts.comparison.toJSON();
-    //aggregate.judgements = opts.judgements;
-    console.log(aggregate);
-    //done(null, aggregate);
+    if( err ){
+      return next( err );
+    }
+
+    if( !_.isArray( results ) || results.length < 1 ){
+      return next( new Error( 'Could not create aggregate' ) );
+    }
+
+    return next(null, aggregate);
   } );
 
 };

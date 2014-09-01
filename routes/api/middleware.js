@@ -13,7 +13,7 @@ function isHttpError( err ){
 }
 //--
 
-exports.factories = { };
+exports.factories = {};
 
 exports.initAPI = function initAPI( req,
                                     res,
@@ -90,9 +90,10 @@ exports.handleError = function( err,
 
 };
 
-exports.notFound = function( req,
-                             res,
-                             next ){
+exports.notFound = function notFound( req,
+                                      res,
+                                      next ){
+  debug( 'notFound' );
   return res.apiError( new errors.Http404Error() );
 };
 
