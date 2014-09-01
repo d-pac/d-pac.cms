@@ -19,7 +19,7 @@ module.exports.list = function( req,
     if( !users ){
       return next( new errors.Http404Error() );
     }
-    var results = { };
+    var results = {};
     users.forEach( function( user ){
       results[user.id] = user;
     } );
@@ -31,8 +31,8 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  User.model.findById( res.locals.user.id ).exec( function( err,
-                                                            user ){
+  User.model.findById( res.locals.filter.user ).exec( function( err,
+                                                                user ){
     if( err ){
       return next( err );
     }
@@ -49,8 +49,8 @@ var update = module.exports.update = function( req,
   debug( 'update' );
   //don't use findByIdAndUpdate, since the schema pre save handler isn't called
   //i.e. passwords would be saved in plain text!!
-  User.model.findById( res.locals.user.id ).exec( function( err,
-                                                            user ){
+  User.model.findById( res.locals.filter.user ).exec( function( err,
+                                                                user ){
     if( err ){
       return next( err );
     }

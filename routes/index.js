@@ -52,57 +52,44 @@ exports = module.exports = function( app ){
     api.middleware.initAPI,
     api.middleware.factories.initCORS() );
 
-  //session:retrieve
-  app.get( '/api/session', api.sessions.retrieve );
-  //sessions:setup
-  app.all( '/api/session', api.middleware.verifyCSRF);
-  //sessions:create
-  app.post( '/api/session', api.sessions.create );
-  //sessions:destroy
-  app.del( '/api/session',
-    api.middleware.requireUser,
-    api.sessions.destroy );
+  //me:setup
+  app.all( '/api/me*',
+    api.middleware.verifyCSRF,
+    api.middleware.requireUser);
 
-  //users:setup
-  app.all( '/api/users*',
-    api.middleware.requireUser,
-    api.middleware.verifyCSRF );
-  //users:list
-  app.get( '/api/users',
-    api.middleware.requireAdmin,
-    api.users.list );
-  //users:retrieve
-  app.all( '/api/users/:id',
-    api.middleware.parseUserId,
-    api.middleware.requireSelf );
-  app.get( '/api/users/:id', api.users.retrieve );
-  //users:update
-  app.put( '/api/users/:id', api.users.replace );
-  app.patch( '/api/users/:id', api.users.update );
-  //users:fallthrough
-  app.all( '/api/users*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
+  //me/session:retrieve
+  app.get( '/api/me/session', api.sessions.retrieve );
+  //me/sessions:create
+  app.post( '/api/me/session', api.sessions.create );
+  //me/session:destroy
+  app.del( '/api/me/session', api.sessions.destroy );
+  //me/session:fallthrough
+  app.all( '/api/me/session*', api.middleware.factories.onlyAllow( 'GET, POST, DELETE' ) );
 
-  //comparisons:setup
-  app.all( '/api/comparisons*',
-    api.middleware.requireUser,
-    api.middleware.verifyCSRF );
-  //comparisons:retrieve:current
-  app.get( '/api/comparisons/actions/current', api.comparisons.actions.retrieveCurrent );
-  //comparisons:retrieve:next
-  app.get( '/api/comparisons/actions/next',
+  //me/account:setup
+  app.all( '/api/me/account*', api.me.prepareForAccount );
+  //me/account:retrieve
+  app.get( '/api/me/account', api.users.retrieve );
+  //me/account:update
+  app.put( '/api/me/account', api.users.replace );
+  app.patch( '/api/me/account', api.users.update );
+  //me/account:fallthrough
+  app.all( '/api/me/account*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
+
+  //me/comparison:setup
+  app.all( '/api/me/comparison*', api.me.prepareForComparison );
+  //me/comparison:retrieve
+  app.get( '/api/me/comparison', api.comparisons.retrieve );
+  //me/comparisons:create
+  app.post( '/api/me/comparison',
     api.middleware.factories.requireParam( 'assessment' ),
     api.middleware.factories.requirePersona( 'assessor' ),
-    api.comparisons.actions.retrieveNext
+    api.me.createComparison
   );
+  //me/comparison:fallthrough
+  app.all( '/api/me/comparison*', api.middleware.factories.onlyAllow( 'GET, POST' ) );
 
   //api:fallthrough
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
-
-  // ## Comparisons
-
-  //
-
-  // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
-  // app.get('/protected', middleware.requireUser, routes.views.protected);
 
 };

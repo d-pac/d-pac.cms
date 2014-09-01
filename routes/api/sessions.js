@@ -1,6 +1,6 @@
 'use strict';
 var keystone = require( 'keystone' );
-var debug = require( 'debug' )( 'dpac:api.sessions' );
+var debug = require( 'debug' )( 'dpac:api.session' );
 var _ = require( 'underscore' );
 var errors = require( 'errors' );
 
@@ -8,18 +8,9 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  if( req.user ){
-    return res.apiResponse( _.extend( {
-      _csrf : keystone.security.csrf.getToken( req, res )
-    }, req.user.toJSON() ) );
-  }else{
-    return res.apiError( new errors.Http401Error( {
-      reason : {
-        name    : "AuthenticationError",
-        message : "No session exists."
-      }
-    } ) );
-  }
+  return res.apiResponse( _.extend( {
+    _csrf : keystone.security.csrf.getToken( req, res )
+  }, req.user.toJSON() ) );
 };
 
 module.exports.create = function( req,
