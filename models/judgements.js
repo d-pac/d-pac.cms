@@ -61,8 +61,14 @@ var config = {
   },
 
   passed : {
-    type    : Types.Boolean,
-    default : false
+    type    : Types.Select,
+    options : [
+      { value : 1, label : "Passed" },
+      { value : 0, label : "Undecided"},
+      { value : -1, label : "Failed"}
+    ],
+    initial : true,
+    default : 0
   },
 
   timelogs : {
