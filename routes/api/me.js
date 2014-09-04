@@ -78,13 +78,14 @@ module.exports.retrieveActiveComparisons = function( req,
         Judgement.model.find( {
           comparison : comparison.id
         } )
-          //.populate( 'representation' )
+          .populate( 'representation' )
           .exec( function( err,
                            judgements ){
             output.push( {
               comparison : comparison,
               assessment : comparison.assessment,
-              judgements : judgements
+              judgements : judgements,
+              representations : _.pluck(judgements, "representation")
             } );
             done();
           } );
