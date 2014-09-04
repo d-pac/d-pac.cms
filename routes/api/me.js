@@ -8,6 +8,8 @@ var debug = require( 'debug' )( 'dpac:api.me' );
 var createAggregateComparison = require( '../../services/createAggregateComparison' );
 var retrieveRepresentationPair = require( '../../services/retrieveRepresentationPair' );
 var Persona = keystone.list( 'Persona' );
+var Comparison = keystone.list( 'Comparison' );
+var Judgement = keystone.list( 'Judgement' );
 
 module.exports.prepareForAccount = function prepareForAccount( req,
                                                                res,
@@ -58,6 +60,44 @@ module.exports.createComparison = function( req,
   } );
 };
 
+module.exports.retrieveActiveComparisons = function( req,
+                                                     res,
+                                                     next ){
+  //todo:refactor
+  Comparison.model
+    .find( {
+      active   : true,
+      assessor : req.user.id
+    } )
+    .populate( 'assessment' )
+    .exec( function( err,
+                     comparisons ){
+      var output = [];
+      async.each( comparisons, function( comparison,
+                                         done ){
+        Judgement.model.find( {
+          comparison : comparison.id
+        } )
+          //.populate( 'representation' )
+          .exec( function( err,
+                           judgements ){
+            output.push( {
+              comparison : comparison,
+              assessment : comparison.assessment,
+              judgements : judgements
+            } );
+            done();
+          } );
+      }, function( err,
+                   result ){
+        if( err ){
+          return next( err );
+        }
+        res.apiResponse( output );
+      } );
+    } );
+};
+
 module.exports.retrieveAssessments = function( req,
                                                res,
                                                next ){
@@ -71,8 +111,8 @@ module.exports.retrieveAssessments = function( req,
     .populate( 'assessment' )
     .exec( function( err,
                      personas ){
-      if(err){
-        return next(err);
+      if( err ){
+        return next( err );
       }
       personas = personas.filter( function( doc ){
         return doc.assessment.state === "published";

@@ -52,6 +52,10 @@ exports = module.exports = function( app ){
     api.middleware.initAPI,
     api.middleware.factories.initCORS() );
 
+  //me/sessions:create
+  app.post( '/api/me/session',
+    api.middleware.verifyCSRF,
+    api.sessions.create );
   //me:setup
   app.all( '/api/me*',
     api.middleware.verifyCSRF,
@@ -59,8 +63,6 @@ exports = module.exports = function( app ){
 
   //me/session:retrieve
   app.get( '/api/me/session', api.sessions.retrieve );
-  //me/sessions:create
-  app.post( '/api/me/session', api.sessions.create );
   //me/session:destroy
   app.del( '/api/me/session', api.sessions.destroy );
   //me/session:fallthrough
@@ -76,18 +78,18 @@ exports = module.exports = function( app ){
   //me/account:fallthrough
   app.all( '/api/me/account*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
 
-  //me/comparison:setup
-  app.all( '/api/me/comparison*', api.me.prepareForComparison );
-  //me/comparison:retrieve
-  app.get( '/api/me/comparison', api.comparisons.retrieve );
+  //me/comparisons:setup
+  app.all( '/api/me/comparisons*', api.me.prepareForComparison );
+  //me/comparisons:retrieve
+  app.get( '/api/me/comparisons', api.me.retrieveActiveComparisons );
   //me/comparisons:create
-  app.post( '/api/me/comparison',
+  app.post( '/api/me/comparisons',
     api.middleware.factories.requireParam( 'assessment' ),
     api.middleware.factories.requirePersona( 'assessor' ),
     api.me.createComparison
   );
   //me/comparison:fallthrough
-  app.all( '/api/me/comparison*', api.middleware.factories.onlyAllow( 'GET, POST' ) );
+  app.all( '/api/me/comparisons*', api.middleware.factories.onlyAllow( 'GET, POST, PUT' ) );
 
   //me/assessments:list
   app.get( '/api/me/assessments', api.me.retrieveAssessments );

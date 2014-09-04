@@ -25,6 +25,10 @@ exports.initAPI = function initAPI( req,
       data = status;
       status = 200;
     }
+    debug( 'RESPONSE', {
+      status : status,
+      body   : data
+    } );
     if( req.query.callback ){
       res.jsonp( status, data );
     }else{
