@@ -1,0 +1,6 @@
+{
+    "options" : {
+        "reporter" : "spec"
+    },
+    "tests":  ["specs/*.spec.js"]
+}

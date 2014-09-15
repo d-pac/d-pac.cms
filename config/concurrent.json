@@ -1,21 +1,29 @@
 {
-  "dev": {
-    "tasks": [
-      "nodemon",
-      "node-inspector",
-      "watch"
-    ],
-    "options": {
-      "logConcurrentOutput": true
+    "options" : {
+        "logConcurrentOutput" : true
+    },
+    "development"   : {
+        "tasks"   : [
+            "nodemon",
+            "node-inspector",
+            "watch"
+        ]
+    },
+    "production" : {
+        "tasks"   : [
+            "nodemon"
+        ]
+    },
+    "tests" : {
+        "tasks"   : [
+            "nodemon",
+            "node-inspector"
+        ]
+    },
+    "debugging": {
+        "tasks" : [
+            "nodemon",
+            "node-inspector"
+        ]
     }
-  },
-  "blind":{
-    "tasks": [
-      "nodemon",
-      "node-inspector"
-    ],
-    "options": {
-      "logConcurrentOutput": true
-    }
-  }
 }

@@ -17,7 +17,7 @@ node_modules
 
 .DS_Store
 
-.env
+.env*
 *-mocks.js
 .grunt
 public/tool

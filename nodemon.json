@@ -1,0 +1,11 @@
+{
+    "verbose" : false,
+    "ignore"  : [
+        "specs/*",
+        "templates/*",
+        "updates/*",
+        "node_modules/*",
+        "docs/*",
+        "config/*"
+    ]
+}

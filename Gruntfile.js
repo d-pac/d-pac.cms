@@ -1,18 +1,24 @@
 'use strict()';
 
-var dotenv = require( 'dotenv' );
-dotenv.load();
+var konfy = require( 'konfy' );
 
 var semver = require('semver');
 
 module.exports = function( grunt ){
+
+  if(grunt.option('env')){
+    process.env.NODE_ENV = grunt.option('env');
+  }
+  konfy.load();
+
   // Time how long tasks take. Can help when optimizing build times
   require( 'time-grunt' )( grunt );
 
   // Load grunt tasks automatically
   require( 'jit-grunt' )( grunt, {
     "bump-only"   : "grunt-bump",
-    "bump-commit" : "grunt-bump"
+    "bump-commit" : "grunt-bump",
+    "mochacli" : "grunt-mocha-cli"
   } );
 
   var configs = require( 'load-grunt-configs' )( grunt, {
@@ -34,10 +40,8 @@ module.exports = function( grunt ){
   } );
 
   // default option to connect server
-  grunt.registerTask( 'serve', function( target ){
-    if(!target){
-      target = "dev";
-    }
+  grunt.registerTask( 'serve', function(){
+    var target = process.env.NODE_ENV || "development";
     grunt.task.run( [
       'jshint',
       'concurrent:'+target
