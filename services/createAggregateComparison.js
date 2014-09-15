@@ -54,6 +54,14 @@ function createComparisonTask( opts ){
   };
 }
 
+/**
+ *
+ * @param aggregate
+ * @param aggregate.assessor
+ * @param aggregate.assessment
+ * @param aggregate.representations[]
+ * @param next
+ */
 module.exports = function createAggregateComparison( aggregate,
                                                      next ){
 

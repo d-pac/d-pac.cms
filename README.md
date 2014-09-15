@@ -12,6 +12,22 @@ Not by a long shot.
 $ npm install && bower install
 ```
 
+## Testing
+
+A two-step process, first run keystone in a test environment with:
+
+```shell
+$ grunt serve --env=tests
+```
+
+This will create a separate database, add some data to it and wait for connections.
+
+Once keystone's bootstrapped run (in a separate process):
+
+```shell
+$ grunt test --env=tests
+```
+
 ## Previewing
 
 ```shell
