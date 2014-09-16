@@ -54,11 +54,9 @@ exports = module.exports = function( app ){
 
   //me/sessions:create
   app.post( '/api/me/session',
-    api.middleware.verifyCSRF,
     api.sessions.create );
   //me:setup
   app.all( '/api/me*',
-    api.middleware.verifyCSRF,
     api.middleware.requireUser);
 
   //me/session:retrieve

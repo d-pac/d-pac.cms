@@ -66,6 +66,7 @@ exports.flashMessages = function( req,
 exports.reflectReq = function( req,
                                res,
                                next ){
+  debug('>>>>>>>>>>>>>>>>>>>>>> ', req.method, req.url);
   debug('REQUEST:', {
     METHOD  : req.method,
     HEADERS : req.headers,

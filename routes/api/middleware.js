@@ -136,7 +136,8 @@ exports.verifyCSRF = function( req,
                                res,
                                next ){
 
-  if( "true" === process.env.CSRF_DISABLED || keystone.security.csrf.validate( req ) ){
+  debug('#verifyCSRF');
+  if( keystone.security.csrf.validate( req ) ){
     return next();
   }
 

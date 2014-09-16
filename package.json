@@ -8,9 +8,9 @@
     "debug": "^1.0.4",
     "dotenv": "^0.2.8",
     "errors": "^0.2.0",
-    "keystone": "^0.2.26",
-    "mongoose-random": "0.0.2",
-    "lodash": "^2.4.1"
+    "keystone": "^0.2.28",
+    "lodash": "^2.4.1",
+    "mongoose-random": "0.0.2"
   },
   "devDependencies": {
     "faker": "^1.0.0",
