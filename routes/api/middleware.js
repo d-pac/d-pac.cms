@@ -21,13 +21,16 @@ exports.initAPI = function initAPI( req,
   debug( '#initAPI' );
   res.apiResponse = function( status,
                               data ){
+    var rid = req.get('Request-UUID');
+    res.header('Request-UUID', rid);
     if( !data && !_.isNumber( status ) ){
       data = status;
       status = 200;
     }
     debug( 'RESPONSE', {
-      status : status,
-      body   : data
+      STATUS : status,
+      BODY   : data,
+      RID : rid
     } );
     if( req.query.callback ){
       res.jsonp( status, data );
@@ -166,6 +169,7 @@ exports.factories.initCORS = function(){
     },
     methods        : process.env.CORS_ALLOWED_METHODS,
     allowedHeaders : process.env.CORS_ALLOWED_HEADERS,
+    exposedHeaders : process.env.CORS_EXPOSED_HEADERS,
     credentials    : true
   };
   return cors( corsOpts );
