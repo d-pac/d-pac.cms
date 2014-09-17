@@ -27,10 +27,11 @@ exports.initAPI = function initAPI( req,
       data = status;
       status = 200;
     }
-    debug( 'RESPONSE', {
+    debug( '<<<<<<<<<<<<<<<<<<<< RESPONSE: ');
+    debug( '\n', {
       STATUS : status,
       BODY   : data,
-      RID : rid
+      "Request-UUID" : rid
     } );
     if( req.query.callback ){
       res.jsonp( status, data );
@@ -79,7 +80,6 @@ exports.handleError = function( err,
                                 res,
                                 next ){
   debug( '#handleError' );
-  console.error( err );
 
   if( isHttpError( err ) ){
     return res.apiError( err );
