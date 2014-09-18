@@ -2,6 +2,7 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var autoinc = require('./helpers/autoinc');
 var comparisonSteps = require( './helpers/constants' ).comparisonSteps;
 
 var Comparison = new keystone.List( 'Comparison', {
@@ -63,6 +64,8 @@ Comparison.relationship( {
   label   : 'Judgements'
 } );
 
+Comparison.schema.plugin(autoinc.plugin, { model: 'Comparison', field: '_rid' });
+
 var jsonFields = _.keys(config);
 
 Comparison.schema.set( 'toJSON', {
@@ -70,7 +73,7 @@ Comparison.schema.set( 'toJSON', {
   transform : function( doc,
                         model,
                         options ){
-    model = _.pick( model, 'id', jsonFields );
+    model = _.pick( model, 'id', '_rid', jsonFields );
     return model;
   }
 } );
