@@ -3,6 +3,7 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var constants = require('./helpers/constants');
 
 var Persona = new keystone.List( 'Persona', {
   map   : {
@@ -15,7 +16,7 @@ var config = {
 
   role : {
     type     : Types.Select,
-    options  : 'assessor, assessee',
+    options  : constants.roles.list.toString(),
     index    : true,
     required : true,
     initial  : true

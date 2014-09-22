@@ -3,6 +3,7 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var constants = require('./helpers/constants');
 
 var Assessment = new keystone.List( 'Assessment', {
   map   : {
@@ -27,8 +28,8 @@ var config = {
 
   state : {
     type    : Types.Select,
-    options : 'draft, published, archived',
-    default : 'draft',
+    options : constants.publicationStates.list.toString(),
+    default : constants.publicationStates.draft,
     index   : true
   }
 
@@ -36,9 +37,6 @@ var config = {
 
 Assessment.add(config);
 
-Assessment.schema.virtual('isPublished' ).get(function(){
-  return 'published' === this.state;
-});
 
 Assessment.relationship( {
   path    : 'representations',

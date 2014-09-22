@@ -2,8 +2,9 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var autoinc = require('./helpers/autoinc');
-var comparisonSteps = require( './helpers/constants' ).comparisonSteps;
+var autoinc = require( './helpers/autoinc' );
+var constants = require( './helpers/constants' );
+var comparisonSteps = constants.comparisonSteps;
 
 var Comparison = new keystone.List( 'Comparison', {
   map   : {
@@ -14,20 +15,25 @@ var Comparison = new keystone.List( 'Comparison', {
 
 var config = {
 
-  assessor            : {
-    type     : Types.Relationship,
-    ref      : 'User',
-    index    : true,
-    required : true,
-    initial  : true
-  },
-
-  assessment          : {
+  assessment : {
     type     : Types.Relationship,
     ref      : 'Assessment',
+    many     : false, //C01
     initial  : true,
-    required : true,
-    index    : true
+    required : true, //C01
+    index    : true,
+    filters  : {
+      state : constants.publicationStates.published //C05
+    }
+  },
+
+  assessor : {
+    type     : Types.Relationship,
+    ref      : 'User',
+    many     : false, //C02
+    index    : true,
+    required : true, //C02
+    initial  : true
   },
 
   comparativeFeedback : {
@@ -35,19 +41,19 @@ var config = {
     wysiwyg : true
   },
 
-  timelogs            : {
+  timelogs : {
     type : Types.Relationship,
     ref  : 'Timelog',
     many : true
   },
 
-  state               : {
+  state : {
     type    : Types.Select,
     options : comparisonSteps,
     initial : true
   },
 
-  active              : {
+  active : {
     type    : Types.Boolean,
     default : true,
     initial : true
@@ -55,7 +61,25 @@ var config = {
 
 };
 
-Comparison.add(config);
+Comparison.add( config );
+
+Comparison.schema.path( 'assessor' ).validate( function( value,
+                                                         done ){
+    //C02
+    var filter = {
+      user       : value,
+      assessment : this.assessment,
+      role       : constants.roles.assessor
+    };
+    var Persona = keystone.list( 'Persona' );
+    Persona.model
+      .find()
+      .where( filter )
+      .exec( function( err, personas ){
+        done( personas && personas.length > 0 );
+      } );
+  }, "user must have assessor persona for selected assessment"
+);
 
 Comparison.relationship( {
   path    : 'judgements',
@@ -64,9 +88,9 @@ Comparison.relationship( {
   label   : 'Judgements'
 } );
 
-Comparison.schema.plugin(autoinc.plugin, { model: 'Comparison', field: '_rid' });
+Comparison.schema.plugin( autoinc.plugin, { model : 'Comparison', field : '_rid' } );
 
-var jsonFields = _.keys(config);
+var jsonFields = _.keys( config );
 
 Comparison.schema.set( 'toJSON', {
   virtuals  : true,
