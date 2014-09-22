@@ -36,6 +36,10 @@ var config = {
 
 Assessment.add(config);
 
+Assessment.schema.virtual('isPublished' ).get(function(){
+  return 'published' === this.state;
+});
+
 Assessment.relationship( {
   path    : 'representations',
   ref     : 'Representation',
@@ -56,6 +60,7 @@ Assessment.relationship( {
   refPath : 'assessment',
   label   : 'Personas'
 } );
+
 
 //Assessment.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
 
