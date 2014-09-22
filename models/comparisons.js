@@ -44,7 +44,7 @@ var config = {
   timelogs : {
     type : Types.Relationship,
     ref  : 'Timelog',
-    many : true
+    many : true //C04
   },
 
   state : {
