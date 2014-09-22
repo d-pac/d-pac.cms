@@ -2,44 +2,57 @@
 
 ## Users
 
-A user should (be allowed to) have
+A user should
 
-* strictly one persona per assessment.
-* representations for an assessment if he has an "assessee" persona for that assessment.
-* strictly one representation per assessment.
-* comparisons for an assessment if he has an "assessor" persona for that assessment.
-* [TBD] number of comparisons per assessment.
-* strictly one active comparison.
+* U01: be allowed to have strictly one persona per assessment.
+* U02: be allowed to have representations for an assessment if he has an "assessee" persona for that assessment.
+* U03: be allowed to have strictly one representation per assessment.
+* U04: be allowed to have comparisons for an assessment if he has an "assessor" persona for that assessment.
+* U05: be allowed to have [TBD] number of comparisons per assessment.
+* U06: be allowed to have strictly one active comparison.
+
+## Personas
+
+A persona should
+
+* P01: have strictly one user
+* P02: have strictly one role
+* P03: have strictly one assessment
+* P04: be created strictly for assessments with "state" is "published"
 
 ## Assessments
 
-An assessment should (be allowed to) have
+An assessment should
 
-* An infinite amount of comparisons
-* An infinite amount of personas
+* A01: be allowed to have an infinite amount of comparisons
+* A02: be allowed to have an infinite amount of personas
+* A03: not be visible, nor editable unless "state" is "published"
 
 ## Comparisons
 
-A comparison should (be allowed to) have
+A comparison should
 
-* Strictly one assessment
-* Strictly one "assessor"-persona
-* A PAM-defined number of judgements
-* A developer-defined number of timelogs
+* C01: have strictly one assessment
+* C02: have strictly one "assessor"-persona
+* C03: have a PAM-defined number of judgements
+* C04: have a developer-defined number of timelogs
+* C05: be created strictly for assessments with "state" is "published"
 
 ## Judgements
 
-A judgement should (be allowed to) have
+A judgement should
 
-* Strictly one assessment
-* Strictly one representation
-* Strictly one "assessor"-persona
-* Strictly one comparison
-* A developer-defined number of timelogs
+* J01: have strictly one assessment
+* J02: have strictly one representation
+* J03: have strictly one "assessor"-persona
+* J04: have strictly one comparison
+* J05: have a developer-defined number of timelogs
+* J06: be created strictly for assessments with "state" is "published"
 
 ## Representations
 
-A representation should (be allowed to) have
+A representation should
 
-* Strictly one "assessee"-persona
-* Strictly one assessment
+* R01: have strictly one "assessee"-persona
+* R02: have strictly one assessment
+* R03: be created strictly for assessments with "state" is "published"
