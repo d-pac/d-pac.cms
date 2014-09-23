@@ -23,6 +23,7 @@ var _ = require( 'underscore' ),
   middleware = require( './middleware' ),
   importRoutes = keystone.importer( __dirname );
 var errors = require( 'errors' );
+var constants = require('../models/helpers/constants');
 
 // Common Middleware
 keystone.pre( 'routes', middleware.initLocals );
@@ -83,7 +84,7 @@ exports = module.exports = function( app ){
   //me/comparisons:create
   app.post( '/api/me/comparisons',
     api.middleware.factories.requireParam( 'assessment' ),
-    api.middleware.factories.requirePersona( 'assessor' ),
+    api.middleware.factories.requirePersona( constants.roles.assessor ),
     api.me.createComparison
   );
   //me/comparison:fallthrough
