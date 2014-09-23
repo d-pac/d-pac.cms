@@ -3,6 +3,7 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var constants = require('./helpers/constants');
 
 var Representation = new keystone.List( 'Representation', {
   map   : {
@@ -24,7 +25,8 @@ var config = {
     type     : Types.Relationship,
     ref      : 'User',
     index    : true,
-    required : true,
+    required : true, //R01
+    many     : false, //R01
     initial  : true
   },
 
@@ -32,8 +34,12 @@ var config = {
     type     : Types.Relationship,
     ref      : 'Assessment',
     initial  : true,
-    required : true,
-    index    : true
+    required : true, //R02
+    many     : false, //R02
+    index    : true,
+    filters  : {
+      state : constants.publicationStates.published //R03
+    }
   }
 
 };
