@@ -18,7 +18,7 @@ A persona should
 * [x] P01: have strictly one user
 * [x] P02: have strictly one role
 * [x] P03: have strictly one assessment
-* [x] P04: be created strictly for assessments with "state" is "published"
+* [x] ~~P04: be created strictly for assessments with "state" is "published"~~
 * P05: U01
 
 ## Assessments
@@ -27,7 +27,7 @@ An assessment should
 
 * [x] A01: be allowed to have an infinite amount of comparisons
 * [x] A02: be allowed to have an infinite amount of personas
-* [x] A03: not be visible, nor editable unless "state" is "published"
+* [x] A03: not be visible, nor usable by an assessor unless "state" is "published"
 
 ## Comparisons
 

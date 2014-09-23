@@ -21,10 +21,7 @@ var config = {
     required : true, //P03
     many     : false, //P03
     initial  : true,
-    collapse : true,
-    filters  : {
-      state : constants.publicationStates.published //P04
-    }
+    collapse : true
   },
 
   user : {
