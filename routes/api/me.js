@@ -5,11 +5,15 @@ var keystone = require( 'keystone' );
 var async = require( 'async' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.me' );
+
 var createAggregateComparison = require( '../../services/createAggregateComparison' );
 var retrieveRepresentationPair = require( '../../services/retrieveRepresentationPair' );
+
 var Persona = keystone.list( 'Persona' );
 var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
+
+var constants = require('../../models/helpers/constants');
 
 module.exports.prepareForAccount = function prepareForAccount( req,
                                                                res,
@@ -107,7 +111,7 @@ module.exports.retrieveAssessments = function( req,
   Persona.model
     .find( {
       user : req.user.id,
-      role : "assessor"
+      role : constants.roles.assessor
     } )
     .populate( 'assessment' )
     .exec( function( err,
@@ -116,7 +120,7 @@ module.exports.retrieveAssessments = function( req,
         return next( err );
       }
       personas = personas.filter( function( doc ){
-        return doc.assessment.state === "published";
+        return doc.assessment.state === constants.publicationStates.published;
       } );
       var assessments = _.map( personas, function( persona ){
         return persona.assessment;
