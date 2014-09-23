@@ -3,6 +3,7 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var constants = require('./helpers/constants');
 
 var Judgement = new keystone.List( 'Judgement', {
   map   : {
@@ -17,7 +18,8 @@ var config = {
     type     : Types.Relationship,
     ref      : 'User',
     index    : true,
-    required : true,
+    required : true, //J03
+    many     : false, //J03
     initial  : true
   },
 
@@ -25,15 +27,20 @@ var config = {
     type     : Types.Relationship,
     ref      : 'Assessment',
     initial  : true,
-    required : true,
-    index    : true
+    required : true, //J01
+    many     : false, //J01
+    index    : true,
+    filters  : {
+      state : constants.publicationStates.published //J06
+    }
   },
 
   representation : {
     type     : Types.Relationship,
     ref      : 'Representation',
     initial  : true,
-    required : true,
+    required : true, //J02
+    many     : false, //J02
     index    : true
   },
 
@@ -41,7 +48,8 @@ var config = {
     type     : Types.Relationship,
     ref      : 'Comparison',
     initial  : true,
-    required : true,
+    required : true, //J04
+    many     : true, //J04
     index    : true
   },
 
@@ -64,8 +72,8 @@ var config = {
     type    : Types.Select,
     options : [
       { value : 1, label : "Passed" },
-      { value : 0, label : "Undecided"},
-      { value : -1, label : "Failed"}
+      { value : 0, label : "Undecided" },
+      { value : -1, label : "Failed" }
     ],
     initial : true,
     default : 0
@@ -74,7 +82,7 @@ var config = {
   timelogs : {
     type : Types.Relationship,
     ref  : 'Timelog',
-    many : true
+    many : true //J05
   }
 
 };
