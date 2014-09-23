@@ -19,6 +19,7 @@ A persona should
 * P02: have strictly one role
 * P03: have strictly one assessment
 * P04: be created strictly for assessments with "state" is "published"
+* P05: U01
 
 ## Assessments
 
@@ -37,6 +38,8 @@ A comparison should
 * C03: have a PAM-defined number of judgements
 * C04: have a developer-defined number of timelogs
 * C05: be created strictly for assessments with "state" is "published"
+* C06: U04
+* C07: U06
 
 ## Judgements
 
@@ -56,3 +59,5 @@ A representation should
 * R01: have strictly one "assessee"-persona
 * R02: have strictly one assessment
 * R03: be created strictly for assessments with "state" is "published"
+* R04: U02
+* R05: U03

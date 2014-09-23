@@ -14,12 +14,17 @@ var Persona = new keystone.List( 'Persona', {
 
 var config = {
 
-  role : {
-    type     : Types.Select, //P02
-    options  : constants.roles.list.toString(),
+  assessment : {
+    type     : Types.Relationship,
+    ref      : 'Assessment',
     index    : true,
-    required : true,
-    initial  : true
+    required : true, //P03
+    many     : false, //P03
+    initial  : true,
+    collapse : true,
+    filters  : {
+      state : constants.publicationStates.published //P04
+    }
   },
 
   user : {
@@ -32,22 +37,36 @@ var config = {
     collapse : true
   },
 
-  assessment : {
-    type     : Types.Relationship,
-    ref      : 'Assessment',
+  role : {
+    type     : Types.Select, //P02
+    options  : constants.roles.list.toString(),
     index    : true,
-    required : true, //P03
-    many     : false, //P03
-    initial  : true,
-    collapse : true,
-    filters  : {
-      state : constants.publicationStates.published //P04
-    }
+    required : true,
+    initial  : true
   }
 
 };
 
 Persona.add( config );
+
+Persona.schema.path( 'user' ).validate( function( value,
+                                                  done ){
+    var current = this;
+    //U01 //P05
+    var filter = {
+      user       : value,
+      assessment : this.assessment
+    };
+    Persona.model
+      .find()
+      .where( filter )
+      .where( '_id' ).ne( current.id )
+      .exec( function( err,
+                       personas ){
+        done( !personas || personas.length <= 0 );
+      } );
+  }, "A user is not allowed to have more than one persona for an assessment."
+);
 
 var jsonFields = _.keys( config );
 

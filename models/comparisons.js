@@ -63,9 +63,10 @@ var config = {
 
 Comparison.add( config );
 
-Comparison.schema.path( 'assessor' ).validate( function( value,
-                                                         done ){
-    //C02
+Comparison.schema.path( 'assessor' )
+  .validate( function( value,
+                       done ){
+    //U04 //C06
     var filter = {
       user       : value,
       assessment : this.assessment,
@@ -75,11 +76,34 @@ Comparison.schema.path( 'assessor' ).validate( function( value,
     Persona.model
       .find()
       .where( filter )
-      .exec( function( err, personas ){
+      .exec( function( err,
+                       personas ){
         done( personas && personas.length > 0 );
       } );
-  }, "user must have assessor persona for selected assessment"
-);
+  }, "user must have assessor persona for selected assessment" );
+
+Comparison.schema.path( 'active' )
+  .validate( function( active,
+                       done ){
+    //U06 //C07
+    var current = this;
+    if( active ){
+      var filter = {
+        active   : true,
+        assessor : current.assessor
+      };
+      Comparison.model
+        .find()
+        .where( filter )
+        .where( '_id' ).ne( current.id )
+        .exec( function( err,
+                         comparisons ){
+          done( !comparisons || comparisons.length <= 0 );
+        } );
+    }else{
+      done( true );
+    }
+  }, "user may not have another active comparison." );
 
 Comparison.relationship( {
   path    : 'judgements',

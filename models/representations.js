@@ -3,7 +3,7 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var constants = require('./helpers/constants');
+var constants = require( './helpers/constants' );
 
 var Representation = new keystone.List( 'Representation', {
   map   : {
@@ -45,6 +45,42 @@ var config = {
 };
 
 Representation.add( config );
+
+Representation.schema.path( 'assessee' )
+  .validate( function( value,
+                       done ){
+    //U02 //R04
+    var filter = {
+      user       : value,
+      assessment : this.assessment,
+      role       : constants.roles.assessee
+    };
+    var Persona = keystone.list( 'Persona' );
+    Persona.model
+      .find()
+      .where( filter )
+      .exec( function( err,
+                       personas ){
+        done( personas && personas.length > 0 );
+      } );
+  }, "user must have assessee persona for selected assessment" )
+  .validate( function( user,
+                       done ){
+    var current = this;
+    //U03 //R05
+    var filter = {
+      assessee   : user,
+      assessment : current.assessment
+    };
+    Representation.model
+      .find()
+      .where( filter )
+      .where( '_id' ).ne( current.id )
+      .exec( function( err,
+                       representations ){
+        done( !representations || representations.length <= 0 );
+      } );
+  }, "user should not have more than one representation per assessment" );
 
 var jsonFields = _.keys( config );
 
