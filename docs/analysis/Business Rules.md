@@ -40,6 +40,7 @@ A comparison should
 * [x] C05: be created strictly for assessments with "state" is "published"
 * C06: U04
 * C07: U06
+* [ ] C08: have a `phase` with a value included in its assessments' `phases`
 
 ## Judgements
 
@@ -61,3 +62,4 @@ A representation should
 * [x] R03: be created strictly for assessments with "state" is "published"
 * R04: U02
 * R05: U03
+

@@ -3,7 +3,6 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var comparisonSteps = require( './helpers/constants' ).comparisonSteps;
 
 var Timelog = new keystone.List( 'Timelog', {
   map   : {
@@ -15,8 +14,8 @@ var Timelog = new keystone.List( 'Timelog', {
 var config = {
 
   type : {
-    type     : Types.Select,
-    options  : comparisonSteps,
+    type     : Types.Relationship,
+    ref      : 'Phase',
     required : true,
     initial  : true
   },

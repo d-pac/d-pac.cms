@@ -4,11 +4,10 @@ var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
 var autoinc = require( './helpers/autoinc' );
 var constants = require( './helpers/constants' );
-var comparisonSteps = constants.comparisonSteps;
 
 var Comparison = new keystone.List( 'Comparison', {
   map   : {
-    name : 'id'
+    name : '_rid'
   },
   track : true
 } );
@@ -48,14 +47,10 @@ var config = {
   },
 
   state : {
-    type    : Types.Select,
-    options : comparisonSteps,
-    initial : true
-  },
-
-  active : {
-    type    : Types.Boolean,
-    default : true,
+    type    : Types.Relationship,
+    ref : 'Phase',
+    many : false,
+    required : false,
     initial : true
   }
 
@@ -82,19 +77,19 @@ Comparison.schema.path( 'assessor' )
       } );
   }, "user must have assessor persona for selected assessment" );
 
-Comparison.schema.path( 'active' )
-  .validate( function( active,
+Comparison.schema.path( 'state' )
+  .validate( function( state,
                        done ){
     //U06 //C07
     var current = this;
-    if( active ){
+    if( state ){
       var filter = {
-        active   : true,
         assessor : current.assessor
       };
       Comparison.model
         .find()
         .where( filter )
+        .where( 'state' ).ne(null)
         .where( '_id' ).ne( current.id )
         .exec( function( err,
                          comparisons ){
@@ -105,6 +100,10 @@ Comparison.schema.path( 'active' )
     }
   }, "user may not have another active comparison." );
 
+Comparison.schema.virtual( 'active' ).get( function(){
+  return !this.state;
+} );
+
 Comparison.relationship( {
   path    : 'judgements',
   ref     : 'Judgement',
@@ -112,7 +111,11 @@ Comparison.relationship( {
   label   : 'Judgements'
 } );
 
-Comparison.schema.plugin( autoinc.plugin, { model : 'Comparison', field : '_rid' } );
+Comparison.schema.plugin( autoinc.plugin, {
+  model : 'Comparison',
+  field : '_rid',
+  startAt : 1
+} );
 
 var jsonFields = _.keys( config );
 
@@ -127,7 +130,7 @@ Comparison.schema.set( 'toJSON', {
 } );
 
 //Comparison.schema.plugin(require('mongoose-random')(), { path: '_r' });
-Comparison.defaultColumns = 'name, assessor, assessment';
+Comparison.defaultColumns = 'name, assessor, assessment, active';
 Comparison.register();
 
 

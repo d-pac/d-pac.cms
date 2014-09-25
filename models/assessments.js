@@ -3,7 +3,7 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var constants = require('./helpers/constants');
+var constants = require( './helpers/constants' );
 
 var Assessment = new keystone.List( 'Assessment', {
   map   : {
@@ -26,6 +26,14 @@ var config = {
     height  : 400
   },
 
+  phases : {
+    type     : Types.Relationship,
+    ref      : 'Phase',
+    required : true,
+    many     : true,
+    initial  : false
+  },
+
   state : {
     type    : Types.Select,
     options : constants.publicationStates.list.toString(),
@@ -35,8 +43,7 @@ var config = {
 
 };
 
-Assessment.add(config);
-
+Assessment.add( config );
 
 Assessment.relationship( {
   path    : 'representations',
@@ -59,10 +66,9 @@ Assessment.relationship( {
   label   : 'Personas'
 } );
 
-
 //Assessment.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
 
-var jsonFields = _.keys(config);
+var jsonFields = _.keys( config );
 
 Assessment.schema.set( 'toJSON', {
   virtuals  : true,
@@ -74,7 +80,7 @@ Assessment.schema.set( 'toJSON', {
   }
 } );
 
-Assessment.defaultColumns = 'title, creator';
+Assessment.defaultColumns = 'title, createdBy, state';
 Assessment.register();
 
 
