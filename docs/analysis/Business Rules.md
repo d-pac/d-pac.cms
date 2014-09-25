@@ -8,7 +8,7 @@ A user should
 * [x] U02: be allowed to have representations for an assessment if he has an "assessee" persona for that assessment.
 * [x] U03: be allowed to have strictly one representation per assessment.
 * [x] U04: be allowed to have comparisons for an assessment if he has an "assessor" persona for that assessment.
-* [ ] U05: be allowed to have [TBD] number of comparisons per assessment.
+* [ ] U05: be allowed to have a defined number of comparisons per assessment.
 * [x] U06: be allowed to have strictly one active comparison.
 
 ## Personas
