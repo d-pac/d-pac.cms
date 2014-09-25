@@ -40,7 +40,7 @@ A comparison should
 * [x] C05: be created strictly for assessments with "state" is "published"
 * C06: U04
 * C07: U06
-* [ ] C08: have a `phase` with a value included in its assessments' `phases`
+* [x] C08: have a `phase` with a value included in its assessments' `phases`
 
 ## Judgements
 

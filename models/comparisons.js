@@ -97,7 +97,26 @@ Comparison.schema.path( 'phase' )
     }else{
       done( true );
     }
-  }, "user may not have another active comparison." );
+  }, "user may not have another active comparison." )
+  .validate( function( phase,
+                       done ){
+    //C08
+    var current = this;
+    if( phase ){
+      var Assessment = keystone.list( 'Assessment' );
+      Assessment.model
+        .findOne( {
+          "_id" : current.assessment,
+          "phases" : phase
+        } )
+        .exec( function( err,
+                         assessment ){
+          done(!!assessment);
+        } );
+    }else{
+      done( true );
+    }
+  }, "phase must be included in workflow of assessment." );
 
 Comparison.schema.virtual( 'active' ).get( function(){
   return !!this.phase;
