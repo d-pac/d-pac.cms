@@ -46,11 +46,10 @@ var config = {
     many : true //C04
   },
 
-  state : {
+  phase : {
     type    : Types.Relationship,
-    ref : 'Phase',
-    many : false,
-    required : false,
+    ref     : 'Phase',
+    index   : true,
     initial : true
   }
 
@@ -77,19 +76,19 @@ Comparison.schema.path( 'assessor' )
       } );
   }, "user must have assessor persona for selected assessment" );
 
-Comparison.schema.path( 'state' )
-  .validate( function( state,
+Comparison.schema.path( 'phase' )
+  .validate( function( phase,
                        done ){
     //U06 //C07
     var current = this;
-    if( state ){
+    if( phase ){
       var filter = {
         assessor : current.assessor
       };
       Comparison.model
         .find()
         .where( filter )
-        .where( 'state' ).ne(null)
+        .where( 'phase' ).ne( null )
         .where( '_id' ).ne( current.id )
         .exec( function( err,
                          comparisons ){
@@ -101,7 +100,7 @@ Comparison.schema.path( 'state' )
   }, "user may not have another active comparison." );
 
 Comparison.schema.virtual( 'active' ).get( function(){
-  return !this.state;
+  return !!this.phase;
 } );
 
 Comparison.relationship( {
@@ -112,8 +111,8 @@ Comparison.relationship( {
 } );
 
 Comparison.schema.plugin( autoinc.plugin, {
-  model : 'Comparison',
-  field : '_rid',
+  model   : 'Comparison',
+  field   : '_rid',
   startAt : 1
 } );
 
@@ -124,13 +123,12 @@ Comparison.schema.set( 'toJSON', {
   transform : function( doc,
                         model,
                         options ){
-    model = _.pick( model, 'id', '_rid', jsonFields );
+    model = _.pick( model, 'id', '_rid', 'active', jsonFields );
     return model;
   }
 } );
 
-//Comparison.schema.plugin(require('mongoose-random')(), { path: '_r' });
-Comparison.defaultColumns = 'name, assessor, assessment, active';
+Comparison.defaultColumns = 'name, assessor, assessment, phase, active';
 Comparison.register();
 
 
