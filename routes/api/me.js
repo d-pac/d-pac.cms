@@ -8,10 +8,9 @@ var debug = require( 'debug' )( 'dpac:api.me' );
 
 var createAggregate = require( '../../services/createAggregate' );
 var retrieveRepresentationPair = require( '../../services/retrieveRepresentationPair' );
+var retrieveActiveAggregates = require( '../../services/retrieveActiveAggregates' );
 
 var Persona = keystone.list( 'Persona' );
-var Comparison = keystone.list( 'Comparison' );
-var Judgement = keystone.list( 'Judgement' );
 
 var constants = require( '../../models/helpers/constants' );
 
@@ -67,50 +66,17 @@ module.exports.createAggregate = function( req,
 module.exports.retrieveActiveAggregates = function( req,
                                                     res,
                                                     next ){
-
-  var promise, comparison, output = [];
-
-  function getActiveComparison(){
-    return Comparison.model
-      .find( {
-        assessor : req.user.id
-      } )
-      .where( 'phase' ).ne( null )
-      .populate( 'assessment' )
-      .exec();
-  }
-
-  function getJudgements( comparisons ){
-    if( comparisons && comparisons.length > 0 ){
-      comparison = comparisons[0];
-      console.log('comparison', comparison);
-      return Judgement.model
-        .find()
-        .where( 'comparison', comparison )
-        .populate( 'representation' )
-        .exec()
-        .then( assembleAggregate );
-    }else{
-      promise.fulfill();
+  debug( '#retrieveActiveAggregates' );
+  retrieveActiveAggregates( {
+    assessor : req.user.id
+  }, function( err,
+               aggregate ){
+    if( err ){
+      return next( err );
     }
-  }
 
-  function assembleAggregate( judgements ){
-    output.push( {
-      comparison      : comparison,
-      assessment      : comparison.assessment,
-      judgements      : judgements,
-      representations : _.pluck( judgements, "representation" )
-    });
-    console.log('output', output);
-    promise.fulfill();
-  }
-
-  promise = getActiveComparison();
-  promise.then( getJudgements )
-    .onResolve( function( err ){
-      res.apiResponse( output );
-    } );
+    res.apiResponse( aggregate );
+  } );
 };
 
 module.exports.retrieveAssessments = function( req,
