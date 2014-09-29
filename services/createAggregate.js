@@ -3,88 +3,121 @@ var _ = require( 'underscore' );
 var debug = require( 'debug' )( 'dpac:services' );
 var async = require( 'async' ),
   keystone = require( 'keystone' );
-
+var Assessment = keystone.list( 'Assessment' );
+var Representation = keystone.list( 'Representation' );
 var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
+var Phase = keystone.list( 'Phase' );
 
-function createJudgementTask( opts,
-                              representation ){
-  return function createJudgement( done ){
-    var judgement = new Judgement.model( {
+function retrieveAssessment( opts,
+                             model ){
+  return Assessment.model
+    .findById( opts.assessment )
+    .exec()
+    .then( function( assessment ){
+      return model.assessment = assessment;
+    } );
+}
+
+function retrieveRepresentations( opts,
+                                  model ){
+
+  //todo: replace this with CJ
+  var promise = Representation.model
+    .find()
+    .sort( { createdAt : -1 } )
+    .limit( 2 )
+    .exec()
+    .then( function( representations ){
+      if( representations && representations.length > 0 ){
+        return model.representations = representations;
+      }else{
+        promise.fulfill();
+      }
+    } );
+
+  return promise;
+}
+
+function createComparison( opts,
+                           model ){
+  return Comparison.model
+    .create( opts )
+    .then( function( doc ){
+      return model.comparison = doc;
+    } );
+}
+
+function createJudgements( opts,
+                           model ){
+  var judgements = [];
+  _.each( opts.representations, function( representation ){
+    judgements.push( {
       assessor       : opts.assessor,
       assessment     : opts.assessment,
-      representation : representation,
-      comparison     : opts.comparison
+      comparison     : opts.comparison,
+      representation : representation
     } );
-    opts.judgements.push( judgement );
-    judgement.save( function( err,
-                              judgement ){
-      if( err ){
-        return done( err );
-      }
-
-      done( null, judgement );
-    } );
-  };
-}
-
-function createJudgementTasks( opts ){
-  var tasks = [];
-  _.times( opts.representations.length, function( index ){
-    tasks.push( createJudgementTask( opts, opts.representations[index] ) );
   } );
-  return tasks;
+  return Judgement.model
+    .create( judgements )
+    .then( function(){
+      return model.judgements = _.toArray( arguments );
+    } );
 }
 
-function createComparisonTask( opts ){
-  return function createComparison( done ){
-    var Assessment = keystone.list( 'Assessment' );
-    Assessment.model.findById(opts.assessment ).exec(function(err,
-      assessment){
-      var phase = assessment.phases[0];
-      var comparison = new Comparison.model( {
-        assessor   : opts.assessor,
-        assessment : opts.assessment,
-        phase : phase
-      } );
-      opts.comparison = comparison;
-      comparison.save( function( err,
-                                 comparison ){
-        if( err ){
-          return done( err );
-        }
-        done( null, comparison );
-      } );
-    });
-  };
+function retrievePhases( opts,
+                         model ){
+  return Phase.model
+    .find()
+    .where( '_id' ).in( opts.ids )
+    .exec()
+    .then( function( docs ){
+      return model.phases = docs;
+    } );
 }
 
 /**
  *
- * @param aggregate
- * @param aggregate.assessor
- * @param aggregate.assessment
- * @param aggregate.representations[]
+ * @param opts
+ * @param opts.assessor
+ * @param opts.assessment
  * @param next
  */
-module.exports = function createAggregateComparison( aggregate,
-                                                     next ){
 
-  debug( 'createAggregateComparison', aggregate );
-  aggregate.judgements = [];
-  var tasks = [createComparisonTask( aggregate )].concat( createJudgementTasks( aggregate ) );
-
-  async.series( tasks, function( err,
-                                 results ){
-    if( err ){
-      return next( err );
-    }
-
-    if( !_.isArray( results ) || results.length < 1 ){
-      return next( new Error( 'Could not create aggregate' ) );
-    }
-
-    return next(null, aggregate);
-  } );
+module.exports = function createAggregate( opts,
+                                           next ){
+  console.log( 'createAggregate', opts );
+  var aggregate = {};
+  var promise = retrieveAssessment( {
+    assessment : opts.assessment
+  }, aggregate )
+    .then( function(){
+      return retrieveRepresentations( {},
+        aggregate );
+    } )
+    .then( function(){
+      return createComparison( {
+        assessor   : opts.assessor,
+        assessment : opts.assessment
+      }, aggregate );
+    } )
+    .then( function(){
+      return createJudgements( {
+        assessor        : opts.assessor,
+        assessment      : opts.assessment,
+        representations : aggregate.representations,
+        comparison      : aggregate.comparison
+      }, aggregate );
+    } )
+    .then( function(){
+      return retrievePhases( {
+        ids : aggregate.assessment.phases
+      }, aggregate );
+    } )
+    .onResolve( function( err,
+                          result ){
+      next( err, aggregate );
+    } );
 
 };

@@ -49,7 +49,7 @@ var config = {
     ref      : 'Comparison',
     initial  : true,
     required : true, //J04
-    many     : true, //J04
+    many     : false, //J04
     index    : true
   },
 

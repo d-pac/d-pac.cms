@@ -7,7 +7,6 @@ var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.me' );
 
 var createAggregate = require( '../../services/createAggregate' );
-var retrieveRepresentationPair = require( '../../services/retrieveRepresentationPair' );
 var retrieveActiveAggregates = require( '../../services/retrieveActiveAggregates' );
 
 var Persona = keystone.list( 'Persona' );
@@ -40,20 +39,10 @@ module.exports.createAggregate = function( req,
                                            res,
                                            next ){
   debug( '#createAggregate' );
-
-  async.waterfall( [
-    function( done ){
-      retrieveRepresentationPair( done );
-    },
-    function( representations,
-              done ){
-      createAggregate( {
-        assessment      : req.param( 'assessment' ),
-        assessor        : req.user.id,
-        representations : representations
-      }, done );
-    }
-  ], function( err,
+  createAggregate( {
+    assessment : req.param( 'assessment' ),
+    assessor   : req.user.id
+  }, function( err,
                result ){
     if( err ){
       return next( err );
