@@ -38,19 +38,24 @@ function createJudgementTasks( opts ){
 
 function createComparisonTask( opts ){
   return function createComparison( done ){
-    var comparison = new Comparison.model( {
-      assessor   : opts.assessor,
-      assessment : opts.assessment,
-      active     : true
-    } );
-    opts.comparison = comparison;
-    comparison.save( function( err,
-                               comparison ){
-      if( err ){
-        return done( err );
-      }
-      done( null, comparison );
-    } );
+    var Assessment = keystone.list( 'Assessment' );
+    Assessment.model.findById(opts.assessment ).exec(function(err,
+      assessment){
+      var phase = assessment.phases[0];
+      var comparison = new Comparison.model( {
+        assessor   : opts.assessor,
+        assessment : opts.assessment,
+        phase : phase
+      } );
+      opts.comparison = comparison;
+      comparison.save( function( err,
+                                 comparison ){
+        if( err ){
+          return done( err );
+        }
+        done( null, comparison );
+      } );
+    });
   };
 }
 

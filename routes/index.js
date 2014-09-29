@@ -77,18 +77,18 @@ exports = module.exports = function( app ){
   //me/account:fallthrough
   app.all( '/api/me/account*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
 
-  //me/comparisons:setup
-  app.all( '/api/me/comparisons*', api.me.prepareForComparison );
-  //me/comparisons:retrieve
-  app.get( '/api/me/comparisons', api.me.retrieveActiveComparisons );
-  //me/comparisons:create
-  app.post( '/api/me/comparisons',
+  //me/aggregates:setup
+  app.all( '/api/me/aggregates*', api.me.prepareForAggregate );
+  //me/aggregates:retrieve
+  app.get( '/api/me/aggregates', api.me.retrieveActiveAggregates );
+  //me/aggregates:create
+  app.post( '/api/me/aggregates',
     api.middleware.factories.requireParam( 'assessment' ),
     api.middleware.factories.requirePersona( constants.roles.assessor ),
-    api.me.createComparison
+    api.me.createAggregate
   );
   //me/comparison:fallthrough
-  app.all( '/api/me/comparisons*', api.middleware.factories.onlyAllow( 'GET, POST, PUT' ) );
+  app.all( '/api/me/aggregates*', api.middleware.factories.onlyAllow( 'GET, POST, PUT' ) );
 
   //me/assessments:list
   app.get( '/api/me/assessments', api.me.retrieveAssessments );
