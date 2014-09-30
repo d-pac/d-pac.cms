@@ -1,71 +1,70 @@
 'use strict';
+var debug = require( 'debug' )( 'dpac:services' );
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' );
 var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
 var Phase = keystone.list( 'Phase' );
 
-module.exports = function retrieveActiveAggregates(vo, next){
-  var promise, aggregate={};
+function getActiveComparison( opts ){
+  //console.log( 'getActiveComparison' );
+  return Comparison.model
+    .findOne( opts )
+    .where( 'phase' ).ne( null )
+    .populate( 'assessment' )
+    .exec();
+}
 
-  function getActiveComparison(){
-    //console.log( 'getActiveComparison' );
-    return Comparison.model
-      .find( {
-        assessor : vo.assessor
-      } )
-      .where( 'phase' ).ne( null )
-      .populate( 'assessment' )
-      .exec();
-  }
+function retrievePhases( opts ){
+  //console.log( 'retrievePhases' );
+  return Phase.model
+    .find()
+    .where( '_id' ).in( opts.ids )
+    .exec();
+}
 
-  function selectComparison( comparisons ){
-    //console.log( 'selectComparison' );
-    if( comparisons && comparisons.length > 0 ){
-      var comparison = aggregate.comparison = comparisons[0];
-      aggregate.assessment = comparison.assessment;
-      return getPhases();
-    }else{
-      promise.fulfill();
-    }
-  }
+function retrieveJudgements( opts ){
+  //console.log( 'retrieveJudgements' );
+  return Judgement.model
+    .find( opts )
+    .populate( 'representation' )
+    .exec();
+}
 
-  function getPhases(){
-    //console.log( 'getPhases' );
-    return Phase.model
-      .find()
-      .where( '_id' ).in( aggregate.assessment.phases )
-      .exec()
-      .then( function( docs ){
-        aggregate.phases = docs;
-      } )
-      .then( getJudgements );
-  }
+module.exports = function retrieveActiveAggregates( opts,
+                                                    next ){
+  debug( 'retrieveActiveAggregates', opts );
+  var aggregate = {
+    assessor : opts.assessor
+  };
 
-  function getJudgements(){
-    //console.log( 'getJudgements' );
-    return Judgement.model
-      .find()
-      .where( 'comparison', aggregate.comparison )
-      .populate( 'representation' )
-      .exec()
-      .then( assembleAggregate );
-  }
-
-  function assembleAggregate( judgements ){
-    //console.log( 'assembleAggregate' );
-    aggregate.judgements = judgements;
-    aggregate.representations = _.pluck( judgements, "representation" );
-    promise.fulfill();
-  }
-
-  promise = getActiveComparison()
-    .then( selectComparison )
-    .onResolve( function( err ){
-      if( err ){
-        return next( err );
+  var promise = getActiveComparison( { assessor : opts.assessor } )
+    .then( function( comparison ){
+      if( !comparison ){
+        return promise.fulfill();
       }
-      next(null, [aggregate] );
+      aggregate.comparison = comparison;
+      aggregate.assessment = comparison.assessment;
+    } )
+    .then( function(){
+      return retrievePhases( {
+        ids : aggregate.assessment.phases
+      } );
+    } )
+    .then( function( phases ){
+      aggregate.phases = phases;
+    } )
+    .then( function(){
+      return retrieveJudgements( {
+        comparison : aggregate.comparison
+      }, aggregate );
+    } )
+    .then( function( judgements ){
+      aggregate.judgements = judgements;
+      aggregate.representations = _.pluck( judgements, "representation" );
+    } )
+    .onResolve( function( err ){
+      next( err, [aggregate] );
     } );
 
 };

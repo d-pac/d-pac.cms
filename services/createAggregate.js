@@ -9,47 +9,28 @@ var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
 var Phase = keystone.list( 'Phase' );
 
-function retrieveAssessment( opts,
-                             model ){
+function retrieveAssessment( opts ){
   return Assessment.model
     .findById( opts.assessment )
-    .exec()
-    .then( function( assessment ){
-      return model.assessment = assessment;
-    } );
+    .exec();
 }
 
-function retrieveRepresentations( opts,
-                                  model ){
+function retrieveRepresentations( opts ){
 
   //todo: replace this with CJ
-  var promise = Representation.model
+  return Representation.model
     .find()
     .sort( { createdAt : -1 } )
     .limit( 2 )
-    .exec()
-    .then( function( representations ){
-      if( representations && representations.length > 0 ){
-        return model.representations = representations;
-      }else{
-        promise.fulfill();
-      }
-    } );
-
-  return promise;
+    .exec();
 }
 
-function createComparison( opts,
-                           model ){
+function createComparison( opts ){
   return Comparison.model
-    .create( opts )
-    .then( function( doc ){
-      return model.comparison = doc;
-    } );
+    .create( opts );
 }
 
-function createJudgements( opts,
-                           model ){
+function createJudgements( opts ){
   var judgements = [];
   _.each( opts.representations, function( representation ){
     judgements.push( {
@@ -62,19 +43,16 @@ function createJudgements( opts,
   return Judgement.model
     .create( judgements )
     .then( function(){
-      return model.judgements = _.toArray( arguments );
+      //won't be handled correctly in the promise chain, unless if we pass them along here
+      return _.toArray( arguments );
     } );
 }
 
-function retrievePhases( opts,
-                         model ){
+function retrievePhases( opts ){
   return Phase.model
     .find()
     .where( '_id' ).in( opts.ids )
-    .exec()
-    .then( function( docs ){
-      return model.phases = docs;
-    } );
+    .exec();
 }
 
 /**
@@ -87,20 +65,31 @@ function retrievePhases( opts,
 
 module.exports = function createAggregate( opts,
                                            next ){
-  console.log( 'createAggregate', opts );
-  var aggregate = {};
-  var promise = retrieveAssessment( {
-    assessment : opts.assessment
-  }, aggregate )
+  debug( 'createAggregate' );
+  var aggregate = {
+    assessor : opts.assessor
+  };
+  var promise = retrieveAssessment( { assessment : opts.assessment } )
+    .then( function handleAssessment( assessment ){
+      aggregate.assessment = assessment;
+    } )
     .then( function(){
-      return retrieveRepresentations( {},
-        aggregate );
+      return retrieveRepresentations();
+    } )
+    .then( function handleRepresentations( representations ){
+      if( !representations || representations.length <= 0 ){
+        return promise.fulfill();
+      }
+      aggregate.representations = representations;
     } )
     .then( function(){
       return createComparison( {
         assessor   : opts.assessor,
         assessment : opts.assessment
-      }, aggregate );
+      } );
+    } )
+    .then( function handleComparison( comparison ){
+      return aggregate.comparison = comparison;
     } )
     .then( function(){
       return createJudgements( {
@@ -108,12 +97,18 @@ module.exports = function createAggregate( opts,
         assessment      : opts.assessment,
         representations : aggregate.representations,
         comparison      : aggregate.comparison
-      }, aggregate );
+      } );
+    } )
+    .then( function handleJudgements( judgements ){
+      return aggregate.judgements = judgements;
     } )
     .then( function(){
       return retrievePhases( {
         ids : aggregate.assessment.phases
-      }, aggregate );
+      } );
+    } )
+    .then( function handlePhases( phases ){
+      return aggregate.phases = phases;
     } )
     .onResolve( function( err,
                           result ){

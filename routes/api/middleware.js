@@ -79,7 +79,7 @@ exports.handleError = function( err,
                                 req,
                                 res,
                                 next ){
-  debug( '#handleError' );
+  debug( '#handleError', err );
 
   if( isHttpError( err ) ){
     return res.apiError( err );
