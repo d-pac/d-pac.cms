@@ -86,9 +86,14 @@ module.exports = function createAggregate( opts,
       aggregate.representations = representations;
     } )
     .then( function(){
+      var firstPhase;
+      if(aggregate.assessment.phases && aggregate.assessment.phases.length > 0){
+        firstPhase = aggregate.assessment.phases[0];
+      }
       return createComparison( {
         assessor   : opts.assessor,
-        assessment : opts.assessment
+        assessment : opts.assessment,
+        phase : firstPhase
       } );
     } )
     .then( function handleComparison( comparison ){
