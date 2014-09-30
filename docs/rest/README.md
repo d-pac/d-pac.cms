@@ -225,14 +225,14 @@ HTTP/1.1 200 OK
 }
 ```
 
-## Comparisons
+## Aggregates
 
-### Retrieve current (active) comparison for the logged in user
+### Retrieve current (active) comparison(s) for the logged in user
 
 #### Request
 
 ```shell
-GET /api/me/comparison
+GET /api/me/aggregates
 ```
 
 #### Response: found
@@ -249,7 +249,12 @@ HTTP/1.1 200 OK
 #### Response: not found
 
 ```shell
-HTTP/1.1 204 OK
+HTTP/1.1 200 OK
+```
+```json
+{
+  "assessor": "5423f87677177065a0887b97"
+}
 ```
 
 ### Create an (active) comparison for the logged in user
@@ -257,7 +262,7 @@ HTTP/1.1 204 OK
 #### Request
 
 ```shell
-POST /api/me/comparison
+POST /api/me/aggregates
 ```
 ```json
 {
