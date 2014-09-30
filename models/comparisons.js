@@ -4,6 +4,7 @@ var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
 var autoinc = require( './helpers/autoinc' );
 var constants = require( './helpers/constants' );
+var Assessment = keystone.list('Assessment');
 
 var Comparison = new keystone.List( 'Comparison', {
   map   : {
@@ -61,7 +62,13 @@ Comparison.schema.path( 'assessment' )
   .validate( function( value,
                        done ){
     //C05
-    done( value.state === constants.publicationStates.published );
+    Assessment.model
+      .findById(value)
+      .lean()
+      .exec()
+      .then(function(assessment){
+        done(assessment && assessment.state === constants.publicationStates.published );
+      });
   }, "assessment must be published" );
 
 Comparison.schema.path( 'assessor' )
