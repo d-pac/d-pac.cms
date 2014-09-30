@@ -6,12 +6,13 @@ var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
 var Phase = keystone.list( 'Phase' );
 
-function getActiveComparison( opts ){
-  //console.log( 'getActiveComparison' );
+function retrievActiveComparison( opts ){
+  //console.log( 'retrievActiveComparison' );
   return Comparison.model
     .findOne( opts )
     .where( 'phase' ).ne( null )
     .populate( 'assessment' )
+    .lean()
     .exec();
 }
 
@@ -20,6 +21,7 @@ function retrievePhases( opts ){
   return Phase.model
     .find()
     .where( '_id' ).in( opts.ids )
+    .lean()
     .exec();
 }
 
@@ -28,6 +30,7 @@ function retrieveJudgements( opts ){
   return Judgement.model
     .find( opts )
     .populate( 'representation' )
+    .lean()
     .exec();
 }
 
@@ -38,20 +41,23 @@ module.exports = function retrieveActiveAggregates( opts,
     assessor : opts.assessor
   };
 
-  var promise = getActiveComparison( { assessor : opts.assessor } )
-    .then( function( comparison ){
+  var promise = retrievActiveComparison( { assessor : opts.assessor } )
+    .then( function handleComparison( comparison ){
       if( !comparison ){
         return promise.fulfill();
       }
+      //promote and flatten populated objects
+      var assessment = comparison.assessment;
       aggregate.comparison = comparison;
-      aggregate.assessment = comparison.assessment;
+      aggregate.assessment = assessment;
+      comparison.assessment = assessment._id;
     } )
     .then( function(){
       return retrievePhases( {
         ids : aggregate.assessment.phases
       } );
     } )
-    .then( function( phases ){
+    .then( function handlePhases( phases ){
       aggregate.phases = phases;
     } )
     .then( function(){
@@ -59,9 +65,16 @@ module.exports = function retrieveActiveAggregates( opts,
         comparison : aggregate.comparison
       }, aggregate );
     } )
-    .then( function( judgements ){
+    .then( function handleJudgements( judgements ){
+      //promote and flatten populated objects
       aggregate.judgements = judgements;
-      aggregate.representations = _.pluck( judgements, "representation" );
+      var representations = [];
+      _.each(judgements, function(judgement){
+        var representation = judgement.representation;
+        judgement.representation = representation._id;
+        representations.push(representation);
+      });
+      aggregate.representations = representations;
     } )
     .onResolve( function( err ){
       next( err, [aggregate] );

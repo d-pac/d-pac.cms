@@ -12,6 +12,7 @@ var Phase = keystone.list( 'Phase' );
 function retrieveAssessment( opts ){
   return Assessment.model
     .findById( opts.assessment )
+    .lean()
     .exec();
 }
 
@@ -22,6 +23,7 @@ function retrieveRepresentations( opts ){
     .find()
     .sort( { createdAt : -1 } )
     .limit( 2 )
+    .lean()
     .exec();
 }
 
@@ -52,6 +54,7 @@ function retrievePhases( opts ){
   return Phase.model
     .find()
     .where( '_id' ).in( opts.ids )
+    .lean()
     .exec();
 }
 
@@ -114,5 +117,4 @@ module.exports = function createAggregate( opts,
                           result ){
       next( err, aggregate );
     } );
-
 };
