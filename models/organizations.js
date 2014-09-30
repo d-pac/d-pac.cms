@@ -23,17 +23,6 @@ Organization.relationship( {
   label   : 'Organization'
 } );
 
-var jsonFields = _.keys( config );
-
-Organization.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
 
 /**
  * Registration

@@ -65,17 +65,6 @@ Persona.schema.path( 'user' ).validate( function( value,
   }, "A user is not allowed to have more than one persona for an assessment."
 );
 
-var jsonFields = _.keys( config );
-
-Persona.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
 
 /**
  * Registration

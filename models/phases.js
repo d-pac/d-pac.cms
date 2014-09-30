@@ -31,16 +31,7 @@ var config = {
 };
 
 Phase.add(config);
-var jsonFields = _.keys( config );
-Phase.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
+
 
 Phase.defaultColumns = 'label, value';
 Phase.register();

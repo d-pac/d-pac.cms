@@ -40,17 +40,6 @@ var config = {
 
 Timelog.add( config );
 
-var jsonFields = _.keys( config );
-
-Timelog.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
 
 Timelog.defaultColumns = 'name, type, duration';
 Timelog.register();

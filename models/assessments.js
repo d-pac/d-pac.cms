@@ -66,19 +66,6 @@ Assessment.relationship( {
   label   : 'Personas'
 } );
 
-//Assessment.schema.plugin( require( 'mongoose-random' )(), { path : '_r' } );
-
-var jsonFields = _.keys( config );
-
-Assessment.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
 
 Assessment.defaultColumns = 'title, createdBy, state';
 Assessment.register();

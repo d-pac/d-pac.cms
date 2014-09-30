@@ -89,18 +89,6 @@ var config = {
 
 Judgement.add( config );
 
-var jsonFields = _.keys( config );
-
-Judgement.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
-
 Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, rank';
 Judgement.register();
 

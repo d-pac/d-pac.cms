@@ -135,17 +135,6 @@ Comparison.schema.plugin( autoinc.plugin, {
   startAt : 1
 } );
 
-var jsonFields = _.keys( config );
-
-Comparison.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', '_rid', 'active', jsonFields );
-    return model;
-  }
-} );
 
 Comparison.defaultColumns = 'name, assessor, assessment, phase, active';
 Comparison.register();

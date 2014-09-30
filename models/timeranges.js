@@ -36,17 +36,6 @@ Timerange.relationship( {
   label   : 'Time log'
 } );
 
-var jsonFields = _.keys( config );
-
-Timerange.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
 
 Timerange.defaultColumns = 'name, begin, end';
 Timerange.register();

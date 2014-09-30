@@ -82,17 +82,6 @@ Representation.schema.path( 'assessee' )
       } );
   }, "user should not have more than one representation per assessment" );
 
-var jsonFields = _.keys( config );
-
-Representation.schema.set( 'toJSON', {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, 'id', jsonFields );
-    return model;
-  }
-} );
 
 Representation.defaultColumns = 'name, assessee, assessment, file';
 Representation.register();
