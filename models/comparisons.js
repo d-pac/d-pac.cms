@@ -57,6 +57,13 @@ var config = {
 
 Comparison.add( config );
 
+Comparison.schema.path( 'assessment' )
+  .validate( function( value,
+                       done ){
+    //C05
+    done( value.state === constants.publicationStates.published );
+  }, "assessment must be published" );
+
 Comparison.schema.path( 'assessor' )
   .validate( function( value,
                        done ){
@@ -106,12 +113,12 @@ Comparison.schema.path( 'phase' )
       var Assessment = keystone.list( 'Assessment' );
       Assessment.model
         .findOne( {
-          "_id" : current.assessment,
+          "_id"    : current.assessment,
           "phases" : phase
         } )
         .exec( function( err,
                          assessment ){
-          done(!!assessment);
+          done( !!assessment );
         } );
     }else{
       done( true );
@@ -134,7 +141,6 @@ Comparison.schema.plugin( autoinc.plugin, {
   field   : '_rid',
   startAt : 1
 } );
-
 
 Comparison.defaultColumns = 'name, assessor, assessment, phase, active';
 Comparison.register();
