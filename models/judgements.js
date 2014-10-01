@@ -53,16 +53,6 @@ var config = {
     index    : true
   },
 
-  rank : {
-    type    : Types.Number,
-    default : -1
-  },
-
-  individualFeedback : {
-    type    : Types.Html,
-    wysiwyg : true
-  },
-
   notes : {
     type    : Types.Html,
     wysiwyg : true

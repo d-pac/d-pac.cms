@@ -37,14 +37,12 @@ function retrieveJudgements( opts ){
 module.exports = function retrieveActiveAggregates( opts,
                                                     next ){
   debug( 'retrieveActiveAggregates', opts );
-  var aggregate = {
-    assessor : opts.assessor
-  };
+  var aggregate = {};
 
   var promise = retrievActiveComparison( { assessor : opts.assessor } )
     .then( function handleComparison( comparison ){
       if( !comparison ){
-        return promise.fulfill();
+        return promise.fulfill([]);
       }
       //promote and flatten populated objects
       var assessment = comparison.assessment;
@@ -69,15 +67,19 @@ module.exports = function retrieveActiveAggregates( opts,
       //promote and flatten populated objects
       aggregate.judgements = judgements;
       var representations = [];
-      _.each(judgements, function(judgement){
+      _.each( judgements, function( judgement ){
         var representation = judgement.representation;
         judgement.representation = representation._id;
-        representations.push(representation);
-      });
+        representations.push( representation );
+      } );
       aggregate.representations = representations;
     } )
-    .onResolve( function( err ){
-      next( err, [aggregate] );
+    .then( function handleOutpu(){
+      aggregate.assessor = opts.assessor;
+      promise.fulfill([aggregate]);
+    } )
+    .onResolve( function( err, output ){
+      next( err, output );
     } );
 
 };

@@ -10,6 +10,7 @@ var Judgement = keystone.list( 'Judgement' );
 var Phase = keystone.list( 'Phase' );
 
 function retrieveAssessment( opts ){
+  console.log('retrieveAssessment');
   return Assessment.model
     .findById( opts.assessment )
     .lean()
@@ -18,6 +19,7 @@ function retrieveAssessment( opts ){
 
 function retrieveRepresentations( opts ){
 
+  console.log('retrieveRepresentations');
   //todo: replace this with CJ
   return Representation.model
     .find()
@@ -28,11 +30,13 @@ function retrieveRepresentations( opts ){
 }
 
 function createComparison( opts ){
+  console.log('createComparison');
   return Comparison.model
     .create( opts );
 }
 
 function createJudgements( opts ){
+  console.log('createJudgements');
   var judgements = [];
   _.each( opts.representations, function( representation ){
     judgements.push( {
@@ -51,6 +55,7 @@ function createJudgements( opts ){
 }
 
 function retrievePhases( opts ){
+  console.log('retrievePhases');
   return Phase.model
     .find()
     .where( '_id' ).in( opts.ids )
@@ -69,6 +74,9 @@ function retrievePhases( opts ){
 module.exports = function createAggregate( opts,
                                            next ){
   debug( 'createAggregate' );
+
+  var NO_REPRESENTATIONS = 'No representations';
+
   var aggregate = {
     assessor : opts.assessor
   };
@@ -80,8 +88,8 @@ module.exports = function createAggregate( opts,
       return retrieveRepresentations();
     } )
     .then( function handleRepresentations( representations ){
-      if( !representations || representations.length <= 0 ){
-        return promise.fulfill();
+      if( !representations || representations.length <= 1 ){
+        throw NO_REPRESENTATIONS;
       }
       aggregate.representations = representations;
     } )
@@ -120,6 +128,9 @@ module.exports = function createAggregate( opts,
     } )
     .onResolve( function( err,
                           result ){
+      if(err && NO_REPRESENTATIONS === err){
+        return next(null, null);
+      }
       next( err, aggregate );
     } );
 };

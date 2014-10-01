@@ -241,9 +241,9 @@ GET /api/me/aggregates
 HTTP/1.1 200 OK
 ```
 ```json
-{
+[{
 
-}
+}]
 ```
 
 #### Response: not found
@@ -252,9 +252,7 @@ HTTP/1.1 200 OK
 HTTP/1.1 200 OK
 ```
 ```json
-{
-  "assessor": "5423f87677177065a0887b97"
-}
+[]
 ```
 
 ### Create an (active) comparison for the logged in user

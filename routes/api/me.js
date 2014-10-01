@@ -48,6 +48,10 @@ module.exports.createAggregate = function( req,
       return next( err );
     }
 
+    if( !result ){
+      return res.apiResponse( 204 );
+    }
+
     return res.apiResponse( result );
   } );
 };

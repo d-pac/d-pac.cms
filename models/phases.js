@@ -3,6 +3,7 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var _s = require('underscore.string');
 
 var Phase = new keystone.List( 'Phase', {
   map:{
@@ -22,7 +23,7 @@ var config = {
     initial  : true
   },
 
-  value : {
+  type : {
     type    : Types.Text,
     required : true,
     initial : true
@@ -32,8 +33,12 @@ var config = {
 
 Phase.add(config);
 
+// Provide access to Keystone
+Phase.schema.virtual( 'machinename' ).get( function(){
+  return _s.slugify(this.label+'-'+this.type);
+} );
 
-Phase.defaultColumns = 'label, value';
+Phase.defaultColumns = 'label, type, machinename';
 Phase.register();
 
 

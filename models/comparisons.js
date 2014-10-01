@@ -52,6 +52,12 @@ var config = {
     ref     : 'Phase',
     index   : true,
     initial : true
+  },
+
+  selected : {
+    type : Types.Relationship,
+    ref : 'Representation',
+    index : true
   }
 
 };
@@ -149,7 +155,7 @@ Comparison.schema.plugin( autoinc.plugin, {
   startAt : 1
 } );
 
-Comparison.defaultColumns = 'name, assessor, assessment, phase, active';
+Comparison.defaultColumns = 'name, assessor, assessment, selected, phase, active';
 Comparison.register();
 
 
