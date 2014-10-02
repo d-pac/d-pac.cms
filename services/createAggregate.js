@@ -10,7 +10,7 @@ var Judgement = keystone.list( 'Judgement' );
 var Phase = keystone.list( 'Phase' );
 
 function retrieveAssessment( opts ){
-  console.log('retrieveAssessment');
+  //debug('retrieveAssessment');
   return Assessment.model
     .findById( opts.assessment )
     .lean()
@@ -19,7 +19,7 @@ function retrieveAssessment( opts ){
 
 function retrieveRepresentations( opts ){
 
-  console.log('retrieveRepresentations');
+  //debug('retrieveRepresentations');
   //todo: replace this with CJ
   return Representation.model
     .find()
@@ -30,13 +30,13 @@ function retrieveRepresentations( opts ){
 }
 
 function createComparison( opts ){
-  console.log('createComparison');
+  //debug('createComparison');
   return Comparison.model
     .create( opts );
 }
 
 function createJudgements( opts ){
-  console.log('createJudgements');
+  //debug('createJudgements');
   var judgements = [];
   _.each( opts.representations, function( representation ){
     judgements.push( {
@@ -55,7 +55,7 @@ function createJudgements( opts ){
 }
 
 function retrievePhases( opts ){
-  console.log('retrievePhases');
+  //debug('retrievePhases');
   return Phase.model
     .find()
     .where( '_id' ).in( opts.ids )
