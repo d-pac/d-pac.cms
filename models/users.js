@@ -65,9 +65,9 @@ User.schema.set( 'toJSON', {
   }
 } );
 
-User.PUBLIC = [
-  'name', 'email', 'password'
-];
+User.api ={
+  editable : [ 'name', 'email', 'password' ]
+};
 
 /**
  * Registration

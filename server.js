@@ -26,6 +26,7 @@ keystone.init( {
   'auto update' : true,
 
   'session'       : true,
+  'session store' : 'mongo',
   'auth'          : true,
   'user model'    : 'User',
   'cookie secret' : 'mSxJb5Xr6cz;T%($q%iLg[w_V/|(*}PhgCt(;!IbqH#{;yL@41f5@T-}p%>/[HhO'

@@ -5,95 +5,63 @@ var keystone = require( 'keystone' );
 var async = require( 'async' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.me' );
-
-var createAggregate = require( '../../services/createAggregate' );
-var retrieveActiveAggregates = require( '../../services/retrieveActiveAggregates' );
-
-var Persona = keystone.list( 'Persona' );
-
 var constants = require( '../../models/helpers/constants' );
 
-module.exports.prepareForAccount = function prepareForAccount( req,
-                                                               res,
-                                                               next ){
-  debug( '#prepareForAccount' );
-  res.locals.filter = {
-    user : req.user.id
-  };
+var personas = require( '../../services/personas' );
+var aggregates = require('../../services/aggregates');
 
-  next();
-};
+module.exports.listAggregates = function( req,
+                                       res,
+                                       next ){
+  debug( '#listAggregates' );
+  aggregates.listActives( {
+    assessor : req.user.id
+  } ).onResolve( function( err,
+                           result ){
+    if( err ){
+      return next( err );
+    }
 
-module.exports.prepareForAggregate = function prepareForAggregate( req,
-                                                                   res,
-                                                                   next ){
-  debug( '#prepareForAggregate' );
-  res.locals.filter = {
-    assessor : req.user.id,
-    active   : true
-  };
-  next();
+    res.apiResponse( result );
+  } );
 };
 
 module.exports.createAggregate = function( req,
+                                  res,
+                                  next ){
+  debug( '#create' );
+  aggregates.create( {
+    assessor   : req.user.id,
+    assessment : req.param( 'assessment' )
+  } ).onResolve( function( err,
+                           result ){
+    if( err ){
+      return next( err );
+    }
+
+    res.apiResponse( result );
+  } );
+};
+
+module.exports.listAssessments = function( req,
                                            res,
                                            next ){
-  debug( '#createAggregate' );
-  createAggregate( {
-    assessment : req.param( 'assessment' ),
-    assessor   : req.user.id
-  }, function( err,
-               result ){
+  debug( '#listAssessments' );
+
+  personas.list( {
+    user : req.user.id,
+    role : constants.roles.assessor
+  } ).onResolve( function( err,
+                           personas ){
     if( err ){
       return next( err );
     }
-
-    if( !result ){
-      return res.apiResponse( 204 );
-    }
-
-    return res.apiResponse( result );
-  } );
-};
-
-module.exports.retrieveActiveAggregates = function( req,
-                                                    res,
-                                                    next ){
-  debug( '#retrieveActiveAggregates' );
-  retrieveActiveAggregates( {
-    assessor : req.user.id
-  }, function( err,
-               aggregate ){
-    if( err ){
-      return next( err );
-    }
-
-    res.apiResponse( aggregate );
-  } );
-};
-
-module.exports.retrieveAssessments = function( req,
-                                               res,
-                                               next ){
-  debug( '#retrieveAssessments' );
-
-  Persona.model
-    .find( {
-      user : req.user.id,
-      role : constants.roles.assessor
-    } )
-    .populate( 'assessment' )
-    .exec( function( err,
-                     personas ){
-      if( err ){
-        return next( err );
-      }
-      personas = personas.filter( function( doc ){
-        return doc.assessment.state === constants.publicationStates.published;
-      } );
-      var assessments = _.map( personas, function( persona ){
-        return persona.assessment;
-      } );
-      res.apiResponse( assessments );
+    personas = personas.filter( function( doc ){
+      return doc.assessment.state === constants.publicationStates.published;
     } );
+    var assessments = _.map( personas, function( persona ){
+      return persona.assessment;
+    } );
+    res.apiResponse( assessments );
+  } );
 };

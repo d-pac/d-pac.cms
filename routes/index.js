@@ -22,8 +22,9 @@ var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   middleware = require( './middleware' ),
   importRoutes = keystone.importer( __dirname );
+var User = keystone.list( 'User' );
 var errors = require( 'errors' );
-var constants = require('../models/helpers/constants');
+var constants = require( '../models/helpers/constants' );
 
 // Common Middleware
 keystone.pre( 'routes', middleware.initLocals );
@@ -47,55 +48,46 @@ exports = module.exports = function( app ){
   // # REST API
   var api = routes.api;
 
-  //api:setup
+  //ALL /api
   app.all( '/api*',
     middleware.reflectReq,
     api.middleware.initAPI,
-    api.middleware.factories.initCORS() );
+    api.middleware.initCORS() );
 
-  //me/sessions:create
   app.post( '/api/me/session',
+    api.middleware.requireParams( "email", "password" ),
     api.sessions.create );
-  //me:setup
-  app.all( '/api/me*',
-    api.middleware.requireUser);
 
-  //me/session:retrieve
+  app.all( '/api*',
+    api.middleware.requireUser );
+
   app.get( '/api/me/session', api.sessions.retrieve );
-  //me/session:destroy
   app.del( '/api/me/session', api.sessions.destroy );
-  //me/session:fallthrough
-  app.all( '/api/me/session*', api.middleware.factories.onlyAllow( 'GET, POST, DELETE' ) );
+  app.all( '/api/me/session*', api.middleware.onlyAllow( 'GET, POST, DELETE' ) );
 
-  //me/account:setup
-  app.all( '/api/me/account*', api.me.prepareForAccount );
-  //me/account:retrieve
   app.get( '/api/me/account', api.users.retrieve );
-  //me/account:update
-  app.put( '/api/me/account', api.users.replace );
+  app.put( '/api/me/account',
+    api.middleware.requireParams( User.api.editable ),
+    api.users.replace );
   app.patch( '/api/me/account', api.users.update );
-  //me/account:fallthrough
-  app.all( '/api/me/account*', api.middleware.factories.onlyAllow( 'GET, PATCH, PUT' ) );
+  app.all( '/api/me/account*', api.middleware.onlyAllow( 'GET, PATCH, PUT' ) );
 
-  //me/aggregates:setup
-  app.all( '/api/me/aggregates*', api.me.prepareForAggregate );
-  //me/aggregates:retrieve
-  app.get( '/api/me/aggregates', api.me.retrieveActiveAggregates );
-  //me/aggregates:create
+  app.get( '/api/me/aggregates', api.me.listAggregates );
   app.post( '/api/me/aggregates',
-    api.middleware.factories.requireParam( 'assessment' ),
-    api.middleware.factories.requirePersona( constants.roles.assessor ),
-    api.me.createAggregate
-  );
-  //me/comparison:fallthrough
-  app.all( '/api/me/aggregates*', api.middleware.factories.onlyAllow( 'GET, POST, PUT' ) );
+    api.middleware.requireParams( "assessment" ),
+    api.me.createAggregate );
+  app.all( '/api/me/aggregates*', api.middleware.onlyAllow( 'GET, POST' ) );
 
-  //me/assessments:list
-  app.get( '/api/me/assessments', api.me.retrieveAssessments );
-  //me/comparison:fallthrough
-  app.all( '/api/me/assessments*', api.middleware.factories.onlyAllow( 'GET' ) );
+  app.get( '/api/me/assessments', api.me.listAssessments );
+  app.all( '/api/me/assessments*', api.middleware.onlyAllow( 'GET' ) );
 
-  //api:fallthrough
+  //app.get('/api/comparisons/:_id',
+  //  api.middleware.requireAdmin,
+  //  api.comparisons.retrieve)
+  //app.patch( '/api/comparisons/:_id',
+  //  api.middleware.factories.requirePersona( constants.roles.assessor ),
+  //  api.comparisons.update);
+  //
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
 };

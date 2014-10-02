@@ -31,8 +31,8 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  User.model.findById( res.locals.filter.user ).exec( function( err,
-                                                                user ){
+  User.model.findById( req.user.id ).exec( function( err,
+                                                     user ){
     if( err ){
       return next( err );
     }
@@ -49,8 +49,8 @@ var update = module.exports.update = function( req,
   debug( 'update' );
   //don't use findByIdAndUpdate, since the schema pre save handler isn't called
   //i.e. passwords would be saved in plain text!!
-  User.model.findById( res.locals.filter.user ).exec( function( err,
-                                                                user ){
+  User.model.findById( req.user.id ).exec( function( err,
+                                                     user ){
     if( err ){
       return next( err );
     }
@@ -59,7 +59,7 @@ var update = module.exports.update = function( req,
     }
 
     user.getUpdateHandler( req, res ).process( req.body, {
-      fields      : _.keys( _.pick( req.body, User.PUBLIC ) ),
+      fields      : _.keys( _.pick( req.body, User.api.editable ) ),
       flashErrors : false
     }, function( err,
                  processor ){
@@ -79,10 +79,5 @@ module.exports.replace = function( req,
                                    res,
                                    next ){
   debug( 'replace' );
-
-  if( apiUtils.hasKeys( req.body, User.PUBLIC ) ){
-    return update( req, res, next );
-  }else{
-    return next( new errors.Http422Error( { reason : 'Partial Entity' } ) );
-  }
+  return update( req, res, next );
 };

@@ -156,6 +156,9 @@ Comparison.schema.plugin( autoinc.plugin, {
 } );
 
 Comparison.defaultColumns = 'name, assessor, assessment, selected, phase, active';
+Comparison.api = {
+  editable : ["selected", "phase"]
+};
 Comparison.register();
 
 
