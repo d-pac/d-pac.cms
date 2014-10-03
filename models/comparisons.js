@@ -13,6 +13,10 @@ var Comparison = new keystone.List( 'Comparison', {
   track : true
 } );
 
+Comparison.api = {
+  editable : ["selected", "phase", "comparativeFeedback", "timelogs"]
+};
+
 var config = {
 
   assessment : {
@@ -61,6 +65,13 @@ var config = {
   }
 
 };
+
+//C09
+_.each(config, function(opts, fieldName){
+  if(Comparison.api.editable.indexOf(fieldName) < 0){
+    opts.noedit = true;
+  }
+});
 
 Comparison.add( config );
 
@@ -156,9 +167,6 @@ Comparison.schema.plugin( autoinc.plugin, {
 } );
 
 Comparison.defaultColumns = 'name, assessor, assessment, selected, phase, active';
-Comparison.api = {
-  editable : ["selected", "phase"]
-};
 Comparison.register();
 
 
