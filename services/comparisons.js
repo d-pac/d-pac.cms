@@ -14,18 +14,25 @@ module.exports.create = function createComparison( opts ){
  * @param {string} [opts.assessor] User.id
  * @returns {Promise}
  */
-module.exports.retrieveActive = function retrievActiveComparison( opts ){
-  debug( '#retrieveActive' );
+module.exports.listActive = function listActive( opts ){
+  debug( '#listActive' );
   return Comparison.model
     .find( opts )
     .where( 'phase' ).ne( null )
     .populate( 'assessment' )
     .lean()
-    .exec()
-    .then(function(comparisons){
-      if(!comparisons || comparisons.length < 0){
-        throw new Error('No comparisons!');
-      }
-      return comparisons;
-    });
+    .exec();
 };
+
+/**
+ *
+ * @param opts
+ * @param {string} opts.comparison Comparison.id
+ * @returns {Promise}
+ */
+module.exports.retrieve = function retrieve(opts){
+  return Comparison.model
+    .findById(opts.comparison)
+    .lean()
+    .exec();
+}

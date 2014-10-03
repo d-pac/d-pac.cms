@@ -6,42 +6,30 @@ var async = require( 'async' ),
   keystone = require( 'keystone' );
 var errors = require( 'errors' );
 var thrown = require( './utils' ).thrown;
-var Comparison = keystone.list( 'Comparison' );
+var service = require( '../../services/comparisons' );
 
 exports.retrieve = function( req,
                              res,
                              next ){
 
   debug( '#retrieve' );
-  Comparison.model
-    .findById( req.param( '_id' ) )
-    .exec( function( err,
-                     comparison ){
-      if( !thrown( err, comparison, next ) ){
-        return res.apiResponse( comparison );
-      }
-    } );
+  service.retrieve( {
+    comparison : req.param( 'comparison' )
+  } ).onResolve( function( err,
+                           result ){
+    if( err ){
+      return next( err );
+    }
+    if(! result){
+      return next( new errors.Http404Error());
+    }
+
+    res.apiResponse( result );
+  } );
 };
 
 var update = module.exports.update = function( req,
                                                res,
                                                next ){
   debug( '#update' );
-
-  Comparison.model
-    .findById( req.param( '_id' ) )
-    .exec( function( err,
-                     comparison ){
-      if(!thrown(err, comparison, next) ){
-        comparison.getUpdateHandler( req, res ).process( req.body, {
-          fields      : _.keys( _.pick( req.body, Comparison.api.editable ) ),
-          flashErrors : false
-        }, function( err,
-                     processor ){
-          if(!thrown(err, processor.item, next)){
-            return res.apiResponse( comparison );
-          }
-        } );
-      }
-    } );
 };

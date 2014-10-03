@@ -78,7 +78,7 @@ module.exports.listActives = function listActives( opts ){
   debug( '#listActives' );
   var aggregates = [];
 
-  return comparisons.retrieveActive( { assessor : opts.assessor } )
+  return comparisons.listActive( { assessor : opts.assessor } )
     .then( function handleComparisons( comparisons ){
       _.each( comparisons, function( comparison ){
         var aggregate = {};
