@@ -81,13 +81,12 @@ exports = module.exports = function( app ){
   app.get( '/api/me/assessments', api.me.listAssessments );
   app.all( '/api/me/assessments*', api.middleware.onlyAllow( 'GET' ) );
 
-  app.get('/api/comparisons/:comparison',
+  app.get('/api/comparisons/:_id',
     api.middleware.requireAdmin,
     api.comparisons.retrieve)
-  //app.patch( '/api/comparisons/:_id',
-  //  api.middleware.factories.requirePersona( constants.roles.assessor ),
-  //  api.comparisons.update);
-  //
+  app.patch( '/api/comparisons/:_id',
+    api.comparisons.update);
+
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
 };

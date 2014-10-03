@@ -13,6 +13,7 @@
     "lodash": "^2.4.1",
     "mongoose-auto-increment": "^3.0.8",
     "mongoose-random": "0.0.2",
+    "mpromise": "^0.5.5",
     "underscore": "^1.6.0",
     "underscore.string": "^2.3.3"
   },

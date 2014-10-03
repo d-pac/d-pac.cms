@@ -14,7 +14,7 @@ var Comparison = new keystone.List( 'Comparison', {
 } );
 
 Comparison.api = {
-  editable : ["selected", "phase", "comparativeFeedback", "timelogs"]
+  editable : ["selected", "phase", "timelogs", "comparativeFeedback"]
 };
 
 var config = {
@@ -65,13 +65,6 @@ var config = {
   }
 
 };
-
-//C09
-_.each(config, function(opts, fieldName){
-  if(Comparison.api.editable.indexOf(fieldName) < 0){
-    opts.noedit = true;
-  }
-});
 
 Comparison.add( config );
 

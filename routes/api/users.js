@@ -7,6 +7,8 @@ var debug = require( 'debug' )( 'dpac:api.users' );
 var apiUtils = require( './utils' );
 var User = keystone.list( 'User' );
 
+//TODO: refactor to service AND review how editable fields are enforced
+
 module.exports.list = function( req,
                                 res,
                                 next ){
