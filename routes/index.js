@@ -83,7 +83,7 @@ exports = module.exports = function( app ){
 
   app.get('/api/comparisons/:_id',
     api.middleware.requireAdmin,
-    api.comparisons.retrieve)
+    api.comparisons.retrieve);
   app.patch( '/api/comparisons/:_id',
     api.comparisons.update);
 

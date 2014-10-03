@@ -2,6 +2,7 @@
 var debug = require( 'debug' )( 'dpac:services.comparisons' );
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
+var extend = require('deep-extend');
 var nullValidator = require( './helpers/nullValidator' );
 var Promise = require( 'mpromise' );
 var Comparison = keystone.list( 'Comparison' );
@@ -54,7 +55,7 @@ module.exports.update = function update( opts,
     .exec()
     .then( nullValidator( validator ) )
     .then( function( comparison ){
-      _.extend( comparison, opts );
+      extend( comparison, opts );
       var promise = new Promise();
       comparison.save( function( err,
                                  comparison ){

@@ -1,49 +1,26 @@
 'use strict';
 
 var debug = require( 'debug' )( 'dpac:api.comparisons' );
-var _ = require( 'underscore' );
-var async = require( 'async' ),
-  keystone = require( 'keystone' );
-var errors = require( 'errors' );
-var utils = require( './utils' );
+var keystone = require( 'keystone' );
+var Controller = require( './controller' );
 var service = require( '../../services/comparisons' );
-var Comparison = keystone.list( 'Comparison' );
+var schema = keystone.list( 'Comparison' );
+
+var controller = new Controller( service, schema );
 
 exports.retrieve = function( req,
                              res,
                              next ){
 
   debug( '#retrieve' );
-  service.retrieve( {
+  controller.retrieve( {
     _id : req.param( '_id' )
-  } ).onResolve( function( err,
-                           result ){
-    if( err ){
-      return next( err );
-    }
-    if( !result ){
-      return next( new errors.Http404Error() );
-    }
-
-    res.apiResponse( result );
-  } );
+  }, req, res, next );
 };
 
-var update = module.exports.update = function( req,
-                                               res,
-                                               next ){
+module.exports.update = function( req,
+                                  res,
+                                  next ){
   debug( '#update' );
-  var opts = req.body;
-  service.update( opts,
-    utils.verifyChangesAllowed( opts, Comparison.api.editable )
-  ).onResolve( function( err,
-                         result ){
-      if( err ){
-        return next( err );
-      }
-      if( !result ){
-        return next( new errors.Http500Error() );
-      }
-      res.apiResponse( result );
-    } );
+  controller.update( req.body, req, res, next );
 };

@@ -13,6 +13,7 @@ var isHttpError = module.exports.isHttpError = function isHttpError( err ){
 function diff( original,
                modified,
                editable ){
+  console.log(original, modified);
   var results = [];
   _.map( modified, function( item,
                              key ){

@@ -60,7 +60,7 @@ User.schema.set( 'toJSON', {
   transform : function( doc,
                         model,
                         options ){
-    model = _.pick( model, 'id', jsonFields );
+    model = _.pick( model, '_id', jsonFields );
     return model;
   }
 } );
