@@ -3,7 +3,7 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var constants = require('./helpers/constants');
+var constants = require( './helpers/constants' );
 
 var Judgement = new keystone.List( 'Judgement', {
   map   : {
@@ -13,7 +13,7 @@ var Judgement = new keystone.List( 'Judgement', {
 } );
 
 Judgement.api = {
-  editable : [ 'notes', 'passed' ]
+  editable : ['notes', 'passed']
 };
 
 var config = {
@@ -65,12 +65,12 @@ var config = {
   passed : {
     type    : Types.Select,
     options : [
-      { value : 1, label : "Passed" },
-      { value : 0, label : "Undecided" },
-      { value : -1, label : "Failed" }
+      { value : "passed", label : "Passed" },
+      { value : "undecided", label : "Undecided" },
+      { value : "failed", label : "Failed" }
     ],
     initial : true,
-    default : 0
+    default : ""
   },
 
   timelogs : {
