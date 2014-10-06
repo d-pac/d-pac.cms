@@ -67,6 +67,9 @@ POST /api/me/session
 }
 ```
 
+* `email` [Required]
+* `password` [Required]
+
 #### Response: Success
 
 ```shell
@@ -164,9 +167,14 @@ PUT /api/me/account
   },
   "password": "HolyShizzle!"
   "password_confirm": "HolyShizzle!"
-  "_csrf": "<CSRF TOKEN>"
 }
 ```
+
+* `email` **[Required]**
+* `name.first` **[Required]**
+* `name.last` **[Required]**
+* `password` **[Required]**
+* `password_confirm` **[Required]**
 
 #### Response
 
@@ -193,12 +201,15 @@ PATCH /api/me/account
 ```
 ```json
 {
-  "email": "changedemail@example.com",
-  "_csrf": "<CSRF TOKEN>"
+  "email": "changedemail@example.com"
 }
 ```
 
-N.B.: though `password` is never returned as a user object, it can be updated too. It does however need an additional value: `password_confirm`.
+* `email` **[Optional]**
+* `name.first` **[optional]**
+* `name.last` **[Optional]**
+* `password` **[Optional]**
+* `password_confirm` **[Optional/Required]** When `password` is provided this field is **[Required]**
 
 E.g.:
 
@@ -268,6 +279,8 @@ POST /api/me/aggregates
 }
 ```
 
+* `assessment` **[Required]**
+
 #### Response
 
 ```shell
@@ -278,6 +291,45 @@ HTTP/1.1 200 OK
 
 }
 ```
+
+## Comparisons
+
+### Retrieve comparison
+
+#### Request
+
+```shell
+GET /api/comparisons/:id
+```
+
+#### Response
+
+```json
+{
+    "_id": "542e5a07635e7121e9d3c68c",
+    "_rid": 16,
+    "assessor": "542bf92a03a305000015720f",
+    "assessment": "5423f89677177065a0887ba1",
+    "phase": "5423f87677177065a0887b99",
+    "timelogs": [],
+    "comparativeFeedback": "Nou!",
+}
+```
+
+### Partial Update
+
+```shell
+PATCH /api/comparisons/:id
+```
+```json
+{
+  "comparativeFeedback": "Lorem ipsum dolor sit amet."
+}
+```
+
+* `selected` {Representation._id} **[Optional]**
+* `phase` {Phase._id} **[Optional]**
+* `comparativeFeedback` **[Optional]**
 
 ## Errors
 
