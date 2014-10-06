@@ -72,11 +72,11 @@ exports = module.exports = function( app ){
   app.patch( '/api/me/account', api.users.update );
   app.all( '/api/me/account*', api.middleware.onlyAllow( 'GET, PATCH, PUT' ) );
 
-  app.get( '/api/me/aggregates', api.me.listAggregates );
-  app.post( '/api/me/aggregates',
+  app.get( '/api/me/mementos', api.me.listMementos );
+  app.post( '/api/me/mementos',
     api.middleware.requireParams( "assessment" ),
-    api.me.createAggregate );
-  app.all( '/api/me/aggregates*', api.middleware.onlyAllow( 'GET, POST' ) );
+    api.me.createMemento );
+  app.all( '/api/me/mementos*', api.middleware.onlyAllow( 'GET, POST' ) );
 
   app.get( '/api/me/assessments', api.me.listAssessments );
   app.all( '/api/me/assessments*', api.middleware.onlyAllow( 'GET' ) );

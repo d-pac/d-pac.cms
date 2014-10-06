@@ -236,14 +236,14 @@ HTTP/1.1 200 OK
 }
 ```
 
-## Aggregates
+## Mementos
 
-### Retrieve current (active) comparison(s) for the logged in user
+### Retrieve current memento(s) for the logged in user
 
 #### Request
 
 ```shell
-GET /api/me/aggregates
+GET /api/me/mementos
 ```
 
 #### Response: found
@@ -266,12 +266,12 @@ HTTP/1.1 200 OK
 []
 ```
 
-### Create an (active) comparison for the logged in user
+### Create a memento for the logged in user
 
 #### Request
 
 ```shell
-POST /api/me/aggregates
+POST /api/me/mementos
 ```
 ```json
 {

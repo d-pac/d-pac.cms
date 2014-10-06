@@ -8,13 +8,13 @@ var debug = require( 'debug' )( 'dpac:api.me' );
 var constants = require( '../../models/helpers/constants' );
 
 var personas = require( '../../services/personas' );
-var aggregates = require('../../services/aggregates');
+var mementos = require('../../services/mementos');
 
-module.exports.listAggregates = function( req,
+module.exports.listMementos = function( req,
                                        res,
                                        next ){
-  debug( '#listAggregates' );
-  aggregates.listActives( {
+  debug( '#listMementos' );
+  mementos.listActives( {
     assessor : req.user.id
   } ).onResolve( function( err,
                            result ){
@@ -26,11 +26,11 @@ module.exports.listAggregates = function( req,
   } );
 };
 
-module.exports.createAggregate = function( req,
+module.exports.createMemento = function( req,
                                   res,
                                   next ){
   debug( '#create' );
-  aggregates.create( {
+  mementos.create( {
     assessor   : req.user.id,
     assessment : req.param( 'assessment' )
   } ).onResolve( function( err,

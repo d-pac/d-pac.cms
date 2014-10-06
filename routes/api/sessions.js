@@ -8,7 +8,6 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  console.log(req.session);
   return res.apiResponse( {
 
     _csrf : keystone.security.csrf.getToken( req, res ),

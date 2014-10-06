@@ -1,6 +1,6 @@
 'use strict';
 var _ = require( 'underscore' );
-var debug = require( 'debug' )( 'dpac:services.aggregates' );
+var debug = require( 'debug' )( 'dpac:services.mementos' );
 var async = require( 'async' ),
   keystone = require( 'keystone' );
 var errors = require( 'errors' );
@@ -18,10 +18,10 @@ var phases = require( './phases' );
  * @param opts.assessment Assessment.id
  * @return {Promise}
  */
-module.exports.create = function createAggregate( opts ){
+module.exports.create = function createMemento( opts ){
   debug( '#create' );
 
-  var aggregate = {
+  var memento = {
     assessor : opts.assessor
   };
   return assessments.retrieve( { assessment : opts.assessment } )
@@ -29,8 +29,8 @@ module.exports.create = function createAggregate( opts ){
       if( !assessment ){
         throw new errors.Http422Error( { reason : 'Assessment not found.' } );
       }
-      aggregate.assessment = assessment;
-      aggregate.phases = assessment.phases;
+      memento.assessment = assessment;
+      memento.phases = assessment.phases;
       assessment.phases = _.pluck( assessment.phases, '_id' );
     } )
     .then( function(){
@@ -38,12 +38,12 @@ module.exports.create = function createAggregate( opts ){
     } )
     .then( function handleRepresentations( representations ){
       //todo: when no representations found
-      aggregate.representations = representations;
+      memento.representations = representations;
     } )
     .then( function(){
       var firstPhase;
-      if( aggregate.phases && aggregate.phases.length > 0 ){
-        firstPhase = aggregate.phases[0];
+      if( memento.phases && memento.phases.length > 0 ){
+        firstPhase = memento.phases[0];
       }
       return comparisons.create( {
         assessor   : opts.assessor,
@@ -52,19 +52,19 @@ module.exports.create = function createAggregate( opts ){
       } );
     } )
     .then( function handleComparison( comparison ){
-      aggregate.comparison = comparison;
+      memento.comparison = comparison;
     } )
     .then( function(){
       return judgements.create( {
         assessor        : opts.assessor,
         assessment      : opts.assessment,
-        representations : aggregate.representations,
-        comparison      : aggregate.comparison
+        representations : memento.representations,
+        comparison      : memento.comparison
       } );
     } )
     .then( function handleJudgements( judgements ){
-      aggregate.judgements = judgements;
-      return aggregate;
+      memento.judgements = judgements;
+      return memento;
     } );
 };
 
@@ -76,26 +76,26 @@ module.exports.create = function createAggregate( opts ){
  */
 module.exports.listActives = function listActives( opts ){
   debug( '#listActives' );
-  var aggregates = [];
+  var mementos = [];
 
   return comparisons.listActive( { assessor : opts.assessor } )
     .then( function handleComparisons( comparisons ){
       _.each( comparisons, function( comparison ){
-        var aggregate = {};
-        aggregate.assessor = comparison.assessor;
-        aggregate.assessment = comparison.assessment;
-        aggregate.comparison = comparison;
+        var memento = {};
+        memento.assessor = comparison.assessor;
+        memento.assessment = comparison.assessment;
+        memento.comparison = comparison;
         comparison.assessment = comparison.assessment._id;
-        aggregates.push( aggregate );
+        mementos.push( memento );
       } );
     } )
     .then( function(){
       var promise;
-      _.each( aggregates, function( aggregate ){
+      _.each( mementos, function( memento ){
         var p = phases.retrieve( {
-          ids : aggregate.assessment.phases
+          ids : memento.assessment.phases
         } ).then( function handlePhases( phases ){
-          aggregate.phases = phases;
+          memento.phases = phases;
         } );
         promise = ( promise )
           ? promise.chain( p )
@@ -105,19 +105,19 @@ module.exports.listActives = function listActives( opts ){
     } )
     .then( function(){
       var promise;
-      _.each( aggregates, function( aggregate ){
+      _.each( mementos, function( memento ){
         var p = judgements.retrieve( {
-          comparison : aggregate.comparison
+          comparison : memento.comparison
         } ).then( function handleJudgements( judgements ){
           //promote and flatten populated objects
-          aggregate.judgements = judgements;
+          memento.judgements = judgements;
           var representations = [];
           _.each( judgements, function( judgement ){
             var representation = judgement.representation;
             judgement.representation = representation._id;
             representations.push( representation );
           } );
-          aggregate.representations = representations;
+          memento.representations = representations;
         } );
         promise = ( promise )
           ? promise.chain( p )
@@ -126,7 +126,7 @@ module.exports.listActives = function listActives( opts ){
       return promise;
     } )
     .then( function handleOutput(){
-      return aggregates;
+      return mementos;
     } );
 
 };
