@@ -12,6 +12,10 @@ var Judgement = new keystone.List( 'Judgement', {
   track : true
 } );
 
+Judgement.api = {
+  editable : [ 'notes', 'passed' ]
+};
+
 var config = {
 
   assessor : {
@@ -79,7 +83,7 @@ var config = {
 
 Judgement.add( config );
 
-Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, rank';
+Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, passed';
 Judgement.register();
 
 
