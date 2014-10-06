@@ -85,8 +85,13 @@ exports = module.exports = function( app ){
     api.middleware.requireAdmin,
     api.comparisons.retrieve );
   app.patch( '/api/comparisons/:_id', api.comparisons.update );
+  app.all( '/api/comparisons*', api.middleware.onlyAllow( 'GET', 'PATCH' ) );
 
   app.patch( '/api/judgements/:_id', api.judgements.update );
+  app.all( '/api/judgements*', api.middleware.onlyAllow( 'PATCH' ) );
+
+  app.post('/api/seqs', api.seqs.create);
+  app.all( '/api/seqs*', api.middleware.onlyAllow( 'POST' ) );
 
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 

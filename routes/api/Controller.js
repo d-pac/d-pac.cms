@@ -30,6 +30,23 @@ _.extend( Controller.prototype, {
       } );
   },
 
+  create : function( opts,
+                     req,
+                     res,
+                     next ){
+    var values = utils.parseValues(opts, req);
+    this.service.create( values ).onResolve( function( err,
+                                                       result ){
+      if( err ){
+        return next( err );
+      }
+      if( !result ){
+        return next( new errors.Http500Error() );
+      }
+      res.apiResponse( result );
+    } );
+  },
+
   update : function( opts,
                      req,
                      res,
