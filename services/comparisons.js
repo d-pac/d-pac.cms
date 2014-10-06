@@ -3,7 +3,6 @@ var debug = require( 'debug' )( 'dpac:services.comparisons' );
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var extend = require('deep-extend');
-var nullValidator = require( './helpers/nullValidator' );
 var Promise = require( 'mpromise' );
 var Comparison = keystone.list( 'Comparison' );
 
@@ -45,15 +44,12 @@ module.exports.retrieve = function retrieve( opts ){
  *
  * @param opts
  * @param {string} opts._id Comparison.id
- * @param {function} validator
  */
-module.exports.update = function update( opts,
-                                         validator ){
+module.exports.update = function update( opts ){
   debug( 'update' );
   return Comparison.model
     .findById( opts._id )
     .exec()
-    .then( nullValidator( validator ) )
     .then( function( comparison ){
       extend( comparison, opts );
       var promise = new Promise();

@@ -37,3 +37,14 @@ module.exports.verifyChangesAllowed = function verifyChangesAllowed( modified,
     return doc;
   };
 };
+
+module.exports.parseValues = function( opts, req ){
+  var temp = {};
+  _.each( opts.fields, function( field ){
+    var value = req.param( field );
+    if(value){
+      temp[field] = value;
+    }
+  } );
+  return _.defaults( opts.values || {}, temp );
+};

@@ -14,7 +14,9 @@ exports.retrieve = function( req,
 
   debug( '#retrieve' );
   controller.retrieve( {
-    _id : req.param( '_id' )
+    values : {
+      _id : req.param( '_id' )
+    }
   }, req, res, next );
 };
 
@@ -22,5 +24,7 @@ module.exports.update = function( req,
                                   res,
                                   next ){
   debug( '#update' );
-  controller.update( req.body, req, res, next );
+  controller.update( {
+    fields : schema.api.editable
+  }, req, res, next );
 };

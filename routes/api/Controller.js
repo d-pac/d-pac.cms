@@ -16,7 +16,7 @@ _.extend( Controller.prototype, {
                        res,
                        next ){
     this.service
-      .retrieve( opts )
+      .retrieve( opts.values )
       .onResolve( function( err,
                             result ){
         if( err ){
@@ -34,18 +34,17 @@ _.extend( Controller.prototype, {
                      req,
                      res,
                      next ){
-    this.service.update( opts,
-      utils.verifyChangesAllowed( opts, this.schema.api.editable )
-    ).onResolve( function( err,
-                           result ){
-        if( err ){
-          return next( err );
-        }
-        if( !result ){
-          return next( new errors.Http500Error() );
-        }
-        res.apiResponse( result );
-      } );
+    var values = utils.parseValues(opts, req);
+    this.service.update( values ).onResolve( function( err,
+                                                       result ){
+      if( err ){
+        return next( err );
+      }
+      if( !result ){
+        return next( new errors.Http500Error() );
+      }
+      res.apiResponse( result );
+    } );
   }
 } );
 

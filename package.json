@@ -10,7 +10,7 @@
     "deep-extend": "^0.2.11",
     "dotenv": "^0.2.8",
     "errors": "^0.2.0",
-    "keystone": "^0.2.29",
+    "keystone": "^0.2.30",
     "lodash": "^2.4.1",
     "mongoose-auto-increment": "^3.0.8",
     "mongoose-random": "0.0.2",

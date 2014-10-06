@@ -8,7 +8,6 @@ var extend = require('deep-extend');
 
 var Promise = require( 'mpromise' );
 
-var nullValidator = require( './helpers/nullValidator' );
 var User = keystone.list( 'User' );
 
 /**
@@ -31,13 +30,11 @@ module.exports.retrieve = function retrieve( opts ){
  * @param {string} opts._id User.id
  * @param {function} validator
  */
-var update = module.exports.update = function update( opts,
-                                                      validator ){
+var update = module.exports.update = function update( opts ){
   debug( 'update' );
   return User.model
     .findById( opts._id )
     .exec()
-    .then( nullValidator( validator ) )
     .then( function( item ){
       extend( item, opts );
       var promise = new Promise();
@@ -51,15 +48,3 @@ var update = module.exports.update = function update( opts,
       return promise;
     } );
 };
-
-/**
- *
- * @param opts
- * @param {string} opts._id User.id
- * @param {function} validator
- */
-module.exports.replace = function update( opts,
-                                          validator ){
-  debug( 'replace' );
-  return update( opts, validator );
-}

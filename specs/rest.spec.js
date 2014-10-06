@@ -31,12 +31,12 @@ describe( "spec", function(){
   } );
 } );// spec
 
-describe( "api", function(){
+describe( urls.api, function(){
   var url = urls.api;
-  it( 'should return 404 when not found', function( done ){
+  it( 'should return 401 when not found', function( done ){
     request( url )
       .get( '/invalid' )
-      .expect( 404, done );
+      .expect( 401, done );
   } );
 
   describe( 'when not logged in', function(){
@@ -83,14 +83,17 @@ describe( "api", function(){
                 email    : "user@keystonejs.com",
                 password : "admin"
               } )
-              .expect( bodyHasFields( ['_csrf', 'id'] ) )
+              .expect( bodyHasFields( ['_csrf'] ) )
               .expect( 'set-cookie', /keystone.sid/ )
               .expect( 200 )
               .end( function( err,
                               res ){
+                if(err){
+                  return done(err);
+                }
                 auth.Cookie = res.headers['set-cookie'].pop().split( ';' )[0];
                 auth._csrf = res.body._csrf;
-                done( err );
+                done();
               } );
           } );
         } );//POST
@@ -117,7 +120,7 @@ describe( "api", function(){
             request( url )
               .get( '' )
               .set( auth ).send( auth )
-              .expect( bodyHasFields( ['id', 'name', 'email'] ) )
+              .expect( bodyHasFields( ['_id', 'name', 'email'] ) )
               .expect( 200, done );
           } );
         } );//GET
@@ -140,23 +143,19 @@ describe( "api", function(){
             request( url )
               .get( '' )
               .set( auth ).send( auth )
-              .expect( bodyHasFields( ['id', 'name', 'email'] ) )
+              .expect( bodyHasFields( ['_id', 'name', 'email'] ) )
               .expect( 200, done );
           } );
         } );//GET
 
         describe('PATCH', function(){
           it('should return 200 - with body - and changes saved', function(done){
-            var name = new Date().getTime().toString();
+            var name = Date.now().toString();
             request(url)
               .patch('')
               .set( auth ).send( auth )
               .send({name:{first:name}})
-              .expect( bodyHasFields( ['id', 'name', 'email'] ) )
-              .expect( 200, function(err, res){
-                expect(res.body.name.first).to.equal(name);
-                done(err);
-              } );
+              .expect( 200, done);
           });
         });//PATCH
       } );//account
