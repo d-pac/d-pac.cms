@@ -367,6 +367,25 @@ All error objects have a similar (base) structure:
 (Quotes taken from [wikipedia](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes))
 Depending on the requested operation and largely based on the guidelines as laid out in the [HTTP API Design Guide](https://github.com/interagent/http-api-design), following status codes are returned by the API methods:
 
+## Seqs
+
+### Creation
+
+#### Request
+
+```shell
+POST /api/seqs
+```
+```json
+{
+  "comparison": "542e5a07635e7121e9d3c68c",
+  "phase" : "5423f87677177065a0887b99",
+  "value" :2
+}
+```
+
+All fields **[Required]**
+
 ### 401 Unauthorized
 
 > Authentication is required and has failed or has not yet been provided.
