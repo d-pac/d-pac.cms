@@ -81,11 +81,12 @@ exports = module.exports = function( app ){
   app.get( '/api/me/assessments', api.me.listAssessments );
   app.all( '/api/me/assessments*', api.middleware.onlyAllow( 'GET' ) );
 
-  app.get('/api/comparisons/:_id',
+  app.get( '/api/comparisons/:_id',
     api.middleware.requireAdmin,
-    api.comparisons.retrieve);
-  app.patch( '/api/comparisons/:_id',
-    api.comparisons.update);
+    api.comparisons.retrieve );
+  app.patch( '/api/comparisons/:_id', api.comparisons.update );
+
+  app.patch( '/api/judgements/:_id', api.judgements.update );
 
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 

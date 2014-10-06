@@ -318,6 +318,8 @@ GET /api/comparisons/:id
 
 ### Partial Update
 
+#### Request
+
 ```shell
 PATCH /api/comparisons/:id
 ```
@@ -330,6 +332,24 @@ PATCH /api/comparisons/:id
 * `selected` {Representation._id} **[Optional]**
 * `phase` {Phase._id} **[Optional]**
 * `comparativeFeedback` **[Optional]**
+
+## Judgements
+
+### Partial Update
+
+#### Request
+
+```shell
+PATCH /api/judgements/:id
+```
+```json
+{
+  "notes": "Lorem ipsum dolor sit amet."
+}
+```
+
+* `notes` **[Optional]**
+* `passed` **[Optional]** [-1, 0, 1] (failed, undetermined, passed)
 
 ## Errors
 
