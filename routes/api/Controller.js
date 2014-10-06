@@ -34,7 +34,7 @@ _.extend( Controller.prototype, {
                      req,
                      res,
                      next ){
-    var values = utils.parseValues(opts, req);
+    var values = utils.parseValues( opts, req );
     this.service.create( values ).onResolve( function( err,
                                                        result ){
       if( err ){
@@ -51,7 +51,14 @@ _.extend( Controller.prototype, {
                      req,
                      res,
                      next ){
-    var values = utils.parseValues(opts, req);
+    if(! opts.values){
+      opts.values = {};
+    }
+    _.defaults( opts.values, {
+      _id : req.param( "_id" )
+    } );
+    console.log(opts);
+    var values = utils.parseValues( opts, req );
     this.service.update( values ).onResolve( function( err,
                                                        result ){
       if( err ){
