@@ -8,9 +8,12 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  return res.apiResponse( _.extend( {
-    _csrf : keystone.security.csrf.getToken( req, res )
-  }, req.user.toJSON() ) );
+  console.log(req.session);
+  return res.apiResponse( {
+
+    _csrf : keystone.security.csrf.getToken( req, res ),
+    user : req.user.toJSON()
+  } );
 };
 
 module.exports.create = function( req,
@@ -19,9 +22,10 @@ module.exports.create = function( req,
   debug( 'create' );
   keystone.session.signin( req.body, req, res, function( user ){
     debug( 'signed in', user.id );
-    return res.apiResponse( _.extend( {
-      _csrf : keystone.security.csrf.getToken( req, res )
-    }, req.user.toJSON() ) );
+    return res.apiResponse( {
+      _csrf : keystone.security.csrf.getToken( req, res ),
+      user  : req.user.toJSON()
+    } );
   }, function( err ){
     if( err ){
       return next( err );
