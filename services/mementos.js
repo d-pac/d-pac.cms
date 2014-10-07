@@ -10,6 +10,7 @@ var judgements = require( './judgements' );
 var comparisons = require( './comparisons' );
 var assessments = require( './assessments' );
 var phases = require( './phases' );
+var seqs = require('./seqs');
 
 /**
  *
@@ -78,21 +79,23 @@ module.exports.listActives = function listActives( opts ){
   debug( '#listActives' );
   var mementos = [];
 
-  return comparisons.listActive( { assessor : opts.assessor } )
-    .then( function handleComparisons( comparisons ){
-      _.each( comparisons, function( comparison ){
-        var memento = {};
-        memento.assessor = comparison.assessor;
-        memento.assessment = comparison.assessment;
-        memento.comparison = comparison;
-        comparison.assessment = comparison.assessment._id;
-        mementos.push( memento );
+  return (function retrieveComparisons(){
+    return comparisons.listActive( { assessor : opts.assessor } )
+      .then( function handleComparisons( comparisons ){
+        _.each( comparisons, function( comparison ){
+          var memento = {};
+          memento.assessor = comparison.assessor;
+          memento.assessment = comparison.assessment;
+          memento.comparison = comparison;
+          comparison.assessment = comparison.assessment._id;
+          mementos.push( memento );
+        } );
       } );
-    } )
-    .then( function(){
+  })()
+    .then( function listPhases(){
       var promise;
       _.each( mementos, function( memento ){
-        var p = phases.retrieve( {
+        var p = phases.list( {
           ids : memento.assessment.phases
         } ).then( function handlePhases( phases ){
           memento.phases = phases;
@@ -103,10 +106,10 @@ module.exports.listActives = function listActives( opts ){
       } );
       return promise;
     } )
-    .then( function(){
+    .then( function listJudgements(){
       var promise;
       _.each( mementos, function( memento ){
-        var p = judgements.retrieve( {
+        var p = judgements.list( {
           comparison : memento.comparison
         } ).then( function handleJudgements( judgements ){
           //promote and flatten populated objects
@@ -118,6 +121,23 @@ module.exports.listActives = function listActives( opts ){
             representations.push( representation );
           } );
           memento.representations = representations;
+        } );
+        promise = ( promise )
+          ? promise.chain( p )
+          : p;
+      } );
+      return promise;
+    } )
+    .then( function listSeqs(){
+      var promise;
+      _.each( mementos, function( memento ){
+        var p = seqs.list( {
+          comparison : memento.comparison
+        } ).then( function handleSeqs( seqs ){
+          if( seqs && seqs.length > 0 ){
+            //seqs are optional, and dependant on the worflow defined in the assessment
+            memento.seqs = seqs;
+          }
         } );
         promise = ( promise )
           ? promise.chain( p )

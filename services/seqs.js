@@ -7,3 +7,11 @@ module.exports.create = function( opts ){
   debug( '#create' );
   return schema.model.create( opts );
 };
+
+module.exports.list = function( opts ){
+  debug('#list');
+  return schema.model
+    .find(opts)
+    .lean()
+    .exec();
+}
