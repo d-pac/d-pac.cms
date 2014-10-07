@@ -28,7 +28,10 @@ module.exports.create = function createMemento( opts ){
   return assessments.retrieve( { assessment : opts.assessment } )
     .then( function handleAssessment( assessment ){
       if( !assessment ){
-        throw new errors.Http422Error( { reason : 'Assessment not found.' } );
+        throw new errors.Http422Error( {
+          message : 'Could not create memento.',
+          explanation : 'Assessment not found.'
+        } );
       }
       memento.assessment = assessment;
       memento.phases = assessment.phases;

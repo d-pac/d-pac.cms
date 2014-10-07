@@ -80,12 +80,12 @@ exports.handleError = function( err,
 
   switch( err.name ){
     case 'ValidationError':
-      return res.apiError( new errors.Http422Error( { reason : err } ) );
+      return res.apiError( new errors.Http422Error( { explanation : err } ) );
     case 'CastError':
-      return res.apiError( new errors.Http400Error( { reason : "Invalid id." } ) );
+      return res.apiError( new errors.Http400Error( { explanation : "Invalid id." } ) );
     /* falls through */
     default:
-      return res.apiError( new errors.Http500Error( { reason : err.message } ) );
+      return res.apiError( new errors.Http500Error( { explanation : err.message } ) );
   }
 
 };
