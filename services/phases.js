@@ -4,7 +4,7 @@ var _ = require('underscore');
 var keystone = require( 'keystone' );
 var Phase = keystone.list( 'Phase' );
 
-module.exports.retrieve = function retrievePhases( opts ){
+module.exports.list = function list( opts ){
   //debug('retrievePhases');
   return Phase.model
     .find()

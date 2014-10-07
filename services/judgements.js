@@ -6,7 +6,7 @@ var extend = require( 'deep-extend' );
 var Promise = require( 'mpromise' );
 var Judgement = keystone.list( 'Judgement' );
 
-module.exports.retrieve = function retrieveJudgements( opts ){
+module.exports.list = function list( opts ){
   debug( '#retrieve' );
   return Judgement.model
     .find( opts )
