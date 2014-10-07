@@ -36,9 +36,18 @@ var routes = {
   api   : importRoutes( './api' )
 };
 
+
 // Setup Route Bindings
 exports = module.exports = function( app ){
   //console.log(errors);
+
+  //TOdo: this is just a temporary fix until https://github.com/keystonejs/keystone/issues/663 is solved
+  keystone.set('500', function(err, req, res, next){
+    res.send(400, new errors.Http400Error({
+      explanation : "Malformed JSON"
+    }));
+  });
+
   // Views
   app.get( '/', routes.views.index );
   app.get( '/blog/:category?', routes.views.blog );
