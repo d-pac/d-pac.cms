@@ -8,11 +8,13 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( 'retrieve' );
-  return res.apiResponse( {
-
-    _csrf : keystone.security.csrf.getToken( req, res ),
-    user : req.user.toJSON()
-  } );
+  var output = {
+    _csrf : keystone.security.csrf.getToken( req, res )
+  };
+  if( req.user ){
+    output.user  = req.user.toJSON();
+  }
+  return res.apiResponse(output);
 };
 
 module.exports.create = function( req,
@@ -30,10 +32,8 @@ module.exports.create = function( req,
       return next( err );
     }else{
       return next( new errors.Http401Error( {
-        reason : {
-          name    : "AuthenticationError",
-          message : "Bad credentials."
-        }
+        message     : "Authentication error",
+        explanation : "Bad credentials."
       } ) );
     }
   } );

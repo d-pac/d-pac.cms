@@ -46,10 +46,11 @@ describe( urls.api, function(){
         var url = urls.session;
 
         describe( 'GET', function(){
-          it( 'should return 401 when no session exists', function( done ){
+          it( 'should return 200 when no session exists', function( done ){
             request( url )
               .get( '' )
-              .expect( 401, done );
+              .expect( bodyHasFields( ['_csrf'] ) )
+              .expect( 200, done );
           } );
         } );//GET
 
@@ -70,8 +71,8 @@ describe( urls.api, function(){
                 password : "invalid password"
               } )
               .expect( function( res ){
-                if( !('reason' in res.body) ){
-                  return "missing reason in body";
+                if( !('explanation' in res.body) ){
+                  return "missing explanation in body";
                 }
               } )
               .expect( 401, done );
@@ -120,7 +121,7 @@ describe( urls.api, function(){
             request( url )
               .get( '' )
               .set( auth ).send( auth )
-              .expect( bodyHasFields( ['_id', 'name', 'email'] ) )
+              .expect( bodyHasFields( ['user', '_csrf'] ) )
               .expect( 200, done );
           } );
         } );//GET
