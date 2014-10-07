@@ -79,7 +79,7 @@ Comparison.schema.path( 'assessment' )
       .then( function( assessment ){
         done( assessment && assessment.state === constants.publicationStates.published );
       } );
-  }, "assessment must be published" );
+  }, "Assessment must be published." );
 
 Comparison.schema.path( 'assessor' )
   .validate( function( value,
@@ -98,7 +98,7 @@ Comparison.schema.path( 'assessor' )
                        personas ){
         done( personas && personas.length > 0 );
       } );
-  }, "user must have assessor persona for selected assessment" );
+  }, "User must have assessor persona for selected assessment." );
 
 Comparison.schema.path( 'phase' )
   .validate( function( phase,
@@ -121,7 +121,7 @@ Comparison.schema.path( 'phase' )
     }else{
       done( true );
     }
-  }, "user may not have another active comparison." )
+  }, "User may not have another active comparison." )
   .validate( function( phase,
                        done ){
     //C08
@@ -140,7 +140,7 @@ Comparison.schema.path( 'phase' )
     }else{
       done( true );
     }
-  }, "phase must be included in workflow of assessment." );
+  }, "Phase must be included in workflow of Assessment." );
 
 Comparison.schema.virtual( 'active' ).get( function(){
   return !!this.phase;

@@ -68,6 +68,14 @@ exports.requireAdmin = function( req,
   return next( output );
 };
 
+function parseValidationErrors(err){
+  var messages = _.pluck(err.errors, "message");
+  return new errors.Http422Error({
+    message : err.message,
+    explanation: messages
+  });
+}
+
 exports.handleError = function( err,
                                 req,
                                 res,
@@ -80,7 +88,7 @@ exports.handleError = function( err,
 
   switch( err.name ){
     case 'ValidationError':
-      return res.apiError( new errors.Http422Error( { explanation : err } ) );
+      return res.apiError( parseValidationErrors(err) );
     case 'CastError':
       return res.apiError( new errors.Http400Error( { explanation : "Invalid id." } ) );
     /* falls through */

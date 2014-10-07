@@ -63,7 +63,7 @@ Representation.schema.path( 'assessee' )
                        personas ){
         done( personas && personas.length > 0 );
       } );
-  }, "user must have assessee persona for selected assessment" )
+  }, "User must have `Assessee` Persona for selected Assessment" )
   .validate( function( user,
                        done ){
     var current = this;
@@ -80,7 +80,7 @@ Representation.schema.path( 'assessee' )
                        representations ){
         done( !representations || representations.length <= 0 );
       } );
-  }, "user should not have more than one representation per assessment" );
+  }, "User should not have more than one Representation per Assessment" );
 
 
 Representation.defaultColumns = 'name, assessee, assessment, file';

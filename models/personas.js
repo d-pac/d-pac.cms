@@ -62,7 +62,7 @@ Persona.schema.path( 'user' ).validate( function( value,
                        personas ){
         done( !personas || personas.length <= 0 );
       } );
-  }, "A user is not allowed to have more than one persona for an assessment."
+  }, "User is not allowed to have more than one Persona for an Assessment."
 );
 
 
