@@ -28,3 +28,4 @@ module.exports.update = function( req,
     fields : schema.api.editable
   }, req, res, next );
 };
+

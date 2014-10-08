@@ -39,7 +39,8 @@ var config = {
 };
 
 Seq.api = {
-  creation : _.keys(config)
+  creation : _.keys(config),
+  editable : ['value']
 };
 Seq.add( config );
 

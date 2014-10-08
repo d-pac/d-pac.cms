@@ -36,17 +36,19 @@ var routes = {
   api   : importRoutes( './api' )
 };
 
-
 // Setup Route Bindings
 exports = module.exports = function( app ){
   //console.log(errors);
 
   //TOdo: this is just a temporary fix until https://github.com/keystonejs/keystone/issues/663 is solved
-  keystone.set('500', function(err, req, res, next){
-    res.send(400, new errors.Http400Error({
+  keystone.set( '500', function( err,
+                                 req,
+                                 res,
+                                 next ){
+    res.send( 400, new errors.Http400Error( {
       explanation : "Malformed JSON"
-    }));
-  });
+    } ) );
+  } );
 
   // Views
   app.get( '/', routes.views.index );
@@ -94,12 +96,17 @@ exports = module.exports = function( app ){
     api.middleware.requireAdmin,
     api.comparisons.retrieve );
   app.patch( '/api/comparisons/:_id', api.comparisons.update );
-  app.all( '/api/comparisons*', api.middleware.onlyAllow( 'GET', 'PATCH' ) );
+  app.put( '/api/comparisons/:_id', api.comparisons.update );
 
+  app.all( '/api/comparisons*', api.middleware.onlyAllow( 'GET', 'PATCH', 'PUT' ) );
+
+  app.put( '/api/judgements/:_id', api.judgements.update );
   app.patch( '/api/judgements/:_id', api.judgements.update );
   app.all( '/api/judgements*', api.middleware.onlyAllow( 'PATCH' ) );
 
-  app.post('/api/seqs', api.seqs.create);
+  app.post( '/api/seqs', api.seqs.create );
+  app.patch( '/api/seqs/:_id', api.seqs.update );
+  app.put( '/api/seqs/:_id', api.seqs.update );
   app.all( '/api/seqs*', api.middleware.onlyAllow( 'POST' ) );
 
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
