@@ -10,7 +10,7 @@ var judgements = require( './judgements' );
 var comparisons = require( './comparisons' );
 var assessments = require( './assessments' );
 var phases = require( './phases' );
-var seqs = require('./seqs');
+var seqs = require( './seqs' );
 
 /**
  *
@@ -29,7 +29,7 @@ module.exports.create = function createMemento( opts ){
     .then( function handleAssessment( assessment ){
       if( !assessment ){
         throw new errors.Http422Error( {
-          message : 'Could not create memento.',
+          message     : 'Could not create memento.',
           explanation : 'Assessment not found.'
         } );
       }
@@ -115,14 +115,21 @@ module.exports.listActives = function listActives( opts ){
         var p = judgements.list( {
           comparison : memento.comparison
         } ).then( function handleJudgements( judgements ){
-          //promote and flatten populated objects
           memento.judgements = judgements;
-          var representations = [];
-          _.each( judgements, function( judgement ){
-            var representation = judgement.representation;
-            judgement.representation = representation._id;
-            representations.push( representation );
-          } );
+        } );
+        promise = ( promise )
+          ? promise.chain( p )
+          : p;
+      } );
+      return promise;
+    } )
+    .then( function listRepresentations(){
+      var promise;
+      _.each( mementos, function( memento ){
+        var ids = _.pluck(memento.judgements, "representation");
+        var p = representations.list( {
+          ids : ids
+        } ).then( function handleRepresentations( representations ){
           memento.representations = representations;
         } );
         promise = ( promise )

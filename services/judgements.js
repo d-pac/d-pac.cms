@@ -10,7 +10,7 @@ module.exports.list = function list( opts ){
   debug( '#retrieve' );
   return Judgement.model
     .find( opts )
-    .populate( 'representation' )
+    .lean()
     .exec();
 };
 
