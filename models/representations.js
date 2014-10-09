@@ -3,7 +3,10 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var mime = require('mime');
+var path = require('path');
 var constants = require( './helpers/constants' );
+
 
 var Representation = new keystone.List( 'Representation', {
   map   : {
@@ -17,6 +20,7 @@ var config = {
   file : {
     type     : Types.LocalFile,
     dest     : 'public/uploads',
+    prefix   : '/uploads',
     required : true,
     initial  : false
   },
@@ -82,6 +86,31 @@ Representation.schema.path( 'assessee' )
       } );
   }, "User should not have more than one Representation per Assessment" );
 
+Representation.schema.virtual('url').get(function(){
+  return '/representations/' + this._id + this.ext;
+});
+
+Representation.schema.virtual('mimeType').get(function(){
+  return this.file.filetype;
+});
+
+Representation.schema.virtual('ext').get(function(){
+  return "." + mime.extension(this.file.filetype);
+});
+
+Representation.schema.virtual('fileUrl').get(function(){
+  return path.join(config.file.prefix, this.file.filename);
+});
+
+Representation.schema.set( 'toJSON', {
+  virtuals  : true,
+  transform : function( doc,
+                        model,
+                        options ){
+    model = _.pick( model, '_id', 'url', 'mimeType', 'ext', 'assessee', 'assessment' );
+    return model;
+  }
+} );
 
 Representation.defaultColumns = 'name, assessee, assessment, file';
 Representation.register();

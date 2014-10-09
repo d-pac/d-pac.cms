@@ -11,7 +11,6 @@ module.exports.list = function list( opts ){
   return Judgement.model
     .find( opts )
     .populate( 'representation' )
-    .lean()
     .exec();
 };
 

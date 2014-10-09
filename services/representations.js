@@ -20,3 +20,9 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
       return representations;
     });
 };
+
+module.exports.retrieve = function retrieve(opts){
+  return Representation.model
+    .findById(opts._id)
+    .exec();
+};

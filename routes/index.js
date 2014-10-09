@@ -36,9 +36,10 @@ var routes = {
   api   : importRoutes( './api' )
 };
 
+
+
 // Setup Route Bindings
 exports = module.exports = function( app ){
-  //console.log(errors);
 
   //TOdo: this is just a temporary fix until https://github.com/keystonejs/keystone/issues/663 is solved
   keystone.set( '500', function( err,
@@ -73,7 +74,7 @@ exports = module.exports = function( app ){
   app.all( '/api*',
     api.middleware.requireUser );
 
-  app.del( '/api/me/session*', api.sessions.destroy );
+  app.delete( '/api/me/session*', api.sessions.destroy );
   app.all( '/api/me/session*', api.middleware.onlyAllow( 'GET, POST, DELETE' ) );
 
   app.get( '/api/me/account', api.users.retrieve );
@@ -109,6 +110,9 @@ exports = module.exports = function( app ){
   app.put( '/api/seqs/:_id', api.seqs.update );
   app.all( '/api/seqs*', api.middleware.onlyAllow( 'POST' ) );
 
-  app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
+  app.get( '/representations/:_id.:format',
+    api.middleware.initCORS(),
+    api.representations.retrieveFile );
+  app.all( '/*', api.middleware.notFound, api.middleware.handleError );
 
 };

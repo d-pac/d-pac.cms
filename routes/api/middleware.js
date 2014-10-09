@@ -68,12 +68,12 @@ exports.requireAdmin = function( req,
   return next( output );
 };
 
-function parseValidationErrors(err){
-  var messages = _.pluck(err.errors, "message");
-  return new errors.Http422Error({
-    message : err.message,
-    explanation: messages
-  });
+function parseValidationErrors( err ){
+  var messages = _.pluck( err.errors, "message" );
+  return new errors.Http422Error( {
+    message     : err.message,
+    explanation : messages
+  } );
 }
 
 exports.handleError = function( err,
@@ -88,7 +88,7 @@ exports.handleError = function( err,
 
   switch( err.name ){
     case 'ValidationError':
-      return res.apiError( parseValidationErrors(err) );
+      return res.apiError( parseValidationErrors( err ) );
     case 'CastError':
       return res.apiError( new errors.Http400Error( { explanation : "Invalid id." } ) );
     /* falls through */
@@ -159,24 +159,24 @@ exports.initCORS = function(){
 
 exports.requireParams = function(){
   var args;
-  if(1 === arguments.length && _.isArray(arguments[0])){
+  if( 1 === arguments.length && _.isArray( arguments[0] ) ){
     args = arguments[0];
   }else{
-    args = _.toArray(arguments);
+    args = _.toArray( arguments );
   }
   return function( req,
                    res,
                    next ){
     debug( '#verifyRequiredParam' );
     var missing = [];
-    _.each(args, function(paramName){
+    _.each( args, function( paramName ){
       if( 'undefined' === typeof req.param( paramName ) ){
-        missing.push(paramName);
+        missing.push( paramName );
       }
-    });
-    if(missing.length){
+    } );
+    if( missing.length ){
       return next( new errors.Http400Error( {
-        reason : "Missing parameters: '" + missing.join("', '") + "'"
+        reason : "Missing parameters: '" + missing.join( "', '" ) + "'"
       } ) );
     }
     return next();
