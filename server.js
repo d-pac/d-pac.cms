@@ -3,11 +3,16 @@
 require( 'dotenv' ).load();
 
 // Require keystone
-var keystone = require( 'keystone' );
+var express = require('express'),
+    mongoose = require('mongoose'),
+    app = express(),
+    keystone = require('keystone').connect(mongoose, app);
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
+
+app.use('/uploads', require('./routes/api/middleware' ).initCORS());
 
 keystone.init( {
 
@@ -32,6 +37,8 @@ keystone.init( {
   'cookie secret' : 'mSxJb5Xr6cz;T%($q%iLg[w_V/|(*}PhgCt(;!IbqH#{;yL@41f5@T-}p%>/[HhO'
 
 } );
+
+
 
 // Load your project's Models
 
@@ -80,5 +87,4 @@ keystone.set( 'nav', {
 } );
 
 // Start Keystone to connect to your database and initialise the web server
-
 keystone.start();
