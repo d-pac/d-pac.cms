@@ -21,7 +21,7 @@ module.exports.listActive = function listActive( opts ){
   debug( '#listActive' );
   return Comparison.model
     .find( opts )
-    .where( 'phase' ).ne( null )
+    .where( 'completed' ).ne( true ) //we want all falsy matches as well
     .populate( 'assessment' )
     .lean()
     .exec();

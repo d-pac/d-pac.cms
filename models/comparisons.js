@@ -62,6 +62,12 @@ var config = {
     type  : Types.Relationship,
     ref   : 'Representation',
     index : true
+  },
+
+  completed : {
+    type    : Types.Boolean,
+    default : false,
+    initial : true
   }
 
 };
@@ -143,7 +149,7 @@ Comparison.schema.path( 'phase' )
   }, "Phase must be included in workflow of Assessment." );
 
 Comparison.schema.virtual( 'active' ).get( function(){
-  return !!this.phase;
+  return !this.completed;
 } );
 
 Comparison.relationship( {
