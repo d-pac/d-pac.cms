@@ -74,7 +74,7 @@ exports = module.exports = function( app ){
   app.all( '/api*',
     api.middleware.requireUser );
 
-  app.delete( '/api/me/session*', api.sessions.destroy );
+  app.del( '/api/me/session*', api.sessions.destroy );
   app.all( '/api/me/session*', api.middleware.onlyAllow( 'GET, POST, DELETE' ) );
 
   app.get( '/api/me/account', api.users.retrieve );
