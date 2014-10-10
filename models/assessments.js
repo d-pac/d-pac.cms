@@ -34,6 +34,13 @@ var config = {
     initial  : false
   },
 
+  comparisonsNum : {
+    type : Types.Number,
+    required : true,
+    initial : true,
+    default : 20
+  },
+
   state : {
     type    : Types.Select,
     options : constants.publicationStates.list.toString(),
