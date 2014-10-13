@@ -45,6 +45,11 @@ var config = {
 
 };
 
+Timelog.api = {
+  creation : _.keys(config),
+  editable : ['times']
+};
+
 Timelog.add( config );
 
 Timelog.defaultColumns = 'name, type, duration';
