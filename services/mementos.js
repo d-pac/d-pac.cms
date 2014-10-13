@@ -98,11 +98,10 @@ module.exports.listActives = function listActives( opts ){
     .then( function listPhases(){
       var promise;
       _.each( mementos, function( memento ){
-        var p = phases.list( {
-          ids : memento.assessment.phases
-        } ).then( function handlePhases( phases ){
-          memento.phases = phases;
-        } );
+        var p = phases.list( memento.assessment.phases )
+          .then( function handlePhases( phases ){
+            memento.phases = phases;
+          } );
         promise = ( promise )
           ? promise.chain( p )
           : p;
@@ -126,12 +125,11 @@ module.exports.listActives = function listActives( opts ){
     .then( function listRepresentations(){
       var promise;
       _.each( mementos, function( memento ){
-        var ids = _.pluck(memento.judgements, "representation");
-        var p = representations.list( {
-          ids : ids
-        } ).then( function handleRepresentations( representations ){
-          memento.representations = representations;
-        } );
+        var ids = _.pluck( memento.judgements, "representation" );
+        var p = representations.list( ids )
+          .then( function handleRepresentations( representations ){
+            memento.representations = representations;
+          } );
         promise = ( promise )
           ? promise.chain( p )
           : p;

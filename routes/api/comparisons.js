@@ -14,9 +14,7 @@ exports.retrieve = function( req,
 
   debug( '#retrieve' );
   controller.retrieve( {
-    values : {
-      _id : req.param( '_id' )
-    }
+    _id : req.param( '_id' )
   }, req, res, next );
 };
 

@@ -4,15 +4,28 @@ var _ = require( 'underscore' );
 var keystone = require( 'keystone' );
 var extend = require( 'deep-extend' );
 var Promise = require( 'mpromise' );
-var Judgement = keystone.list( 'Judgement' );
+var schema = keystone.list( 'Judgement' );
 
-module.exports.list = function list( opts ){
-  debug( '#retrieve' );
-  return Judgement.model
-    .find( opts )
+var listById = module.exports.listById = function listById(ids){
+  return schema.model
+    .find()
+    .where( '_id' ).in( ids )
     .lean()
     .exec();
 };
+
+module.exports.list = function list( opts ){
+  debug('list');
+  if( _.isArray(opts)){
+    return listById(opts);
+  }
+
+  return schema.model
+    .find(opts)
+    .lean()
+    .exec();
+};
+
 
 module.exports.create = function createJudgements( opts ){
   debug( '#create' );
@@ -25,7 +38,7 @@ module.exports.create = function createJudgements( opts ){
       representation : representation
     } );
   } );
-  return Judgement.model
+  return schema.model
     .create( judgements )
     .then( function(){
       //won't be handled correctly in the promise chain, unless if we pass them along here
@@ -40,7 +53,7 @@ module.exports.create = function createJudgements( opts ){
  */
 module.exports.update = function update( opts ){
   debug( 'update' );
-  return Judgement.model
+  return schema.model
     .findById( opts._id )
     .exec()
     .then( function( judgement ){

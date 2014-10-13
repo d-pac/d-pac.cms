@@ -4,11 +4,11 @@ var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var extend = require('deep-extend');
 var Promise = require( 'mpromise' );
-var Comparison = keystone.list( 'Comparison' );
+var schema = keystone.list( 'Comparison' );
 
 module.exports.create = function createComparison( opts ){
   debug( '#create' );
-  return Comparison.model.create( opts );
+  return schema.model.create( opts );
 };
 
 /**
@@ -19,7 +19,7 @@ module.exports.create = function createComparison( opts ){
  */
 module.exports.listActive = function listActive( opts ){
   debug( '#listActive' );
-  return Comparison.model
+  return schema.model
     .find( opts )
     .where( 'completed' ).ne( true ) //we want all falsy matches as well
     .populate( 'assessment' )
@@ -34,7 +34,7 @@ module.exports.listActive = function listActive( opts ){
  * @returns {Promise}
  */
 module.exports.retrieve = function retrieve( opts ){
-  return Comparison.model
+  return schema.model
     .findById( opts._id )
     .lean()
     .exec();
@@ -47,7 +47,7 @@ module.exports.retrieve = function retrieve( opts ){
  */
 module.exports.update = function update( opts ){
   debug( 'update' );
-  return Comparison.model
+  return schema.model
     .findById( opts._id )
     .exec()
     .then( function( comparison ){

@@ -14,15 +14,13 @@ exports.retrieve = function( req,
 
   debug( '#retrieve' );
   controller.retrieve( {
-    values : {
-      _id : req.user.id
-    }
+    _id : req.user.id
   }, req, res, next );
 };
 
 var update = module.exports.update = function( req,
-                                  res,
-                                  next ){
+                                               res,
+                                               next ){
   debug( '#update' );
   controller.update( {
     values : {

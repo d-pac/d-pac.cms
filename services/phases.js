@@ -1,14 +1,26 @@
 'use strict';
-
+var debug = require( 'debug' )( 'dpac:services.phases' );
 var _ = require('underscore');
 var keystone = require( 'keystone' );
-var Phase = keystone.list( 'Phase' );
+var schema = keystone.list( 'Phase' );
 
-module.exports.list = function list( opts ){
-  //debug('retrievePhases');
-  return Phase.model
+var listById = module.exports.listById = function listById(ids){
+  return schema.model
     .find()
-    .where( '_id' ).in( opts.ids )
+    .where( '_id' ).in( ids )
     .lean()
     .exec();
 };
+
+module.exports.list = function list( opts ){
+  debug('list');
+  if( _.isArray(opts)){
+    return listById(opts);
+  }
+
+  return schema.model
+    .find(opts)
+    .lean()
+    .exec();
+};
+

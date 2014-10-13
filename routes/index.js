@@ -36,8 +36,6 @@ var routes = {
   api   : importRoutes( './api' )
 };
 
-
-
 // Setup Route Bindings
 exports = module.exports = function( app ){
 
@@ -110,9 +108,16 @@ exports = module.exports = function( app ){
   app.put( '/api/seqs/:_id', api.seqs.update );
   app.all( '/api/seqs*', api.middleware.onlyAllow( 'POST' ) );
 
+  app.get( '/api/timelogs', api.timelogs.list );
+  app.post( 'api/timelogs', api.timelogs.create );
+  app.patch( '/api/seqs/:_id', api.timelogs.update );
+  app.put( '/api/seqs/:_id', api.timelogs.update );
+  app.all( '/api/timelogs*', api.middleware.onlyAllow( 'GET', 'POST', 'PATCH', 'PUT' ) );
+
   app.get( '/representations/:_id.:format',
     api.middleware.initCORS(),
     api.representations.retrieveFile );
+
   app.all( '/*', api.middleware.notFound, api.middleware.handleError );
 
 };

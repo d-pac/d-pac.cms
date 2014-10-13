@@ -3,7 +3,7 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var moment = require('moment-range');
+var moment = require( 'moment-range' );
 
 var Timerange = new keystone.List( 'Timerange', {
   map   : {
@@ -12,18 +12,22 @@ var Timerange = new keystone.List( 'Timerange', {
   track : true
 } );
 
+var format = "DD/MM/YYYY HH:mm:ss";
+
 var config = {
 
   begin : {
-    type     : Date,
+    type     : Types.Datetime,
     required : true,
-    initial  : true
+    initial  : true,
+    format   : format
   },
 
   end : {
-    type     : Date,
+    type     : Types.Datetime,
     required : true,
-    initial  : true
+    initial  : true,
+    format   : format
   }
 
 };
@@ -31,7 +35,7 @@ var config = {
 Timerange.add( config );
 
 Timerange.schema.virtual( 'duration' ).get( function(){
-  return moment.range(this.begin, this.end ).diff('s');
+  return moment.range( this.begin, this.end ).diff( 's' );
 } );
 
 Timerange.relationship( {
@@ -40,7 +44,6 @@ Timerange.relationship( {
   refPath : 'times',
   label   : 'Time log'
 } );
-
 
 Timerange.defaultColumns = 'name, begin, end, duration';
 Timerange.register();

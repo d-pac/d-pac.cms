@@ -1,5 +1,6 @@
 'use strict';
 var debug = require( 'debug' )( 'dpac:services.seqs' );
+var _ = require('underscore');
 var keystone = require( 'keystone' );
 var extend = require('deep-extend');
 var Promise = require( 'mpromise' );
@@ -10,8 +11,20 @@ module.exports.create = function( opts ){
   return schema.model.create( opts );
 };
 
-module.exports.list = function( opts ){
-  debug('#list');
+var listById = module.exports.listById = function listById(ids){
+  return schema.model
+    .find()
+    .where( '_id' ).in( ids )
+    .lean()
+    .exec();
+};
+
+module.exports.list = function list( opts ){
+  debug('list');
+  if( _.isArray(opts)){
+    return listById(opts);
+  }
+
   return schema.model
     .find(opts)
     .lean()

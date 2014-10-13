@@ -8,17 +8,17 @@ var extend = require('deep-extend');
 
 var Promise = require( 'mpromise' );
 
-var User = keystone.list( 'User' );
+var schema = keystone.list( 'User' );
 
 /**
  *
  * @param opts
- * @param opts._id User.id
+ * @param opts._id schema.id
  * @returns {Promise}
  */
 module.exports.retrieve = function retrieve( opts ){
   debug( '#retrieve' );
-  return User.model
+  return schema.model
     .findById( opts._id )
     .lean()
     .exec();
@@ -32,7 +32,7 @@ module.exports.retrieve = function retrieve( opts ){
  */
 var update = module.exports.update = function update( opts ){
   debug( 'update' );
-  return User.model
+  return schema.model
     .findById( opts._id )
     .exec()
     .then( function( item ){

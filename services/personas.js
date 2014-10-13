@@ -1,18 +1,25 @@
 'use strict';
 var debug = require( 'debug' )( 'dpac:services.assessments' );
+var _ = require('underscore');
 var keystone = require( 'keystone' );
-var Persona = keystone.list( 'Persona' );
+var schema = keystone.list( 'Persona' );
 
-/**
- *
- * @param opts
- * @param {string} opts.user User.id
- * @param {string} opts.role Role name
- * @returns {Promise}
- */
+var listById = module.exports.listById = function listById(ids){
+  return schema.model
+    .find()
+    .where( '_id' ).in( ids )
+    .lean()
+    .exec();
+};
+
 module.exports.list = function list( opts ){
-  return Persona.model
+  debug('list');
+  if( _.isArray(opts)){
+    return listById(opts);
+  }
+
+  return schema.model
     .find(opts)
-    .populate( 'assessment' )
+    .lean()
     .exec();
 };

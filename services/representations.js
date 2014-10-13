@@ -1,7 +1,7 @@
 'use strict';
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
-var Representation = keystone.list( 'Representation' );
+var schema = keystone.list( 'Representation' );
 
 function toSafeJSON( representations ){
   if( _.isArray( representations ) ){
@@ -13,9 +13,22 @@ function toSafeJSON( representations ){
   }
 }
 
+var listById = module.exports.listById = function(ids){
+  return schema.model
+    .find()
+    .where( '_id' ).in( ids )
+    .exec()
+    .then( function( representations ){
+      return toSafeJSON( representations );
+    } );
+};
+
 module.exports.list = function list( opts ){
-  return Representation.model
-    .where( '_id' ).in( opts.ids )
+  if( _.isArray(opts)){
+    return listById(opts);
+  }
+  return schema.model
+    .find(opts)
     .exec()
     .then( function( representations ){
       return toSafeJSON( representations );
@@ -26,7 +39,7 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
 
   //debug('retrieveRepresentations');
   //todo: replace this with CJ
-  return Representation.model
+  return schema.model
     .find()
     .sort( { createdAt : -1 } )
     .limit( 2 )
@@ -41,7 +54,7 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
 };
 
 module.exports.retrieveFull = function retrieveFull( opts ){
-  return Representation.model
+  return schema.model
     .findById( opts._id )
     .exec();
 };

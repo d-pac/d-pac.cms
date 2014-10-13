@@ -38,6 +38,16 @@ module.exports.verifyChangesAllowed = function verifyChangesAllowed( modified,
   };
 };
 
+/**
+ *
+ * @param opts
+ * @param opts.fields [Required] Array of field names that will be updated, all other values
+ *  will be ignored [!] for security reasons
+ * @param opts.values [Optional] Object containing key value pairs that correspond to schema fields,
+ *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
+ * @param req
+ * @returns {*}
+ */
 module.exports.parseValues = function( opts, req ){
   var temp = {};
   _.each( opts.fields, function( field ){

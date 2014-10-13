@@ -1,7 +1,7 @@
 'use strict';
 var debug = require( 'debug' )( 'dpac:services.assessments' );
 var keystone = require( 'keystone' );
-var Assessment = keystone.list( 'Assessment' );
+var schema = keystone.list( 'Assessment' );
 
 /**
  *
@@ -11,7 +11,7 @@ var Assessment = keystone.list( 'Assessment' );
  */
 module.exports.retrieve = function retrieveAssessment( opts ){
   debug('#retrieve');
-  return Assessment.model
+  return schema.model
     .findById( opts._id )
     .populate( 'phases' )
     .lean()
