@@ -67,6 +67,9 @@ POST /api/me/session
 }
 ```
 
+* `email` [Required]
+* `password` [Required]
+
 #### Response: Success
 
 ```shell
@@ -164,9 +167,14 @@ PUT /api/me/account
   },
   "password": "HolyShizzle!"
   "password_confirm": "HolyShizzle!"
-  "_csrf": "<CSRF TOKEN>"
 }
 ```
+
+* `email` **[Required]**
+* `name.first` **[Required]**
+* `name.last` **[Required]**
+* `password` **[Required]**
+* `password_confirm` **[Required]**
 
 #### Response
 
@@ -193,12 +201,15 @@ PATCH /api/me/account
 ```
 ```json
 {
-  "email": "changedemail@example.com",
-  "_csrf": "<CSRF TOKEN>"
+  "email": "changedemail@example.com"
 }
 ```
 
-N.B.: though `password` is never returned as a user object, it can be updated too. It does however need an additional value: `password_confirm`.
+* `email` **[Optional]**
+* `name.first` **[optional]**
+* `name.last` **[Optional]**
+* `password` **[Optional]**
+* `password_confirm` **[Optional/Required]** When `password` is provided this field is **[Required]**
 
 E.g.:
 
@@ -225,14 +236,14 @@ HTTP/1.1 200 OK
 }
 ```
 
-## Aggregates
+## Mementos
 
-### Retrieve current (active) comparison(s) for the logged in user
+### Retrieve current memento(s) for the logged in user
 
 #### Request
 
 ```shell
-GET /api/me/aggregates
+GET /api/me/mementos
 ```
 
 #### Response: found
@@ -241,9 +252,9 @@ GET /api/me/aggregates
 HTTP/1.1 200 OK
 ```
 ```json
-{
+[{
 
-}
+}]
 ```
 
 #### Response: not found
@@ -252,23 +263,23 @@ HTTP/1.1 200 OK
 HTTP/1.1 200 OK
 ```
 ```json
-{
-  "assessor": "5423f87677177065a0887b97"
-}
+[]
 ```
 
-### Create an (active) comparison for the logged in user
+### Create a memento for the logged in user
 
 #### Request
 
 ```shell
-POST /api/me/aggregates
+POST /api/me/mementos
 ```
 ```json
 {
   "assessment" : "53a984cca87b4b7d57a99858"
 }
 ```
+
+* `assessment` **[Required]**
 
 #### Response
 
@@ -280,6 +291,65 @@ HTTP/1.1 200 OK
 
 }
 ```
+
+## Comparisons
+
+### Retrieve comparison
+
+#### Request
+
+```shell
+GET /api/comparisons/:id
+```
+
+#### Response
+
+```json
+{
+    "_id": "542e5a07635e7121e9d3c68c",
+    "_rid": 16,
+    "assessor": "542bf92a03a305000015720f",
+    "assessment": "5423f89677177065a0887ba1",
+    "phase": "5423f87677177065a0887b99",
+    "timelogs": [],
+    "comparativeFeedback": "Nou!",
+}
+```
+
+### Partial Update
+
+#### Request
+
+```shell
+PATCH /api/comparisons/:id
+```
+```json
+{
+  "comparativeFeedback": "Lorem ipsum dolor sit amet."
+}
+```
+
+* `selected` {Representation._id} **[Optional]**
+* `phase` {Phase._id} **[Optional]**
+* `comparativeFeedback` **[Optional]**
+
+## Judgements
+
+### Partial Update
+
+#### Request
+
+```shell
+PATCH /api/judgements/:id
+```
+```json
+{
+  "notes": "Lorem ipsum dolor sit amet."
+}
+```
+
+* `notes` **[Optional]**
+* `passed` **[Optional]** [-1, 0, 1] (failed, undetermined, passed)
 
 ## Errors
 
@@ -296,6 +366,25 @@ All error objects have a similar (base) structure:
 
 (Quotes taken from [wikipedia](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes))
 Depending on the requested operation and largely based on the guidelines as laid out in the [HTTP API Design Guide](https://github.com/interagent/http-api-design), following status codes are returned by the API methods:
+
+## Seqs
+
+### Creation
+
+#### Request
+
+```shell
+POST /api/seqs
+```
+```json
+{
+  "comparison": "542e5a07635e7121e9d3c68c",
+  "phase" : "5423f87677177065a0887b99",
+  "value" :2
+}
+```
+
+All fields **[Required]**
 
 ### 401 Unauthorized
 

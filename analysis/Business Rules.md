@@ -41,6 +41,7 @@ A comparison should
 * C06: U04
 * C07: U06
 * [x] C08: have a `phase` with a value included in its assessments' `phases`
+* [x] C09: only allow editing of fields: "selected", "phase", "comparativeFeedback", "timelogs"
 
 ## Judgements
 
