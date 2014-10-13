@@ -71,14 +71,7 @@ var config = {
     ],
     initial : true,
     default : ""
-  },
-
-  timelogs : {
-    type : Types.Relationship,
-    ref  : 'Timelog',
-    many : true //J05
   }
-
 };
 
 Judgement.add( config );

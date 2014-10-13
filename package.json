@@ -15,6 +15,7 @@
     "keystone": "^0.2.30",
     "lodash": "^2.4.1",
     "mime": "^1.2.11",
+    "moment-range": "^1.0.5",
     "mongoose-auto-increment": "^3.0.8",
     "mongoose-random": "0.0.2",
     "mpromise": "^0.5.5",

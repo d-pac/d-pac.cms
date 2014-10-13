@@ -20,6 +20,13 @@ var config = {
     initial  : true
   },
 
+  comparison : {
+    type    : Types.Relationship,
+    ref     : 'Comparison',
+    require : true,
+    initial : true
+  },
+
   duration : {
     type     : Number,
     default  : 0,
@@ -39,7 +46,6 @@ var config = {
 };
 
 Timelog.add( config );
-
 
 Timelog.defaultColumns = 'name, type, duration';
 Timelog.register();

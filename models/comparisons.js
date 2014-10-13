@@ -45,12 +45,6 @@ var config = {
     wysiwyg : true
   },
 
-  timelogs : {
-    type : Types.Relationship,
-    ref  : 'Timelog',
-    many : true //C04
-  },
-
   phase : {
     type    : Types.Relationship,
     ref     : 'Phase',
