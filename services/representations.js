@@ -2,16 +2,7 @@
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var schema = keystone.list( 'Representation' );
-
-function toSafeJSON( representations ){
-  if( _.isArray( representations ) ){
-    return _.map( representations, function( doc ){
-      return doc.toSafeJSON();
-    } );
-  }else{
-    return representations.toSafeJSON();
-  }
-}
+var toSafeJSON = require('./utils').toSafeJSON;
 
 var listById = module.exports.listById = function(ids){
   return schema.model
