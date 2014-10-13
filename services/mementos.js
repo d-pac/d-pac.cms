@@ -11,6 +11,7 @@ var comparisons = require( './comparisons' );
 var assessments = require( './assessments' );
 var phases = require( './phases' );
 var seqs = require( './seqs' );
+var timelogs = require('./timelogs');
 
 /**
  *
@@ -153,6 +154,20 @@ module.exports.listActives = function listActives( opts ){
       } );
       return promise;
     } )
+    .then( function listTimelogs(){
+      var promise;
+      _.each( mementos, function( memento ){
+        var p = timelogs.list( {
+          comparison : memento.comparison
+        } ).then( function handleTimelogs( docs ){
+          memento.timelogs = docs;
+        } );
+        promise = ( promise )
+          ? promise.chain( p )
+          : p;
+      } );
+      return promise;
+    })
     .then( function handleOutput(){
       return mementos;
     } );

@@ -3,17 +3,21 @@
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
+var moment = require( 'moment-range' );
 
 var Timelog = new keystone.List( 'Timelog', {
   map   : {
     name : 'id'
   },
-  track : true
+  track : true,
+  defaultSort: 'comparison'
 } );
+
+var format = "DD/MM/YYYY HH:mm:ss";
 
 var config = {
 
-  type : {
+  phase : {
     type     : Types.Relationship,
     ref      : 'Phase',
     required : true,
@@ -27,32 +31,35 @@ var config = {
     initial : true
   },
 
-  duration : {
-    type     : Number,
-    default  : 0,
+  begin : {
+    type     : Types.Datetime,
     required : true,
-    initial  : true
+    initial  : true,
+    format   : format
   },
 
-  times : {
-    type     : Types.Relationship,
-    ref      : 'Timerange',
-    initial  : true,
+  end : {
+    type     : Types.Datetime,
     required : true,
-    index    : true,
-    many     : true
+    initial  : true,
+    format   : format
   }
 
 };
 
 Timelog.api = {
-  creation : _.keys(config),
-  editable : ['times']
+  creation : _.keys(config)
 };
 
 Timelog.add( config );
 
-Timelog.defaultColumns = 'name, type, duration';
+Timelog.schema.virtual( 'duration' ).get( function(){
+  return moment.range( this.begin, this.end ).diff( 's' );
+} );
+
+
+Timelog.schema.methods.toSafeJSON = function(){
+  return _.pick( this, ['_id', 'duration'].concat( _.keys(config)) );
+};
+Timelog.defaultColumns = 'name, comparison, phase, begin, end, duration';
 Timelog.register();
-
-

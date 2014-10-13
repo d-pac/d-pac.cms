@@ -76,8 +76,7 @@ keystone.set( 'nav', {
     'representations',
     'comparisons',
     'judgements',
-    'timelogs',
-    'timeranges'
+    'timelogs'
   ],
   'users'       : [
     'users',
