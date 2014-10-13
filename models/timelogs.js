@@ -6,11 +6,11 @@ var keystone = require( 'keystone' ),
 var moment = require( 'moment-range' );
 
 var Timelog = new keystone.List( 'Timelog', {
-  map   : {
+  map         : {
     name : 'id'
   },
-  track : true,
-  defaultSort: 'comparison'
+  track       : true,
+  defaultSort : 'comparison'
 } );
 
 var format = "DD/MM/YYYY HH:mm:ss";
@@ -40,7 +40,7 @@ var config = {
 
   end : {
     type     : Types.Datetime,
-    required : true,
+    required : false,
     initial  : true,
     format   : format
   }
@@ -48,18 +48,22 @@ var config = {
 };
 
 Timelog.api = {
-  creation : _.keys(config)
+  creation : _.keys( config ),
+  editable : ["end"]
 };
 
 Timelog.add( config );
 
 Timelog.schema.virtual( 'duration' ).get( function(){
-  return moment.range( this.begin, this.end ).diff( 's' );
+  if(this.end){
+    return moment.range( this.begin, this.end ).diff( 's' );
+  }
+
+  return "-";
 } );
 
-
 Timelog.schema.methods.toSafeJSON = function(){
-  return _.pick( this, ['_id', 'duration'].concat( _.keys(config)) );
+  return _.pick( this, ['_id', 'duration'].concat( _.keys( config ) ) );
 };
 Timelog.defaultColumns = 'name, comparison, phase, begin, end, duration';
 Timelog.register();

@@ -49,6 +49,9 @@ module.exports.verifyChangesAllowed = function verifyChangesAllowed( modified,
  * @returns {*}
  */
 module.exports.parseValues = function( opts, req ){
+  if(! opts.fields){
+    throw new Error('`opts.fields` is required!');
+  }
   var temp = {};
   _.each( opts.fields, function( field ){
     var value = req.param( field );

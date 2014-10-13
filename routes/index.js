@@ -109,9 +109,9 @@ exports = module.exports = function( app ){
   app.all( '/api/seqs*', api.middleware.onlyAllow( 'POST' ) );
 
   app.get( '/api/timelogs', api.timelogs.list );
-  app.post( 'api/timelogs', api.timelogs.create );
-  app.patch( '/api/seqs/:_id', api.timelogs.update );
-  app.put( '/api/seqs/:_id', api.timelogs.update );
+  app.post( '/api/timelogs', api.timelogs.create );
+  app.patch( '/api/timelogs/:_id', api.timelogs.update );
+  app.put( '/api/timelogs/:_id', api.timelogs.update );
   app.all( '/api/timelogs*', api.middleware.onlyAllow( 'GET', 'POST', 'PATCH', 'PUT' ) );
 
   app.get( '/representations/:_id.:format',
