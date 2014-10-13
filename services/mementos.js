@@ -154,20 +154,6 @@ module.exports.listActives = function listActives( opts ){
       } );
       return promise;
     } )
-    .then( function listTimelogs(){
-      var promise;
-      _.each( mementos, function( memento ){
-        var p = timelogs.list( {
-          comparison : memento.comparison
-        } ).then( function handleTimelogs( docs ){
-          memento.timelogs = docs;
-        } );
-        promise = ( promise )
-          ? promise.chain( p )
-          : p;
-      } );
-      return promise;
-    })
     .then( function handleOutput(){
       return mementos;
     } );
