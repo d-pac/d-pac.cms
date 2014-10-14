@@ -70,7 +70,7 @@ var config = {
       { value : "failed", label : "Failed" }
     ],
     initial : true,
-    default : ""
+    default : "undecided"
   }
 };
 

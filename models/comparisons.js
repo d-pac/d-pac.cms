@@ -14,7 +14,7 @@ var Comparison = new keystone.List( 'Comparison', {
 } );
 
 Comparison.api = {
-  editable : ["selected", "phase", "timelogs", "comparativeFeedback"]
+  editable : ["selected", "phase", "timelogs", "comparativeFeedback", "completed"]
 };
 
 var config = {
@@ -100,28 +100,26 @@ Comparison.schema.path( 'assessor' )
       } );
   }, "User must have assessor persona for selected assessment." );
 
-Comparison.schema.path( 'phase' )
-  .validate( function( phase,
+Comparison.schema.path( 'assessor' )
+  .validate( function( value,
                        done ){
     //U06 //C07
     var current = this;
-    if( phase ){
-      var filter = {
-        assessor : current.assessor
-      };
-      Comparison.model
-        .find()
-        .where( filter )
-        .where( 'phase' ).ne( null )
-        .where( '_id' ).ne( current.id )
-        .exec( function( err,
-                         comparisons ){
-          done( !comparisons || comparisons.length <= 0 );
-        } );
-    }else{
-      done( true );
-    }
-  }, "User may not have another active comparison." )
+    var filter = {
+      assessor  : current.assessor,
+      completed : false
+    };
+    Comparison.model
+      .find()
+      .where( filter )
+      .where( '_id' ).ne( current.id )
+      .exec( function( err,
+                       comparisons ){
+        done( !comparisons || comparisons.length <= 0 );
+      } );
+  }, "User may not have another active comparison." );
+
+Comparison.schema.path( 'phase' )
   .validate( function( phase,
                        done ){
     //C08

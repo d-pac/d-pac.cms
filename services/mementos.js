@@ -26,7 +26,7 @@ module.exports.create = function createMemento( opts ){
   var memento = {
     assessor : opts.assessor
   };
-  return assessments.retrieve( { assessment : opts.assessment } )
+  return assessments.retrieve( { _id : opts.assessment } )
     .then( function handleAssessment( assessment ){
       if( !assessment ){
         throw new errors.Http422Error( {
