@@ -6,13 +6,15 @@ var async = require( 'async' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.me' );
 var constants = require( '../../models/helpers/constants' );
+var Promise = require('bluebird');
 
+var comparisons = require( '../../services/comparisons' );
 var personas = require( '../../services/personas' );
-var mementos = require('../../services/mementos');
+var mementos = require( '../../services/mementos' );
 
 module.exports.listMementos = function( req,
-                                       res,
-                                       next ){
+                                        res,
+                                        next ){
   debug( '#listMementos' );
   mementos.listActives( {
     assessor : req.user.id
@@ -27,8 +29,8 @@ module.exports.listMementos = function( req,
 };
 
 module.exports.createMemento = function( req,
-                                  res,
-                                  next ){
+                                         res,
+                                         next ){
   debug( '#create' );
   mementos.create( {
     assessor   : req.user.id,
@@ -48,20 +50,39 @@ module.exports.listAssessments = function( req,
                                            next ){
   debug( '#listAssessments' );
 
+  var output = [];
   personas.list( {
     user : req.user.id,
     role : constants.roles.assessor
+  } ).then( function handlePersonas( docs ){
+    return _.chain( docs )
+      .map( function( persona ){
+        return persona.assessment;
+      } )
+      .filter( function( assessment ){
+        return assessment.state === constants.publicationStates.published;
+      } )
+      .value();
+  } ).then( function( assessments ){
+    var promises = [];
+    _.each( assessments, function( assessment ){
+      var p = comparisons.count( {
+        assessor : req.user.id,
+        assessment : assessment._id,
+        completed : true
+      } ).then( function handleComparisonsNum( completedComparisons ){
+        if(completedComparisons < assessment.comparisonsNum){
+          output.push(assessment);
+        }
+      } );
+      promises.push(p);
+    } );
+    return Promise.all(promises);
   } ).onResolve( function( err,
-                           personas ){
+                           assessments ){
     if( err ){
       return next( err );
     }
-    personas = personas.filter( function( doc ){
-      return doc.assessment.state === constants.publicationStates.published;
-    } );
-    var assessments = _.map( personas, function( persona ){
-      return persona.assessment;
-    } );
-    res.apiResponse( assessments );
+    res.apiResponse( output );
   } );
 };

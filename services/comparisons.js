@@ -3,7 +3,7 @@ var debug = require( 'debug' )( 'dpac:services.comparisons' );
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var extend = require('deep-extend');
-var Promise = require( 'mpromise' );
+var Promise = require( 'bluebird' );
 var schema = keystone.list( 'Comparison' );
 
 module.exports.create = function createComparison( opts ){
@@ -50,16 +50,18 @@ module.exports.update = function update( opts ){
   return schema.model
     .findById( opts._id )
     .exec()
-    .then( function( comparison ){
-      extend( comparison, opts );
-      var promise = new Promise();
-      comparison.save( function( err,
-                                 comparison ){
-        if( err ){
-          return promise.reject( err );
-        }
-        promise.fulfill( comparison );
-      } );
-      return promise;
+    .then( function( doc ){
+      if( !doc ){
+        return;
+      }
+      extend( doc, opts );
+      var save = Promise.promisify(doc.save, doc);
+      return save();
     } );
+};
+
+module.exports.count = function count(opts){
+  return schema.model
+    .count(opts)
+    .exec();
 };

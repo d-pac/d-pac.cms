@@ -4,6 +4,7 @@ var debug = require( 'debug' )( 'dpac:services.mementos' );
 var async = require( 'async' ),
   keystone = require( 'keystone' );
 var errors = require( 'errors' );
+var Promise = require('bluebird');
 
 var representations = require( './representations' );
 var judgements = require( './judgements' );
@@ -97,50 +98,37 @@ module.exports.listActives = function listActives( opts ){
       } );
   })()
     .then( function listPhases(){
-      var promise;
-      _.each( mementos, function( memento ){
-        var p = phases.list( memento.assessment.phases )
+      var promises=_.map( mementos, function( memento ){
+        return phases.list( memento.assessment.phases )
           .then( function handlePhases( phases ){
             memento.phases = phases;
           } );
-        promise = ( promise )
-          ? promise.chain( p )
-          : p;
       } );
-      return promise;
+      return Promise.all(promises);
     } )
     .then( function listJudgements(){
-      var promise;
-      _.each( mementos, function( memento ){
-        var p = judgements.list( {
+      var promises = _.map( mementos, function( memento ){
+        return judgements.list( {
           comparison : memento.comparison
         } ).then( function handleJudgements( judgements ){
           memento.judgements = judgements;
         } );
-        promise = ( promise )
-          ? promise.chain( p )
-          : p;
       } );
-      return promise;
+      return Promise.all(promises);
     } )
     .then( function listRepresentations(){
-      var promise;
-      _.each( mementos, function( memento ){
+      var promises = _.map( mementos, function( memento ){
         var ids = _.pluck( memento.judgements, "representation" );
-        var p = representations.list( ids )
+        return representations.list( ids )
           .then( function handleRepresentations( representations ){
             memento.representations = representations;
           } );
-        promise = ( promise )
-          ? promise.chain( p )
-          : p;
       } );
-      return promise;
+      return Promise.all(promises);
     } )
     .then( function listSeqs(){
-      var promise;
-      _.each( mementos, function( memento ){
-        var p = seqs.list( {
+      var promises = _.map( mementos, function( memento ){
+        return seqs.list( {
           comparison : memento.comparison
         } ).then( function handleSeqs( seqs ){
           if( seqs && seqs.length > 0 ){
@@ -148,11 +136,8 @@ module.exports.listActives = function listActives( opts ){
             memento.seqs = seqs;
           }
         } );
-        promise = ( promise )
-          ? promise.chain( p )
-          : p;
       } );
-      return promise;
+      return Promise.all(promises);
     } )
     .then( function handleOutput(){
       return mementos;

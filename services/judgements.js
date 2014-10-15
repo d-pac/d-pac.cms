@@ -3,7 +3,7 @@ var debug = require( 'debug' )( 'dpac:services.judgements' );
 var _ = require( 'underscore' );
 var keystone = require( 'keystone' );
 var extend = require( 'deep-extend' );
-var Promise = require( 'mpromise' );
+var Promise = require( 'bluebird' );
 var schema = keystone.list( 'Judgement' );
 
 var listById = module.exports.listById = function listById(ids){
@@ -56,16 +56,12 @@ module.exports.update = function update( opts ){
   return schema.model
     .findById( opts._id )
     .exec()
-    .then( function( judgement ){
-      extend( judgement, opts );
-      var promise = new Promise();
-      judgement.save( function( err,
-                                comparison ){
-        if( err ){
-          return promise.reject( err );
-        }
-        promise.fulfill( comparison );
-      } );
-      return promise;
+    .then( function( doc ){
+      if( !doc ){
+        return;
+      }
+      extend( doc, opts );
+      var save = Promise.promisify(doc.save, doc);
+      return save();
     } );
 };

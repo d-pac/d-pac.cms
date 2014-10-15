@@ -2,8 +2,8 @@
 
 var debug = require( 'debug' )( 'dpac:services.timelogs' );
 var _ = require( 'underscore' );
-var extend = require('deep-extend');
-var Promise = require( 'mpromise' );
+var extend = require( 'deep-extend' );
+var Promise = require( 'bluebird' );
 
 var keystone = require( 'keystone' );
 var toSafeJSON = require( './utils' ).toSafeJSON;
@@ -13,7 +13,7 @@ var listById = module.exports.listById = function listById( ids ){
   return schema.model
     .find()
     .where( '_id' ).in( ids )
-    .sort('comparison begin')
+    .sort( 'comparison begin' )
     .exec()
     .then( function( docs ){
       return toSafeJSON( docs );
@@ -28,7 +28,7 @@ module.exports.list = function list( opts ){
 
   return schema.model
     .find( opts )
-    .sort('comparison begin')
+    .sort( 'comparison begin' )
     .exec()
     .then( function( docs ){
       return toSafeJSON( docs );
@@ -51,15 +51,11 @@ module.exports.update = function update( opts ){
     .findById( opts._id )
     .exec()
     .then( function( doc ){
+      if( !doc ){
+        return;
+      }
       extend( doc, opts );
-      var promise = new Promise();
-      doc.save( function( err,
-                                 doc ){
-        if( err ){
-          return promise.reject( err );
-        }
-        promise.fulfill( doc );
-      } );
-      return promise;
+      var save = Promise.promisify( doc.save, doc );
+      return save();
     } );
 };

@@ -7,6 +7,11 @@ var express = require('express'),
     mongoose = require('mongoose'),
     app = express(),
     keystone = require('keystone').connect(mongoose, app);
+var errors = require("errors");
+
+if(process.env.NODE_ENV==="debugging"){
+  errors.stacks(true);
+}
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options

@@ -11,23 +11,30 @@ function Controller( service,
 }
 
 _.extend( Controller.prototype, {
+
+  _createResponder : function( res,
+                               next,
+                               ErrorClass ){
+    return function( err,
+                     result ){
+      if( err ){
+        return next( err );
+      }
+      if( !result ){
+        return next( new ErrorClass() );
+      }
+
+      res.apiResponse( result );
+    };
+  },
+
   retrieve : function( opts,
                        req,
                        res,
                        next ){
     this.service
       .retrieve( opts )
-      .onResolve( function( err,
-                            result ){
-        if( err ){
-          return next( err );
-        }
-        if( !result ){
-          return next( new errors.Http404Error() );
-        }
-
-        res.apiResponse( result );
-      } );
+      .onResolve( this._createResponder( res, next, errors.Http404Error ) );
   },
 
   /**
@@ -48,16 +55,7 @@ _.extend( Controller.prototype, {
     var values = utils.parseValues( opts, req );
     this.service
       .create( values )
-      .onResolve( function( err,
-                            result ){
-        if( err ){
-          return next( err );
-        }
-        if( !result ){
-          return next( new errors.Http500Error() );
-        }
-        res.apiResponse( result );
-      } );
+      .onResolve( this._createResponder( res, next, errors.Http500Error ) );
   },
 
   /**
@@ -84,16 +82,7 @@ _.extend( Controller.prototype, {
     var values = utils.parseValues( opts, req );
     this.service
       .update( values )
-      .onResolve( function( err,
-                            result ){
-        if( err ){
-          return next( err );
-        }
-        if( !result ){
-          return next( new errors.Http500Error() );
-        }
-        res.apiResponse( result );
-      } );
+      .onResolve( this._createResponder( res, next, errors.Http404Error ) );
   },
 
   list : function( opts,

@@ -3,7 +3,7 @@ var debug = require( 'debug' )( 'dpac:services.seqs' );
 var _ = require('underscore');
 var keystone = require( 'keystone' );
 var extend = require('deep-extend');
-var Promise = require( 'mpromise' );
+var Promise = require( 'bluebird' );
 var schema = keystone.list('Seq');
 
 module.exports.create = function( opts ){
@@ -42,15 +42,11 @@ module.exports.update = function update( opts ){
     .findById( opts._id )
     .exec()
     .then( function( doc ){
+      if( !doc ){
+        return;
+      }
       extend( doc, opts );
-      var promise = new Promise();
-      doc.save( function( err,
-                                 doc ){
-        if( err ){
-          return promise.reject( err );
-        }
-        promise.fulfill( doc );
-      } );
-      return promise;
+      var save = Promise.promisify(doc.save, doc);
+      return save();
     } );
 };

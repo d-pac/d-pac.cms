@@ -1,5 +1,5 @@
 'use strict';
-var debug = require( 'debug' )( 'dpac:services.assessments' );
+var debug = require( 'debug' )( 'dpac:services.personas' );
 var _ = require('underscore');
 var keystone = require( 'keystone' );
 var schema = keystone.list( 'Persona' );
@@ -8,7 +8,7 @@ var listById = module.exports.listById = function listById(ids){
   return schema.model
     .find()
     .where( '_id' ).in( ids )
-    .lean()
+    .populate('assessment')
     .exec();
 };
 
@@ -20,6 +20,6 @@ module.exports.list = function list( opts ){
 
   return schema.model
     .find(opts)
-    .lean()
+    .populate('assessment')
     .exec();
 };

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "async": "^0.8.0",
+    "bluebird": "^2.3.5",
     "connect-mongo": "^0.4.1",
     "cors": "^2.4.1",
     "debug": "^1.0.4",
@@ -12,13 +13,12 @@
     "errors": "^0.2.0",
     "express": "^3.3.8",
     "jade": "^1.7.0",
-    "keystone": "^0.2.30",
+    "keystone": "^0.2.31",
     "lodash": "^2.4.1",
     "mime": "^1.2.11",
     "moment-range": "^1.0.5",
     "mongoose-auto-increment": "^3.0.8",
     "mongoose-random": "0.0.2",
-    "mpromise": "^0.5.5",
     "underscore": "^1.6.0",
     "underscore.string": "^2.3.3"
   },
