@@ -52,7 +52,9 @@ exports.requireUser = function( req,
   debug( '#requireUser' );
   var output;
   if( !req.user ){
-    output = new errors.Http401Error();
+    output = new errors.Http401Error( {
+      explanation : "You need to be logged in."
+    } );
   }
   return next( output );
 };
