@@ -7,7 +7,6 @@ var mime = require('mime');
 var path = require('path');
 var constants = require( './helpers/constants' );
 
-
 var Representation = new keystone.List( 'Representation', {
   map   : {
     name : 'id'
@@ -105,18 +104,6 @@ Representation.schema.virtual('fileUrl').get(function(){
 Representation.schema.methods.toSafeJSON = function(){
   return _.pick( this, '_id', 'url', 'mimeType', 'ext', 'assessee', 'assessment' );
 };
-
-Representation.schema.set( 'toJSON', {
-  virtuals  : false,
-  transform : function( doc,
-                        model,
-                        options ){
-    console.log(doc);
-    console.log(model);
-    //model = _.pick( model, '_id', 'url', 'mimeType', 'ext', 'assessee', 'assessment' );
-    return model;
-  }
-} );
 
 Representation.defaultColumns = 'name, assessee, assessment';
 Representation.register();

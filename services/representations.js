@@ -1,4 +1,5 @@
 'use strict';
+var debug = require( 'debug' )( 'dpac:services.representations' );
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var schema = keystone.list( 'Representation' );
@@ -14,7 +15,8 @@ var listById = module.exports.listById = function(ids){
     } );
 };
 
-module.exports.list = function list( opts ){
+var list = module.exports.list = function list( opts ){
+  debug("#list");
   if( _.isArray(opts)){
     return listById(opts);
   }
@@ -28,19 +30,12 @@ module.exports.list = function list( opts ){
 
 module.exports.retrievePair = function retrieveRepresentationPair( opts ){
 
-  //debug('retrieveRepresentations');
+  debug('retrievePair');
   //todo: replace this with CJ
-  return schema.model
-    .find()
-    .sort( { createdAt : -1 } )
-    .limit( 2 )
-    .exec()
+  return list()
     .then( function( representations ){
-      if( !representations || representations.length <= 1 ){
-        throw new Error( 'No representations' );
-      }
-
-      return toSafeJSON( representations );
+      var shuffled = _.shuffle(representations);
+      return shuffled.slice(0, 2);
     } );
 };
 
