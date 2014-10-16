@@ -2,7 +2,7 @@
 var debug = require( 'debug' )( 'dpac:api.users' );
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
-var Controller = require( './controller' );
+var Controller = require( './Controller' );
 var service = require( '../../services/users' );
 var schema = keystone.list( 'User' );
 

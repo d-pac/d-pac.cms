@@ -33,6 +33,7 @@
     "grunt-mocha-cli": "^1.10.0",
     "grunt-node-inspector": "~0.1.5",
     "grunt-nodemon": "^0.3.0",
+    "grunt-rsync": "^0.6.2",
     "jit-grunt": "^0.8.0",
     "jshint-stylish": "^0.4.0",
     "konfy": "^0.1.2",

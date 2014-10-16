@@ -2,7 +2,7 @@
 
 var debug = require( 'debug' )( 'dpac:api.timelogs' );
 var keystone = require( 'keystone' );
-var Controller = require( './controller' );
+var Controller = require( './Controller' );
 var service = require( '../../services/timelogs' );
 var schema = keystone.list( 'Timelog' );
 

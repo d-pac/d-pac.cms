@@ -2,7 +2,7 @@
 
 var debug = require( 'debug' )( 'dpac:api.seqs' );
 var keystone = require( 'keystone' );
-var Controller = require( './controller' );
+var Controller = require( './Controller' );
 var service = require( '../../services/seqs' );
 var schema = keystone.list( 'Seq' );
 

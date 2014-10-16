@@ -40,14 +40,14 @@ var routes = {
 exports = module.exports = function( app ){
 
   //TOdo: this is just a temporary fix until https://github.com/keystonejs/keystone/issues/663 is solved
-  keystone.set( '500', function( err,
-                                 req,
-                                 res,
-                                 next ){
-    res.send( 400, new errors.Http400Error( {
-      explanation : "Malformed JSON"
-    } ) );
-  } );
+  //keystone.set( '500', function( err,
+  //                               req,
+  //                               res,
+  //                               next ){
+  //  res.send( 400, new errors.Http400Error( {
+  //    explanation : "Malformed JSON"
+  //  } ) );
+  //} );
 
   // Views
   app.get( '/', routes.views.index );
@@ -118,6 +118,6 @@ exports = module.exports = function( app ){
     api.middleware.initCORS(),
     api.representations.retrieveFile );
 
-  app.all( '/*', api.middleware.notFound, api.middleware.handleError );
+  app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
 };

@@ -2,7 +2,7 @@
 
 var debug = require( 'debug' )( 'dpac:api.comparisons' );
 var keystone = require( 'keystone' );
-var Controller = require( './controller' );
+var Controller = require( './Controller' );
 var service = require( '../../services/comparisons' );
 var schema = keystone.list( 'Comparison' );
 

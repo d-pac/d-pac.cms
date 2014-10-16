@@ -2,7 +2,7 @@
 
 var debug = require( 'debug' )( 'dpac:api.judgements' );
 var keystone = require( 'keystone' );
-var Controller = require( './controller' );
+var Controller = require( './Controller' );
 var service = require( '../../services/judgements' );
 var schema = keystone.list( 'Judgement' );
 
