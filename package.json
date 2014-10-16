@@ -18,7 +18,6 @@
     "mime": "^1.2.11",
     "moment-range": "^1.0.5",
     "mongoose-auto-increment": "^3.0.8",
-    "mongoose-random": "0.0.2",
     "underscore": "^1.6.0",
     "underscore.string": "^2.3.3"
   },
