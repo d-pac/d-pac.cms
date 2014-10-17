@@ -10,7 +10,7 @@ module.exports = {
       src                : './', //trailing slash REQUIRED [!]
       dest               : '<%= env.REMOTE_DEST %>',
       host               : ['<%= env.REMOTE_USERNAME %>', '@', '<%= env.REMOTE_HOST %>'].join( '' ),
-      exclude            : ['*-mocks.js'],
+      exclude            : ['*-mocks.js', 'public/assessors', 'public/uploads'],
       syncDestIgnoreExcl : true
     }
   }
