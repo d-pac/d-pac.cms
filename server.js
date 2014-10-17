@@ -78,15 +78,18 @@ keystone.set( 'nav', {
   ],
   'assessments' : [
     'assessments',
-    'representations',
     'comparisons',
-    'judgements',
-    'timelogs'
+    'judgements'
   ],
   'users'       : [
+    'organizations',
     'users',
     'personas',
-    'organizations'
+    'representations'
+  ],
+  'reporting' : [
+    'timelogs',
+    'seqs'
   ]
 } );
 
