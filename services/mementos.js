@@ -4,7 +4,7 @@ var debug = require( 'debug' )( 'dpac:services.mementos' );
 var async = require( 'async' ),
   keystone = require( 'keystone' );
 var errors = require( 'errors' );
-var Promise = require('bluebird');
+var Promise = require( 'bluebird' );
 
 var representations = require( './representations' );
 var judgements = require( './judgements' );
@@ -12,7 +12,7 @@ var comparisons = require( './comparisons' );
 var assessments = require( './assessments' );
 var phases = require( './phases' );
 var seqs = require( './seqs' );
-var timelogs = require('./timelogs');
+var timelogs = require( './timelogs' );
 
 /**
  *
@@ -38,6 +38,18 @@ module.exports.create = function createMemento( opts ){
       memento.assessment = assessment;
       memento.phases = assessment.phases;
       assessment.phases = _.pluck( assessment.phases, '_id' );
+    } )
+    .then( function(){
+      return comparisons.completedCount( {
+        assessment : opts.assessment,
+        assessor   : opts.assessor
+      } );
+    } )
+    .then( function handleCounts( completedNum ){
+      memento.progress = {
+        completedNum   : completedNum,
+        comparisonsNum : memento.assessment.comparisonsNum
+      };
     } )
     .then( function(){
       return representations.retrievePair();
@@ -97,14 +109,28 @@ module.exports.listActives = function listActives( opts ){
         } );
       } );
   })()
+    .then( function(){
+      var promises = _.map( mementos, function( memento ){
+        return comparisons.completedCount( {
+          assessment : memento.assessment._id,
+          assessor   : opts.assessor
+        } ).then( function( completedNum ){
+          memento.progress = {
+            completedNum   : completedNum,
+            comparisonsNum : memento.assessment.comparisonsNum
+          };
+        } );
+      } );
+      return Promise.all( promises );
+    } )
     .then( function listPhases(){
-      var promises=_.map( mementos, function( memento ){
+      var promises = _.map( mementos, function( memento ){
         return phases.list( memento.assessment.phases )
           .then( function handlePhases( phases ){
             memento.phases = phases;
           } );
       } );
-      return Promise.all(promises);
+      return Promise.all( promises );
     } )
     .then( function listJudgements(){
       var promises = _.map( mementos, function( memento ){
@@ -114,7 +140,7 @@ module.exports.listActives = function listActives( opts ){
           memento.judgements = judgements;
         } );
       } );
-      return Promise.all(promises);
+      return Promise.all( promises );
     } )
     .then( function listRepresentations(){
       var promises = _.map( mementos, function( memento ){
@@ -124,7 +150,7 @@ module.exports.listActives = function listActives( opts ){
             memento.representations = representations;
           } );
       } );
-      return Promise.all(promises);
+      return Promise.all( promises );
     } )
     .then( function listSeqs(){
       var promises = _.map( mementos, function( memento ){
@@ -137,7 +163,7 @@ module.exports.listActives = function listActives( opts ){
           }
         } );
       } );
-      return Promise.all(promises);
+      return Promise.all( promises );
     } )
     .then( function handleOutput(){
       return mementos;

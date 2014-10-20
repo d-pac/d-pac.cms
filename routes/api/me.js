@@ -66,10 +66,9 @@ module.exports.listAssessments = function( req,
   } ).then( function( assessments ){
     var promises = [];
     _.each( assessments, function( assessment ){
-      var p = comparisons.count( {
+      var p = comparisons.completedCount( {
         assessor : req.user.id,
-        assessment : assessment._id,
-        completed : true
+        assessment : assessment._id
       } ).then( function handleComparisonsNum( completedComparisons ){
         if(completedComparisons < assessment.comparisonsNum){
           output.push(assessment);
