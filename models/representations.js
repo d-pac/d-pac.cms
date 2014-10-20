@@ -39,10 +39,7 @@ var config = {
     initial  : true,
     required : true, //R02
     many     : false, //R02
-    index    : true,
-    filters  : {
-      state : constants.publicationStates.published //R03
-    }
+    index    : true
   }
 
 };

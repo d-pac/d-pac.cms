@@ -60,7 +60,7 @@ A representation should
 
 * [x] R01: have strictly one "assessee"-persona
 * [x] R02: have strictly one assessment
-* [x] R03: be created strictly for assessments with "state" is "published"
+* [x] R03: ~~be created strictly for assessments with "state" is "published"~~
 * R04: U02
 * R05: U03
 
