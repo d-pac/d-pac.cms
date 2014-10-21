@@ -9,10 +9,10 @@ var Phase = new keystone.List( 'Phase', {
   map:{
     name: "label"
   },
-  noedit : true,
+  noedit : false,
   nocreate: true,
   nodelete: true,
-  hidden: true
+  hidden: false
 } );
 
 var config = {
@@ -26,7 +26,8 @@ var config = {
   type : {
     type    : Types.Text,
     required : true,
-    initial : true
+    initial : true,
+    noedit: true
   }
 
 };

@@ -77,6 +77,7 @@ keystone.set( 'nav', {
     'enquiries'
   ],
   'assessments' : [
+    'phases',
     'assessments',
     'comparisons',
     'judgements'
