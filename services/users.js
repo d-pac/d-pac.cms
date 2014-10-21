@@ -19,6 +19,7 @@ module.exports.retrieve = function retrieve( opts ){
   debug( '#retrieve' );
   return schema.model
     .findById( opts._id )
+    .populate('organization')
     .lean()
     .exec();
 };
