@@ -5,6 +5,7 @@ var async = require( 'async' ),
   keystone = require( 'keystone' );
 var errors = require( 'errors' );
 var Promise = require( 'bluebird' );
+var toSafeJSON = require( './utils' ).toSafeJSON;
 
 var representations = require( './representations' );
 var judgements = require( './judgements' );
@@ -52,11 +53,15 @@ module.exports.create = function createMemento( opts ){
       };
     } )
     .then( function(){
-      return representations.retrievePair();
+      return representations.retrievePair( { assessment : opts.assessment } );
     } )
     .then( function handleRepresentations( representations ){
       //todo: when no representations found
-      memento.representations = representations;
+      representations[0].compared.push( representations[1]._id );
+      representations[1].compared.push( representations[0]._id );
+      representations[0].save();
+      representations[1].save();
+      memento.representations = toSafeJSON( representations );
     } )
     .then( function(){
       var firstPhase;

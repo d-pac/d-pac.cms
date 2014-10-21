@@ -3,8 +3,8 @@
 var _ = require( 'underscore' ),
   keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
-var mime = require('mime');
-var path = require('path');
+var mime = require( 'mime' );
+var path = require( 'path' );
 var constants = require( './helpers/constants' );
 
 var Representation = new keystone.List( 'Representation', {
@@ -40,6 +40,12 @@ var config = {
     required : true, //R02
     many     : false, //R02
     index    : true
+  },
+
+  compared : {
+    type : Types.Relationship,
+    ref  : 'Representation',
+    many : true
   }
 
 };
@@ -82,21 +88,21 @@ Representation.schema.path( 'assessee' )
       } );
   }, "User should not have more than one Representation per Assessment" );
 
-Representation.schema.virtual('url').get(function(){
+Representation.schema.virtual( 'url' ).get( function(){
   return '/representations/' + this._id + this.ext;
-});
+} );
 
-Representation.schema.virtual('mimeType').get(function(){
+Representation.schema.virtual( 'mimeType' ).get( function(){
   return this.file.filetype;
-});
+} );
 
-Representation.schema.virtual('ext').get(function(){
-  return "." + mime.extension(this.file.filetype);
-});
+Representation.schema.virtual( 'ext' ).get( function(){
+  return "." + mime.extension( this.file.filetype );
+} );
 
-Representation.schema.virtual('fileUrl').get(function(){
-  return path.join(config.file.prefix, this.file.filename);
-});
+Representation.schema.virtual( 'fileUrl' ).get( function(){
+  return path.join( config.file.prefix, this.file.filename );
+} );
 
 Representation.schema.methods.toSafeJSON = function(){
   return _.pick( this, '_id', 'url', 'mimeType', 'ext', 'assessee', 'assessment' );
