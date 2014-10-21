@@ -40,25 +40,21 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
     } )
     .exec()
     .then(function(representations){
-      representations = _.sortBy(representations,function(representation){
-        return representation.compared.length;
+      representations = _.sortBy( _.shuffle(representations),function(representation){
+        return representation.comparedNum;
       });
       var selected = representations.shift();
       var opponent;
-      if(selected.compared.length <= 0){
+      if(selected.comparedNum <= 0){
         opponent = representations.shift();
       }else{
         opponent = _.find(representations, function(representation){
-          if(representation.compared && representation.compared.length){
             return representation.compared.indexOf(selected._id) < 0;
-          }
-          return true;
         });
         if(!opponent){
           opponent = representations.shift();
         }
       }
-
       return [selected, opponent];
     });
 

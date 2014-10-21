@@ -59,6 +59,8 @@ module.exports.create = function createMemento( opts ){
       //todo: when no representations found
       representations[0].compared.push( representations[1]._id );
       representations[1].compared.push( representations[0]._id );
+      representations[0].comparedNum++;
+      representations[1].comparedNum++;
       representations[0].save();
       representations[1].save();
       memento.representations = toSafeJSON( representations );

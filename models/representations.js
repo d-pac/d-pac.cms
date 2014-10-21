@@ -42,6 +42,16 @@ var config = {
     index    : true
   },
 
+  //let's cache the number of comparisons this representation is used in,
+  //it's NOT the same as using `compared.length` since `compared` has unique values only
+  //which means that if two representations have been compared with each other already
+  //this will not show up -> leads to uneven distribution
+  comparedNum : {
+    type    : Types.Number,
+    index   : true,
+    default : 0
+  },
+
   compared : {
     type : Types.Relationship,
     ref  : 'Representation',
