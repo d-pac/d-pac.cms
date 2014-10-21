@@ -141,6 +141,7 @@ Comparison.schema.path( 'phase' )
   }, "Phase must be included in workflow of Assessment." );
 
 Comparison.schema.virtual( 'active' ).get( function(){
+  console.log("this", this);
   return !this.completed;
 } );
 
@@ -157,7 +158,7 @@ Comparison.schema.plugin( autoinc.plugin, {
   startAt : 1
 } );
 
-Comparison.defaultColumns = 'name, assessor, assessment, selected, phase, active';
+Comparison.defaultColumns = 'name, assessor, assessment, selected, phase, completed';
 Comparison.register();
 
 
