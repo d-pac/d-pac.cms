@@ -117,8 +117,11 @@ exports = module.exports = function( app ){
   //app.get('/api/representations/next', api.representations.retrievePair);
 
   app.get( '/representations/:_id.:format',
+    api.middleware.initAPI,
     api.middleware.initCORS(),
-    api.representations.retrieveFile );
+    api.representations.retrieveFile,
+    api.middleware.notFound,
+    api.middleware.handleError );
 
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 

@@ -9,7 +9,11 @@ module.exports.retrieveFile = function( req,
     _id : req.param( '_id' )
   } ).onResolve( function( err,
                            doc ){
-    res.redirect( 307, doc.fileUrl );
+    if(doc){
+      res.redirect( 307, doc.fileUrl );
+    }else{
+      next();
+    }
   } );
 };
 
