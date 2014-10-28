@@ -22,9 +22,9 @@ exports.initAPI = function initAPI( req,
     }
     debug( '<<<<<<<<<<<<<<<<<<<< RESPONSE: ' );
     debug( '\n', {
-      STATUS         : status,
-      BODY           : data,
-      "Request-UUID" : rid
+      STATUS  : status,
+      BODY    : data,
+      HEADERS : res._headers
     } );
     if( req.query.callback ){
       res.jsonp( status, data );
