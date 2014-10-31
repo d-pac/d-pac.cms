@@ -69,8 +69,7 @@ var config = {
       { value : "undecided", label : "Undecided" },
       { value : "failed", label : "Failed" }
     ],
-    initial : true,
-    default : "undecided"
+    initial : true
   }
 };
 
