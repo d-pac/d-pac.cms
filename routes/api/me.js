@@ -60,7 +60,7 @@ module.exports.listAssessments = function( req,
         return persona.assessment;
       } )
       .filter( function( assessment ){
-        return assessment.state === constants.publicationStates.published;
+        return !!assessment && (assessment.state === constants.publicationStates.published);
       } )
       .value();
   } ).then( function( assessments ){
