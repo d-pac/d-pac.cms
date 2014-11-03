@@ -6,7 +6,7 @@ var extend = require( 'deep-extend' );
 var Promise = require( 'bluebird' );
 var schema = keystone.list( 'Judgement' );
 
-var listById = module.exports.listById = function listById(ids){
+var listById = module.exports.listById = function listById( ids ){
   return schema.model
     .find()
     .where( '_id' ).in( ids )
@@ -15,28 +15,29 @@ var listById = module.exports.listById = function listById(ids){
 };
 
 module.exports.list = function list( opts ){
-  debug('list');
-  if( _.isArray(opts)){
-    return listById(opts);
+  debug( 'list' );
+  if( _.isArray( opts ) ){
+    return listById( opts );
   }
 
   return schema.model
-    .find(opts)
+    .find( opts )
     .lean()
     .exec();
 };
 
-
 module.exports.create = function createJudgements( opts ){
   debug( '#create' );
   var judgements = [];
-  _.each( opts.representations, function( representation ){
-    judgements.push( {
+  opts.representations.forEach( function( representation,
+                                          index ){
+    judgements[index] = {
       assessor       : opts.assessor,
       assessment     : opts.assessment,
       comparison     : opts.comparison,
-      representation : representation
-    } );
+      representation : representation,
+      position       : opts.positions[index]
+    };
   } );
   return schema.model
     .create( judgements )
@@ -61,7 +62,7 @@ module.exports.update = function update( opts ){
         return;
       }
       extend( doc, opts );
-      var save = Promise.promisify(doc.save, doc);
+      var save = Promise.promisify( doc.save, doc );
       return save();
     } );
 };

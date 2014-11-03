@@ -57,6 +57,11 @@ var config = {
     index    : true
   },
 
+  position : {
+    type : String,
+    noedit: true
+  },
+
   notes : {
     type    : Types.Html,
     wysiwyg : true
@@ -75,7 +80,7 @@ var config = {
 
 Judgement.add( config );
 
-Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, passed';
+Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, position, passed';
 Judgement.register();
 
 

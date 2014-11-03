@@ -84,7 +84,8 @@ module.exports.create = function createMemento( opts ){
         assessor        : opts.assessor,
         assessment      : opts.assessment,
         representations : memento.representations,
-        comparison      : memento.comparison
+        comparison      : memento.comparison,
+        positions       : ["left", "right"]
       } );
     } )
     .then( function handleJudgements( judgements ){
