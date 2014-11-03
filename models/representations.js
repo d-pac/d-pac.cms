@@ -49,13 +49,15 @@ var config = {
   comparedNum : {
     type    : Types.Number,
     index   : true,
-    default : 0
+    default : 0,
+    noedit: true
   },
 
   compared : {
     type : Types.Relationship,
     ref  : 'Representation',
-    many : true
+    many : true,
+    noedit: true
   }
 
 };
