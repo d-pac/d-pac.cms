@@ -26,7 +26,7 @@ var list = module.exports.list = function list( opts ){
 };
 
 module.exports.listAssessments = function listAssessments( opts ){
-  debug("#listAssessments");
+  debug( "#listAssessments" );
   return list( opts )
     .then( function handlePersonas( docs ){
       return _.chain( docs )
