@@ -81,24 +81,7 @@ Representation.schema.path( 'assessee' )
                        personas ){
         done( personas && personas.length > 0 );
       } );
-  }, "User must have `Assessee` Persona for selected Assessment" )
-  .validate( function( user,
-                       done ){
-    var current = this;
-    //U03 //R05
-    var filter = {
-      assessee   : user,
-      assessment : current.assessment
-    };
-    Representation.model
-      .find()
-      .where( filter )
-      .where( '_id' ).ne( current.id )
-      .exec( function( err,
-                       representations ){
-        done( !representations || representations.length <= 0 );
-      } );
-  }, "User should not have more than one Representation per Assessment" );
+  }, "User must have `Assessee` Persona for selected Assessment" );
 
 Representation.schema.virtual( 'url' ).get( function(){
   return '/representations/' + this._id + this.ext;
