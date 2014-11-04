@@ -42,8 +42,8 @@ module.exports.listMementos = function( req,
     }
 
     if( !result || result.length <= 0 ){
-      personas.listAssessments( {
-        user : req.user.id,
+      _listAssessments( {
+        assessor : req.user.id,
         role : constants.roles.assessor
       } ).then( function( assessments ){
         if( assessments && assessments.length > 0 ){
@@ -59,7 +59,7 @@ module.exports.listMementos = function( req,
             res.apiResponse( [result] );
           } );
         }else{
-          res.apiResponse([]);
+          res.apiResponse( [] );
         }
       } );
     }else{
@@ -69,34 +69,45 @@ module.exports.listMementos = function( req,
   } );
 };
 
-module.exports.listAssessments = function( req,
-                                           res,
-                                           next ){
-  debug( '#listAssessments' );
-
+function _listAssessments( opts ){
   var output = [];
-  personas.listAssessments( {
-    user : req.user.id,
-    role : constants.roles.assessor
+  return personas.listAssessments( {
+    user : opts.assessor,
+    role : opts.role
   } ).then( function( assessments ){
     var promises = [];
     _.each( assessments, function( assessment ){
       var p = comparisons.completedCount( {
-        assessor   : req.user.id,
+        assessor   : opts.assessor,
         assessment : assessment._id
       } ).then( function handleComparisonsNum( completedComparisons ){
         if( completedComparisons < assessment.comparisonsNum ){
           output.push( assessment );
+          //return assessment;
         }
       } );
       promises.push( p );
     } );
     return Promise.all( promises );
+  } ).then( function(){
+    return output;
+  } );
+}
+
+module.exports.listAssessments = function( req,
+                                           res,
+                                           next ){
+  debug( '#listAssessments' );
+
+  _listAssessments( {
+    assessor : req.user.id,
+    role     : constants.roles.assessor
   } ).onResolve( function( err,
                            assessments ){
+
     if( err ){
       return next( err );
     }
-    res.apiResponse( output );
+    res.apiResponse( assessments );
   } );
 };
