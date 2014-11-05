@@ -20,7 +20,7 @@ db.once( 'open', function callback(){
       try{
         expect( representation ).to.have.property( 'file' );
       }catch( err ){
-        console.log( '[Error]', 'Representation', representation._id, 'missing "file"' );
+        console.log( '[Error]', 'Representation', representation, 'missing "file"' );
       }
     } );
 
