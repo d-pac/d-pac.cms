@@ -21,3 +21,4 @@ node_modules
 *-mocks.js
 .grunt
 public/assessors
+*.sh
