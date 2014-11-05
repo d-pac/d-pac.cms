@@ -34,7 +34,7 @@ exports.initAPI = function initAPI( req,
   };
 
   res.apiError = function( error ){
-    res.apiResponse( error.status, error );
+    res.apiResponse( error.status || 500, error );
   };
 
   //console.log(req.headers);

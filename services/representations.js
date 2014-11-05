@@ -40,22 +40,26 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
     } )
     .exec()
     .then(function(representations){
-      representations = _.sortBy( _.shuffle(representations),function(representation){
-        return representation.comparedNum;
-      });
-      var selected = representations.shift();
-      var opponent;
-      if(selected.comparedNum <= 0){
-        opponent = representations.shift();
+      if(! representations || representations.length <= 0){
+        return [];
       }else{
-        opponent = _.find(representations, function(representation){
-            return representation.compared.indexOf(selected._id) < 0;
+        representations = _.sortBy( _.shuffle(representations),function(representation){
+          return representation.comparedNum;
         });
-        if(!opponent){
+        var selected = representations.shift();
+        var opponent;
+        if(selected.comparedNum <= 0){
           opponent = representations.shift();
+        }else{
+          opponent = _.find(representations, function(representation){
+              return representation.compared.indexOf(selected._id) < 0;
+          });
+          if(!opponent){
+            opponent = representations.shift();
+          }
         }
+        return [selected, opponent];
       }
-      return [selected, opponent];
     });
 
 };

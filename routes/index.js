@@ -114,7 +114,9 @@ exports = module.exports = function( app ){
   app.put( '/api/timelogs/:_id', api.timelogs.update );
   app.all( '/api/timelogs*', api.middleware.onlyAllow( 'GET', 'POST', 'PATCH', 'PUT' ) );
 
-  //app.get('/api/representations/next', api.representations.retrievePair);
+  //app.get('/api/representations/next', api.representations.retrievePair,
+  //    api.middleware.notFound,
+  //    api.middleware.handleError);
 
   app.get( '/representations/:_id.:format',
     api.middleware.initAPI,

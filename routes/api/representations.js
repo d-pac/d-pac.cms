@@ -1,4 +1,5 @@
 'use strict';
+var debug = require( 'debug' )( 'dpac:api.representations' );
 var service = require( '../../services/representations' );
 
 module.exports.retrieveFile = function( req,
@@ -20,11 +21,12 @@ module.exports.retrieveFile = function( req,
 module.exports.retrievePair = function( req,
                                         res,
                                         next ){
+  debug("#retrievePair");
   service.retrievePair({
     assessment : req.param("assessment")
   }).onResolve(function(err, result){
     if(err){
-      return res.apiError(err);
+      return next(err);
     }
     res.apiResponse("200", result);
   });

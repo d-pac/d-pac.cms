@@ -12,6 +12,31 @@ var comparisons = require( '../../services/comparisons' );
 var personas = require( '../../services/personas' );
 var mementos = require( '../../services/mementos' );
 
+function _listAssessments( opts ){
+  var output = [];
+  return personas.listAssessments( {
+    user : opts.assessor,
+    role : opts.role
+  } ).then( function( assessments ){
+    var promises = [];
+    _.each( assessments, function( assessment ){
+      var p = comparisons.completedCount( {
+        assessor   : opts.assessor,
+        assessment : assessment._id
+      } ).then( function handleComparisonsNum( completedComparisons ){
+        if( completedComparisons < assessment.comparisonsNum ){
+          output.push( assessment );
+          //return assessment;
+        }
+      } );
+      promises.push( p );
+    } );
+    return Promise.all( promises );
+  } ).then( function(){
+    return output;
+  } );
+}
+
 var createMemento = module.exports.createMemento = function( req,
                                                              res,
                                                              next ){
@@ -68,31 +93,6 @@ module.exports.listMementos = function( req,
     }
   } );
 };
-
-function _listAssessments( opts ){
-  var output = [];
-  return personas.listAssessments( {
-    user : opts.assessor,
-    role : opts.role
-  } ).then( function( assessments ){
-    var promises = [];
-    _.each( assessments, function( assessment ){
-      var p = comparisons.completedCount( {
-        assessor   : opts.assessor,
-        assessment : assessment._id
-      } ).then( function handleComparisonsNum( completedComparisons ){
-        if( completedComparisons < assessment.comparisonsNum ){
-          output.push( assessment );
-          //return assessment;
-        }
-      } );
-      promises.push( p );
-    } );
-    return Promise.all( promises );
-  } ).then( function(){
-    return output;
-  } );
-}
 
 module.exports.listAssessments = function( req,
                                            res,
