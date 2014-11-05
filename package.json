@@ -13,7 +13,7 @@
     "errors": "^0.2.0",
     "express": "^3.3.8",
     "jade": "^1.7.0",
-    "keystone": "^0.2.31",
+    "keystone": "^0.2.33",
     "lodash": "^2.4.1",
     "mime": "^1.2.11",
     "moment-range": "^1.0.5",
