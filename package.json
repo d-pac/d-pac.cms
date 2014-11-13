@@ -12,6 +12,7 @@
     "dotenv": "^0.2.8",
     "errors": "^0.2.0",
     "express": "^3.3.8",
+    "fast-csv": "^0.5.4",
     "jade": "^1.7.0",
     "keystone": "^0.2.33",
     "lodash": "^2.4.1",
