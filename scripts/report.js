@@ -55,7 +55,7 @@ function listTimelogs( comparisonIds ){
 
 function extractFeedback( comparison ){
   if( comparison.comparativeFeedback ){
-    return comparison.comparativeFeedback;
+    return comparison.comparativeFeedback.replace( /(?:\r\n|\r|\n)/g, '\u21A9' ).replace( /"/g, "'" );
   }else{
     //either deliberately left empty
     //or comparison wasn't finished yet and the assessor wasn't able to fill it in
@@ -88,7 +88,8 @@ exports = module.exports = function( done ){
             : FALSE,
           "selected representation" : (comparison.selected)
             ? comparison.selected.file.filename
-            : UNDEFINED
+            : UNDEFINED,
+          "selected position" : UNDEFINED
         };
 
       } );
@@ -136,6 +137,7 @@ exports = module.exports = function( done ){
         "Pass/Fail duration", "Pass/Fail SEQ duration"
       ];
       return _.map( comparisonsMap, function( comparison ){
+        var total = 0;
         durations.forEach( function( duration ){
           if( comparison[duration] ){
             comparison[duration] = comparison[duration].reduce( function( memo,
@@ -145,7 +147,9 @@ exports = module.exports = function( done ){
           }else{
             comparison[duration] = 0;
           }
+          total += comparison[duration];
         } );
+        comparison["Total duration"] = total;
         return _.defaults( comparison, {
           "Select best SEQ"          : -1,
           "Pass/Fail SEQ"            : -1,

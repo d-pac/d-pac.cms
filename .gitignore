@@ -22,3 +22,4 @@ node_modules
 .grunt
 public/assessors
 *.sh
+reports/*.csv
