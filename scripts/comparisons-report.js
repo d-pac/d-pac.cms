@@ -2,12 +2,13 @@
 var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var objectId = require( 'mongoose' ).Types.ObjectId;
+var fs = require( "fs" );
+var csv = require( "fast-csv" );
+
 var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
 var Seq = keystone.list( 'Seq' );
 var Timelog = keystone.list( 'Timelog' );
-var fs = require( "fs" );
-var csv = require( "fast-csv" );
 
 var assessments = ["5458894f0138e02976448d26", "545889770138e02976448d27"];
 
@@ -89,7 +90,7 @@ exports = module.exports = function( done ){
           "selected representation" : (comparison.selected)
             ? comparison.selected.file.filename
             : UNDEFINED,
-          "selected position" : UNDEFINED
+          "selected position"       : UNDEFINED
         };
 
       } );
@@ -158,11 +159,10 @@ exports = module.exports = function( done ){
       } );
     } )
     .then( function( list ){
-      var ws = fs.createWriteStream( "reports/" + Date.now() + ".csv" );
+      var ws = fs.createWriteStream( "reports/comparisons-" + Date.now() + ".csv" );
       csv
         .write( list, { headers : true, quoteColumns : true } )
         .pipe( ws );
       done();
-    } )
-  ;
+    } );
 };
