@@ -36,6 +36,7 @@ module.exports.listAssessments = function listAssessments( opts ){
         .filter( function( assessment ){
           return !!assessment && (assessment.state === constants.publicationStates.published);
         } )
+        .sortBy( "order" )
         .value();
     } );
 }

@@ -9,7 +9,8 @@ var Assessment = new keystone.List( 'Assessment', {
   map   : {
     name : 'title'
   },
-  track : true
+  track : true,
+  defaultSort : "order"
 } );
 
 var config = {
@@ -46,6 +47,10 @@ var config = {
     options : constants.publicationStates.list.toString(),
     default : constants.publicationStates.draft,
     index   : true
+  },
+
+  order : {
+    type : Types.Number
   }
 
 };
@@ -74,7 +79,7 @@ Assessment.relationship( {
 } );
 
 
-Assessment.defaultColumns = 'title, createdBy, state';
+Assessment.defaultColumns = 'title, createdBy, state, order';
 Assessment.register();
 
 
