@@ -4,7 +4,7 @@ var objectId = require( 'mongoose' ).Types.ObjectId;
 var Assessment = keystone.list( 'Assessment' );
 var Persona = keystone.list('Persona');
 var Representation = keystone.list('Representation');
-var assessments = ["5440eba4ccbc42010c600b3f", "5440ebc9ccbc42010c600b40"];
+var assessments = ["5458894f0138e02976448d26", "545889770138e02976448d27"];
 
 function createAssessment( opts ){
   return Assessment.model
