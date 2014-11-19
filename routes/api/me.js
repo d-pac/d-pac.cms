@@ -58,8 +58,9 @@ module.exports.listMementos = function( req,
                                         res,
                                         next ){
   debug( '#listMementos' );
+  var assessor = req.param("assessor") || req.user.id;
   mementos.listActives( {
-    assessor : req.user.id
+    assessor : assessor
   } ).onResolve( function( err,
                            result ){
     if( err ){
@@ -68,12 +69,12 @@ module.exports.listMementos = function( req,
 
     if( !result || result.length <= 0 ){
       _listAssessments( {
-        assessor : req.user.id,
+        assessor : assessor,
         role : constants.roles.assessor
       } ).then( function( assessments ){
         if( assessments && assessments.length > 0 ){
           mementos.create( {
-            assessor   : req.user.id,
+            assessor   : assessor,
             assessment : assessments[0]._id
           } ).onResolve( function( err,
                                    result ){
@@ -99,8 +100,9 @@ module.exports.listAssessments = function( req,
                                            next ){
   debug( '#listAssessments' );
 
+  var assessor = req.param("assessor") || req.user.id;
   _listAssessments( {
-    assessor : req.user.id,
+    assessor : assessor,
     role     : constants.roles.assessor
   } ).onResolve( function( err,
                            assessments ){
