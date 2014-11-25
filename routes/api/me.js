@@ -26,15 +26,14 @@ function _listAssessments( opts ){
       } ).then( function handleComparisonsNum( completedComparisons ){
         if( completedComparisons < assessment.comparisonsNum ){
           output.push( assessment );
-          //return assessment;
+          //return assessment; //do not use the return value, since we only need some of these and returning undefined's will add those undefineds to the output
         }
       } );
       promises.push( p );
     } );
     return Promise.all( promises );
   } ).then( function(){
-    _.sortBy(output, 'order');
-    return output;
+    return _.sortBy(output, "order");
   } );
 }
 
@@ -59,7 +58,7 @@ module.exports.listMementos = function( req,
                                         res,
                                         next ){
   debug( '#listMementos' );
-  var assessor = req.param("assessor") || req.user.id;
+  var assessor = req.param( "assessor" ) || req.user.id;
   mementos.listActives( {
     assessor : assessor
   } ).onResolve( function( err,
@@ -71,7 +70,7 @@ module.exports.listMementos = function( req,
     if( !result || result.length <= 0 ){
       _listAssessments( {
         assessor : assessor,
-        role : constants.roles.assessor
+        role     : constants.roles.assessor
       } ).then( function( assessments ){
         if( assessments && assessments.length > 0 ){
           mementos.create( {
@@ -101,7 +100,7 @@ module.exports.listAssessments = function( req,
                                            next ){
   debug( '#listAssessments' );
 
-  var assessor = req.param("assessor") || req.user.id;
+  var assessor = req.param( "assessor" ) || req.user.id;
   _listAssessments( {
     assessor : assessor,
     role     : constants.roles.assessor
