@@ -33,6 +33,7 @@ function _listAssessments( opts ){
     } );
     return Promise.all( promises );
   } ).then( function(){
+    _.sortBy(output, 'order');
     return output;
   } );
 }
