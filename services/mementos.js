@@ -99,7 +99,7 @@ module.exports.create = function createMemento( opts ){
           _id : judgement.representation
         } )
           .then( function handleRepresentation( representation ){
-            judgement._representation = representation.toSafeJSON();
+            judgement.representation = representation.toSafeJSON();
           } );
       } );
 
