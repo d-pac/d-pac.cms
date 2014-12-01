@@ -3,14 +3,11 @@ var keystone = require( 'keystone' );
 var _ = require( 'underscore' );
 var objectId = require( 'mongoose' ).Types.ObjectId;
 var fs = require( "fs" );
-var csv = require( "fast-csv" );
 
 var Comparison = keystone.list( 'Comparison' );
 var Judgement = keystone.list( 'Judgement' );
 var Seq = keystone.list( 'Seq' );
 var Timelog = keystone.list( 'Timelog' );
-
-var assessments = ["5458894f0138e02976448d26", "545889770138e02976448d27"];
 
 var LEFT_EMPTY = "empty";
 var UNDEFINED = "N/A";
@@ -71,10 +68,10 @@ function extractFeedback( comparison ){
   }
 }
 
-exports = module.exports = function( done ){
+exports = module.exports = function( assessmentIds ){
   var comparisonsMap = {};
   var comparisonsIds = [];
-  listComparisons( assessments )
+  return listComparisons( assessmentIds )
     .then( function( comparisons ){
       comparisons.forEach( function( comparison ){
         var id = comparison._id.toString();
@@ -82,7 +79,7 @@ exports = module.exports = function( done ){
         comparisonsMap[id] = {
           comparison                : comparison._rid,
           assessment                : comparison.assessment.title,
-          assessor                  : comparison.assessor._id.toString(),
+          assessor                  : comparison.assessor.email,
           comparative               : extractFeedback( comparison ),
           completed                 : (comparison.completed)
             ? TRUE
@@ -159,10 +156,6 @@ exports = module.exports = function( done ){
       } );
     } )
     .then( function( list ){
-      var ws = fs.createWriteStream( "reports/comparisons-" + Date.now() + ".csv" );
-      csv
-        .write( list, { headers : true, quoteColumns : true } )
-        .pipe( ws );
-      done();
+      return list;
     } );
 };

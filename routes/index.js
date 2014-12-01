@@ -55,6 +55,7 @@ exports = module.exports = function( app ){
   app.get( '/blog/post/:post', routes.views.post );
   app.all( '/contact', routes.views.contact );
 
+
   // # REST API
   var api = routes.api;
 
@@ -117,6 +118,8 @@ exports = module.exports = function( app ){
   //app.get('/api/representations/next', api.representations.retrievePair,
   //    api.middleware.notFound,
   //    api.middleware.handleError);
+
+  app.get( '/api/reports/comparisons', api.middleware.requireAdmin, api.reports.comparisons);
 
   app.get( '/representations/:_id.:format',
     api.middleware.initAPI,

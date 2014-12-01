@@ -90,7 +90,12 @@ keystone.set( 'nav', {
   ],
   'reporting' : [
     'timelogs',
-    'seqs'
+    'seqs',
+    {
+      label: "Comparisons CSV [!]",
+      key : "comparisons-report",
+      path : "/api/reports/comparisons"
+    }
   ]
 } );
 
