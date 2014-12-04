@@ -18,12 +18,12 @@ if(process.env.NODE_ENV==="debugging"){
 // and documentation.
 
 app.use('/uploads', require('./routes/api/middleware' ).initCORS());
-
+var pkg = require("./package.json" );
 keystone.init( {
 
   'name'  : 'd-pac',
   'brand' : 'd-pac',
-  'appversion' : require("./package.json" ).version,
+  'appversion' : pkg.version + " (" + pkg.build + ")",
 
   'less'    : 'public',
   'static'  : 'public',

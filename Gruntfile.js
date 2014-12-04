@@ -9,9 +9,10 @@ module.exports = function( grunt ){
   if( grunt.option( 'env' ) ){
     process.env.NODE_ENV = grunt.option( 'env' );
   }
-  konfy.load(function(err, data){
-    console.log('err', err);
-  });
+  konfy.load( function( err,
+                        data ){
+    console.log( 'err', err );
+  } );
 
   // Time how long tasks take. Can help when optimizing build times
   require( 'time-grunt' )( grunt );
@@ -20,15 +21,19 @@ module.exports = function( grunt ){
   require( 'jit-grunt' )( grunt, {
     "bump-only"   : "grunt-bump",
     "bump-commit" : "grunt-bump",
-    "mochacli"    : "grunt-mocha-cli"
+    "mochacli"    : "grunt-mocha-cli",
+    "buildnumber" : "grunt-build-number"
   } );
 
   var configs = require( 'load-grunt-configs' )( grunt, {
-    pkg   : grunt.file.readJSON( 'package.json' ),
-    paths : {
+    pkg         : grunt.file.readJSON( 'package.json' ),
+    paths       : {
       entrypoint : "server.js"
     },
-    env   : process.env
+    env         : process.env,
+    buildnumber : {
+      files : ['package.json']
+    }
   } );
 
   // Project configuration.
@@ -46,6 +51,7 @@ module.exports = function( grunt ){
     var target = process.env.NODE_ENV || "development";
     grunt.task.run( [
       'jshint',
+      'buildnumber',
       'concurrent:' + target
     ] );
   } );
@@ -70,6 +76,6 @@ module.exports = function( grunt ){
 
   grunt.registerTask( 'publish', ['gh-pages'] );
 
-  grunt.registerTask( 'deploy', ['rsync'] );
+  grunt.registerTask( 'deploy', ['buildnumber', 'rsync'] );
 
 };
