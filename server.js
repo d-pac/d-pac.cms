@@ -23,6 +23,7 @@ keystone.init( {
 
   'name'  : 'd-pac',
   'brand' : 'd-pac',
+  'appversion' : require("./package.json" ).version,
 
   'less'    : 'public',
   'static'  : 'public',
