@@ -1,7 +1,7 @@
 {
   "name": "d-pac.cms",
   "version": "0.5.4",
-  "build": "55",
+  "build": "57",
   "private": true,
   "dependencies": {
     "async": "^0.8.0",
