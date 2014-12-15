@@ -7,27 +7,22 @@ var schema = keystone.list( 'Representation' );
 var toSafeJSON = require( './utils' ).toSafeJSON;
 var ObjectId = require( 'mongoose' ).Types.ObjectId;
 
-var listById = module.exports.listById = function( ids ){
-  return schema.model
-    .find()
-    .where( '_id' ).in( ids )
+var list = module.exports.list = function list( opts ){
+  debug( "#list" );
+  var query = schema.model
+    .find( opts );
+  if( _.isArray( opts ) ){
+    query = query.where( '_id' ).in( opts );
+  }
+  return query
     .exec()
     .then( function( representations ){
       return toSafeJSON( representations );
     } );
 };
 
-var list = module.exports.list = function list( opts ){
-  debug( "#list" );
-  if( _.isArray( opts ) ){
-    return listById( opts );
-  }
-  return schema.model
-    .find( opts )
-    .exec()
-    .then( function( representations ){
-      return toSafeJSON( representations );
-    } );
+var listById = module.exports.listById = function listById( ids ){
+  return module.exports.list( ids );
 };
 
 module.exports.retrievePair = function retrieveRepresentationPair( opts ){
@@ -39,28 +34,28 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
       assessment : opts.assessment
     } )
     .exec()
-    .then(function(representations){
-      if(! representations || representations.length <= 0){
+    .then( function( representations ){
+      if( !representations || representations.length <= 0 ){
         return [];
       }else{
-        representations = _.sortBy( _.shuffle(representations),function(representation){
+        representations = _.sortBy( _.shuffle( representations ), function( representation ){
           return representation.comparedNum;
-        });
+        } );
         var selected = representations.shift();
         var opponent;
-        if(selected.comparedNum <= 0){
+        if( selected.comparedNum <= 0 ){
           opponent = representations.shift();
         }else{
-          opponent = _.find(representations, function(representation){
-              return representation.compared.indexOf(selected._id) < 0;
-          });
-          if(!opponent){
+          opponent = _.find( representations, function( representation ){
+            return representation.compared.indexOf( selected._id ) < 0;
+          } );
+          if( !opponent ){
             opponent = representations.shift();
           }
         }
         return [selected, opponent];
       }
-    });
+    } );
 
 };
 

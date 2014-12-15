@@ -121,13 +121,18 @@ exports = module.exports = function( app ){
 
   app.get( '/api/reports/comparisons', api.middleware.requireAdmin, api.reports.comparisons);
 
+  app.all('/api/admin*', api.middleware.requireAdmin);
+
+  app.get('/api/admin/representations/actions/duplicates', api.admin.duplicateRepresentations);
+  app.get('/api/admin/representations/actions/next', api.representations.retrievePair);
+
+  app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
+
   app.get( '/representations/:_id.:format',
     api.middleware.initAPI,
     api.middleware.initCORS(),
     api.representations.retrieveFile,
     api.middleware.notFound,
     api.middleware.handleError );
-
-  app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
 };
