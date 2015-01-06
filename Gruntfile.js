@@ -76,6 +76,6 @@ module.exports = function( grunt ){
 
   grunt.registerTask( 'publish', ['gh-pages'] );
 
-  grunt.registerTask( 'deploy', ['buildnumber', 'rsync'] );
+  grunt.registerTask( 'deploy', ['buildnumber', 'rsync:app'] );
 
 };
