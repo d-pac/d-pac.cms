@@ -1,6 +1,6 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
-require( 'dotenv' ).load();
+var konfy = require( 'konfy' ).load();
 
 // Require keystone
 var express = require('express'),
