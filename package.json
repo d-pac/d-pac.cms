@@ -1,7 +1,7 @@
 {
   "name": "d-pac.cms",
   "version": "0.5.4",
-  "build": "60",
+  "build": "61",
   "private": true,
   "dependencies": {
     "async": "^0.8.0",
@@ -15,7 +15,7 @@
     "express": "^3.3.8",
     "fast-csv": "^0.5.4",
     "jade": "^1.7.0",
-    "keystone": "d-pac/keystone#d-pac",
+    "keystone": "^0.2.40",
     "lodash": "^2.4.1",
     "mime": "^1.2.11",
     "moment-range": "^1.0.5",
