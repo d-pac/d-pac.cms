@@ -3,7 +3,7 @@
 var debug = require( 'debug' )( 'dpac:api.reports' );
 var _ = require( "underscore" );
 var csv = require('fast-csv');
-var Promise = require('bluebird');
+var Bluebird = require('bluebird');
 var moment = require('moment');
 
 var assessmentsService = require( '../../services/assessments' );
@@ -20,7 +20,7 @@ module.exports.comparisons = function reportComparisons( req,
       return comparisonsReporting( ids );
     } )
     .then(function(comparisons){
-      var writeToString = Promise.promisify(csv.writeToString);
+      var writeToString = Bluebird.promisify(csv.writeToString);
       return writeToString(comparisons, { headers : true, quoteColumns : true });
     })
     .onResolve( function( err,

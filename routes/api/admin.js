@@ -1,7 +1,7 @@
 'use strict';
 var debug = require( 'debug' )( 'dpac:api.admin' );
 var _ = require( "underscore" );
-var Promise = require( "bluebird" );
+var Bluebird = require( "bluebird" );
 var keystone = require( "keystone" );
 var assessmentsService = require( '../../services/assessments' );
 var representationsService = require( '../../services/representations' );
@@ -64,7 +64,7 @@ module.exports.duplicateRepresentations = function( req,
             }
           ] ).exec();
       } );
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .onResolve( function( err,
                           results ){

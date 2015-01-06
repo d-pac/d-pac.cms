@@ -6,7 +6,7 @@ var async = require( 'async' );
 var errors = require( 'errors' );
 var debug = require( 'debug' )( 'dpac:api.me' );
 var constants = require( '../../models/helpers/constants' );
-var Promise = require( 'bluebird' );
+var Bluebird = require( 'bluebird' );
 
 var comparisons = require( '../../services/comparisons' );
 var personas = require( '../../services/personas' );
@@ -31,7 +31,7 @@ function _listAssessments( opts ){
       } );
       promises.push( p );
     } );
-    return Promise.all( promises );
+    return Bluebird.all( promises );
   } ).then( function(){
     return _.sortBy(output, "order");
   } );
