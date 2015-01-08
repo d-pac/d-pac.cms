@@ -74,7 +74,7 @@ module.exports = function( grunt ){
     'mochacli'
   ] );
 
-  grunt.registerTask( 'publish', ['gh-pages'] );
+  grunt.registerTask( 'publish', ['apidoc', 'gh-pages'] );
 
   grunt.registerTask( 'deploy', ['buildnumber', 'rsync:app'] );
 
