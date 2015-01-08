@@ -40,7 +40,6 @@ var update = module.exports.update = function( req,
         flashErrors : false
       }, function( err,
                    processor ){
-        console.log('hmmm');
         if( err ){
           return next( err );
         }

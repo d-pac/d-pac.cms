@@ -178,7 +178,7 @@ exports.requireParams = function(){
     } );
     if( missing.length ){
       return next( new errors.Http400Error( {
-        reason : "Missing parameters: '" + missing.join( "', '" ) + "'"
+        explanation : "Missing parameters: '" + missing.join( "', '" ) + "'"
       } ) );
     }
     return next();
