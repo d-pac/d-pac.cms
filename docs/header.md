@@ -4,6 +4,10 @@ The D-pac REST API attempts to follow best practices as laid out by [Interagent'
 
 ## Requests
 
+### `PATCH` and `PUT`
+
+All methods marked with `PATCH` are also available with `PUT`, with the major difference that all fields are optional with `PATCH` and required with `PUT`.
+
 ### Parameters
 
 All request parameters can be supplied either as query string arguments or as json body.
@@ -19,7 +23,7 @@ POST //api/me/session
 {
 	"email" : "john.doe@example.com",
 	"password" : "foo",
-	"password_confirm" : "foo" 
+	"password_confirm" : "foo"
 }
 
 ```

@@ -195,6 +195,7 @@ exports = module.exports = function( app ){
    * @apiSuccess (Success Response: Comparison) {String} selected Representation id
    * @apiSuccess (Success Response: Comparison) {String} comparativeFeedback Comparative feedback provided by the assessor.
    * @apiSuccessExample {json} Success Response Example
+   HTTP/1.1 200 OK
    {
        "_id": "54635da80b7ce8bc0ba66382",
        "_rid": 36,
@@ -204,6 +205,83 @@ exports = module.exports = function( app ){
        "completed": true,
        "selected": "545b261a7b0463af66064169",
        "comparativeFeedback": "Lorem ipsum"
+   }
+   */
+
+  /**
+   * @apiDefine SuccessReturnsJudgement
+   * @apiSuccess (Success Response: Judgement) {String} _id Judgement id.
+   * @apiSuccess (Success Response: Judgement) {String} assessor User id.
+   * @apiSuccess (Success Response: Judgement) {String} assessment Assessment id.
+   * @apiSuccess (Success Response: Judgement) {String} representation Representation id.
+   * @apiSuccess (Success Response: Judgement) {String} comparison Comparison id.
+   * @apiSuccess (Success Response: Judgement) {String} position "left" or "right".
+   * @apiSuccess (Success Response: Judgement) {String} notes Notes on the representation.
+   * @apiSuccess (Success Response: Judgement) {Boolean} passed Whether the representation is "passed".
+   * @apiSuccessExample {json} Success Response Example
+   HTTP/1.1 200 OK
+   {
+       "_id": "548ebd1294b99671f604def6",
+       "assessor": "543f8abd6f0a6bb721653954",
+       "assessment": "5458894f0138e02976448d26",
+       "comparison": "548ebd1294b99671f604def5",
+       "representation": "545b360ecd3c054e06cefd22",
+       "position": "left"
+   }
+   */
+
+  /**
+   * @apiDefine SuccessReturnsSEQ
+   * @apiSuccess (Success Response: SEQ) {String} _id SEQ id.
+   * @apiSuccess (Success Response: SEQ) {String} comparison Comparison id.
+   * @apiSuccess (Success Response: SEQ) {String} phase Phase id.
+   * @apiSuccess (Success Response: SEQ) {Number} value SEQ value in a range [1;7].
+   * @apiSuccessExample {json} Success Response Example
+   HTTP/1.1 200 OK
+   {
+       "_id": "548ebd1294b99671f604def6",
+       "phase": "543f8abd6f0a6bb721653954",
+       "comparison": "548ebd1294b99671f604def5",
+       "value": 5
+   }
+   */
+
+  /**
+   * @apiDefine SuccessReturnsTimelog
+   * @apiSuccess (Success Response: Timelog) {String} _id Timelog id.
+   * @apiSuccess (Success Response: Timelog) {String} comparison Comparison id.
+   * @apiSuccess (Success Response: Timelog) {String} phase Phase id.
+   * @apiSuccess (Success Response: Timelog) {Date} begin Begin timestamp of logging.
+   * @apiSuccess (Success Response: Timelog) {Date} end End timestamp of logging.
+   * @apiSuccess (Success Response: Timelog) {Number} duration Time difference between `begin` and `end` in seconds.
+   * @apiSuccessExample {json} Success Response Example
+   HTTP/1.1 200 OK
+   {
+       "_id": "54635da90b7ce8bc0ba66385",
+       "duration": 224,
+       "phase": "5423f87677177065a0887b99",
+       "comparison": "54635da80b7ce8bc0ba66382",
+       "begin": "2014-11-12T13:16:25.000Z",
+       "end": "2014-11-12T13:20:09.000Z"
+   }
+   */
+
+  /**
+   * @apiDefine SuccessReturnsRepresentation
+   * @apiSuccess (Success Response: Representation) {String} _id Representation id.
+   * @apiSuccess (Success Response: Representation) {String} url URL of the representation file.
+   * @apiSuccess (Success Response: Representation) {String} mimeType MIME type of the representation file.
+   * @apiSuccess (Success Response: Representation) {String} ext Extension of the representation file.
+   * @apiSuccess (Success Response: Representation) {String} assessee User id of the corresponding assessee.
+   * @apiSuccess (Success Response: Representation) {String} assessment Assessment id.
+   * @apiSuccessExample {json} Success Response Example
+   {
+       "_id": "545b360ecd3c054e06cefd22",
+       "url": "/representations/545b360ecd3c054e06cefd22.pdf",
+       "mimeType": "application/pdf",
+       "ext": ".pdf",
+       "assessee": "5458be880138e02976448ef4",
+       "assessment": "5458894f0138e02976448d26"
    }
    */
 
@@ -351,17 +429,81 @@ exports = module.exports = function( app ){
 
   app.all( '/api/comparisons*', api.middleware.onlyAllow( 'GET', 'PATCH', 'PUT' ) );
 
-  app.put( '/api/judgements/:_id', api.judgements.update );
+  /**
+   * @api {patch} /judgements/:id Update
+   * @apiVersion 0.1.0
+   * @apiGroup Judgements
+   * @apiName UpdateJudgement
+   * @apiDescription Updates the judgement with the given id.
+   * @apiPermission Authenticated
+   * @apiParam {String} notes Notes on the corresponding representation.
+   * @apiParam {Boolean} passed Whether the representation is "passed".
+   * @apiUse SuccessReturnsJudgement
+   */
   app.patch( '/api/judgements/:_id', api.judgements.update );
+  app.put( '/api/judgements/:_id', api.judgements.update );
   app.all( '/api/judgements*', api.middleware.onlyAllow( 'PATCH' ) );
 
+  /**
+   * @api {post} /seqs Create
+   * @apiVersion 0.1.0
+   * @apiGroup SEQS
+   * @apiName CreateSEQ
+   * @apiDescription Creates a SEQ.
+   * @apiPermission Authenticated
+   * @apiParam {String} comparison Comparison id.
+   * @apiParam {String} phase Phase id.
+   * @apiParam {Number} value SEQ value.
+   * @apiUse SuccessReturnsSEQ
+   */
   app.post( '/api/seqs', api.seqs.create );
+
+  /**
+   * @api {patch} /seqs/:id Update
+   * @apiVersion 0.1.0
+   * @apiGroup SEQS
+   * @apiName UpdateSEQ
+   * @apiDescription Updates the SEQ with the given id.
+   * @apiPermission Authenticated
+   * @apiParam {String} comparison Comparison id.
+   * @apiParam {String} phase Phase id.
+   * @apiParam {Number} value SEQ value.
+   * @apiUse SuccessReturnsSEQ
+   */
   app.patch( '/api/seqs/:_id', api.seqs.update );
   app.put( '/api/seqs/:_id', api.seqs.update );
+
   app.all( '/api/seqs*', api.middleware.onlyAllow( 'POST' ) );
 
+
+  //todo: remove?
   app.get( '/api/timelogs', api.timelogs.list );
+
+  /**
+   * @api {post} /timelogs Create
+   * @apiVersion 0.1.0
+   * @apiGroup Timelogs
+   * @apiName CreateTimelog
+   * @apiDescription Creates a timelog.
+   * @apiPermission Authenticated
+   * @apiParam {String} comparison Comparison id.
+   * @apiParam {String} phase Phase id.
+   * @apiParam {Date} begin Begin timestamp of logging.
+   * @apiParam {Date} end End timestamp of logging.
+   * @apiUse SuccessReturnsTimelog
+   */
   app.post( '/api/timelogs', api.timelogs.create );
+
+  /**
+   * @api {patch} /timelogs/:id Update
+   * @apiVersion 0.1.0
+   * @apiGroup Timelogs
+   * @apiName UpdateTimelog
+   * @apiDescription Updates a timelog.
+   * @apiPermission Authenticated
+   * @apiParam {Date} end End timestamp of logging.
+   * @apiUse SuccessReturnsTimelog
+   */
   app.patch( '/api/timelogs/:_id', api.timelogs.update );
   app.put( '/api/timelogs/:_id', api.timelogs.update );
   app.all( '/api/timelogs*', api.middleware.onlyAllow( 'GET', 'POST', 'PATCH', 'PUT' ) );
@@ -379,6 +521,15 @@ exports = module.exports = function( app ){
 
   app.all( '/api*', api.middleware.notFound, api.middleware.handleError );
 
+  /**
+   * @api {get} /representations/:id Retrieve
+   * @apiVersion 0.1.0
+   * @apiGroup Representations
+   * @apiName RetrieveRepresentation
+   * @apiDescription Retrieves a Representation.
+   * @apiPermission Authenticated
+   * @apiUse SuccessReturnsRepresentation
+   */
   app.get( '/representations/:_id.:format',
     api.middleware.initAPI,
     api.middleware.initCORS(),
