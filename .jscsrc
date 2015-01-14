@@ -1,18 +1,94 @@
 {
-    "preset": "google",
-    "fileExtensions": [ ".js", "jscs" ],
-
-    "requireParenthesesAroundIIFE": true,
-    "maximumLineLength": 120,
-    "validateLineBreaks": "LF",
-    "validateIndentation": 4,
-
+    "disallowEmptyBlocks": true,
+    "disallowKeywordsOnNewLine": ["else"],
     "disallowKeywords": ["with"],
-    "disallowSpacesInsideObjectBrackets": null,
-    "disallowImplicitTypeConversion": ["string"],
+    "disallowMixedSpacesAndTabs": true,
+    "disallowMultipleLineBreaks": true,
+    "disallowMultipleLineStrings": true,
+    "disallowMultipleVarDecl": true,
+    "disallowNewlineBeforeBlockStatements": true,
+    "disallowOperatorBeforeLineBreak": true,
+    "disallowPaddingNewlinesInBlocks": true,
+    "disallowQuotedKeysInObjects": true,
+    "disallowSpaceAfterPrefixUnaryOperators": true,
+    "disallowSpaceBeforeBlockStatements": true,
+    "disallowSpaceBeforeKeywords": true,
+    "disallowSpaceBeforePostfixUnaryOperators": true,
+    "disallowSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
+    "disallowSpacesInCallExpression": true,
+    "disallowSpacesInFunctionDeclaration": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
+    "disallowSpacesInFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
+    "disallowSpacesInNamedFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
+    "disallowTrailingComma": true,
+    "disallowTrailingWhitespace": true,
+    "maximumLineLength": {
+        "value": 80,
+        "allowComments": true,
+        "allowUrlComments": true,
+        "allowRegex": true
+    },
+    "requireAlignedObjectValues": "ignoreLineBreak",
+    "requireBlocksOnNewline": true,
+    "requireCamelCaseOrUpperCaseIdentifiers": true,
+    "requireCapitalizedConstructors": true,
+    "requireCurlyBraces": [
+        "for",
+        "while",
+        "do",
+        "try",
+        "catch",
+        "default"
+    ],
+    "requireDotNotation": true,
+    "requireKeywordsOnNewLine": [],
+    "requireLineBreakAfterVariableAssignment": true,
+    "requireLineFeedAtFileEnd": true,
+    "requireMultipleVarDecl": "onevar",
+    "requirePaddingNewlinesBeforeKeywords": true,
+    "requirePaddingNewLinesInObjects": true,
+    "requireParenthesesAroundIIFE": true,
+    "requireSpaceAfterBinaryOperators": true,
+    "requireSpaceAfterKeywords": [
+        "return",
+        "case"
+    ],
+    "requireSpaceAfterLineComment": true,
+    "requireSpaceAfterObjectKeys": true,
+    "requireSpaceBeforeBinaryOperators": true,
+    "requireSpaceBeforeKeywords": true,
+    "requireSpaceBeforeObjectValues": true,
+    "requireSpaceBetweenArguments": true,
+    "requireSpacesInConditionalExpression": true,
+    "requireSpacesInsideArrayBrackets": "all",
+    "requireSpacesInsideObjectBrackets": "all",
+    "requireSpacesInsideParentheses": {
+        "all": true
+    },
+    "requireYodaConditions": true,
+    "validateIndentation": 2,
+    "validateLineBreaks": "LF",
+    "validateParameterSeparator": ", ",
+    "validateQuoteMarks": {
+        "mark": "\"",
+        "escape": true
+    },
 
-    "safeContextKeyword": "_this",
-
+    "fileExtensions": [
+        ".js",
+        "jscs"
+    ],
     "excludeFiles": [
         "templates"
     ]
