@@ -40,17 +40,15 @@ module.exports = function( grunt ){
   grunt.initConfig( configs );
 
   // load jshint
-  grunt.registerTask( 'lint', function( target ){
-    grunt.task.run( [
-      'jshint'
-    ] );
-  } );
+  grunt.registerTask( 'lint', [
+    'jshint', 'jscs'
+  ] );
 
   // default option to connect server
   grunt.registerTask( 'serve', function(){
     var target = process.env.NODE_ENV || "development";
     grunt.task.run( [
-      'jshint',
+      'lint',
       'buildnumber',
       'concurrent:' + target
     ] );

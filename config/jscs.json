@@ -1,0 +1,14 @@
+{
+    "src": [
+        "config/*.js*",
+        "models/*.js",
+        "public/*.js",
+        "routes/*.js",
+        "services/*.js",
+        "specs/*.js",
+        "updates/*.js"
+    ],
+    "options": {
+        "config": ".jscsrc"
+    }
+}
