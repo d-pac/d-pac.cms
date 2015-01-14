@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' );
-var keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
-var moment = require( 'moment-range' );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
+var moment = require( "moment-range" );
 
-var Timelog = new keystone.List( 'Timelog', {
+var Timelog = new keystone.List( "Timelog", {
   map         : {
-    name : 'id'
+    name : "id"
   },
   track       : true,
-  defaultSort : 'comparison'
+  defaultSort : "comparison"
 } );
 
 var format = "DD/MM/YYYY HH:mm:ss";
@@ -19,14 +19,14 @@ var config = {
 
   phase : {
     type     : Types.Relationship,
-    ref      : 'Phase',
+    ref      : "Phase",
     required : true,
     initial  : true
   },
 
   comparison : {
     type    : Types.Relationship,
-    ref     : 'Comparison',
+    ref     : "Comparison",
     require : true,
     initial : true
   },
@@ -49,21 +49,21 @@ var config = {
 
 Timelog.api = {
   creation : _.keys( config ),
-  editable : ["end"]
+  editable : [ "end" ]
 };
 
 Timelog.add( config );
 
-Timelog.schema.virtual( 'duration' ).get( function(){
-  if(this.end){
-    return moment.range( this.begin, this.end ).diff( 's' );
+Timelog.schema.virtual( "duration" ).get( function(){
+  if( this.end ){
+    return moment.range( this.begin, this.end ).diff( "s" );
   }
 
   return "-";
 } );
 
 Timelog.schema.methods.toSafeJSON = function(){
-  return _.pick( this, ['_id', 'duration'].concat( _.keys( config ) ) );
+  return _.pick( this, [ "_id", "duration" ].concat( _.keys( config ) ) );
 };
-Timelog.defaultColumns = 'name, comparison, phase, begin, end, duration';
+Timelog.defaultColumns = "name, comparison, phase, begin, end, duration";
 Timelog.register();

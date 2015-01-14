@@ -1,6 +1,5 @@
 {
     "src": [
-        "config/*.js*",
         "models/*.js",
         "public/*.js",
         "routes/*.js",
@@ -9,6 +8,7 @@
         "updates/*.js"
     ],
     "options": {
-        "config": ".jscsrc"
+        "config": ".jscsrc",
+        "maxErrors": 1
     }
 }

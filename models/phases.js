@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
-var _s = require('underscore.string');
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
+var _s = require( "underscore.string" );
 
-var Phase = new keystone.List( 'Phase', {
-  map:{
-    name: "label"
+var Phase = new keystone.List( "Phase", {
+  map      : {
+    name : "label"
   },
-  noedit : false,
-  nocreate: true,
-  nodelete: true,
-  hidden: false
+  noedit   : false,
+  nocreate : true,
+  nodelete : true,
+  hidden   : false
 } );
 
 var config = {
@@ -24,22 +24,20 @@ var config = {
   },
 
   type : {
-    type    : Types.Text,
+    type     : Types.Text,
     required : true,
-    initial : true,
-    noedit: true
+    initial  : true,
+    noedit   : true
   }
 
 };
 
-Phase.add(config);
+Phase.add( config );
 
 // Provide access to Keystone
-Phase.schema.virtual( 'machinename' ).get( function(){
-  return _s.slugify(this.label+'-'+this.type);
+Phase.schema.virtual( "machinename" ).get( function(){
+  return _s.slugify( this.label + "-" + this.type );
 } );
 
-Phase.defaultColumns = 'label, type, machinename';
+Phase.defaultColumns = "label, type, machinename";
 Phase.register();
-
-

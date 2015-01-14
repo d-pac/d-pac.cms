@@ -7,12 +7,13 @@
     "disallowMultipleLineStrings": true,
     "disallowMultipleVarDecl": true,
     "disallowNewlineBeforeBlockStatements": true,
-    "disallowOperatorBeforeLineBreak": true,
+    "disallowOperatorBeforeLineBreak": [
+        "+",
+        "-"
+    ],
     "disallowPaddingNewlinesInBlocks": true,
     "disallowQuotedKeysInObjects": true,
     "disallowSpaceAfterPrefixUnaryOperators": true,
-    "disallowSpaceBeforeBlockStatements": true,
-    "disallowSpaceBeforeKeywords": true,
     "disallowSpaceBeforePostfixUnaryOperators": true,
     "disallowSpacesInAnonymousFunctionExpression": {
         "beforeOpeningRoundBrace": true,
@@ -34,7 +35,7 @@
     "disallowTrailingComma": true,
     "disallowTrailingWhitespace": true,
     "maximumLineLength": {
-        "value": 80,
+        "value": 120,
         "allowComments": true,
         "allowUrlComments": true,
         "allowRegex": true
@@ -55,8 +56,20 @@
     "requireKeywordsOnNewLine": [],
     "requireLineBreakAfterVariableAssignment": true,
     "requireLineFeedAtFileEnd": true,
-    "requireMultipleVarDecl": "onevar",
-    "requirePaddingNewlinesBeforeKeywords": true,
+    "requirePaddingNewlinesBeforeKeywords": [
+        "do",
+        "for",
+        "if",
+        "switch",
+        "case",
+        "try",
+        "catch",
+        "void",
+        "while",
+        "with",
+        "return",
+        "typeof"
+    ],
     "requirePaddingNewLinesInObjects": true,
     "requireParenthesesAroundIIFE": true,
     "requireSpaceAfterBinaryOperators": true,
@@ -84,7 +97,6 @@
         "mark": "\"",
         "escape": true
     },
-
     "fileExtensions": [
         ".js",
         "jscs"

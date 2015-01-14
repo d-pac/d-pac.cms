@@ -1,65 +1,66 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' );
-var keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
-var constants = require( './helpers/constants' );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
+var constants = require( "./helpers/constants" );
 
-var Judgement = new keystone.List( 'Judgement', {
+var Judgement = new keystone.List( "Judgement", {
   map   : {
-    name : 'id'
+    name : "id"
   },
   track : true
 } );
 
 Judgement.api = {
-  editable : ['notes', 'passed']
+  editable : [ "notes", "passed" ]
 };
 
 var config = {
 
   assessor : {
     type     : Types.Relationship,
-    ref      : 'User',
+    ref      : "User",
     index    : true,
-    required : true, //J03
-    many     : false, //J03
+    required : true, // J03
+    many     : false, // J03
     initial  : true
+
   },
 
   assessment : {
     type     : Types.Relationship,
-    ref      : 'Assessment',
+    ref      : "Assessment",
     initial  : true,
-    required : true, //J01
-    many     : false, //J01
+    required : true, // J01
+    many     : false, // J01
     index    : true,
     filters  : {
-      state : constants.publicationStates.published //J06
+      state : constants.publicationStates.published // J06
     }
   },
 
   representation : {
     type     : Types.Relationship,
-    ref      : 'Representation',
+    ref      : "Representation",
     initial  : true,
-    required : true, //J02
-    many     : false, //J02
+    required : true, // J02
+    many     : false, // J02
     index    : true
   },
 
   comparison : {
     type     : Types.Relationship,
-    ref      : 'Comparison',
+    ref      : "Comparison",
     initial  : true,
-    required : true, //J04
-    many     : false, //J04
+    required : true, // J04
+    many     : false, // J04
     index    : true
   },
 
   position : {
-    type : String,
-    noedit: true
+    type   : String,
+    noedit : true
   },
 
   notes : {
@@ -70,9 +71,18 @@ var config = {
   passed : {
     type    : Types.Select,
     options : [
-      { value : "passed", label : "Passed" },
-      { value : "undecided", label : "Undecided" },
-      { value : "failed", label : "Failed" }
+      {
+        value : "passed",
+        label : "Passed"
+      },
+      {
+        value : "undecided",
+        label : "Undecided"
+      },
+      {
+        value : "failed",
+        label : "Failed"
+      }
     ],
     initial : true
   }
@@ -80,7 +90,5 @@ var config = {
 
 Judgement.add( config );
 
-Judgement.defaultColumns = 'name, assessor, assessment, comparison, representation, position, passed';
+Judgement.defaultColumns = "name, assessor, assessment, comparison, representation, position, passed";
 Judgement.register();
-
-

@@ -1,42 +1,42 @@
-'use strict';
-var _ = require( 'underscore' );
-var keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
-var autoinc = require( './helpers/autoinc' );
-var constants = require( './helpers/constants' );
-var Assessment = keystone.list( 'Assessment' );
+"use strict";
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
+var autoinc = require( "./helpers/autoinc" );
+var constants = require( "./helpers/constants" );
+var Assessment = keystone.list( "Assessment" );
 
-var Comparison = new keystone.List( 'Comparison', {
+var Comparison = new keystone.List( "Comparison", {
   map   : {
-    name : '_rid'
+    name : "_rid"
   },
   track : true
 } );
 
 Comparison.api = {
-  editable : ["selected", "phase", "timelogs", "comparativeFeedback", "completed"]
+  editable : [ "selected", "phase", "timelogs", "comparativeFeedback", "completed" ]
 };
 
 var config = {
 
   assessment : {
     type     : Types.Relationship,
-    ref      : 'Assessment',
-    many     : false, //C01
+    ref      : "Assessment",
+    many     : false, // C01
     initial  : true,
-    required : true, //C01
+    required : true, // C01
     index    : true,
     filters  : {
-      state : constants.publicationStates.published //C05
+      state : constants.publicationStates.published // C05
     }
   },
 
   assessor : {
     type     : Types.Relationship,
-    ref      : 'User',
-    many     : false, //C02
+    ref      : "User",
+    many     : false, // C02
     index    : true,
-    required : true, //C02
+    required : true, // C02
     initial  : true
   },
 
@@ -47,14 +47,14 @@ var config = {
 
   phase : {
     type    : Types.Relationship,
-    ref     : 'Phase',
+    ref     : "Phase",
     index   : true,
     initial : true
   },
 
   selected : {
     type  : Types.Relationship,
-    ref   : 'Representation',
+    ref   : "Representation",
     index : true
   },
 
@@ -68,10 +68,10 @@ var config = {
 
 Comparison.add( config );
 
-Comparison.schema.path( 'assessment' )
+Comparison.schema.path( "assessment" )
   .validate( function( value,
                        done ){
-    //C05
+    // C05
     Assessment.model
       .findById( value )
       .lean()
@@ -81,29 +81,29 @@ Comparison.schema.path( 'assessment' )
       } );
   }, "Assessment must be published." );
 
-Comparison.schema.path( 'assessor' )
+Comparison.schema.path( "assessor" )
   .validate( function( value,
                        done ){
-    //U04 //C06
+    // U04 // C06
     var filter = {
       user       : value,
       assessment : this.assessment,
       role       : constants.roles.assessor
     };
-    var Persona = keystone.list( 'Persona' );
+    var Persona = keystone.list( "Persona" );
     Persona.model
       .find()
       .where( filter )
       .exec( function( err,
                        personas ){
-        done( personas && personas.length > 0 );
+        done( personas && 0 < personas.length );
       } );
   }, "User must have assessor persona for selected assessment." );
 
-Comparison.schema.path( 'assessor' )
+Comparison.schema.path( "assessor" )
   .validate( function( value,
                        done ){
-    //U06 //C07
+    // U06 // C07
     var current = this;
     var filter = {
       assessor  : current.assessor,
@@ -112,54 +112,53 @@ Comparison.schema.path( 'assessor' )
     Comparison.model
       .find()
       .where( filter )
-      .where( '_id' ).ne( current.id )
+      .where( "_id" ).ne( current.id )
       .exec( function( err,
                        comparisons ){
-        done( !comparisons || comparisons.length <= 0 );
+        done( !comparisons || 0 >= comparisons.length );
       } );
   }, "User may not have another active comparison." );
 
-Comparison.schema.path( 'phase' )
+Comparison.schema.path( "phase" )
   .validate( function( phase,
                        done ){
-    //C08
+    // C08
     var current = this;
+
     if( phase ){
-      var Assessment = keystone.list( 'Assessment' );
+      var Assessment = keystone.list( "Assessment" );
       Assessment.model
         .findOne( {
-          "_id"    : current.assessment,
-          "phases" : phase
+          _id    : current.assessment,
+          phases : phase
         } )
         .exec( function( err,
                          assessment ){
           done( !!assessment );
         } );
-    }else{
+    } else {
       done( true );
     }
   }, "Phase must be included in workflow of Assessment." );
 
-Comparison.schema.virtual( 'active' ).get( function(){
-  console.log("this", this);
+Comparison.schema.virtual( "active" ).get( function(){
+  console.log( "this", this );
+
   return !this.completed;
 } );
 
 Comparison.relationship( {
-  path    : 'judgements',
-  ref     : 'Judgement',
-  refPath : 'comparison',
-  label   : 'Judgements'
+  path    : "judgements",
+  ref     : "Judgement",
+  refPath : "comparison",
+  label   : "Judgements"
 } );
 
 Comparison.schema.plugin( autoinc.plugin, {
-  model   : 'Comparison',
-  field   : '_rid',
+  model   : "Comparison",
+  field   : "_rid",
   startAt : 1
 } );
 
-Comparison.defaultColumns = 'name, assessor, assessment, selected, phase, completed';
+Comparison.defaultColumns = "name, assessor, assessment, selected, phase, completed";
 Comparison.register();
-
-
-

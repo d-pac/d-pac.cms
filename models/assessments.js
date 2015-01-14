@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
-var constants = require( './helpers/constants' );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
+var constants = require( "./helpers/constants" );
 
-var Assessment = new keystone.List( 'Assessment', {
-  map   : {
-    name : 'title'
+var Assessment = new keystone.List( "Assessment", {
+  map         : {
+    name : "title"
   },
-  track : true,
+  track       : true,
   defaultSort : "order"
 } );
 
@@ -29,17 +29,17 @@ var config = {
 
   phases : {
     type     : Types.Relationship,
-    ref      : 'Phase',
+    ref      : "Phase",
     required : true,
     many     : true,
     initial  : false
   },
 
   comparisonsNum : {
-    type : Types.Number,
+    type     : Types.Number,
     required : true,
-    initial : true,
-    default : 20
+    initial  : true,
+    default  : 20
   },
 
   state : {
@@ -58,28 +58,25 @@ var config = {
 Assessment.add( config );
 
 Assessment.relationship( {
-  path    : 'representations',
-  ref     : 'Representation',
-  refPath : 'assessment',
-  label   : 'Representations'
+  path    : "representations",
+  ref     : "Representation",
+  refPath : "assessment",
+  label   : "Representations"
 } );
 
 Assessment.relationship( {
-  path    : 'comparisons',
-  ref     : 'Comparison',
-  refPath : 'assessment',
-  label   : 'Comparisons'
+  path    : "comparisons",
+  ref     : "Comparison",
+  refPath : "assessment",
+  label   : "Comparisons"
 } );
 
 Assessment.relationship( {
-  path    : 'personas',
-  ref     : 'Persona',
-  refPath : 'assessment',
-  label   : 'Personas'
+  path    : "personas",
+  ref     : "Persona",
+  refPath : "assessment",
+  label   : "Personas"
 } );
 
-
-Assessment.defaultColumns = 'title, createdBy, state, order';
+Assessment.defaultColumns = "title, createdBy, state, order";
 Assessment.register();
-
-

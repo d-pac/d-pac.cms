@@ -1,8 +1,8 @@
-var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
 
-var Organization = new keystone.List( 'Organization', {
+var Organization = new keystone.List( "Organization", {
   track : true
 } );
 
@@ -17,16 +17,15 @@ var config = {
 Organization.add( config );
 
 Organization.relationship( {
-  path    : 'organization',
-  ref     : 'User',
-  refPath : 'organization',
-  label   : 'Organization'
+  path    : "organization",
+  ref     : "User",
+  refPath : "organization",
+  label   : "Organization"
 } );
-
 
 /**
  * Registration
  */
 
-Organization.defaultColumns = 'name';
+Organization.defaultColumns = "name";
 Organization.register();

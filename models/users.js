@@ -1,13 +1,13 @@
-var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
 
 /**
  * Users
  * =====
  */
 
-var User = new keystone.List( 'User' );
+var User = new keystone.List( "User" );
 
 var config = {
   name         : {
@@ -17,7 +17,7 @@ var config = {
   },
   organization : {
     type    : Types.Relationship,
-    ref     : 'Organization',
+    ref     : "Organization",
     index   : true,
     initial : true
   },
@@ -34,44 +34,45 @@ var config = {
   }
 };
 
-User.add( config, 'Permissions', {
+User.add( config, "Permissions", {
   isAdmin : {
     type  : Boolean,
-    label : 'Can access Keystone'
+    label : "Can access Keystone"
   }
 } );
 
 // Provide access to Keystone
-User.schema.virtual( 'canAccessKeystone' ).get( function(){
+User.schema.virtual( "canAccessKeystone" ).get( function(){
   return this.isAdmin;
 } );
 
 User.relationship( {
-  path    : 'personas',
-  ref     : 'Persona',
-  refPath : 'user',
-  label   : 'Personas'
+  path    : "personas",
+  ref     : "Persona",
+  refPath : "user",
+  label   : "Personas"
 } );
 
-var jsonFields = _.keys( _.omit( config, 'password' ) );
+var jsonFields = _.keys( _.omit( config, "password" ) );
 
-User.schema.set( 'toJSON', {
+User.schema.set( "toJSON", {
   virtuals  : true,
   transform : function( doc,
                         model,
                         options ){
-    model = _.pick( model, '_id', jsonFields );
+    model = _.pick( model, "_id", jsonFields );
+
     return model;
   }
 } );
 
-User.api ={
-  editable : [ 'name', 'email', 'password' ]
+User.api = {
+  editable : [ "name", "email", "password" ]
 };
 
 /**
  * Registration
  */
 
-User.defaultColumns = 'name, email, isAdmin';
+User.defaultColumns = "name, email, isAdmin";
 User.register();

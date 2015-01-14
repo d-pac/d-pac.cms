@@ -1,23 +1,22 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' ),
-  keystone = require( 'keystone' ),
-  Types = keystone.Field.Types;
-var constants = require( './helpers/constants' );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
+var constants = require( "./helpers/constants" );
 
-var Seq = new keystone.List( 'Seq', {
+var Seq = new keystone.List( "Seq", {
   map   : {
-    name : 'id'
+    name : "id"
   },
   track : true
 } );
-
 
 var config = {
 
   comparison : {
     type     : Types.Relationship,
-    ref      : 'Comparison',
+    ref      : "Comparison",
     required : true,
     many     : false,
     initial  : true
@@ -25,7 +24,7 @@ var config = {
 
   phase : {
     type     : Types.Relationship,
-    ref      : 'Phase',
+    ref      : "Phase",
     required : true,
     many     : false,
     initial  : true
@@ -39,12 +38,10 @@ var config = {
 };
 
 Seq.api = {
-  creation : _.keys(config),
-  editable : ['value']
+  creation : _.keys( config ),
+  editable : [ "value" ]
 };
 Seq.add( config );
 
-Seq.defaultColumns = 'name, comparison, phase, value';
+Seq.defaultColumns = "name, comparison, phase, value";
 Seq.register();
-
-
