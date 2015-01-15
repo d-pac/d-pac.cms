@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' );
-var keystone = require( 'keystone' );
-var debug = require( 'debug' )( 'dpac:services.users' );
-var extend = require('deep-extend');
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var debug = require( "debug" )( "dpac:services.users" );
+var extend = require( "deep-extend" );
 
-var Promise = require( 'bluebird' );
+var Promise = require( "bluebird" );
 
-var schema = keystone.list( 'User' );
+var schema = keystone.list( "User" );
 
 /**
  *
@@ -16,9 +16,10 @@ var schema = keystone.list( 'User' );
  * @returns {Promise}
  */
 module.exports.retrieve = function retrieve( opts ){
-  debug( '#retrieve' );
+  debug( "#retrieve" );
+
   return schema.model
     .findById( opts._id )
-    .populate('organization')
+    .populate( "organization" )
     .exec();
 };

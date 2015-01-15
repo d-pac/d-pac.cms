@@ -1,32 +1,34 @@
-'use strict';
-var debug = require( 'debug' )( 'dpac:services.seqs' );
-var _ = require('underscore');
-var keystone = require( 'keystone' );
-var extend = require('deep-extend');
-var Promise = require( 'bluebird' );
-var schema = keystone.list('Seq');
+"use strict";
+var debug = require( "debug" )( "dpac:services.seqs" );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var extend = require( "deep-extend" );
+var Promise = require( "bluebird" );
+var schema = keystone.list( "Seq" );
 
 module.exports.create = function( opts ){
-  debug( '#create' );
+  debug( "#create" );
+
   return schema.model.create( opts );
 };
 
-var listById = module.exports.listById = function listById(ids){
+var listById = module.exports.listById = function listById( ids ){
   return schema.model
     .find()
-    .where( '_id' ).in( ids )
+    .where( "_id" ).in( ids )
     .lean()
     .exec();
 };
 
 module.exports.list = function list( opts ){
-  debug('list');
-  if( _.isArray(opts)){
-    return listById(opts);
+  debug( "list" );
+
+  if( _.isArray( opts ) ){
+    return listById( opts );
   }
 
   return schema.model
-    .find(opts)
+    .find( opts )
     .lean()
     .exec();
 };
@@ -37,7 +39,8 @@ module.exports.list = function list( opts ){
  * @param {string} opts._id Seq.id
  */
 module.exports.update = function update( opts ){
-  debug( 'update' );
+  debug( "update" );
+
   return schema.model
     .findById( opts._id )
     .exec()
@@ -46,7 +49,8 @@ module.exports.update = function update( opts ){
         return;
       }
       extend( doc, opts );
-      var save = Promise.promisify(doc.save, doc);
+      var save = Promise.promisify( doc.save, doc );
+
       return save();
     } );
 };

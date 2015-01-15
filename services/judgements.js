@@ -1,21 +1,22 @@
-'use strict';
-var debug = require( 'debug' )( 'dpac:services.judgements' );
-var _ = require( 'underscore' );
-var keystone = require( 'keystone' );
-var extend = require( 'deep-extend' );
-var Promise = require( 'bluebird' );
-var schema = keystone.list( 'Judgement' );
+"use strict";
+var debug = require( "debug" )( "dpac:services.judgements" );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var extend = require( "deep-extend" );
+var Promise = require( "bluebird" );
+var schema = keystone.list( "Judgement" );
 
 var listById = module.exports.listById = function listById( ids ){
   return schema.model
     .find()
-    .where( '_id' ).in( ids )
+    .where( "_id" ).in( ids )
     .lean()
     .exec();
 };
 
 module.exports.list = function list( opts ){
-  debug( 'list' );
+  debug( "list" );
+
   if( _.isArray( opts ) ){
     return listById( opts );
   }
@@ -27,22 +28,23 @@ module.exports.list = function list( opts ){
 };
 
 module.exports.create = function createJudgements( opts ){
-  debug( '#create' );
+  debug( "#create" );
   var judgements = [];
   opts.representations.forEach( function( representation,
                                           index ){
-    judgements[index] = {
+    judgements[ index ] = {
       assessor       : opts.assessor,
       assessment     : opts.assessment,
       comparison     : opts.comparison,
       representation : representation,
-      position       : opts.positions[index]
+      position       : opts.positions[ index ]
     };
   } );
+
   return schema.model
     .create( judgements )
     .then( function(){
-      //won't be handled correctly in the promise chain, unless if we pass them along here
+      // won't be handled correctly in the promise chain, unless if we pass them along here
       return _.toArray( arguments );
     } );
 };
@@ -53,7 +55,8 @@ module.exports.create = function createJudgements( opts ){
  * @param {string} opts._id Judgement.id
  */
 module.exports.update = function update( opts ){
-  debug( 'update' );
+  debug( "update" );
+
   return schema.model
     .findById( opts._id )
     .exec()
@@ -63,6 +66,7 @@ module.exports.update = function update( opts ){
       }
       extend( doc, opts );
       var save = Promise.promisify( doc.save, doc );
+
       return save();
     } );
 };

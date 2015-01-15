@@ -5,7 +5,7 @@ var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var schema = keystone.list( "Assessment" );
 
-var listById = module.exports.listById = function listById( ids ){
+module.exports.listById = function listById( ids ){
   return module.exports.list( ids );
 };
 

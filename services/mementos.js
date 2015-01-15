@@ -1,18 +1,17 @@
-'use strict';
-var _ = require( 'underscore' );
-var debug = require( 'debug' )( 'dpac:services.mementos' );
-var async = require( 'async' ),
-  keystone = require( 'keystone' );
-var errors = require( 'errors' );
-var Promise = require( 'bluebird' );
-var toSafeJSON = require( './utils' ).toSafeJSON;
+"use strict";
+var _ = require( "underscore" );
+var debug = require( "debug" )( "dpac:services.mementos" );
+var async = require( "async" );
+var keystone = require( "keystone" );
+var errors = require( "errors" );
+var Promise = require( "bluebird" );
 
-var representationsService = require( './representations' );
-var judgementsService = require( './judgements' );
-var comparisonsService = require( './comparisons' );
-var assessmentsService = require( './assessments' );
-var phasesService = require( './phases' );
-var seqsService = require( './seqs' );
+var representationsService = require( "./representations" );
+var judgementsService = require( "./judgements" );
+var comparisonsService = require( "./comparisons" );
+var assessmentsService = require( "./assessments" );
+var phasesService = require( "./phases" );
+var seqsService = require( "./seqs" );
 
 /**
  *
@@ -22,22 +21,25 @@ var seqsService = require( './seqs' );
  * @return {Promise}
  */
 module.exports.create = function createMemento( opts ){
-  debug( '#create' );
+  debug( "#create" );
 
   var memento = {
     assessor : opts.assessor
   };
-  return assessmentsService.retrieve( { _id : opts.assessment } )
+
+  return assessmentsService.retrieve( {
+    _id : opts.assessment
+  } )
     .then( function handleAssessment( assessment ){
       if( !assessment ){
         throw new errors.Http422Error( {
-          message     : 'Could not create memento.',
-          explanation : 'Assessment not found.'
+          message     : "Could not create memento.",
+          explanation : "Assessment not found."
         } );
       }
       memento.assessment = assessment;
       memento.phases = assessment.phases;
-      assessment.phases = _.pluck( assessment.phases, '_id' );
+      assessment.phases = _.pluck( assessment.phases, "_id" );
     } )
     .then( function getNumOfCompletedComparisons(){
       return comparisonsService.completedCount( {
@@ -53,9 +55,11 @@ module.exports.create = function createMemento( opts ){
     } )
     .then( function createComparison(){
       var firstPhase;
-      if( memento.phases && memento.phases.length > 0 ){
-        firstPhase = memento.phases[0];
+
+      if( memento.phases && 0 < memento.phases.length ){
+        firstPhase = memento.phases[ 0 ];
       }
+
       return comparisonsService.create( {
         assessor   : opts.assessor,
         assessment : opts.assessment,
@@ -66,16 +70,19 @@ module.exports.create = function createMemento( opts ){
       memento.comparison = comparison;
     } )
     .then( function getRepresentationPair(){
-      return representationsService.retrievePair( { assessment : opts.assessment } );
+      return representationsService.retrievePair( {
+        assessment : opts.assessment
+      } );
     } )
     .then( function handleRepresentations( representations ){
-      //todo: when no representations found
-      representations[0].compared.push( representations[1]._id );
-      representations[1].compared.push( representations[0]._id );
-      representations[0].comparedNum++;
-      representations[1].comparedNum++;
-      representations[0].save();
-      representations[1].save();
+      // todo: when no representations found
+      representations[ 0 ].compared.push( representations[ 1 ]._id );
+      representations[ 1 ].compared.push( representations[ 0 ]._id );
+      representations[ 0 ].comparedNum++;
+      representations[ 1 ].comparedNum++;
+      representations[ 0 ].save();
+      representations[ 1 ].save();
+
       return representations;
     } )
     .then( function createJudgements( representations ){
@@ -84,13 +91,15 @@ module.exports.create = function createMemento( opts ){
         assessment      : opts.assessment,
         representations : representations,
         comparison      : memento.comparison,
-        positions       : ["left", "right"]
+        positions       : [ "left", "right" ]
       } );
     } )
     .then( function handleJudgements( judgements ){
-      memento.judgements = _.sortBy( judgements, 'position' ).map(function(judgement){
-        return judgement.toJSON();
-      });
+      memento.judgements = _.sortBy( judgements, "position" )
+        .map( function( judgement ){
+          return judgement.toJSON();
+        } );
+
       return judgements;
     } )
     .then( function listRepresentations( judgements ){
@@ -117,10 +126,12 @@ module.exports.create = function createMemento( opts ){
  * @return {Promise}
  */
 module.exports.listActives = function listActives( opts ){
-  debug( '#listActives' );
+  debug( "#listActives" );
   var mementos = [];
 
-  return comparisonsService.listActive( { assessor : opts.assessor } )
+  return comparisonsService.listActive( {
+    assessor : opts.assessor
+  } )
     .then( function handleComparisons( comparisons ){
       _.each( comparisons, function( comparison ){
         var memento = {};
@@ -143,6 +154,7 @@ module.exports.listActives = function listActives( opts ){
           };
         } );
       } );
+
       return Promise.all( promises );
     } )
     .then( function listPhases(){
@@ -152,6 +164,7 @@ module.exports.listActives = function listActives( opts ){
             memento.phases = phases;
           } );
       } );
+
       return Promise.all( promises );
     } )
     .then( function listJudgements(){
@@ -162,6 +175,7 @@ module.exports.listActives = function listActives( opts ){
           memento.judgements = judgements;
         } );
       } );
+
       return Promise.all( promises );
     } )
     .then( function listRepresentations(){
@@ -186,16 +200,16 @@ module.exports.listActives = function listActives( opts ){
         return seqsService.list( {
           comparison : memento.comparison
         } ).then( function handleSeqs( seqs ){
-          if( seqs && seqs.length > 0 ){
-            //seqs are optional, and dependant on the worflow defined in the assessment
+          if( seqs && 0 < seqs.length ){
+            // seqs are optional, and dependant on the worflow defined in the assessment
             memento.seqs = seqs;
           }
         } );
       } );
+
       return Promise.all( promises );
     } )
     .then( function handleOutput(){
       return mementos;
     } );
-
 };

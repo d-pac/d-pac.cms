@@ -1,19 +1,19 @@
-'use strict';
+"use strict";
 
-var debug = require( 'debug' )( 'dpac:services.timelogs' );
-var _ = require( 'underscore' );
-var extend = require( 'deep-extend' );
-var Promise = require( 'bluebird' );
+var debug = require( "debug" )( "dpac:services.timelogs" );
+var _ = require( "underscore" );
+var extend = require( "deep-extend" );
+var Promise = require( "bluebird" );
 
-var keystone = require( 'keystone' );
-var toSafeJSON = require( './utils' ).toSafeJSON;
-var schema = keystone.list( 'Timelog' );
+var keystone = require( "keystone" );
+var toSafeJSON = require( "./utils" ).toSafeJSON;
+var schema = keystone.list( "Timelog" );
 
 var listById = module.exports.listById = function listById( ids ){
   return schema.model
     .find()
-    .where( '_id' ).in( ids )
-    .sort( 'comparison begin' )
+    .where( "_id" ).in( ids )
+    .sort( "comparison begin" )
     .exec()
     .then( function( docs ){
       return toSafeJSON( docs );
@@ -21,14 +21,15 @@ var listById = module.exports.listById = function listById( ids ){
 };
 
 module.exports.list = function list( opts ){
-  debug( 'list' );
+  debug( "list" );
+
   if( _.isArray( opts ) ){
     return listById( opts );
   }
 
   return schema.model
     .find( opts )
-    .sort( 'comparison begin' )
+    .sort( "comparison begin" )
     .exec()
     .then( function( docs ){
       return toSafeJSON( docs );
@@ -36,7 +37,8 @@ module.exports.list = function list( opts ){
 };
 
 module.exports.create = function( opts ){
-  debug( '#create' );
+  debug( "#create" );
+
   return schema.model.create( opts );
 };
 
@@ -46,7 +48,8 @@ module.exports.create = function( opts ){
  * @param {string} opts._id Seq.id
  */
 module.exports.update = function update( opts ){
-  debug( 'update', opts );
+  debug( "update", opts );
+
   return schema.model
     .findById( opts._id )
     .exec()
@@ -56,6 +59,7 @@ module.exports.update = function update( opts ){
       }
       extend( doc, opts );
       var save = Promise.promisify( doc.save, doc );
+
       return save();
     } );
 };

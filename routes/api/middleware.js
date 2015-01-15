@@ -157,7 +157,6 @@ exports.onlyAllow = function( methods ){
 
 exports.initCORS = function(){
   var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
-  //noinspection JSUnusedGlobalSymbols
   var corsOpts = {
     origin         : function( url,
                                callback ){

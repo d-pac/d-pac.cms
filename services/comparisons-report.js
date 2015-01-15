@@ -1,7 +1,6 @@
 "use strict";
 var keystone = require( "keystone" );
 var _ = require( "underscore" );
-var objectId = require( "mongoose" ).Types.ObjectId;
 var fs = require( "fs" );
 
 var Comparison = keystone.list( "Comparison" );
