@@ -12,7 +12,6 @@
         "-"
     ],
     "disallowPaddingNewlinesInBlocks": true,
-    "disallowQuotedKeysInObjects": true,
     "disallowSpaceAfterPrefixUnaryOperators": true,
     "disallowSpaceBeforePostfixUnaryOperators": true,
     "disallowSpacesInAnonymousFunctionExpression": {

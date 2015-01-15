@@ -1,6 +1,6 @@
 {
-    "rest" : {
-        "src" : "routes/",
-        "dest" : "docs"
-    }
+  "rest": {
+    "src": "routes/",
+    "dest": "docs"
+  }
 }

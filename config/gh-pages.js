@@ -1,10 +1,12 @@
-'use strict';
+"use strict";
 
-module.exports = function(grunt, opts){
+// noinspection JSUnusedLocalSymbols
+module.exports = function( grunt,
+                           opts ){
   return {
-      options: {
-        base: 'docs'
-      },
-      src: ['**']
+    options : {
+      base : "docs"
+    },
+    src     : [ "**" ]
   };
 };
