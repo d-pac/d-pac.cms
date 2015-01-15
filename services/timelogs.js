@@ -3,7 +3,7 @@
 var debug = require( "debug" )( "dpac:services.timelogs" );
 var _ = require( "underscore" );
 var extend = require( "deep-extend" );
-var Promise = require( "bluebird" );
+var Bluebird = require( "bluebird" );
 
 var keystone = require( "keystone" );
 var toSafeJSON = require( "./utils" ).toSafeJSON;
@@ -58,7 +58,7 @@ module.exports.update = function update( opts ){
         return;
       }
       extend( doc, opts );
-      var save = Promise.promisify( doc.save, doc );
+      var save = Bluebird.promisify( doc.save, doc );
 
       return save();
     } );

@@ -2,6 +2,13 @@
 
 module.exports = function( grunt,
                            opts ){
+  var dirs = [
+    "models/**/*.js",
+    "routes/**/*.js",
+    "services/**/*.js",
+    "*.js"
+  ];
+
   return {
     tasks : {
       jshint : {
@@ -10,24 +17,16 @@ module.exports = function( grunt,
           "force"    : false,
           "jshintrc" : ".jshintrc"
         },
-        "all"     : [
-          "routes/**/*.js",
-          "models/**/*.js"
-        ],
+        "all"     : dirs,
         "server"  : [
           "<%= paths.entrypoint %>"
         ]
       },
 
       jscs : {
-        "src"     : [
-          "models/*.js",
-          "routes/*.js",
-          "services/*.js"
-        ],
+        "src"     : dirs,
         "options" : {
-          "config"    : ".jscsrc",
-          "maxErrors" : 1
+          "config" : ".jscsrc"
         }
       }
     }

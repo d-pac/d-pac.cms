@@ -63,8 +63,7 @@
         "catch",
         "void",
         "while",
-        "with",
-        "return"
+        "with"
     ],
     "requirePaddingNewLinesInObjects": true,
     "requireParenthesesAroundIIFE": true,

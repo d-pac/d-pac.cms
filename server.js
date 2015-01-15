@@ -1,101 +1,99 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
-var konfy = require( 'konfy' ).load();
+var konfy = require( "konfy" );
+konfy.load();
 
 // Require keystone
-var express = require('express'),
-    mongoose = require('mongoose'),
-    app = express(),
-    keystone = require('keystone').connect(mongoose, app);
-var errors = require("errors");
+var express = require( "express" );
+var mongoose = require( "mongoose" );
+var app = express();
+var keystone = require( "keystone" ).connect( mongoose, app );
+var errors = require( "errors" );
 
-if(process.env.NODE_ENV==="debugging"){
-  errors.stacks(true);
+if( "debugging" === process.env.NODE_ENV ){
+  errors.stacks( true );
 }
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
 
-app.use('/uploads', require('./routes/api/middleware' ).initCORS());
-var pkg = require("./package.json" );
+app.use( "/uploads", require( "./routes/api/middleware" ).initCORS() );
+var pkg = require( "./package.json" );
 keystone.init( {
 
-  'name'  : 'd-pac',
-  'brand' : 'd-pac',
-  'appversion' : pkg.version + " (" + pkg.build + ")",
+  "name"       : "d-pac",
+  "brand"      : "d-pac",
+  "appversion" : pkg.version + " (" + pkg.build + ")",
 
-  'less'    : 'public',
-  'static'  : 'public',
-  'favicon' : 'public/favicon.ico',
+  "less"    : "public",
+  "static"  : "public",
+  "favicon" : "public/favicon.ico",
 
-  'logger' : process.env.LOGGER || 'dev',
+  "logger" : process.env.LOGGER || "dev",
 
-  'views'       : 'templates/views',
-  'view engine' : 'jade',
+  "views"       : "templates/views",
+  "view engine" : "jade",
 
-  'auto update' : true,
+  "auto update" : true,
 
-  'session'       : true,
-  'session store' : 'mongo',
-  'auth'          : true,
-  'user model'    : 'User',
-  'cookie secret' : 'mSxJb5Xr6cz;T%($q%iLg[w_V/|(*}PhgCt(;!IbqH#{;yL@41f5@T-}p%>/[HhO'
+  "session"       : true,
+  "session store" : "mongo",
+  "auth"          : true,
+  "user model"    : "User",
+  "cookie secret" : "mSxJb5Xr6cz;T%($q%iLg[w_V/|(*}PhgCt(;!IbqH#{;yL@41f5@T-}p%>/[HhO"
 
 } );
 
-
-
 // Load your project's Models
 
-keystone.import( 'models' );
-
+keystone.import( "models" );
 
 // Setup common locals for your templates. The following are required for the
 // bundled templates and layouts. Any runtime locals (that should be set uniquely
 // for each request) should be added to ./routes/middleware.js
 
-keystone.set( 'locals', {
-  _        : require( 'underscore' ),
-  env      : keystone.get( 'env' ),
+keystone.set( "locals", {
+  _        : require( "underscore" ),
+  env      : keystone.get( "env" ),
   utils    : keystone.utils,
   editable : keystone.content.editable
 } );
 
 // Load your project's Routes
 
-keystone.set( 'routes', require( './routes' ) );
+keystone.set( "routes", require( "./routes" ) );
 
 // Setup common locals for your emails. The following are required by Keystone's
 // default email templates, you may remove them if you're using your own.
 
 // Configure the navigation bar in Keystone's Admin UI
 
-keystone.set( 'nav', {
-  'content'     : [
-    'posts',
-    'post-categories',
-    'enquiries'
+keystone.set( "nav", {
+  "content"     : [
+    "posts",
+    "post-categories",
+    "enquiries"
   ],
-  'assessments' : [
-    'phases',
-    'assessments',
-    'comparisons',
-    'judgements'
+  "assessments" : [
+    "phases",
+    "assessments",
+    "comparisons",
+    "judgements"
   ],
-  'users'       : [
-    'organizations',
-    'users',
-    'personas',
-    'representations'
+  "users"       : [
+    "organizations",
+    "users",
+    "personas",
+    "representations"
   ],
-  'reporting' : [
-    'timelogs',
-    'seqs',
+  "reporting"   : [
+    "timelogs",
+    "seqs",
     {
-      label: "Comparisons CSV [!]",
-      key : "comparisons-report",
-      path : "/api/reports/comparisons"
+      label : "Comparisons CSV [!]",
+      key   : "comparisons-report",
+      path  : "/api/reports/comparisons"
     }
   ]
 } );

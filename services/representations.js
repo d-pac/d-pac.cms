@@ -2,7 +2,6 @@
 var debug = require( "debug" )( "dpac:services.representations" );
 var keystone = require( "keystone" );
 var _ = require( "underscore" );
-var Promise = require( "bluebird" );
 var schema = keystone.list( "Representation" );
 var toSafeJSON = require( "./utils" ).toSafeJSON;
 

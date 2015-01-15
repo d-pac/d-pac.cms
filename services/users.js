@@ -5,8 +5,6 @@ var keystone = require( "keystone" );
 var debug = require( "debug" )( "dpac:services.users" );
 var extend = require( "deep-extend" );
 
-var Promise = require( "bluebird" );
-
 var schema = keystone.list( "User" );
 
 /**

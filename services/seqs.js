@@ -3,7 +3,7 @@ var debug = require( "debug" )( "dpac:services.seqs" );
 var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var extend = require( "deep-extend" );
-var Promise = require( "bluebird" );
+var Bluebird = require( "bluebird" );
 var schema = keystone.list( "Seq" );
 
 module.exports.create = function( opts ){
@@ -49,7 +49,7 @@ module.exports.update = function update( opts ){
         return;
       }
       extend( doc, opts );
-      var save = Promise.promisify( doc.save, doc );
+      var save = Bluebird.promisify( doc.save, doc );
 
       return save();
     } );

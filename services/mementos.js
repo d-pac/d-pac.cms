@@ -4,7 +4,7 @@ var debug = require( "debug" )( "dpac:services.mementos" );
 var async = require( "async" );
 var keystone = require( "keystone" );
 var errors = require( "errors" );
-var Promise = require( "bluebird" );
+var Bluebird = require( "bluebird" );
 
 var representationsService = require( "./representations" );
 var judgementsService = require( "./judgements" );
@@ -112,7 +112,7 @@ module.exports.create = function createMemento( opts ){
           } );
       } );
 
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .then( function(){
       return memento;
@@ -155,7 +155,7 @@ module.exports.listActives = function listActives( opts ){
         } );
       } );
 
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .then( function listPhases(){
       var promises = _.map( mementos, function( memento ){
@@ -165,7 +165,7 @@ module.exports.listActives = function listActives( opts ){
           } );
       } );
 
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .then( function listJudgements(){
       var promises = _.map( mementos, function( memento ){
@@ -176,7 +176,7 @@ module.exports.listActives = function listActives( opts ){
         } );
       } );
 
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .then( function listRepresentations(){
       var judgements = _.reduce( mementos, function( memo,
@@ -193,7 +193,7 @@ module.exports.listActives = function listActives( opts ){
           } );
       } );
 
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .then( function listSeqs(){
       var promises = _.map( mementos, function( memento ){
@@ -207,7 +207,7 @@ module.exports.listActives = function listActives( opts ){
         } );
       } );
 
-      return Promise.all( promises );
+      return Bluebird.all( promises );
     } )
     .then( function handleOutput(){
       return mementos;
