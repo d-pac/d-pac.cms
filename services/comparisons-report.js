@@ -1,13 +1,13 @@
-'use strict';
-var keystone = require( 'keystone' );
-var _ = require( 'underscore' );
-var objectId = require( 'mongoose' ).Types.ObjectId;
+"use strict";
+var keystone = require( "keystone" );
+var _ = require( "underscore" );
+var objectId = require( "mongoose" ).Types.ObjectId;
 var fs = require( "fs" );
 
-var Comparison = keystone.list( 'Comparison' );
-var Judgement = keystone.list( 'Judgement' );
-var Seq = keystone.list( 'Seq' );
-var Timelog = keystone.list( 'Timelog' );
+var Comparison = keystone.list( "Comparison" );
+var Judgement = keystone.list( "Judgement" );
+var Seq = keystone.list( "Seq" );
+var Timelog = keystone.list( "Timelog" );
 
 var LEFT_EMPTY = "empty";
 var UNDEFINED = "N/A";
@@ -18,8 +18,8 @@ var NIL = -1;
 function listComparisons( assessmentIds ){
   return Comparison.model
     .find()
-    .where( 'assessment' ).in( assessmentIds )
-    .populate( 'assessor' )
+    .where( "assessment" ).in( assessmentIds )
+    .populate( "assessor" )
     .populate( "assessment" )
     .populate( "selected" )
     .populate( "phase" )
@@ -53,16 +53,20 @@ function listTimelogs( comparisonIds ){
 
 function extractFeedback( comparison ){
   if( comparison.comparativeFeedback ){
-    return comparison.comparativeFeedback.replace( /(?:\r\n|\r|\n)/g, '\u21A9' ).replace( /"/g, "'" );
-  }else{
-    //either deliberately left empty
-    //or comparison wasn't finished yet and the assessor wasn't able to fill it in
+    return comparison.comparativeFeedback.replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+  } else {
+    // either deliberately left empty
+    // or comparison wasn't finished yet and the assessor wasn't able to fill it in
     switch( comparison.phase.machinename ){
+
       case "select-best-select":
       case "select-best-seq-seq":
       case "comparative-feedback-compare":
+
         return UNDEFINED;
+
       default :
+
         return LEFT_EMPTY;
     }
   }
@@ -71,25 +75,25 @@ function extractFeedback( comparison ){
 exports = module.exports = function( assessmentIds ){
   var comparisonsMap = {};
   var comparisonsIds = [];
+
   return listComparisons( assessmentIds )
     .then( function( comparisons ){
       comparisons.forEach( function( comparison ){
         var id = comparison._id.toString();
         comparisonsIds.push( id );
-        comparisonsMap[id] = {
+        comparisonsMap[ id ] = {
           comparison                : comparison._rid,
           assessment                : comparison.assessment.title,
           assessor                  : comparison.assessor.email,
           comparative               : extractFeedback( comparison ),
-          completed                 : (comparison.completed)
+          completed                 : ( comparison.completed )
             ? TRUE
             : FALSE,
-          "selected representation" : (comparison.selected)
+          "selected representation" : ( comparison.selected )
             ? comparison.selected.file.filename
             : UNDEFINED,
           "selected position"       : UNDEFINED
         };
-
       } );
     } )
     .then( function(){
@@ -97,12 +101,13 @@ exports = module.exports = function( assessmentIds ){
     } )
     .then( function( judgements ){
       judgements.forEach( function( judgement ){
-        var comparison = comparisonsMap[judgement.comparison.toString()];
+        var comparison = comparisonsMap[ judgement.comparison.toString() ];
         var p = judgement.position;
-        comparison[p + " representation"] = judgement.representation.file.filename;
-        comparison[p + " passed"] = judgement.passed || UNDEFINED;
-        if( comparison["selected representation"] === judgement.representation.file.filename ){
-          comparison["selected position"] = p;
+        comparison[ p + " representation" ] = judgement.representation.file.filename;
+        comparison[ p + " passed" ] = judgement.passed || UNDEFINED;
+
+        if( comparison[ "selected representation" ] === judgement.representation.file.filename ){
+          comparison[ "selected position" ] = p;
         }
       } );
     } )
@@ -111,9 +116,9 @@ exports = module.exports = function( assessmentIds ){
     } )
     .then( function( seqs ){
       seqs.forEach( function( seq ){
-        var comparison = comparisonsMap[seq.comparison.toString()];
+        var comparison = comparisonsMap[ seq.comparison.toString() ];
         var p = seq.phase.label;
-        comparison[p] = seq.value || NIL;
+        comparison[ p ] = seq.value || NIL;
       } );
     } )
     .then( function(){
@@ -121,11 +126,12 @@ exports = module.exports = function( assessmentIds ){
     } )
     .then( function( timelogs ){
       timelogs.forEach( function( timelog ){
-        var comparison = comparisonsMap[timelog.comparison.toString()];
-        if( !comparison[timelog.phase.label + " duration"] ){
-          comparison[timelog.phase.label + " duration"] = [];
+        var comparison = comparisonsMap[ timelog.comparison.toString() ];
+
+        if( !comparison[ timelog.phase.label + " duration" ] ){
+          comparison[ timelog.phase.label + " duration" ] = [];
         }
-        comparison[timelog.phase.label + " duration"].push( timelog.duration );
+        comparison[ timelog.phase.label + " duration" ].push( timelog.duration );
       } );
     } )
     .then( function(){
@@ -134,20 +140,22 @@ exports = module.exports = function( assessmentIds ){
         "Comparative Feedback duration", "Comparative Feedback SEQ duration",
         "Pass/Fail duration", "Pass/Fail SEQ duration"
       ];
+
       return _.map( comparisonsMap, function( comparison ){
         var total = 0;
         durations.forEach( function( duration ){
-          if( comparison[duration] ){
-            comparison[duration] = comparison[duration].reduce( function( memo,
-                                                                          s ){
+          if( comparison[ duration ] ){
+            comparison[ duration ] = comparison[ duration ].reduce( function( memo,
+                                                                              s ){
               return memo + s;
             }, 0 );
-          }else{
-            comparison[duration] = 0;
+          } else {
+            comparison[ duration ] = 0;
           }
-          total += comparison[duration];
+          total += comparison[ duration ];
         } );
-        comparison["Total duration"] = total;
+        comparison[ "Total duration" ] = total;
+
         return _.defaults( comparison, {
           "Select best SEQ"          : -1,
           "Pass/Fail SEQ"            : -1,

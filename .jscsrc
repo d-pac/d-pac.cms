@@ -49,8 +49,7 @@
         "while",
         "do",
         "try",
-        "catch",
-        "default"
+        "catch"
     ],
     "requireDotNotation": true,
     "requireKeywordsOnNewLine": [],
@@ -61,7 +60,6 @@
         "for",
         "if",
         "switch",
-        "case",
         "try",
         "catch",
         "void",

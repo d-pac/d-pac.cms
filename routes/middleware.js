@@ -5,13 +5,13 @@
  *
  * This structure is not enforced, and just a starting point. If
  * you have more middleware you may want to group it as separate
- * modules in your project's /lib directory.
+ * modules in your project"s /lib directory.
  */
 
-var _ = require( 'underscore' ),
-  querystring = require( 'querystring' ),
-  keystone = require( 'keystone' );
-var debug = require( 'debug' )( 'dpac:middleware' );
+var _ = require( "underscore" );
+var querystring = require( "querystring" );
+var keystone = require( "keystone" );
+var debug = require( "debug" )( "dpac:middleware" );
 /**
  Initialises the standard view locals
 
@@ -23,19 +23,29 @@ var debug = require( 'debug' )( 'dpac:middleware' );
 exports.initLocals = function( req,
                                res,
                                next ){
-
   var locals = res.locals;
 
   locals.navLinks = [
-    { label : 'Home', key : 'home', href : '/' },
-    { label : 'Blog', key : 'blog', href : '/blog' },
-    { label : 'Contact', key : 'contact', href : '/contact' }
+    {
+      label : "Home",
+      key   : "home",
+      href  : "/"
+    },
+    {
+      label : "Blog",
+      key   : "blog",
+      href  : "/blog"
+    },
+    {
+      label : "Contact",
+      key   : "contact",
+      href  : "/contact"
+    }
   ];
 
   locals.user = req.user;
 
   next();
-
 };
 
 /**
@@ -45,12 +55,11 @@ exports.initLocals = function( req,
 exports.flashMessages = function( req,
                                   res,
                                   next ){
-
   var flashMessages = {
-    info    : req.flash( 'info' ),
-    success : req.flash( 'success' ),
-    warning : req.flash( 'warning' ),
-    error   : req.flash( 'error' )
+    info    : req.flash( "info" ),
+    success : req.flash( "success" ),
+    warning : req.flash( "warning" ),
+    error   : req.flash( "error" )
   };
 
   res.locals.messages = _.any( flashMessages, function( msgs ){
@@ -60,14 +69,13 @@ exports.flashMessages = function( req,
     : false;
 
   next();
-
 };
 
 exports.reflectReq = function( req,
                                res,
                                next ){
-  debug( 'REQUEST: >>>>>>>>>>>>>>>>>>>>>> ', req.method, req.url );
-  debug( '\n',{
+  debug( "REQUEST: >>>>>>>>>>>>>>>>>>>>>> ", req.method, req.url );
+  debug( "\n", {
     METHOD  : req.method,
     HEADERS : req.headers,
     QUERY   : req.query,
