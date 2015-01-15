@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' );
-var errors = require( 'errors' );
-var utils = require( './utils' );
+var _ = require( "underscore" );
+var errors = require( "errors" );
+var utils = require( "./utils" );
 
 function Controller( service,
                      schema ){
@@ -20,6 +20,7 @@ _.extend( Controller.prototype, {
       if( err ){
         return next( err );
       }
+
       if( !result ){
         return next( new ErrorClass() );
       }
@@ -96,6 +97,7 @@ _.extend( Controller.prototype, {
         if( err ){
           return next( err );
         }
+
         if( !result ){
           result = [];
         }

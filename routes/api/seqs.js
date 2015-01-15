@@ -1,18 +1,17 @@
-'use strict';
+"use strict";
 
-var debug = require( 'debug' )( 'dpac:api.seqs' );
-var keystone = require( 'keystone' );
-var Controller = require( './Controller' );
-var service = require( '../../services/seqs' );
-var schema = keystone.list( 'Seq' );
+var debug = require( "debug" )( "dpac:api.seqs" );
+var keystone = require( "keystone" );
+var Controller = require( "./Controller" );
+var service = require( "../../services/seqs" );
+var schema = keystone.list( "Seq" );
 
 var controller = new Controller( service, schema );
 
 exports.create = function( req,
                            res,
                            next ){
-
-  debug( '#create' );
+  debug( "#create" );
   controller.create( {
     fields : schema.api.creation
   }, req, res, next );
@@ -21,7 +20,7 @@ exports.create = function( req,
 exports.update = function( req,
                            res,
                            next ){
-  debug( '#update' );
+  debug( "#update" );
   controller.update( {
     fields : schema.api.editable
   }, req, res, next );

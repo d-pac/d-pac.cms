@@ -65,8 +65,7 @@
         "void",
         "while",
         "with",
-        "return",
-        "typeof"
+        "return"
     ],
     "requirePaddingNewLinesInObjects": true,
     "requireParenthesesAroundIIFE": true,

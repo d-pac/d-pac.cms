@@ -1,19 +1,20 @@
-'use strict';
+"use strict";
 
-var _ = require( 'underscore' );
-var keystone = require( 'keystone' );
-var async = require( 'async' );
-var errors = require( 'errors' );
-var debug = require( 'debug' )( 'dpac:api.me' );
-var constants = require( '../../models/helpers/constants' );
-var Bluebird = require( 'bluebird' );
+var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var async = require( "async" );
+var errors = require( "errors" );
+var debug = require( "debug" )( "dpac:api.me" );
+var constants = require( "../../models/helpers/constants" );
+var Bluebird = require( "bluebird" );
 
-var comparisons = require( '../../services/comparisons' );
-var personas = require( '../../services/personas' );
-var mementos = require( '../../services/mementos' );
+var comparisons = require( "../../services/comparisons" );
+var personas = require( "../../services/personas" );
+var mementos = require( "../../services/mementos" );
 
 function _listAssessments( opts ){
   var output = [];
+
   return personas.listAssessments( {
     user : opts.assessor,
     role : opts.role
@@ -26,24 +27,26 @@ function _listAssessments( opts ){
       } ).then( function handleComparisonsNum( completedComparisons ){
         if( completedComparisons < assessment.comparisonsNum ){
           output.push( assessment );
-          //return assessment; //do not use the return value, since we only need some of these and returning undefined's will add those undefineds to the output
+          // return assessment;
+          // do not use the return value, since we only need some of these and returning undefined's will add those undefineds to the output
         }
       } );
       promises.push( p );
     } );
+
     return Bluebird.all( promises );
   } ).then( function(){
-    return _.sortBy(output, "order");
+    return _.sortBy( output, "order" );
   } );
 }
 
-var createMemento = module.exports.createMemento = function( req,
+module.exports.createMemento = function( req,
                                                              res,
                                                              next ){
-  debug( '#create' );
+  debug( "#create" );
   mementos.create( {
     assessor   : req.user.id,
-    assessment : req.param( 'assessment' )
+    assessment : req.param( "assessment" )
   } ).onResolve( function( err,
                            result ){
     if( err ){
@@ -57,7 +60,7 @@ var createMemento = module.exports.createMemento = function( req,
 module.exports.listMementos = function( req,
                                         res,
                                         next ){
-  debug( '#listMementos' );
+  debug( "#listMementos" );
   var assessor = req.param( "assessor" ) || req.user.id;
   mementos.listActives( {
     assessor : assessor
@@ -67,29 +70,29 @@ module.exports.listMementos = function( req,
       return next( err );
     }
 
-    if( !result || result.length <= 0 ){
+    if( !result || 0 >= result.length ){
       _listAssessments( {
         assessor : assessor,
         role     : constants.roles.assessor
       } ).then( function( assessments ){
-        if( assessments && assessments.length > 0 ){
+        if( assessments && 0 < assessments.length ){
           mementos.create( {
             assessor   : assessor,
-            assessment : assessments[0]._id
+            assessment : assessments[ 0 ]._id
           } ).onResolve( function( err,
                                    result ){
             if( err ){
               return next( err );
             }
 
-            res.apiResponse( [result] );
+            res.apiResponse( [ result ] );
           } );
-        }else{
+        } else {
           res.apiResponse( [] );
         }
       } );
-    }else{
-      //in progress
+    } else {
+      // in progress
       res.apiResponse( result );
     }
   } );
@@ -98,7 +101,7 @@ module.exports.listMementos = function( req,
 module.exports.listAssessments = function( req,
                                            res,
                                            next ){
-  debug( '#listAssessments' );
+  debug( "#listAssessments" );
 
   var assessor = req.param( "assessor" ) || req.user.id;
   _listAssessments( {
@@ -106,7 +109,6 @@ module.exports.listAssessments = function( req,
     role     : constants.roles.assessor
   } ).onResolve( function( err,
                            assessments ){
-
     if( err ){
       return next( err );
     }

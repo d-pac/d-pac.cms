@@ -1,11 +1,10 @@
-'use strict';
-var debug = require( 'debug' )( 'dpac:api.admin' );
+"use strict";
+var debug = require( "debug" )( "dpac:api.admin" );
 var _ = require( "underscore" );
 var Bluebird = require( "bluebird" );
 var keystone = require( "keystone" );
-var assessmentsService = require( '../../services/assessments' );
-var representationsService = require( '../../services/representations' );
-var ObjectId = require( 'mongoose' ).Types.ObjectId;
+var assessmentsService = require( "../../services/assessments" );
+var ObjectId = require( "mongoose" ).Types.ObjectId;
 
 var Representation = keystone.list( "Representation" );
 
@@ -20,13 +19,6 @@ module.exports.duplicateRepresentations = function( req,
     .then( function listDuplicates( assessmentIds ){
       var promises = _.map( assessmentIds, function( assessment ){
         return Representation.model
-          //.find( {
-          //  assessment : assessment
-          //} ).exec().then( function( representations ){
-          //  return _.groupBy( representations, function( item ){
-          //    return item.file.filename;
-          //  } );
-          //} );
           .aggregate( [
             {
               $match : {
@@ -35,25 +27,29 @@ module.exports.duplicateRepresentations = function( req,
             },
             {
               $group : {
-                _id          : {
+                _id         : {
                   "file.filename" : "$file.filename"
                 },
-                occurrences  : { $sum : 1 },
-                "assessment" : {
-                  $addToSet  : "$assessment"
+                occurrences : {
+                  $sum : 1
+                },
+                assessment  : {
+                  $addToSet : "$assessment"
                 }
               }
             },
             {
               $match : {
-                occurrences : { $gte : 2 }
+                occurrences : {
+                  $gte : 2
+                }
               }
             },
             {
               $project : {
                 _id             : 1,
                 "file.filename" : 1,
-                "assessment"    : 1,
+                assessment      : 1,
                 occurrences     : 1
               }
             },
@@ -64,6 +60,7 @@ module.exports.duplicateRepresentations = function( req,
             }
           ] ).exec();
       } );
+
       return Bluebird.all( promises );
     } )
     .onResolve( function( err,
@@ -74,5 +71,4 @@ module.exports.duplicateRepresentations = function( req,
 
       res.apiResponse( results );
     } );
-
 };

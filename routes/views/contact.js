@@ -1,40 +1,38 @@
-var keystone = require( 'keystone' ),
-  Enquiry = keystone.list( 'Enquiry' );
+var keystone = require( "keystone" );
+var Enquiry = keystone.list( "Enquiry" );
 
 exports = module.exports = function( req,
                                      res ){
-
-  var view = new keystone.View( req, res ),
-    locals = res.locals;
+  var view = new keystone.View( req, res );
+  var locals = res.locals;
 
   // Set locals
-  locals.section = 'contact';
+  locals.section = "contact";
   locals.enquiryTypes = Enquiry.fields.enquiryType.ops;
   locals.formData = req.body || {};
   locals.validationErrors = {};
   locals.enquirySubmitted = false;
 
   // On POST requests, add the Enquiry item to the database
-  view.on( 'post', { action : 'contact' }, function( next ){
-
-    var application = new Enquiry.model(),
-      updater = application.getUpdateHandler( req );
+  view.on( "post", {
+    action : "contact"
+  }, function( next ){
+    var application = new Enquiry.model();
+    var updater = application.getUpdateHandler( req );
 
     updater.process( req.body, {
       flashErrors  : true,
-      fields       : 'name, email, phone, enquiryType, message',
-      errorMessage : 'There was a problem submitting your enquiry:'
+      fields       : "name, email, phone, enquiryType, message",
+      errorMessage : "There was a problem submitting your enquiry:"
     }, function( err ){
       if( err ){
         locals.validationErrors = err.errors;
-      }else{
+      } else {
         locals.enquirySubmitted = true;
       }
       next();
     } );
-
   } );
 
-  view.render( 'contact' );
-
+  view.render( "contact" );
 };

@@ -1,28 +1,30 @@
-'use strict';
-var keystone = require( 'keystone' );
-var debug = require( 'debug' )( 'dpac:api.session' );
-var _ = require( 'underscore' );
-var errors = require( 'errors' );
+"use strict";
+var keystone = require( "keystone" );
+var debug = require( "debug" )( "dpac:api.session" );
+var _ = require( "underscore" );
+var errors = require( "errors" );
 
 module.exports.retrieve = function( req,
-                                    res,
-                                    next ){
-  debug( 'retrieve' );
+                                    res ){
+  debug( "retrieve" );
   var output = {
     _csrf : keystone.security.csrf.getToken( req, res )
   };
+
   if( req.user ){
-    output.user  = req.user.toJSON();
+    output.user = req.user.toJSON();
   }
-  return res.apiResponse(output);
+
+  return res.apiResponse( output );
 };
 
 module.exports.create = function( req,
                                   res,
                                   next ){
-  debug( 'create' );
+  debug( "create" );
   keystone.session.signin( req.body, req, res, function( user ){
-    debug( 'signed in', user.id );
+    debug( "signed in", user.id );
+
     return res.apiResponse( {
       _csrf : keystone.security.csrf.getToken( req, res ),
       user  : req.user.toJSON()
@@ -30,7 +32,7 @@ module.exports.create = function( req,
   }, function( err ){
     if( err ){
       return next( err );
-    }else{
+    } else {
       return next( new errors.Http401Error( {
         message     : "Authentication error",
         explanation : "Bad credentials."
@@ -40,9 +42,8 @@ module.exports.create = function( req,
 };
 
 module.exports.destroy = function( req,
-                                   res,
-                                   next ){
-  debug( 'destroy' );
+                                   res ){
+  debug( "destroy" );
   keystone.session.signout( req, res, function(){
     return res.apiResponse( 204 );
   } );
