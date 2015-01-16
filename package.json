@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "async": "^0.9.0",
-    "bluebird": "^2.3.5",
+    "bluebird": "^2.7.1",
     "connect-mongo": "^0.4.1",
     "cors": "^2.4.1",
     "debug": "^1.0.4",
