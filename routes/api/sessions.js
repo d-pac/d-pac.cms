@@ -5,7 +5,8 @@ var _ = require( "underscore" );
 var errors = require( "errors" );
 
 module.exports.retrieve = function( req,
-                                    res ){
+                                    res,
+                                    next ){
   debug( "retrieve" );
   var output = {
     _csrf : keystone.security.csrf.getToken( req, res )
@@ -42,7 +43,8 @@ module.exports.create = function( req,
 };
 
 module.exports.destroy = function( req,
-                                   res ){
+                                   res,
+                                   next ){
   debug( "destroy" );
   keystone.session.signout( req, res, function(){
     return res.apiResponse( 204 );

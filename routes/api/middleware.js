@@ -112,7 +112,8 @@ exports.handleError = function( err,
 };
 
 exports.notFound = function notFound( req,
-                                      res ){
+                                      res,
+                                      next ){
   debug( "notFound" );
 
   return res.apiError( new errors.Http404Error() );
