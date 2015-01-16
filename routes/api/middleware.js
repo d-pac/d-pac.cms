@@ -88,7 +88,8 @@ function parseValidationErrors( err ){
 
 exports.handleError = function( err,
                                 req,
-                                res ){
+                                res,
+                                next ){
   debug( "#handleError", err );
 
   if( utils.isHttpError( err ) ){
