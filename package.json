@@ -1,7 +1,7 @@
 {
   "name": "d-pac.cms",
   "version": "0.5.4",
-  "build": "83",
+  "build": "84",
   "private": true,
   "dependencies": {
     "async": "^0.9.0",
@@ -9,7 +9,7 @@
     "connect-mongo": "^0.4.1",
     "cors": "^2.4.1",
     "debug": "^1.0.4",
-    "deep-extend": "^0.2.11",
+    "deep-extend": "^0.3.2",
     "errors": "^0.2.0",
     "express": "^3.3.8",
     "fast-csv": "^0.5.4",
