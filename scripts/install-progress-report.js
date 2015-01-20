@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-var reporter = 'progress-report.js';
-var script = '<%= version %>-report-progress-<%= now %>.js';
+var reporter = "progress-report.js";
+var script = "<%= version %>-report-progress-<%= now %>.js";
 
-var _ = require( 'underscore' );
-var path = require( 'path' );
-var pkg = require( '../package.json' );
-var fs = require( 'fs' );
+var _ = require( "underscore" );
+var path = require( "path" );
+var pkg = require( "../package.json" );
+var fs = require( "fs" );
 
 var src = path.resolve( path.join( __dirname, reporter ) );
 var dest = path.resolve( path.join( __dirname, "../updates", _.template( script, {

@@ -1,14 +1,14 @@
-'use strict';
-var keystone = require( 'keystone' );
-var _ = require( 'underscore' );
-var objectId = require( 'mongoose' ).Types.ObjectId;
+"use strict";
+var keystone = require( "keystone" );
+var _ = require( "underscore" );
+var objectId = require( "mongoose" ).Types.ObjectId;
 var fs = require( "fs" );
 var csv = require( "fast-csv" );
 
-var Comparison = keystone.list( 'Comparison' );
-var Judgement = keystone.list( 'Judgement' );
-var Seq = keystone.list( 'Seq' );
-var Timelog = keystone.list( 'Timelog' );
+var Comparison = keystone.list( "Comparison" );
+var Judgement = keystone.list( "Judgement" );
+var Seq = keystone.list( "Seq" );
+var Timelog = keystone.list( "Timelog" );
 
 var assessments = ["5458894f0138e02976448d26", "545889770138e02976448d27", "545889960138e02976448d28", "546c5c93bf406705026574bc"];
 
@@ -21,8 +21,8 @@ var NIL = -1;
 function listComparisons( assessmentIds ){
   return Comparison.model
     .find()
-    .where( 'assessment' ).in( assessmentIds )
-    .populate( 'assessor' )
+    .where( "assessment" ).in( assessmentIds )
+    .populate( "assessor" )
     .populate( "assessment" )
     .populate( "selected" )
     .populate( "phase" )
@@ -56,7 +56,7 @@ function listTimelogs( comparisonIds ){
 
 function extractFeedback( comparison ){
   if( comparison.comparativeFeedback ){
-    return comparison.comparativeFeedback.replace( /(?:\r\n|\r|\n)/g, '\u21A9' ).replace( /"/g, "'" );
+    return comparison.comparativeFeedback.replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
   }else{
     //either deliberately left empty
     //or comparison wasn't finished yet and the assessor wasn't able to fill it in

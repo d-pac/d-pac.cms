@@ -1,9 +1,9 @@
-'use strict';
-var keystone = require( 'keystone' );
-var objectId = require( 'mongoose' ).Types.ObjectId;
-var Assessment = keystone.list( 'Assessment' );
-var Persona = keystone.list('Persona');
-var Representation = keystone.list('Representation');
+"use strict";
+var keystone = require( "keystone" );
+var objectId = require( "mongoose" ).Types.ObjectId;
+var Assessment = keystone.list( "Assessment" );
+var Persona = keystone.list("Persona");
+var Representation = keystone.list("Representation");
 var assessments = ["5458894f0138e02976448d26", "545889770138e02976448d27"];
 
 function createAssessment( opts ){
@@ -14,7 +14,7 @@ function createAssessment( opts ){
 function listPersonas( assessments ){
   return Persona.model
       .find()
-      .where( 'assessment' ).in( assessments )
+      .where( "assessment" ).in( assessments )
       .lean()
       .exec();
 }
@@ -22,7 +22,7 @@ function listPersonas( assessments ){
 function listRepresentations( assessments ){
   return Representation.model
     .find()
-    .where('assessment' ).in(assessments)
+    .where("assessment" ).in(assessments)
     .lean()
     .exec();
 }

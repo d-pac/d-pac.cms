@@ -1,10 +1,10 @@
-'use strict';
-var keystone = require( 'keystone' );
-var _ = require( 'underscore' );
-var objectId = require( 'mongoose' ).Types.ObjectId;
+"use strict";
+var keystone = require( "keystone" );
+var _ = require( "underscore" );
+var objectId = require( "mongoose" ).Types.ObjectId;
 var fs = require( "fs" );
 
-var Comparison = keystone.list( 'Comparison' );
+var Comparison = keystone.list( "Comparison" );
 
 function listComparisons(){
   return Comparison.model
@@ -14,7 +14,7 @@ function listComparisons(){
       total: {$sum: 1}
     } )
     .project( {
-      assessor  : '$_id',
+      assessor  : "$_id",
       _id       : 0,
       total : 1
     } )

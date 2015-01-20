@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
-var konfy = require( 'konfy' );
+var konfy = require( "konfy" );
 konfy.load();
 
-var expect = require( 'must' );
-var _ = require( 'underscore' );
+var expect = require( "must" );
+var _ = require( "underscore" );
 
-var mongoose = require( 'mongoose' );
+var mongoose = require( "mongoose" );
 var objectId = mongoose.Types.ObjectId;
-console.log( 'connecting to', process.env.MONGO_URI );
+console.log( "connecting to", process.env.MONGO_URI );
 mongoose.connect( process.env.MONGO_URI );
 
 //var userNames = [
@@ -36,11 +36,11 @@ var assessmentIds = [
 ];
 
 var db = mongoose.connection;
-db.on( 'error', console.error.bind( console, 'connection error:' ) );
-db.once( 'open', function callback(){
-  var User = mongoose.model( 'users', mongoose.Schema() );
-  var Persona = mongoose.model( 'personas', mongoose.Schema() );
-  var Representation = mongoose.model( 'representations', mongoose.Schema() );
+db.on( "error", console.error.bind( console, "connection error:" ) );
+db.once( "open", function callback(){
+  var User = mongoose.model( "users", mongoose.Schema() );
+  var Persona = mongoose.model( "personas", mongoose.Schema() );
+  var Representation = mongoose.model( "representations", mongoose.Schema() );
   var userIds;
   User.find()
     .where( "name.first" )

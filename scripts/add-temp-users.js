@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var keystone = require( 'keystone' );
-var _ = require( 'underscore' );
-var _s = require( 'underscore.string' );
+var keystone = require( "keystone" );
+var _ = require( "underscore" );
+var _s = require( "underscore.string" );
 var Bluebird = require( "bluebird" );
-var objectId = require( 'mongoose' ).Types.ObjectId;
-var constants = require( '../models/helpers/constants' );
+var objectId = require( "mongoose" ).Types.ObjectId;
+var constants = require( "../models/helpers/constants" );
 var User = keystone.list( "User" );
 var Persona = keystone.list( "Persona" );
 
@@ -29,7 +29,7 @@ function createUserAndPersona( i ){
   var counter = i + begin;
   var iPad = _s.lpad( counter.toString(), 2, "0" ); //sorry, couldn't resist
   return createUser( {
-    'name.full' : [prefix, iPad].join( " " ),
+    "name.full" : [prefix, iPad].join( " " ),
     email       : [prefix.toLowerCase(), iPad, "@d-pac.org"].join( "" ),
     password    : "test"
   } ).then( function( user ){
