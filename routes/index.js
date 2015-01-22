@@ -493,7 +493,9 @@ exports = module.exports = function( app ){
   app.put( "/api/timelogs/:_id", api.timelogs.update );
   app.all( "/api/timelogs*", api.middleware.onlyAllow( "GET", "POST", "PATCH", "PUT" ) );
 
-  app.get( "/api/reports/comparisons", api.middleware.requireAdmin, api.reports.comparisons );
+  app.get( "/api/reports*", api.middleware.requireAdmin );
+  app.get( "/api/reports/comparisons", api.reports.comparisons );
+  app.get( "/api/reports/overview", api.reports.overview );
 
   app.all( "/api/admin*", api.middleware.requireAdmin );
 

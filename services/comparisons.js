@@ -18,12 +18,17 @@ module.exports.create = function createComparison( opts ){
  * @param {string} [opts.assessor] User.id
  * @returns {Promise}
  */
-module.exports.listActive = function listActive( opts ){
+module.exports.listActive = function listActive( opts,
+                                                 active ){
   debug( "#listActive" );
+
+  if( "undefined" === typeof active ){
+    active = true;
+  }
 
   return schema.model
     .find( opts )
-    .where( "completed" ).ne( true ) // we want all falsy matches as well
+    .where( "completed" ).ne( active ) // we want all falsy matches as well
     .populate( "assessment" )
     .lean()
     .exec();
