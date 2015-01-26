@@ -71,7 +71,8 @@ module.exports.create = function createMemento( opts ){
     } )
     .then( function getRepresentationPair(){
       return representationsService.retrievePair( {
-        assessment : opts.assessment
+        assessment : opts.assessment,
+        algorithm : memento.assessment.algorithm
       } );
     } )
     .then( function handleRepresentations( representations ){

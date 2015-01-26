@@ -1,5 +1,6 @@
 "use strict";
 var debug = require( "debug" )( "dpac:api.representations" );
+var assessmentsService = require( "../../services/assessments" );
 var service = require( "../../services/representations" );
 
 module.exports.retrieveFile = function( req,
@@ -21,8 +22,14 @@ module.exports.retrievePair = function( req,
                                         res,
                                         next ){
   debug( "#retrievePair" );
-  service.retrievePair( {
-    assessment : req.param( "assessment" )
+
+  assessmentsService.retrieve( {
+    _id : req.param( "assessment" )
+  } ).then( function( assessment ){
+    return service.retrievePair( {
+      assessment : assessment._id,
+      algorithm  : assessment.algorithm || "comparative-selection"
+    } );
   } ).onResolve( function( err,
                            result ){
     if( err ){

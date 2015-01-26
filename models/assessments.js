@@ -4,6 +4,7 @@ var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 var constants = require( "./helpers/constants" );
+var plugins = require( "keystone-dpac-plugins" );
 
 var Assessment = new keystone.List( "Assessment", {
   map         : {
@@ -21,6 +22,13 @@ var config = {
     initial  : true
   },
 
+  algorithm : {
+    type    : Types.Select,
+    label   : "Selection algorithm",
+    options : plugins.list( "select" ),
+    initial : true
+  },
+
   description : {
     type    : Types.Html,
     wysiwyg : true,
@@ -29,6 +37,7 @@ var config = {
 
   phases : {
     type     : Types.Relationship,
+    label    : "Workflow",
     ref      : "Phase",
     required : true,
     many     : true,
@@ -37,6 +46,7 @@ var config = {
 
   comparisonsNum : {
     type     : Types.Number,
+    label    : "Number of comparisons",
     required : true,
     initial  : true,
     default  : 20

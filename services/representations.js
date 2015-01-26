@@ -34,29 +34,7 @@ module.exports.retrievePair = function retrieveRepresentationPair( opts ){
     } )
     .exec()
     .then( function( representations ){
-      if( !representations || 0 > representations.length ){
-        return [];
-      } else {
-        representations = _.sortBy( _.shuffle( representations ), function( representation ){
-          return representation.comparedNum;
-        } );
-        var selected = representations.shift();
-        var opponent;
-
-        if( 0 >= selected.comparedNum ){
-          opponent = representations.shift();
-        } else {
-          opponent = _.find( representations, function( representation ){
-            return 0 > representation.compared.indexOf( selected._id );
-          } );
-
-          if( !opponent ){
-            opponent = representations.shift();
-          }
-        }
-
-        return [ selected, opponent ];
-      }
+      return require( opts.algorithm ).select( representations );
     } );
 };
 
