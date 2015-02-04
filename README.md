@@ -33,9 +33,6 @@ CORS_ALLOWED_METHODS = GET,POST,PATCH,OPTIONS,DELETE,PUT
 CORS_ALLOWED_HEADERS = X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-Type, Date, Request-UUID, Accept-Encoding
 CORS_EXPOSED_HEADERS = Request-UUID
 CORS_DISABLED = true
-REMOTE_HOST = staging.d-pac.be
-REMOTE_USERNAME = d-pac
-REMOTE_DEST = /users/d-pac/tool
 ```
 
 A large number of settings are necessary to allow a proper functioning of the underlying KeystoneJS framework, see [Keystone demo documentation](https://github.com/JedWatson/keystone-demo) for an explanation of `CLOUDINARY_URL`, `MANDRILL_APIKEY`, `MANDRILL_USERNAME`, `EMBEDLY_APIKEY`, `COOKIE_SECRET`, `MONGO_URI`, `GA_DOMAIN`, `GA_PROPERTY`, `PORT`
@@ -49,9 +46,6 @@ However, a number of custom settings are optionally set as well:
 * `CORS_ALLOWED_METHODS`: Restrict which methods are allowed in CORS requests.
 * `CORS_ALLOWED_HEADERS`: Restrict which headers are allowed in CORS requests.
 * `CORS_EXPOSED_HEADERS`: Restrict which headers will be exposed in CORS request responses.
-* `REMOTE_HOST`: Configure the remote host where the d-pac.cms instance will be deployed to.
-* `REMOTE_USER`: Configure the user on the remote host where the d-pac.cms instance will be deployed to.
-* `REMOTE_DEST`: Configure the directory on the remote host where the d-pac.cms instance will be deployed to.
 
 #### Multiple Environments
 
@@ -63,23 +57,20 @@ E.g.
 ```sh
 # file: .env
 CLOUDINARY_URL=cloudinary://aaaaaaaaaaaaaaaaaaaaaaaaaaaa@keystone-demo
-MONGO_URI=mongodb://localhost/d-pac-tool
 PORT = 3020
-REMOTE_USERNAME = d-pac
-REMOTE_DEST = /users/d-pac/tool
 ```
 ```sh
 # file: .env.staging
-REMOTE_HOST = staging.d-pac.be
+MONGO_URI=mongodb://localhost/d-pac-tool-staging
 ```
 ```sh
 # file: .env.production
-REMOTE_HOST = www.d-pac.be
+MONGO_URI=mongodb://localhost/d-pac-tool
 ```
 
 Use the `NODE_ENV` environment variable to define which settings will be used. This can be done in a number of ways, either:
 
-1. Export the `NODE_ENV` variable in your `.bashrc` file, e.g.
+1. Export the `NODE_ENV` variable in your `.bashrc` (or `.profile` or...) file, e.g.
 
   ```sh
   # file: .bashrc (or similar)
@@ -100,34 +91,36 @@ Use the `NODE_ENV` environment variable to define which settings will be used. T
   
 ### Deployment
 
+D-pac uses [flightplan](https://github.com/pstadler/flightplan) to separate deployment automation from other automated tasks, see documentation for a detailed explanation.
+
+#### Configuration
+
+Flight manifests are automatically loaded from a `flights` directory. A `flights/example.js` file is provided to show how to set it up. You need a flight manifest file for each deployment target.
+
+E.g. let's say we have a "staging" and "production" server we want to deploy to, then the `flights` directory needs to contain a file for each: `staging.js` and `production.js`.
+
+#### Usage
+
 ```shell
-$ grunt deploy
+$ fly staging
 ```
 
-This will `rsync` your files to `REMOTE_DEST` on `REMOTE_HOST` with `REMOTE_USER`, see `config/rsync.json` for excluded files
-To deploy to different environments provide the env name as an argument, e.g.:
+Will do a full deployment to whatever server you configured in `staging.js`.
 
-```sh
-$ grunt deploy --env=staging
+Sub-targets:
+
+```shell
+$ fly qa:staging
 ```
+
+Runs some quality assurance tools
+
 
 ### Contributing
 
 #### Testing
 
-A two-step process, first run keystone in a test environment with:
-
-```shell
-$ grunt serve --env=tests
-```
-
-This will create a separate database, add some data to it and wait for connections.
-
-Once keystone's bootstrapped run (in a separate process):
-
-```shell
-$ grunt test --env=tests
-```
+TBD
 
 #### Previewing
 
