@@ -24,4 +24,5 @@ public/assessors
 *.sh
 reports/*.csv
 
-flights
+flights/*
+!flights/EXAMPLE.js

@@ -3,15 +3,15 @@
 // flightplan.js
 var _ = require( "underscore" );
 var plan = require( "flightplan" );
-var config = require( "./flights" );
-var manifest = require( "./package.json" );
+var flightManifests = require( "require-directory" )( module, "./flights" );
+var packageManifest = require( "./package.json" );
 var fs = require( "fs" );
 
-var packages = _.keys( manifest.dependencies ).map( function( dep ){
+var packages = _.keys( packageManifest.dependencies ).map( function( dep ){
   return "node_modules/" + dep;
 } );
 
-_.each( config, function( config,
+_.each( flightManifests, function( config,
                           targetName ){
   plan.target( targetName, config.target, config.runtime );
 } );
@@ -28,6 +28,7 @@ plan.local( [ "default", "deploy", "deploy.app" ], function( transport ){
     "public/styles/", "public/favicon.ico",
     ".env", "Gruntfile.js", "nodemon.json", "package.json", "server.js"
   ].concat( packages );
+
   if( envFileExists ){
     files.push( ".env." + plan.runtime.target );
   }
