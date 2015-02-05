@@ -25,7 +25,7 @@ plan.local( [ "default", "deploy", "deploy.app", "deploy.all" ], function( trans
   var envFileExists = fs.existsSync( ".env." + plan.runtime.target );
   var files = [
     "models/", "routes/", "scripts/", "services/", "updates/", "public/fonts/", "public/images/", "public/js/",
-    "public/styles/", "public/favicon.ico",
+    "public/styles/", "public/favicon.ico", "templates/",
     ".env", "Gruntfile.js", "nodemon.json", "package.json", "server.js", "npm-shrinkwrap.json"
   ].concat( packages );
 
@@ -34,6 +34,7 @@ plan.local( [ "default", "deploy", "deploy.app", "deploy.all" ], function( trans
   }
   transport.transfer( files, plan.runtime.options.dest );
 } );
+
 plan.local( [ "deploy.uploads", "deploy.all" ], function( transport ){
   transport.log( "Deploying 'uploads' to remote" );
   var files = [
