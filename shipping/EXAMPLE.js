@@ -1,10 +1,6 @@
 module.exports = {
-  target  : {
-    host     : "example.com",
-    username : "johndoe",
-    agent    : process.env.SSH_AUTH_SOCK
-  },
-  runtime : {
+  servers : "johndoe@example.com",
+  options : {
     dest : "/home/johndoe/dpac"
   }
 };

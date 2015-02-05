@@ -19,7 +19,7 @@ if( "debugging" === process.env.NODE_ENV ){
 // and documentation.
 
 app.use( "/uploads", require( "./routes/api/middleware" ).initCORS() );
-var pkg = require( "./../package.json" );
+var pkg = require( "../package.json" );
 keystone.init( {
 
   "name"       : "d-pac",
