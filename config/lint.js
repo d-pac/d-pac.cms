@@ -3,10 +3,7 @@
 module.exports = function( grunt,
                            opts ){
   var dirs = [
-    "models/**/*.js",
-    "routes/**/*.js",
-    "services/**/*.js",
-    "*.js"
+    "app**/*.js"
   ];
 
   return {

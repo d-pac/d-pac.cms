@@ -1,6 +1,6 @@
 {
   "rest": {
-    "src": "routes/",
+    "src": "app/routes/",
     "dest": "docs"
   }
 }

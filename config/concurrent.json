@@ -5,25 +5,12 @@
   "development": {
     "tasks": [
       "nodemon",
-      "node-inspector",
-      "watch"
+      "node-inspector"
     ]
   },
   "production": {
     "tasks": [
       "nodemon"
-    ]
-  },
-  "tests": {
-    "tasks": [
-      "nodemon",
-      "node-inspector"
-    ]
-  },
-  "debugging": {
-    "tasks": [
-      "nodemon",
-      "node-inspector"
     ]
   }
 }

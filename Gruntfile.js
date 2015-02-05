@@ -25,7 +25,7 @@ module.exports = function( grunt ){
   var configs = require( "load-grunt-configs" )( grunt, {
     pkg         : grunt.file.readJSON( "package.json" ),
     paths       : {
-      entrypoint : "server.js"
+      entrypoint : "app/server.js"
     },
     env         : process.env,
     buildnumber : {
