@@ -1,6 +1,6 @@
 {
   "name": "d-pac.cms",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "build": "110",
   "private": true,
   "dependencies": {
