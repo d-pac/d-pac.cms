@@ -44,11 +44,8 @@ module.exports = function( shipit ){
   shipit.blTask( "npm-stop", function(){
     return shipit.remote( "cd " + this.config.options.dest + "; npm stop" );
   } );
-  shipit.task( "npm-restart", [ "npm-stop", "npm-start" ], function(){
-    return true;
-  } );
 
-  shipit.task( "deploy", [ "transfer-app", "npm-install", "npm-restart" ], function(){
+  shipit.task( "deploy", [ "transfer-app", "npm-install", "npm-start" ], function(){
     return true;
   } );
 };
