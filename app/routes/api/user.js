@@ -1,40 +1,35 @@
 "use strict";
-var keystone = require( "keystone" );
-var debug = require( "debug" )( "dpac:api.session" );
+var debug = require( "debug" )( "dpac:api.authentication" );
+
 var _ = require( "underscore" );
 var errors = require( "errors" );
+var keystone = require( "keystone" );
 
-module.exports.retrieve = function( req,
-                                    res,
-                                    next ){
-  debug( "retrieve" );
-  var output;
-
-  try{
-    output = {
-      _csrf : keystone.security.csrf.getToken( req, res )
-    };
-  } catch( err ) {
-    return next( new errors.Http500Error() );
-  }
-
+module.exports.status = function status( req,
+                                         res,
+                                         next ){
+  debug( "#status" );
   if( req.user ){
-    output.user = req.user.toJSON();
+    return res.apiResponse( {
+      user : req.user
+    } );
   }
 
-  return res.apiResponse( output );
+  return next( new errors.Http401Error( {
+    message     : "Authentication error",
+    explanation : "Not logged in."
+  } ) );
 };
 
-module.exports.create = function( req,
+module.exports.signin = function( req,
                                   res,
                                   next ){
-  debug( "create" );
+  debug( "signin" );
   keystone.session.signin( req.body, req, res, function( user ){
     debug( "signed in", user.id );
 
     return res.apiResponse( {
-      _csrf : keystone.security.csrf.getToken( req, res ),
-      user  : req.user.toJSON()
+      user : req.user.toJSON()
     } );
   }, function( err ){
     if( err ){
@@ -48,10 +43,10 @@ module.exports.create = function( req,
   } );
 };
 
-module.exports.destroy = function( req,
+module.exports.signout = function( req,
                                    res,
                                    next ){
-  debug( "destroy" );
+  debug( "signout" );
   keystone.session.signout( req, res, function(){
     return res.apiResponse( 204 );
   } );

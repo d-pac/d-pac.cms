@@ -22,9 +22,6 @@ var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var middleware = require( "./middleware" );
 var importRoutes = keystone.importer( __dirname );
-var User = keystone.list( "User" );
-var errors = require( "errors" );
-var constants = require( "../models/helpers/constants" );
 
 // Common Middleware
 keystone.pre( "routes", middleware.initLocals );
@@ -33,7 +30,7 @@ keystone.pre( "render", middleware.flashMessages );
 // Import Route Controllers
 var routes = {
   views : importRoutes( "./views" ),
-  //api   : importRoutes( "./api" )
+  api   : importRoutes( "./api" )
 };
 
 // Setup Route Bindings
@@ -43,5 +40,50 @@ exports = module.exports = function( app ){
   app.get( "/blog/:category?", routes.views.blog );
   app.get( "/blog/post/:post", routes.views.post );
   app.all( "/contact", routes.views.contact );
+
+  // # REST API
+  var api = routes.api;
+
+  // -- API setup --
+  app.all( "/api*",
+    middleware.reflectReq,
+    api.helpers.middleware.initAPI,
+    api.helpers.middleware.initCORS() );
+
+  // -- users --
+
+  app.get( "/api/users",
+    api.helpers.middleware.requireAdmin,
+    api.users.list );
+  app.get( "/api/users/:_id",
+    api.helpers.middleware.parseUserId,
+    api.helpers.middleware.requireSelf,
+    api.users.retrieve );
+  app.patch( "/api/users/:_id",
+    api.helpers.middleware.parseUserId,
+    api.helpers.middleware.requireSelf,
+    api.users.update );
+  app.get( "/api/user",
+    api.helpers.middleware.parseUserId,
+    api.helpers.middleware.requireUser,
+    api.users.retrieve );
+  app.patch( "/api/user",
+    api.helpers.middleware.parseUserId,
+    api.helpers.middleware.requireUser,
+    api.users.update );
+
+  // -- authentication --
+  app.get( "/api/user/session", api.user.status );
+  app.post( "/api/user/session",
+    api.helpers.middleware.requireParams( "email", "password" ),
+    api.user.signin );
+  app.delete( "/api/user/session*",
+    api.helpers.middleware.requireUser,
+    api.user.signout );
+
+  // -- API fallback --
+  app.all( "/api*",
+    api.helpers.middleware.notFound,
+    api.helpers.middleware.handleError );
 
 };

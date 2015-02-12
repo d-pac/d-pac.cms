@@ -1,27 +1,23 @@
 "use strict";
 var debug = require( "debug" )( "dpac:services.assessments" );
 
-var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var schema = keystone.list( "Assessment" );
-var P = require( "bluebird" );
+var Service = require( "./helpers/Service" );
+var base = new Service( schema );
 
 module.exports.listById = function listById( ids ){
-  return module.exports.list( ids );
+  return base.listByid( ids ).execAsync();
 };
 
 module.exports.list = function list( opts ){
   debug( "list" );
-  var query = schema.model
-    .find( opts )
-    .sort( "order" );
-
-  if( _.isArray( opts ) ){
-    query = query.where( "_id" ).in( opts );
-  }
-
-  return P.resolve( query.lean().exec() );
+  return base.list( opts )
+    .sort( "order" )
+    .lean()
+    .execAsync();
 };
+
 /**
  *
  * @param opts
@@ -31,9 +27,8 @@ module.exports.list = function list( opts ){
 module.exports.retrieve = function retrieveAssessment( opts ){
   debug( "#retrieve" );
 
-  return P.resolve( schema.model
-    .findById( opts._id )
+  return base.retrieve( opts )
     .populate( "phases" )
     .lean()
-    .exec() );
+    .execAsync();
 };

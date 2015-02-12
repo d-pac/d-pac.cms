@@ -11,6 +11,12 @@ var Service = require( "./helpers/Service" );
 
 var base = new Service( schema );
 
+module.exports.list = function list( opts ){
+  debug( "#list", opts );
+  return base.list( opts )
+    .execAsync();
+};
+
 /**
  *
  * @param opts
@@ -22,5 +28,12 @@ module.exports.retrieve = function retrieve( opts ){
 
   return base.retrieve( opts )
     .populate( "organization" )
+    .execAsync();
+};
+
+module.exports.update = function retrieve( opts ){
+  debug( "#update", opts );
+
+  return base.update( opts )
     .execAsync();
 };

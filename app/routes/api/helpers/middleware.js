@@ -123,9 +123,9 @@ exports.requireSelf = function( req,
                                 res,
                                 next ){
   debug( "#requireSelf" );
-  var id = res.locals.user.id;
+  var id = req.param( "_id" );
 
-  if( req.user.isAdmin || ( id && id === req.user.id ) ){
+  if( req.user && ( req.user.isAdmin || ( id && id === req.user.id ) ) ){
     return next();
   } else {
     return next( new errors.Http401Error() );
@@ -201,4 +201,14 @@ exports.requireParams = function(){
 
     return next();
   };
+};
+
+module.exports.parseUserId = function parseUserId( req,
+                                                   res,
+                                                   next ){
+  var idParam = req.param( "_id" );
+  if( ( !idParam || "me" === idParam ) && req.user ){
+    req.params._id = req.user.id;
+  }
+  next();
 };

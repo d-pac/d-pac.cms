@@ -1,4 +1,5 @@
 "use strict";
+var debug = require( "debug" )( "dpac:api.helpers.Controller" );
 
 var _ = require( "underscore" );
 var errors = require( "errors" );
@@ -11,6 +12,7 @@ function Controller( service ){
 _.extend( Controller.prototype, {
 
   retrieve : function( opts ){
+    debug( "#retrieve" );
     return this.service
       .retrieve( opts )
       .then( function( result ){
@@ -32,6 +34,7 @@ _.extend( Controller.prototype, {
    */
   create : function( opts,
                      req ){
+    debug( "#create" );
     var values = utils.parseValues( opts, req );
     return this.service
       .create( values )
@@ -51,11 +54,10 @@ _.extend( Controller.prototype, {
    * @param opts.values [Optional] Object containing key value pairs that correspond to schema fields,
    *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
    * @param req
-   * @param res
-   * @param next
    */
   update : function( opts,
                      req ){
+    debug( "#update" );
     if( !opts.values ){
       opts.values = {};
     }
@@ -74,6 +76,7 @@ _.extend( Controller.prototype, {
   },
 
   list : function( opts ){
+    debug( "#list" );
     return this.service
       .list( opts )
       .then( function( result ){
@@ -85,6 +88,7 @@ _.extend( Controller.prototype, {
   },
 
   remove : function( req ){
+    debug( "#remove" );
     return this.service.remove( {
       _id : req.param( "_id" )
     } )

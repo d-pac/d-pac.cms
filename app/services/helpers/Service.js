@@ -21,7 +21,7 @@ _.extend( Service.prototype, {
   /**
    *
    * @param {(string|string[])} ids
-   * @param {object} opts Mongoose options
+   * @param {object} [opts] Mongoose options
    * @returns {*}
    */
   listByid : function listById( ids,
