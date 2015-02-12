@@ -14,7 +14,13 @@ exports.retrieve = function( req,
   debug( "#retrieve" );
   controller.retrieve( {
     _id : req.param( "_id" )
-  }, req, res, next );
+  } ).then( function( result ){
+    res.apiResponse( {
+      comparison : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };
 
 module.exports.update = function( req,
@@ -23,5 +29,11 @@ module.exports.update = function( req,
   debug( "#update" );
   controller.update( {
     fields : schema.api.editable
-  }, req, res, next );
+  }, req ).then( function( result ){
+    res.apiResponse( {
+      comparison : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };

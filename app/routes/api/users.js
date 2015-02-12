@@ -7,6 +7,7 @@ var Controller = require( "./Controller" );
 var utils = require( "./utils" );
 var service = require( "../../services/users" );
 var schema = keystone.list( "User" );
+var P = require( "bluebird" );
 
 var controller = new Controller( service, schema );
 
@@ -16,7 +17,13 @@ exports.retrieve = function( req,
   debug( "#retrieve" );
   controller.retrieve( {
     _id : req.user.id
-  }, req, res, next );
+  }, next ).then( function( result ){
+    res.apiResponse( {
+      user : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };
 
 var update = module.exports.update = function( req,
@@ -30,29 +37,28 @@ var update = module.exports.update = function( req,
     fields : [ "password_confirm" ].concat( fields )
   }, req );
 
-  service
-    .retrieve( {
-      _id : req.user.id
-    } )
-    .then( function( user ){
-      // we need to use this atrocity since otherwise the keystone-native validators won't run
+  service.retrieve( {
+    _id : req.user.id
+  } ).then( function( user ){
+    return P.fromNode( function( callback ){
       user.getUpdateHandler( req, res ).process( values, {
         fields      : fields,
         flashErrors : false
-      }, function( err,
-                   processor ){
-        if( err ){
-          return next( err );
-        }
-        var user = processor.item;
-
-        if( !user ){
-          return next( new errors.Http500Error() );
-        }
-
-        return res.apiResponse( user );
-      } );
+      }, callback );
     } );
+  } ).then( function( processor ){
+    var result = processor.item;
+    if( !result ){
+      throw new errors.Http500Error();
+    }
+    return result;
+  } ).then( function( result ){
+    return res.apiResponse( {
+      user : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };
 
 module.exports.replace = function( req,

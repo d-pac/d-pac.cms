@@ -4,7 +4,7 @@
   "build": "110",
   "dependencies": {
     "async": "^0.9.0",
-    "bluebird": "^2.7.1",
+    "bluebird": "^2.9.7",
     "comparative-selection": "^1.0.0",
     "connect-mongo": "^0.4.1",
     "cors": "^2.4.1",

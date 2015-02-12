@@ -3,19 +3,21 @@ var debug = require( "debug" )( "dpac:services.comparisons" );
 var keystone = require( "keystone" );
 var _ = require( "underscore" );
 var extend = require( "deep-extend" );
-var Bluebird = require( "bluebird" );
+var P = require( "bluebird" );
 var schema = keystone.list( "Comparison" );
+var updateResource = require( "./helpers/updateResource" );
 
 module.exports.create = function createComparison( opts ){
   debug( "#create" );
 
-  return schema.model.create( opts );
+  return P.resolve( schema.model.create( opts ) );
 };
 
 /**
  *
  * @param opts
  * @param {string} [opts.assessor] User.id
+ * @param {boolean} [active=true]
  * @returns {Promise}
  */
 module.exports.listActive = function listActive( opts,
@@ -26,12 +28,12 @@ module.exports.listActive = function listActive( opts,
     active = true;
   }
 
-  return schema.model
+  return P.resolve( schema.model
     .find( opts )
     .where( "completed" ).ne( active ) // we want all falsy matches as well
     .populate( "assessment" )
     .lean()
-    .exec();
+    .exec() );
 };
 
 /**
@@ -41,10 +43,10 @@ module.exports.listActive = function listActive( opts,
  * @returns {Promise}
  */
 module.exports.retrieve = function retrieve( opts ){
-  return schema.model
+  return P.resolve( schema.model
     .findById( opts._id )
     .lean()
-    .exec();
+    .exec() );
 };
 
 /**
@@ -55,18 +57,7 @@ module.exports.retrieve = function retrieve( opts ){
 module.exports.update = function update( opts ){
   debug( "update" );
 
-  return schema.model
-    .findById( opts._id )
-    .exec()
-    .then( function( doc ){
-      if( !doc ){
-        return;
-      }
-      extend( doc, opts );
-      var save = Bluebird.promisify( doc.save, doc );
-
-      return save();
-    } );
+  return updateResource( schema, opts );
 };
 
 module.exports.completedCount = function completedCount( opts ){

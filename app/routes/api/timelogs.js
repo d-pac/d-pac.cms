@@ -13,7 +13,13 @@ exports.list = function( req,
                          next ){
   controller.list( {
     // no filtering, we need everything ?
-  }, req, res, next );
+  } ).then( function( result ){
+    res.apiResponse( {
+      timelogs : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };
 
 exports.create = function( req,
@@ -22,7 +28,13 @@ exports.create = function( req,
   debug( "#create" );
   controller.create( {
     fields : schema.api.creation
-  }, req, res, next );
+  }, req ).then( function( result ){
+    res.apiResponse( {
+      timelog : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };
 
 exports.update = function( req,
@@ -31,5 +43,11 @@ exports.update = function( req,
   debug( "#update" );
   controller.update( {
     fields : schema.api.editable
-  }, req, res, next );
+  }, req ).then( function( result ){
+    res.apiResponse( {
+      timelog : result
+    } );
+  } ).catch( function( err ){
+    next( err );
+  } );
 };

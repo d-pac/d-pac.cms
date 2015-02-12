@@ -12,30 +12,15 @@ function Controller( service,
 
 _.extend( Controller.prototype, {
 
-  _createResponder : function( res,
-                               next,
-                               ErrorClass ){
-    return function( err,
-                     result ){
-      if( err ){
-        return next( err );
-      }
-
-      if( !result ){
-        return next( new ErrorClass() );
-      }
-
-      res.apiResponse( result );
-    };
-  },
-
-  retrieve : function( opts,
-                       req,
-                       res,
-                       next ){
-    this.service
+  retrieve : function( opts ){
+    return this.service
       .retrieve( opts )
-      .onResolve( this._createResponder( res, next, errors.Http404Error ) );
+      .then( function( result ){
+        if( !result ){
+          throw new errors.Http404Error();
+        }
+        return result;
+      } );
   },
 
   /**
@@ -46,17 +31,18 @@ _.extend( Controller.prototype, {
    * @param opts.values [Optional] Object containing key value pairs that correspond to schema fields,
    *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
    * @param req
-   * @param res
-   * @param next
    */
   create : function( opts,
-                     req,
-                     res,
-                     next ){
+                     req ){
     var values = utils.parseValues( opts, req );
-    this.service
+    return this.service
       .create( values )
-      .onResolve( this._createResponder( res, next, errors.Http500Error ) );
+      .then( function( result ){
+        if( !result ){
+          throw new errors.Http500Error();
+        }
+        return result;
+      } );
   },
 
   /**
@@ -71,9 +57,7 @@ _.extend( Controller.prototype, {
    * @param next
    */
   update : function( opts,
-                     req,
-                     res,
-                     next ){
+                     req ){
     if( !opts.values ){
       opts.values = {};
     }
@@ -81,27 +65,24 @@ _.extend( Controller.prototype, {
       _id : req.param( "_id" )
     } );
     var values = utils.parseValues( opts, req );
-    this.service
+    return this.service
       .update( values )
-      .onResolve( this._createResponder( res, next, errors.Http404Error ) );
+      .then( function( result ){
+        if( !result ){
+          throw new errors.Http404Error();
+        }
+        return result;
+      } );
   },
 
-  list : function( opts,
-                   req,
-                   res,
-                   next ){
-    this.service
+  list : function( opts ){
+    return this.service
       .list( opts )
-      .onResolve( function( err,
-                            result ){
-        if( err ){
-          return next( err );
-        }
-
+      .then( function( result ){
         if( !result ){
           result = [];
         }
-        res.apiResponse( result );
+        return result;
       } );
   }
 } );

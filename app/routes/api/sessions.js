@@ -8,9 +8,15 @@ module.exports.retrieve = function( req,
                                     res,
                                     next ){
   debug( "retrieve" );
-  var output = {
-    _csrf : keystone.security.csrf.getToken( req, res )
-  };
+  var output;
+
+  try{
+    output = {
+      _csrf : keystone.security.csrf.getToken( req, res )
+    };
+  } catch( err ) {
+    return next( new errors.Http500Error() );
+  }
 
   if( req.user ){
     output.user = req.user.toJSON();

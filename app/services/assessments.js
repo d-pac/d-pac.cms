@@ -4,6 +4,7 @@ var debug = require( "debug" )( "dpac:services.assessments" );
 var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var schema = keystone.list( "Assessment" );
+var P = require( "bluebird" );
 
 module.exports.listById = function listById( ids ){
   return module.exports.list( ids );
@@ -19,7 +20,7 @@ module.exports.list = function list( opts ){
     query = query.where( "_id" ).in( opts );
   }
 
-  return query.lean().exec();
+  return P.resolve( query.lean().exec() );
 };
 /**
  *
@@ -30,9 +31,9 @@ module.exports.list = function list( opts ){
 module.exports.retrieve = function retrieveAssessment( opts ){
   debug( "#retrieve" );
 
-  return schema.model
+  return P.resolve( schema.model
     .findById( opts._id )
     .populate( "phases" )
     .lean()
-    .exec();
+    .exec() );
 };
