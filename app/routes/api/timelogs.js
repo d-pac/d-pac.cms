@@ -51,3 +51,14 @@ exports.update = function( req,
     next( err );
   } );
 };
+
+exports.remove = function( req,
+                           res,
+                           next ){
+  debug( "#remove" );
+  controller.remove( req ).then( function( result ){
+    res.apiResponse( 204 );
+  } ).catch( function( err ){
+    next( err );
+  } );
+};

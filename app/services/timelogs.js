@@ -9,6 +9,9 @@ var keystone = require( "keystone" );
 var toSafeJSON = require( "./utils" ).toSafeJSON;
 var schema = keystone.list( "Timelog" );
 
+var Service = require( "./helpers/Service" );
+var base = new Service( schema );
+
 var listById = module.exports.listById = function listById( ids ){
   return schema.model
     .find()
@@ -50,16 +53,11 @@ module.exports.create = function( opts ){
 module.exports.update = function update( opts ){
   debug( "update", opts );
 
-  return schema.model
-    .findById( opts._id )
-    .exec()
-    .then( function( doc ){
-      if( !doc ){
-        return;
-      }
-      extend( doc, opts );
-      var save = Bluebird.promisify( doc.save, doc );
+  return base.update( opts ).execAsync();
+};
 
-      return save();
-    } );
+module.exports.remove = function remove( opts ){
+  debug( "remove", opts );
+
+  return base.remove( opts ).execAsync();
 };

@@ -7,6 +7,9 @@ var extend = require( "deep-extend" );
 var P = require( "bluebird" );
 
 var schema = keystone.list( "User" );
+var Service = require( "./helpers/Service" );
+
+var base = new Service( schema );
 
 /**
  *
@@ -15,10 +18,9 @@ var schema = keystone.list( "User" );
  * @returns {Promise}
  */
 module.exports.retrieve = function retrieve( opts ){
-  debug( "#retrieve" );
+  debug( "#retrieve", opts );
 
-  return P.resolve( schema.model
-      .findById( opts._id )
-      .populate( "organization" )
-      .exec() );
+  return base.retrieve( opts )
+    .populate( "organization" )
+    .execAsync();
 };

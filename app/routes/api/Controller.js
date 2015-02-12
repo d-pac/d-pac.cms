@@ -4,10 +4,8 @@ var _ = require( "underscore" );
 var errors = require( "errors" );
 var utils = require( "./utils" );
 
-function Controller( service,
-                     schema ){
+function Controller( service ){
   this.service = service;
-  this.schema = schema;
 }
 
 _.extend( Controller.prototype, {
@@ -81,6 +79,18 @@ _.extend( Controller.prototype, {
       .then( function( result ){
         if( !result ){
           result = [];
+        }
+        return result;
+      } );
+  },
+
+  remove : function( req ){
+    return this.service.remove( {
+      _id : req.param( "_id" )
+    } )
+      .then( function( result ){
+        if( !result ){
+          throw new errors.Http404Error();
         }
         return result;
       } );
