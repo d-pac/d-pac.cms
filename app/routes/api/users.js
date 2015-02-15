@@ -6,7 +6,6 @@ var _ = require( "underscore" );
 var errors = require( "errors" );
 var keystone = require( "keystone" );
 
-var schema = keystone.list( "User" );
 var service = require( "../../services/users" );
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
@@ -15,7 +14,7 @@ module.exports.list = function list( req,
                                      res,
                                      next ){
   debug( "#list" );
-  base.list()
+  base.list( req )
     .then( function( result ){
       res.apiResponse( {
         user : result
@@ -45,9 +44,7 @@ module.exports.update = function update( req,
                                          res,
                                          next ){
   debug( "update" );
-  base.update( {
-    fields : schema.api.editable
-  }, req )
+  base.update( req )
     .then( function( result ){
       res.apiResponse( {
         user : result

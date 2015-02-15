@@ -55,6 +55,9 @@ exports = module.exports = function( app ){
   app.get( "/api/users",
     api.helpers.middleware.requireAdmin,
     api.users.list );
+  app.post( "/api/users",
+    api.helpers.middleware.requireAdmin,
+    api.users.list );
   app.get( "/api/users/:_id",
     api.helpers.middleware.parseUserId,
     api.helpers.middleware.requireSelf,
@@ -73,13 +76,21 @@ exports = module.exports = function( app ){
     api.users.update );
 
   // -- authentication --
-  app.get( "/api/user/session", api.user.status );
+  app.get( "/api/user/session", api.authentication.status );
   app.post( "/api/user/session",
     api.helpers.middleware.requireParams( "email", "password" ),
-    api.user.signin );
+    api.authentication.signin );
   app.delete( "/api/user/session*",
     api.helpers.middleware.requireUser,
-    api.user.signout );
+    api.authentication.signout );
+
+  // -- assessments --
+  app.get( "/api/assessments",
+    api.helpers.middleware.requireAdmin,
+    api.assessments.list );
+  app.post( "/api/assessments",
+    api.helpers.middleware.requireAdmin,
+    api.assessments.list );
 
   // -- API fallback --
   app.all( "/api*",

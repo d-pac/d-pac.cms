@@ -55,15 +55,14 @@ _.extend( Controller.prototype, {
    *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
    * @param req
    */
-  update : function( opts,
-                     req ){
+  update : function( req ){
     debug( "#update" );
-    if( !opts.values ){
-      opts.values = {};
-    }
-    _.defaults( opts.values, {
-      _id : req.param( "_id" )
-    } );
+    var opts = {
+      values : {
+        _id : req.param( "_id" )
+      },
+      fields : this.service.editableFields
+    };
     var values = utils.parseValues( opts, req );
     return this.service
       .update( values )
@@ -75,10 +74,13 @@ _.extend( Controller.prototype, {
       } );
   },
 
-  list : function( opts ){
-    debug( "#list" );
+  list : function( req ){
+    var filter = req.param( "filter" );
+    if( _.isString( filter ) ){
+      filter = JSON.parse( filter );
+    }
     return this.service
-      .list( opts )
+      .list( filter )
       .then( function( result ){
         if( !result ){
           result = [];

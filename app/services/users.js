@@ -37,3 +37,5 @@ module.exports.update = function retrieve( opts ){
   return base.update( opts )
     .execAsync();
 };
+
+module.exports.editableFields = schema.api.editable;
