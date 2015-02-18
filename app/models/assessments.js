@@ -23,10 +23,11 @@ var config = {
   },
 
   algorithm : {
-    type    : Types.Select,
-    label   : "Selection algorithm",
-    options : plugins.list( "select" ),
-    initial : true
+    type     : Types.Select,
+    label    : "Selection algorithm",
+    options  : plugins.list( "select" ),
+    initial  : true,
+    required : true
   },
 
   description : {
