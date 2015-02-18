@@ -26,7 +26,11 @@ module.exports.listById = function listById( ids ){
 };
 
 module.exports.retrievePair = function retrieveRepresentationPair( opts ){
-  debug( "retrievePair" );
+  debug( "#retrievePair"  );
+
+  opts = _.defaults( opts, {
+    algorithm : "comparative-selection"
+  } );
 
   return schema.model
     .find( {

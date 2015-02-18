@@ -4,7 +4,7 @@ var objectId = require( 'mongoose' ).Types.ObjectId;
 var Assessment = keystone.list( 'Assessment' );
 var Persona = keystone.list( 'Persona' );
 var Representation = keystone.list( 'Representation' );
-var assessments = ["5458894f0138e02976448d26", "545889770138e02976448d27"];
+var assessments = [ "5458894f0138e02976448d26", "545889770138e02976448d27" ];
 
 function createAssessment( opts ){
   return Assessment.model
@@ -77,7 +77,7 @@ exports = module.exports = function( done ){
       newAssessment = assessment._id;
     } )
     .then( function(){
-      return listPersonas( [assessments[0]] );
+      return listPersonas( [ assessments[ 0 ] ] );
     } )
     .then( function( personas ){
       return duplicatePersonas( newAssessment, personas );
