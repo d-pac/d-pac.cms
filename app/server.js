@@ -4,13 +4,10 @@ var konfy = require( "konfy" );
 konfy.load();
 
 // Require keystone
-var express = require( "express" );
-var mongoose = require( "mongoose" );
-var app = express();
-var keystone = require( "keystone" ).connect( mongoose, app );
+var keystone = require( "keystone" );
 var errors = require( "errors" );
 
-if( "debugging" === process.env.NODE_ENV ){
+if( "development" === process.env.NODE_ENV ){
   errors.stacks( true );
 }
 
@@ -18,7 +15,6 @@ if( "debugging" === process.env.NODE_ENV ){
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
 
-app.use( "/uploads", require( "./routes/api/middleware" ).initCORS() );
 var pkg = require( "../package.json" );
 keystone.init( {
 
