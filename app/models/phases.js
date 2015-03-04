@@ -9,7 +9,7 @@ var Phase = new keystone.List( "Phase", {
   map      : {
     name : "label"
   },
-  noedit   : false,
+  noedit   : true,
   nocreate : true,
   nodelete : true,
   hidden   : false

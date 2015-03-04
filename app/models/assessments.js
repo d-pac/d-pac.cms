@@ -42,7 +42,7 @@ var config = {
     ref      : "Phase",
     required : true,
     many     : true,
-    initial  : false
+    initial  : true
   },
 
   comparisonsNum : {
@@ -61,7 +61,10 @@ var config = {
   },
 
   order : {
-    type : Types.Number
+    type    : Types.Number,
+    label   : "Sort order",
+    note    : "Used to determine the order in which assessments need to be handled by the assessor (numeric sort)",
+    default : 0
   }
 
 };
@@ -80,13 +83,6 @@ Assessment.relationship( {
   ref     : "Comparison",
   refPath : "assessment",
   label   : "Comparisons"
-} );
-
-Assessment.relationship( {
-  path    : "personas",
-  ref     : "Persona",
-  refPath : "assessment",
-  label   : "Personas"
 } );
 
 Assessment.defaultColumns = "title, createdBy, state, order";

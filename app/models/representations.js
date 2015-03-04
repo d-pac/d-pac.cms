@@ -9,36 +9,38 @@ var constants = require( "./helpers/constants" );
 
 var Representation = new keystone.List( "Representation", {
   map   : {
-    name : "id"
+    name : "name"
   },
   track : true
 } );
 
+Representation.schema.plugin( require( "./helpers/autoinc" ).plugin, {
+  model   : "Representation",
+  field   : "_rid",
+  startAt : 1
+} );
+
+Representation.schema.virtual( "name" ).get( function(){
+  return "Representation " + this._rid;
+} ).depends = [ '_rid' ];
+
 var config = {
 
-  file : {
-    type     : Types.LocalFile,
-    dest     : "public/uploads",
-    prefix   : "/uploads",
-    required : true,
-    initial  : false
-  },
-
-  assessee : {
-    type     : Types.Relationship,
-    ref      : "User",
-    index    : true,
-    required : true, // R01
-    many     : false, // R01
-    initial  : true
-  },
-
-  assessment  : {
+  assessment : {
     type     : Types.Relationship,
     ref      : "Assessment",
     initial  : true,
     required : true, // R02
     many     : false, // R02
+    index    : true
+  },
+
+  document    : {
+    type     : Types.Relationship,
+    ref      : "Document",
+    initial  : true,
+    required : true,
+    many     : false,
     index    : true
   },
 
@@ -48,6 +50,7 @@ var config = {
   // this will not show up -> leads to uneven distribution
   comparedNum : {
     type    : Types.Number,
+    label   : "Compared with",
     index   : true,
     default : 0,
     noedit  : true
@@ -64,44 +67,9 @@ var config = {
 
 Representation.add( config );
 
-Representation.schema.path( "assessee" )
-  .validate( function( value,
-                       done ){
-    // U02 // R04
-    var filter = {
-      user       : value,
-      assessment : this.assessment,
-      role       : constants.roles.assessee
-    };
-    var Persona = keystone.list( "Persona" );
-    Persona.model
-      .find()
-      .where( filter )
-      .exec( function( err,
-                       personas ){
-        done( personas && 0 < personas.length );
-      } );
-  }, "User must have `Assessee` Persona for selected Assessment" );
+//Representation.schema.methods.toSafeJSON = function(){
+//  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
+//};
 
-Representation.schema.virtual( "url" ).get( function(){
-  return "/representations/" + this._id + this.ext;
-} );
-
-Representation.schema.virtual( "mimeType" ).get( function(){
-  return this.file.filetype;
-} );
-
-Representation.schema.virtual( "ext" ).get( function(){
-  return "." + mime.extension( this.file.filetype );
-} );
-
-Representation.schema.virtual( "fileUrl" ).get( function(){
-  return path.join( config.file.prefix, this.file.filename );
-} );
-
-Representation.schema.methods.toSafeJSON = function(){
-  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
-};
-
-Representation.defaultColumns = "name, assessee, assessment";
+Representation.defaultColumns = "name, assessment, document, comparedNum";
 Representation.register();

@@ -12,5 +12,5 @@
   "node": true,
   "laxbreak": true,
   "expr": true,
-  "quotmark": "double"
+  "laxcomma": true
 }

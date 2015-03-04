@@ -31,6 +31,14 @@ var config = {
     type     : Types.Password,
     initial  : true,
     required : false
+  },
+  assessments  : {
+    type     : Types.Relationship,
+    ref      : "Assessment",
+    index    : true,
+    initial  : false,
+    required : false,
+    many     : true
   }
 };
 
@@ -44,13 +52,6 @@ User.add( config, "Permissions", {
 // Provide access to Keystone
 User.schema.virtual( "canAccessKeystone" ).get( function(){
   return this.isAdmin;
-} );
-
-User.relationship( {
-  path    : "personas",
-  ref     : "Persona",
-  refPath : "user",
-  label   : "Personas"
 } );
 
 var jsonFields = _.keys( _.omit( config, "password" ) );

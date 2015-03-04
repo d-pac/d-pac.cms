@@ -5,6 +5,8 @@ konfy.load();
 
 // Require keystone
 var keystone = require( "keystone" );
+keystone.importer( __dirname )( "patches" );
+
 var errors = require( "errors" );
 
 if( "development" === process.env.NODE_ENV ){
@@ -69,31 +71,22 @@ keystone.set( "routes", require( "./routes" ) );
 // Configure the navigation bar in Keystone's Admin UI
 
 keystone.set( "nav", {
-  "content"     : [
+  "content"    : [
     "posts",
     "post-categories",
     "enquiries"
   ],
-  "assessments" : [
+  "assessment" : [
     "phases",
     "assessments",
+    "representations",
+    "documents",
     "comparisons",
-    "judgements"
-  ],
-  "users"       : [
     "organizations",
-    "users",
-    "personas",
-    "representations"
+    "users"
   ],
-  "reporting"   : [
-    "timelogs",
-    "seqs",
-    {
-      label : "Comparisons CSV [!]",
-      key   : "comparisons-report",
-      path  : "/api/reports/comparisons"
-    }
+  "reporting"  : [
+    "timelogs"
   ]
 } );
 
