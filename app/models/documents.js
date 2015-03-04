@@ -8,9 +8,9 @@ var path = require( "path" );
 var constants = require( "./helpers/constants" );
 
 var Document = new keystone.List( "Document", {
-  map   : {
-    name : "name"
-  },
+  //map   : {
+  //  name : "name"
+  //},
   track : true
 } );
 
@@ -20,13 +20,29 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt : 1
 } );
 
-Document.schema.virtual( "name" ).get( function(){
-  return ( this.file && this.file.originalname )
-    ? this.file.originalname
-    : this.id;
-} ).depends = [ 'file', '_rid' ];
+//Document.schema.virtual( "name" ).get( function(){
+//  return ( this.file && this.file.originalname )
+//    ? this.file.originalname
+//    : this.id;
+//} ).depends = [ 'file', '_rid' ];
 
 var config = {
+  name : {
+    type     : String,
+    default  : "<no name>",
+    noedit   : true,
+    watch    : "file _rid",
+    value    : function(){
+      if( this.file && this.file.originalname ){
+        return this.file.originalname;
+      }
+
+      return "Empty document " + this._rid;
+    },
+    required : false,
+    note     : "Will automatically take on the filename"
+  },
+
   file : {
     type     : Types.LocalFile,
     dest     : "app/public/uploads",

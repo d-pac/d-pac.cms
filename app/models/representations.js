@@ -8,23 +8,28 @@ var path = require( "path" );
 var constants = require( "./helpers/constants" );
 
 var Representation = new keystone.List( "Representation", {
-  map   : {
-    name : "name"
-  },
   track : true
 } );
 
-Representation.schema.plugin( require( "./helpers/autoinc" ).plugin, {
-  model   : "Representation",
-  field   : "_rid",
-  startAt : 1
-} );
-
-Representation.schema.virtual( "name" ).get( function(){
-  return "Representation " + this._rid;
-} ).depends = [ '_rid' ];
 
 var config = {
+  name : {
+    type     : String,
+    default  : "<no name>",
+    noedit   : true,
+    watch    : "assessment document",
+    value    : function(){
+      console.log(this);
+
+      if( this.assessment && this.document ){
+        return this.assessment.name + " - " + this.document.name;
+      }
+
+      return "Empty representation ";
+    },
+    required : false,
+    note     : "Will automatically take on the filename"
+  },
 
   assessment : {
     type     : Types.Relationship,
