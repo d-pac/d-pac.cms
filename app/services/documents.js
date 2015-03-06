@@ -1,8 +1,8 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.assessments" );
+var debug = require( "debug" )( "dpac:services.documents" );
 
 var keystone = require( "keystone" );
-var schema = keystone.list( "Assessment" );
+var schema = keystone.list( "Document" );
 var Service = require( "./helpers/Service" );
 var base = new Service( schema );
 
@@ -13,7 +13,6 @@ module.exports.listById = function listById( ids ){
 module.exports.list = function list( opts ){
   debug( "list" );
   return base.list( opts )
-    .sort( "order" )
     .lean()
     .execAsync();
 };
@@ -21,18 +20,17 @@ module.exports.list = function list( opts ){
 /**
  *
  * @param opts
- * @param opts._id Assessment.id
+ * @param opts._id Document.id
  * @returns {Promise}
  */
-module.exports.retrieve = function retrieveAssessment( opts ){
-  debug( "#retrieve" );
+module.exports.retrieve = function retrieveDocument( opts ){
+  debug( "#retrieve", opts );
 
   return base.retrieve( opts )
-    .populate( "phases" )
     .execAsync();
 };
 
-module.exports.getName = function getName( assessment ){
+module.exports.getName = function getName( document ){
   debug( "#getName" );
-  return base.getName( assessment );
+  return base.getName( document );
 };

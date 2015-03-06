@@ -30,7 +30,7 @@ keystone.pre( "render", middleware.flashMessages );
 // Import Route Controllers
 var routes = {
   views : importRoutes( "./views" ),
-  api   : importRoutes( "./api" )
+  //api   : importRoutes( "./api" )
 };
 
 // Setup Route Bindings
@@ -42,59 +42,59 @@ exports = module.exports = function( app ){
   app.all( "/contact", routes.views.contact );
 
   // # REST API
-  var api = routes.api;
-
-  // -- API setup --
-  app.all( "/api*",
-    middleware.reflectReq,
-    api.helpers.middleware.initAPI,
-    api.helpers.middleware.initCORS() );
-
-  // -- users --
-
-  app.get( "/api/users",
-    api.helpers.middleware.requireAdmin,
-    api.users.list );
-  app.post( "/api/users",
-    api.helpers.middleware.requireAdmin,
-    api.users.list );
-  app.get( "/api/users/:_id",
-    api.helpers.middleware.parseUserId,
-    api.helpers.middleware.requireSelf,
-    api.users.retrieve );
-  app.patch( "/api/users/:_id",
-    api.helpers.middleware.parseUserId,
-    api.helpers.middleware.requireSelf,
-    api.users.update );
-  app.get( "/api/user",
-    api.helpers.middleware.parseUserId,
-    api.helpers.middleware.requireUser,
-    api.users.retrieve );
-  app.patch( "/api/user",
-    api.helpers.middleware.parseUserId,
-    api.helpers.middleware.requireUser,
-    api.users.update );
-
-  // -- authentication --
-  app.get( "/api/user/session", api.authentication.status );
-  app.post( "/api/user/session",
-    api.helpers.middleware.requireParams( "email", "password" ),
-    api.authentication.signin );
-  app.delete( "/api/user/session*",
-    api.helpers.middleware.requireUser,
-    api.authentication.signout );
-
-  // -- assessments --
-  app.get( "/api/assessments",
-    api.helpers.middleware.requireAdmin,
-    api.assessments.list );
-  app.post( "/api/assessments",
-    api.helpers.middleware.requireAdmin,
-    api.assessments.list );
-
-  // -- API fallback --
-  app.all( "/api*",
-    api.helpers.middleware.notFound,
-    api.helpers.middleware.handleError );
+  //var api = routes.api;
+  //
+  //// -- API setup --
+  //app.all( "/api*",
+  //  middleware.reflectReq,
+  //  api.helpers.middleware.initAPI,
+  //  api.helpers.middleware.initCORS() );
+  //
+  //// -- users --
+  //
+  //app.get( "/api/users",
+  //  api.helpers.middleware.requireAdmin,
+  //  api.users.list );
+  //app.post( "/api/users",
+  //  api.helpers.middleware.requireAdmin,
+  //  api.users.list );
+  //app.get( "/api/users/:_id",
+  //  api.helpers.middleware.parseUserId,
+  //  api.helpers.middleware.requireSelf,
+  //  api.users.retrieve );
+  //app.patch( "/api/users/:_id",
+  //  api.helpers.middleware.parseUserId,
+  //  api.helpers.middleware.requireSelf,
+  //  api.users.update );
+  //app.get( "/api/user",
+  //  api.helpers.middleware.parseUserId,
+  //  api.helpers.middleware.requireUser,
+  //  api.users.retrieve );
+  //app.patch( "/api/user",
+  //  api.helpers.middleware.parseUserId,
+  //  api.helpers.middleware.requireUser,
+  //  api.users.update );
+  //
+  //// -- authentication --
+  //app.get( "/api/user/session", api.authentication.status );
+  //app.post( "/api/user/session",
+  //  api.helpers.middleware.requireParams( "email", "password" ),
+  //  api.authentication.signin );
+  //app.delete( "/api/user/session*",
+  //  api.helpers.middleware.requireUser,
+  //  api.authentication.signout );
+  //
+  //// -- assessments --
+  //app.get( "/api/assessments",
+  //  api.helpers.middleware.requireAdmin,
+  //  api.assessments.list );
+  //app.post( "/api/assessments",
+  //  api.helpers.middleware.requireAdmin,
+  //  api.assessments.list );
+  //
+  //// -- API fallback --
+  //app.all( "/api*",
+  //  api.helpers.middleware.notFound,
+  //  api.helpers.middleware.handleError );
 
 };

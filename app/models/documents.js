@@ -29,7 +29,7 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 var config = {
   name : {
     type     : String,
-    default  : "<no name>",
+    default  : "Document name",
     noedit   : true,
     watch    : "file _rid",
     value    : function(){
@@ -40,7 +40,7 @@ var config = {
       return "Empty document " + this._rid;
     },
     required : false,
-    note     : "Will automatically take on the filename"
+    note     : "is automatically generated"
   },
 
   file : {

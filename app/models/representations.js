@@ -6,29 +6,40 @@ var Types = keystone.Field.Types;
 var mime = require( "mime" );
 var path = require( "path" );
 var constants = require( "./helpers/constants" );
+var P = require( "bluebird" );
+
+var assessmentsService = require( "../services/assessments" );
+var documentsService = require( "../services/documents" );
 
 var Representation = new keystone.List( "Representation", {
   track : true
 } );
 
-
 var config = {
   name : {
     type     : String,
-    default  : "<no name>",
+    default  : "Representation name",
     noedit   : true,
     watch    : "assessment document",
-    value    : function(){
-      console.log(this);
-
+    value    : function( done ){
       if( this.assessment && this.document ){
-        return this.assessment.name + " - " + this.document.name;
+        P.join( assessmentsService.retrieve( {
+          _id : this.assessment
+        } ), documentsService.retrieve( {
+          _id : this.document
+        } ), function( assessment,
+                       document ){
+          done( assessmentsService.getName( assessment ) + " - " + documentsService.getName( document ) );
+        } );
+        return {
+          async : true
+        };
       }
 
       return "Empty representation ";
     },
     required : false,
-    note     : "Will automatically take on the filename"
+    note     : "is automatically generated"
   },
 
   assessment : {
@@ -55,7 +66,7 @@ var config = {
   // this will not show up -> leads to uneven distribution
   comparedNum : {
     type    : Types.Number,
-    label   : "Compared with",
+    label   : "Times compared",
     index   : true,
     default : 0,
     noedit  : true
@@ -66,6 +77,16 @@ var config = {
     ref    : "Representation",
     many   : true,
     noedit : true
+  },
+
+  scale : {
+    type    : Types.Number,
+    default : null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
+  },
+
+  benchmark : {
+    type    : Types.Boolean,
+    default : false
   }
 
 };
@@ -76,5 +97,5 @@ Representation.add( config );
 //  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
 //};
 
-Representation.defaultColumns = "name, assessment, document, comparedNum";
+Representation.defaultColumns = "name, comparedNum";
 Representation.register();

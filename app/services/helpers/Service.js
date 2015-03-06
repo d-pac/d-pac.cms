@@ -79,6 +79,10 @@ _.extend( Service.prototype, {
     }, promise );
 
     return promise;
+  },
+
+  getName : function( item ){
+    return this.schema.getDocumentName( item );
   }
 } );
 
