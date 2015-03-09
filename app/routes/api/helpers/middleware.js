@@ -30,18 +30,26 @@ exports.initAPI = function initAPI( req,
     } );
 
     if( req.query.callback ){
-      res.jsonp( status, data );
+      res.status( status ).jsonp( data );
     } else {
-      res.json( status, data );
+      res.status( status ).json( data );
     }
   };
 
   res.apiError = function( error ){
-    res.apiResponse( error.status || 500, error );
+    res.apiResponse( error.status || 500, { errors : error } );
   };
 
   // console.log(req.headers);
 
+  next();
+};
+
+exports.setIdParamToUser = function( req,
+                                     res,
+                                     next ){
+  debug( "#setIdParamToUser" );
+  req.params._id = req.user.id;
   next();
 };
 
@@ -92,6 +100,8 @@ exports.handleError = function( err,
                                 next ){
   debug( "#handleError", err );
 
+  console.error( err.stack );
+
   if( utils.isHttpError( err ) ){
     return res.apiError( err );
   }
@@ -122,8 +132,8 @@ exports.notFound = function notFound( req,
 exports.requireSelf = function( req,
                                 res,
                                 next ){
-  debug( "#requireSelf" );
-  var id = req.param( "_id" );
+  var id = req.params._id;
+  debug( "#requireSelf", id );
 
   if( req.user && ( req.user.isAdmin || ( id && id === req.user.id ) ) ){
     return next();
@@ -146,15 +156,11 @@ exports.verifyCSRF = function( req,
   } ) );
 };
 
-exports.onlyAllow = function( methods ){
-  return function methodNotAllowed( req,
-                                    res,
-                                    next ){
-    debug( "#methodNotAllowed" );
-    res.set( "Allow", methods );
-
-    return next( new errors.Http405Error() );
-  };
+exports.methodNotAllowed = function methodNotAllowed( req,
+                                                      res,
+                                                      next ){
+  debug( "#methodNotAllowed" );
+  return next( new errors.Http405Error() );
 };
 
 exports.initCORS = function(){
@@ -206,7 +212,8 @@ exports.requireParams = function(){
 module.exports.parseUserId = function parseUserId( req,
                                                    res,
                                                    next ){
-  var idParam = req.param( "_id" );
+  debug( "#parseUserId" );
+  var idParam = req.params[ "_id" ];
   if( ( !idParam || "me" === idParam ) && req.user ){
     req.params._id = req.user.id;
   }

@@ -3,24 +3,6 @@ var debug = require( "debug" )( "dpac:services.phases" );
 var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var schema = keystone.list( "Phase" );
-
-var listById = module.exports.listById = function listById( ids ){
-  return schema.model
-    .find()
-    .where( "_id" ).in( ids )
-    .lean()
-    .exec();
-};
-
-module.exports.list = function list( opts ){
-  debug( "list" );
-
-  if( _.isArray( opts ) ){
-    return listById( opts );
-  }
-
-  return schema.model
-    .find( opts )
-    .lean()
-    .exec();
-};
+var Service = require( "./helpers/Service" );
+var base = new Service( schema );
+module.exports = base.mixin();

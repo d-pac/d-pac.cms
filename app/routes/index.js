@@ -20,21 +20,25 @@
 
 var _ = require( "underscore" );
 var keystone = require( "keystone" );
-var middleware = require( "./middleware" );
+var appMw = require( "./middleware" );
 var importRoutes = keystone.importer( __dirname );
 
 // Common Middleware
-keystone.pre( "routes", middleware.initLocals );
-keystone.pre( "render", middleware.flashMessages );
+keystone.pre( "routes", appMw.initLocals );
+keystone.pre( "render", appMw.flashMessages );
 
 // Import Route Controllers
 var routes = {
   views : importRoutes( "./views" ),
-  //api   : importRoutes( "./api" )
+  api   : importRoutes( "./api" )
 };
+var api = routes.api;
+var apiMw = api.helpers.middleware;
+var registerDefaultRoutes = api.helpers.registerDefaultRoutes;
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
+
   // Views
   app.get( "/", routes.views.index );
   app.get( "/blog/:category?", routes.views.blog );
@@ -42,59 +46,43 @@ exports = module.exports = function( app ){
   app.all( "/contact", routes.views.contact );
 
   // # REST API
-  //var api = routes.api;
-  //
-  //// -- API setup --
-  //app.all( "/api*",
-  //  middleware.reflectReq,
-  //  api.helpers.middleware.initAPI,
-  //  api.helpers.middleware.initCORS() );
-  //
-  //// -- users --
-  //
-  //app.get( "/api/users",
-  //  api.helpers.middleware.requireAdmin,
-  //  api.users.list );
-  //app.post( "/api/users",
-  //  api.helpers.middleware.requireAdmin,
-  //  api.users.list );
-  //app.get( "/api/users/:_id",
-  //  api.helpers.middleware.parseUserId,
-  //  api.helpers.middleware.requireSelf,
-  //  api.users.retrieve );
-  //app.patch( "/api/users/:_id",
-  //  api.helpers.middleware.parseUserId,
-  //  api.helpers.middleware.requireSelf,
-  //  api.users.update );
-  //app.get( "/api/user",
-  //  api.helpers.middleware.parseUserId,
-  //  api.helpers.middleware.requireUser,
-  //  api.users.retrieve );
-  //app.patch( "/api/user",
-  //  api.helpers.middleware.parseUserId,
-  //  api.helpers.middleware.requireUser,
-  //  api.users.update );
-  //
-  //// -- authentication --
-  //app.get( "/api/user/session", api.authentication.status );
-  //app.post( "/api/user/session",
-  //  api.helpers.middleware.requireParams( "email", "password" ),
-  //  api.authentication.signin );
-  //app.delete( "/api/user/session*",
-  //  api.helpers.middleware.requireUser,
-  //  api.authentication.signout );
-  //
-  //// -- assessments --
-  //app.get( "/api/assessments",
-  //  api.helpers.middleware.requireAdmin,
-  //  api.assessments.list );
-  //app.post( "/api/assessments",
-  //  api.helpers.middleware.requireAdmin,
-  //  api.assessments.list );
-  //
-  //// -- API fallback --
-  //app.all( "/api*",
-  //  api.helpers.middleware.notFound,
-  //  api.helpers.middleware.handleError );
 
+  // -- API setup --
+  app.route( "/api*" )
+    .all( appMw.reflectReq )
+    .all( apiMw.initAPI );
+
+  app.route( "/api/session" )
+    .get( api.authentication.status )
+    .post( apiMw.requireParams( "email", "password" ) )
+    .post( api.authentication.signin )
+    .delete( apiMw.requireUser )
+    .delete( api.authentication.signout );
+
+  app.route( "/api/user" )
+    .all( apiMw.requireUser )
+    .all( apiMw.setIdParamToUser )
+    .get( api.users.retrieve )
+    .patch( api.users.update );
+
+  app.route( "/api/user/assessments" )
+    .all( apiMw.requireUser )
+    .all( apiMw.setIdParamToUser )
+    .get( api.users.listAssessments );
+
+  registerDefaultRoutes( "/api/assessments",
+    app, {
+      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller : api.assessments
+    } );
+
+  registerDefaultRoutes( "/api/representations",
+    app, {
+      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller : api.representations
+    } );
+
+  // -- API fallback --
+  app.use( apiMw.methodNotAllowed );
+  app.use( apiMw.handleError );
 };

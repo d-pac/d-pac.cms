@@ -10,6 +10,56 @@ function Controller( service ){
 }
 
 _.extend( Controller.prototype, {
+  mixin : function( receiver ){
+    receiver = receiver || {};
+    var controller = this;
+    receiver.retrieve = function( req,
+                                  res,
+                                  next ){
+      controller.handleResult( controller.retrieve( {
+        _id : req.param( "_id" )
+      } ), res, next );
+    };
+    receiver.list = function( req,
+                              res,
+                              next ){
+      controller.handleResult( controller.list( req ), res, next );
+    };
+    receiver.create = function( req,
+                                res,
+                                next ){
+      controller.handleResult( controller.create( req ), res, next );
+    };
+    receiver.update = function( req,
+                                res,
+                                next ){
+      controller.handleResult( controller.update( req ), res, next );
+    };
+    receiver.remove = function( req,
+                                res,
+                                next ){
+      controller.remove( req )
+        .then( function( result ){
+          res.apiResponse( 204 );
+        } ).catch( function( err ){
+          next( err );
+        } );
+    };
+    return receiver;
+  },
+
+  handleResult : function( p,
+                           res,
+                           next ){
+    debug( "#handleResult" );
+    p.then( function( result ){
+      res.apiResponse( {
+        data : result
+      } );
+    } ).catch( function( err ){
+      next( err );
+    } );
+  },
 
   retrieve : function( opts ){
     debug( "#retrieve" );
@@ -32,10 +82,11 @@ _.extend( Controller.prototype, {
    *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
    * @param req
    */
-  create : function( opts,
-                     req ){
+  create : function( req ){
     debug( "#create" );
-    var values = utils.parseValues( opts, req );
+    var values = utils.parseValues( {
+      fields : this.service.getEditableFields()
+    }, req );
     return this.service
       .create( values )
       .then( function( result ){
@@ -61,7 +112,7 @@ _.extend( Controller.prototype, {
       values : {
         _id : req.param( "_id" )
       },
-      fields : this.service.editableFields
+      fields : this.service.getEditableFields()
     };
     var values = utils.parseValues( opts, req );
     return this.service

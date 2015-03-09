@@ -10,8 +10,23 @@ function Service( schema ){
 }
 
 _.extend( Service.prototype, {
-
-  list : function list( opts ){
+  mixin : function( receiver ){
+    var methods = _.omit( _.keys( Service.prototype ), "mixin" );
+    var service = this;
+    receiver = receiver || {};
+    _.each( methods, function( methodName ){
+      receiver[ methodName ] = function(){
+        var args = _.toArray( arguments );
+        var result = service[ methodName ].apply( service, args );
+        if( result && result.hasOwnProperty( "execAsync" ) ){
+          result = result.execAsync();
+        }
+        return result;
+      }.bind( receiver );
+    } );
+    return receiver;
+  },
+  list  : function list( opts ){
     return P.promisifyAll(
       this.schema.model
         .find( opts )
@@ -24,15 +39,16 @@ _.extend( Service.prototype, {
    * @param {object} [opts] Mongoose options
    * @returns {*}
    */
-  listByid : function listById( ids,
+  listById : function listById( ids,
                                 opts ){
     if( _.isString( ids ) ){
-      return this.list( _.defaults( {
-        _id : ids
-      } ), opts );
+      return P.promisifyAll( this.schema.model
+        .find( _.defaults( {
+          _id : ids
+        } ), opts ) );
     } else if( _.isArray( ids ) ){
-      return this.list( opts )
-        .where( "_id" ).in( opts );
+      return P.promisifyAll( this.schema.model.find( opts )
+        .where( "_id" ).in( ids ) );
     }
 
     throw new Error( "Incorrect parameter type for `ids`, `String` or `Array` expected" );
@@ -45,9 +61,13 @@ _.extend( Service.prototype, {
     );
   },
 
-  update : function( opts ){
-    var promise = this.retrieve( opts )
-      .execAsync();
+  update : function( promise,
+                     opts ){
+    if( 2 > arguments.length ){
+      opts = promise;
+      promise = this.retrieve( opts )
+        .execAsync();
+    }
     promise.execAsync = _.bind( function(){
       return this.then( function( doc ){
         if( !doc ){
@@ -83,6 +103,14 @@ _.extend( Service.prototype, {
 
   getName : function( item ){
     return this.schema.getDocumentName( item );
+  },
+
+  getEditableFields : function(){
+    if( this.schema.api && this.schema.api.editable ){
+      return this.schema.api.editable;
+    }
+
+    return _.keys( this.schema.fields );
   }
 } );
 

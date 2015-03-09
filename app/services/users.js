@@ -1,21 +1,13 @@
 "use strict";
 
-var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var debug = require( "debug" )( "dpac:services.users" );
-var extend = require( "deep-extend" );
-var P = require( "bluebird" );
-
 var schema = keystone.list( "User" );
 var Service = require( "./helpers/Service" );
+var assessments = require( "./assessments" );
 
 var base = new Service( schema );
-
-module.exports.list = function list( opts ){
-  debug( "#list", opts );
-  return base.list( opts )
-    .execAsync();
-};
+module.exports = base.mixin();
 
 /**
  *
@@ -31,11 +23,18 @@ module.exports.retrieve = function retrieve( opts ){
     .execAsync();
 };
 
-module.exports.update = function retrieve( opts ){
-  debug( "#update", opts );
-
-  return base.update( opts )
-    .execAsync();
+module.exports.listAssessments = function listAssessments( opts ){
+  debug( "#listAssessments" );
+  return base.retrieve( opts )
+    .execAsync()
+    .then( function( user ){
+      console.log("USER", user);
+      return assessments.listById( user.assessments );
+    } );
 };
 
-module.exports.editableFields = schema.api.editable;
+module.exports.update = function update( opts ){
+  debug( "#update" );
+  return base.update( this.retrieve( opts ), opts )
+    .execAsync();
+};
