@@ -21,7 +21,7 @@ var config = {
     default  : "Representation name",
     noedit   : true,
     watch    : "assessment document",
-    value    : function( done ){
+    value    : function( callback ){
       if( this.assessment && this.document ){
         P.join( assessmentsService.retrieve( {
           _id : this.assessment
@@ -29,14 +29,13 @@ var config = {
           _id : this.document
         } ), function( assessment,
                        document ){
-          done( assessmentsService.getName( assessment ) + " - " + documentsService.getName( document ) );
+          callback( null, assessmentsService.getName( assessment ) + " - " + documentsService.getName( document ) );
+        } ).catch( function( err ){
+          callback( err );
         } );
-        return {
-          async : true
-        };
+      } else {
+        callback( null, "Empty representation " );
       }
-
-      return "Empty representation ";
     },
     required : false,
     note     : "is automatically generated"
