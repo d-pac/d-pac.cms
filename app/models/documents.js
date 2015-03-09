@@ -37,7 +37,7 @@ var config = {
         return this.file.originalname;
       }
 
-      return "Empty document " + this._rid;
+      return "Empty document [" + this._rid + "]";
     },
     required : false,
     note     : "is automatically generated"
@@ -124,6 +124,13 @@ Document.schema.virtual( "fileUrl" ).get( function(){
 //  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
 //};
 //
+
+Document.relationship( {
+  path    : "representations",
+  ref     : "Representation",
+  refPath : "document",
+  label   : "Representations"
+} );
 
 Document.defaultColumns = [ "name", "owner", "url|40%", "mimeType" ];
 Document.register();

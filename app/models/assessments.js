@@ -85,5 +85,12 @@ Assessment.relationship( {
   label   : "Comparisons"
 } );
 
+Assessment.relationship( {
+  path    : "assessors",
+  ref     : "User",
+  refPath : "assessments",
+  label   : "Assessors"
+} );
+
 Assessment.defaultColumns = "title, createdBy, state, order";
 Assessment.register();

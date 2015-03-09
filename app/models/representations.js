@@ -34,7 +34,7 @@ var config = {
           callback( err );
         } );
       } else {
-        callback( null, "Empty representation " );
+        callback( null, "Empty representation" );
       }
     },
     required : false,
@@ -95,6 +95,13 @@ Representation.add( config );
 //Representation.schema.methods.toSafeJSON = function(){
 //  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
 //};
+
+Representation.relationship( {
+  path    : "comparisons",
+  ref     : "Comparison",
+  refPath : "representations",
+  label   : "Comparisons"
+} );
 
 Representation.defaultColumns = "name, comparedNum";
 Representation.register();
