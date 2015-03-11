@@ -38,7 +38,6 @@ var registerDefaultRoutes = api.helpers.registerDefaultRoutes;
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
-
   // Views
   app.get( "/", routes.views.index );
   app.get( "/blog/:category?", routes.views.blog );

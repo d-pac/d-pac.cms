@@ -8,9 +8,6 @@ var path = require( "path" );
 var constants = require( "./helpers/constants" );
 
 var Document = new keystone.List( "Document", {
-  //map   : {
-  //  name : "name"
-  //},
   track : true
 } );
 
@@ -20,34 +17,79 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt : 1
 } );
 
-//Document.schema.virtual( "name" ).get( function(){
-//  return ( this.file && this.file.originalname )
-//    ? this.file.originalname
-//    : this.id;
-//} ).depends = [ 'file', '_rid' ];
+var utils = {
+  file : {
+    href     : function(){
+      return this.file.href;
+    },
+    mimeType : function(){
+      return this.file.filetype;
+    },
+    ext      : function(){
+      return "." + mime.extension( this.file.filetype );
+    },
+    name     : function(){
+      return this.file.originalname;
+    }
+  },
+  link : {
+    href     : function(){
+      return this.link;
+    },
+    mimeType : function(){
+      return mime.lookup( this.link );
+    },
+    ext      : function(){
+      return path.extname( this.link );
+    },
+    name     : function(){
+      return path.basename( this.link );
+    }
+  }
+};
 
 var config = {
   name : {
     type     : String,
     default  : "Document name",
     noedit   : true,
-    watch    : "file _rid",
+    watch    : "file link _rid",
     value    : function(){
-      if( this.file && this.file.originalname ){
-        return this.file.originalname;
-      }
-
-      return "Empty document [" + this._rid + "]";
+      return utils[ this.type ].name.call( this );
     },
     required : false,
     note     : "is automatically generated"
   },
 
+  owner : {
+    type     : Types.Relationship,
+    ref      : "User",
+    index    : true,
+    required : true, // R01
+    many     : false, // R01
+    initial  : true
+  },
+
+  type : {
+    hidden : true,
+    type   : String,
+    watch  : "link file",
+    value  : function(){
+      if( 0 < this.file.size ){
+        return "file";
+      }
+      return "link";
+    }
+  }
+};
+
+Document.add( config, "File", {
   file : {
     type     : Types.LocalFile,
+    label    : "Local file",
     dest     : "app/public/uploads",
     prefix   : "/uploads",
-    required : true,
+    required : false,
     initial  : false,
     filename : function( doc,
                          file ){
@@ -61,64 +103,33 @@ var config = {
     }
   },
 
-  owner : {
-    type     : Types.Relationship,
-    ref      : "User",
-    index    : true,
-    required : true, // R01
-    many     : false, // R01
-    initial  : true
+  link : {
+    type  : Types.Url,
+    label : "External file"
   }
-};
+} );
 
-Document.add( config );
+Document.schema.path( "link" )
+  .validate( function( value,
+                       isValid ){
+    if( !!value ){
+      isValid( !this.file.size );
+    } else {
+      isValid( !!this.file.size );
+    }
+  }, "You need to supply either a local file OR an external link." );
 
-//Document.schema.path( "assessee" )
-//  .validate( function( value,
-//                       done ){
-//    // U02 // R04
-//    var filter = {
-//      user       : value,
-//      assessment : this.assessment,
-//      role       : constants.roles.assessee
-//    };
-//    var Persona = keystone.list( "Persona" );
-//    Persona.model
-//      .find()
-//      .where( filter )
-//      .exec( function( err,
-//                       personas ){
-//        done( personas && 0 < personas.length );
-//      } );
-//  }, "User must have `Assessee` Persona for selected Assessment" );
-
-Document.schema.virtual( "url" ).get( function(){
-  if( this.ext ){
-    return "/documents/" + this._id + this.ext;
-  }
-
-  return undefined;
-} ).depends = [ "_id", "ext" ];
+Document.schema.virtual( "href" ).get( function(){
+  return utils[ this.type ].href.call( this );
+} ).depends = [ "file", "type", "link" ];
 
 Document.schema.virtual( "mimeType" ).get( function(){
-  return this.file.filetype;
-} ).depends = [ "file" ];
+  return utils[ this.type ].mimeType.call( this );
+} ).depends = [ "file", "type", "link" ];
 
 Document.schema.virtual( "ext" ).get( function(){
-  if( this.file && this.file.filetype ){
-    return "." + mime.extension( this.file.filetype );
-  }
-
-  return undefined;
-} ).depends = [ "file" ];
-
-Document.schema.virtual( "fileUrl" ).get( function(){
-  if( this.file && this.file.filename ){
-    return path.join( config.file.prefix, this.file.filename );
-  }
-
-  return undefined;
-} ).depends = [ "file" ];
+  return utils[ this.type ].ext.call( this );
+} ).depends = [ "file", "type", "link" ];
 
 //Document.schema.methods.toSafeJSON = function(){
 //  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
@@ -132,5 +143,5 @@ Document.relationship( {
   label   : "Representations"
 } );
 
-Document.defaultColumns = [ "name", "owner", "url|40%", "mimeType" ];
+Document.defaultColumns = [ "name", "owner", "href|40%", "mimeType" ];
 Document.register();
