@@ -78,14 +78,16 @@ var config = {
     noedit : true
   },
 
-  scale : {
+  ability : {
     type    : Types.Number,
     default : null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
   },
 
-  benchmark : {
-    type    : Types.Boolean,
-    default : false
+  type : {
+    type    : Types.Select,
+    options : constants.publicationStates.list.toString(),
+    default : constants.TO_RANK,
+    index   : true
   }
 
 };

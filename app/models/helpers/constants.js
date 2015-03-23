@@ -7,7 +7,10 @@ var constants = module.exports = {
   ASSESSEE  : "Assessee",
   DRAFT     : "draft",
   PUBLISHED : "published",
-  ARCHIVED  : "archived"
+  ARCHIVED  : "archived",
+  BENCHMARK : "benchmark",
+  TO_RANK   : "to rank",
+  RANKED    : "ranked"
 };
 
 module.exports.roles = {
@@ -21,4 +24,8 @@ module.exports.publicationStates = {
   draft     : constants.DRAFT,
   published : constants.PUBLISHED,
   archived  : constants.ARCHIVED
+};
+
+module.exports.representationTypes = {
+  list : [constants.TO_RANK, constants.RANKED, constants.BENCHMARK]
 };
