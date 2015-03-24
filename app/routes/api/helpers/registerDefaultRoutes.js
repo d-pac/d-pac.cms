@@ -11,7 +11,7 @@ module.exports = function registerDefaultRoutes( baseUrl,
 
   var controller = opts.controller;
   router.get( controller.list );
-  router = app.route( opts.baseUrl + "/:_id" )
+  router = app.route( baseUrl + "/:_id" )
     .get( controller.retrieve )
     .patch( controller.update )
     .post( controller.create )

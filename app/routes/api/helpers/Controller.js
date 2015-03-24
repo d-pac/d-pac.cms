@@ -16,6 +16,7 @@ _.extend( Controller.prototype, {
     receiver.retrieve = function( req,
                                   res,
                                   next ){
+      debug( "#retrieve" );
       controller.handleResult( controller.retrieve( {
         _id : req.param( "_id" )
       } ), res, next );
@@ -23,21 +24,25 @@ _.extend( Controller.prototype, {
     receiver.list = function( req,
                               res,
                               next ){
+      debug( "#list" );
       controller.handleResult( controller.list( req ), res, next );
     };
     receiver.create = function( req,
                                 res,
                                 next ){
+      debug( "#create" );
       controller.handleResult( controller.create( req ), res, next );
     };
     receiver.update = function( req,
                                 res,
                                 next ){
+      debug( "#update" );
       controller.handleResult( controller.update( req ), res, next );
     };
     receiver.remove = function( req,
                                 res,
                                 next ){
+      debug( "#remove" );
       controller.remove( req )
         .then( function( result ){
           res.apiResponse( 204 );
