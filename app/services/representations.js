@@ -29,14 +29,14 @@ module.exports = base.mixin();
 //};
 //
 module.exports.select = function select( opts ){
-  debug( "#select" );
+  debug( "#select", opts );
   requireProp( opts, "assessment" );
 
   opts = _.defaults( opts, {
     algorithm : "comparative-selection"
   } );
 
-  return this.list( opts )
+  return this.list( _.omit( opts, 'algorithm' ) )
     .then( function( representations ){
       return require( opts.algorithm ).select( representations );
     } );

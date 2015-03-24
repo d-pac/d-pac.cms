@@ -1,4 +1,5 @@
 "use strict";
+var debug = require( "debug" )( "dpac:services.helpers.Service" );
 
 var _ = require( "underscore" );
 var errors = require( "errors" );
@@ -26,7 +27,9 @@ _.extend( Service.prototype, {
     } );
     return receiver;
   },
-  list  : function list( opts ){
+
+  list : function list( opts ){
+    debug( "#list", opts );
     return P.promisifyAll(
       this.schema.model
         .find( opts )
@@ -41,6 +44,7 @@ _.extend( Service.prototype, {
    */
   listById : function listById( ids,
                                 opts ){
+    debug( "#listById" );
     if( _.isString( ids ) ){
       return P.promisifyAll( this.schema.model
         .find( _.defaults( {
@@ -55,14 +59,23 @@ _.extend( Service.prototype, {
   },
 
   retrieve : function( opts ){
+    debug( "#retrieve" );
     return P.promisifyAll(
       this.schema.model
         .findById( opts._id, opts.fields, opts )
     );
   },
 
+  create : function( opts ){
+    debug( "#create" );
+    return P.promisifyAll(
+      this.schema.model.create( opts )
+    );
+  },
+
   update : function( promise,
                      opts ){
+    debug( "#update" );
     if( 2 > arguments.length ){
       opts = promise;
       promise = this.retrieve( opts )
@@ -85,6 +98,7 @@ _.extend( Service.prototype, {
   },
 
   remove : function( opts ){
+    debug( "#remove" );
     var promise = this.retrieve( opts )
       .execAsync();
     promise.execAsync = _.bind( function(){
