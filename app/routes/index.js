@@ -97,6 +97,12 @@ exports = module.exports = function( app ){
       controller : api.documents
     } );
 
+  registerDefaultRoutes( "/api/users",
+    app, {
+      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller : api.users
+    } );
+
   // -- API fallback --
   app.use( apiMw.methodNotAllowed );
   app.use( apiMw.handleError );
