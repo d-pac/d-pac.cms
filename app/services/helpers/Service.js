@@ -74,6 +74,7 @@ _.extend( Service.prototype, {
           return P.resolve( [] );
         }
         deepExtend( doc, opts );
+        //todo: use/pass getUpdateHandler
         return P.promisify( doc.save, doc )();
       } ).spread( function( mixed ){
         return mixed;

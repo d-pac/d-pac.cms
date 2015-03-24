@@ -4,6 +4,7 @@ var keystone = require( "keystone" );
 var _ = require( "underscore" );
 var schema = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
+var P = require( "bluebird" );
 var base = new Service( schema, module.exports );
 
 /**
@@ -23,12 +24,12 @@ module.exports.listActive = function listActive( opts ){
 };
 
 module.exports.completedCount = function completedCount( opts ){
-  if( !opts ){
-    opts = {};
-  }
-  opts.completed = true;
+  opts = _.defaults( opts, {
+    completed : true
+  } );
 
-  return schema.model
-    .count( opts )
-    .exec();
+  return P.promisifyAll(
+    schema.model
+      .count( opts )
+  ).execAsync();
 };

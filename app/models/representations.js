@@ -92,6 +92,13 @@ var config = {
 
 };
 
+Representation.schema.methods.compareWith = function( other ){
+  this.compared.push( other._id );
+  this.comparedNum++;
+  other.compared.push( this._id );
+  other.comparedNum++;
+};
+
 Representation.add( config );
 
 //Representation.schema.methods.toSafeJSON = function(){
