@@ -80,12 +80,13 @@ var config = {
 
   ability : {
     type    : Types.Number,
+    noedit  : true,
     default : null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
   },
 
   type : {
     type    : Types.Select,
-    options : constants.publicationStates.list.toString(),
+    options : constants.representationTypes.list.toString(),
     default : constants.TO_RANK,
     index   : true
   }

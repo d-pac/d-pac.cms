@@ -53,12 +53,14 @@ var config = {
     type     : String,
     default  : "Document name",
     noedit   : true,
-    watch    : "file link _rid",
-    value    : function(){
-      return utils[ this.type ].name.call( this );
-    },
+    required : true,
+    note     : "uses the value of title, or is automatically generated"
+  },
+
+  title : {
+    type     : Types.Text,
     required : false,
-    note     : "is automatically generated"
+    initial  : true
   },
 
   owner : {
@@ -131,6 +133,14 @@ Document.schema.virtual( "ext" ).get( function(){
   return utils[ this.type ].ext.call( this );
 } ).depends = [ "file", "type", "link" ];
 
+Document.schema.pre( "save", function( callback ){
+  if( this.title ){
+    this.name = this.title;
+  } else if( this.type ){
+    this.name = utils[ this.type ].name.call( this );
+  }
+  callback();
+} );
 //Document.schema.methods.toSafeJSON = function(){
 //  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
 //};
