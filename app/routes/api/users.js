@@ -14,3 +14,11 @@ module.exports.listAssessments = function( req,
     _id : req.param( "_id" )
   } ), res, next );
 };
+
+module.exports.listMementos = function( req,
+                                        res,
+                                        next ){
+  base.handleResult( service.listMementos( {
+    _id : req.param( "_id" )
+  } ), res, next );
+};

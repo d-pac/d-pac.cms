@@ -25,7 +25,8 @@ module.exports.listById = function listById( ids,
   opts = _.defaults( {}, opts, {
     state : "published"
   } );
-  return base.listById( ids, opts ).sort( "order" )
+  return base.listById( ids, opts )
+    .sort( "order" )
     .populate( "phases" )
     .execAsync();
 };

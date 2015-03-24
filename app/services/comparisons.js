@@ -8,20 +8,10 @@ var P = require( "bluebird" );
 var base = new Service( schema );
 module.exports = base.mixin();
 
-/**
- *
- * @param opts
- * @param {string} [opts.assessor] User.id
- * @returns {Promise}
- */
-module.exports.listActive = function listActive( opts ){
-  debug( "#listActive" );
-
-  opts = _.defaults( opts, {
-    completed : false
-  } );
-
-  return this.list( opts );
+module.exports.list = function list( opts ){
+  return base.list( opts )
+    .populate( "representations" )
+    .execAsync();
 };
 
 module.exports.completedCount = function completedCount( opts ){

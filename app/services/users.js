@@ -5,6 +5,7 @@ var debug = require( "debug" )( "dpac:services.users" );
 var schema = keystone.list( "User" );
 var Service = require( "./helpers/Service" );
 var assessments = require( "./assessments" );
+var mementos = require( "./mementos" );
 
 var base = new Service( schema );
 module.exports = base.mixin();
@@ -28,8 +29,17 @@ module.exports.listAssessments = function listAssessments( opts ){
   return base.retrieve( opts )
     .execAsync()
     .then( function( user ){
-      console.log("USER", user);
       return assessments.listById( user.assessments );
+    } );
+};
+
+module.exports.listMementos = function listMementos( opts ){
+  return base.retrieve( opts )
+    .execAsync()
+    .then( function( user ){
+      return mementos.list( {
+        assessor : user._id
+      } );
     } );
 };
 
