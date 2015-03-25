@@ -7,27 +7,21 @@ var Service = require( "./helpers/Service" );
 var requireProp = require( './helpers/requireProp' );
 var base = new Service( schema );
 module.exports = base.mixin();
-//
-//var list = module.exports.list = function list( opts ){
-//  debug( "#list" );
-//  var query = schema.model
-//    .find( opts );
-//
-//  if( _.isArray( opts ) ){
-//    query = query.where( "_id" ).in( opts );
-//  }
-//
-//  return query
-//    .exec()
-//    .then( function( representations ){
-//      return toSafeJSON( representations );
-//    } );
-//};
-//
-//module.exports.listById = function listById( ids ){
-//  return module.exports.list( ids );
-//};
-//
+
+module.exports.list = function list( opts ){
+  debug( "list" );
+  return base.list( opts )
+    .populate( "document" )
+    .execAsync();
+};
+
+module.exports.retrieve = function list( opts ){
+  debug( "list" );
+  return base.retrieve( opts )
+    .populate( "document" )
+    .execAsync();
+};
+
 module.exports.select = function select( opts ){
   debug( "#select", opts );
   requireProp( opts, "assessment" );
@@ -41,9 +35,3 @@ module.exports.select = function select( opts ){
       return require( opts.algorithm ).select( representations );
     } );
 };
-//
-//module.exports.retrieveFull = function retrieveFull( opts ){
-//  return schema.model
-//    .findById( opts._id )
-//    .exec();
-//};

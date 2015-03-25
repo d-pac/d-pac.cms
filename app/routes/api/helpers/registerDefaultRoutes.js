@@ -8,14 +8,15 @@ module.exports = function registerDefaultRoutes( baseUrl,
   if( opts.all ){
     listRouter = listRouter.all( opts.all );
   }
-  listRouter.get( controller.list );
+  listRouter.get( controller.list )
+    .post( controller.create );
+
   var resourceRouter = app.route( baseUrl + "/:_id" );
   if( opts.all ){
     resourceRouter.all( opts.all );
   }
   resourceRouter.get( controller.retrieve )
     .patch( controller.update )
-    .post( controller.create )
     .delete( controller.remove );
   return {
     list      : listRouter,

@@ -83,16 +83,17 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.phases.list );
 
+  app.route( "/api/representations" )
+    .all( apiMw.requireUser )
+    .get( api.representations.list );
+  app.route( "/api/representations/:_id" )
+    .all( apiMw.requireUser )
+    .get( api.representations.retrieve );
+
   registerDefaultRoutes( "/api/assessments",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
       controller : api.assessments
-    } );
-
-  registerDefaultRoutes( "/api/representations",
-    app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.representations
     } );
 
   registerDefaultRoutes( "/api/documents",
