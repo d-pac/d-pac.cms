@@ -10,7 +10,7 @@ module.exports = base.mixin();
 
 module.exports.list = function list( opts ){
   debug( "list" );
-  return base.list
+  return base.list( opts )
     .sort( "comparison begin" )
     .execAsync();
 };

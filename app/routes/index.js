@@ -109,6 +109,12 @@ exports = module.exports = function( app ){
       controller : api.comparisons
     } );
 
+  registerDefaultRoutes( "/api/timelogs",
+    app, {
+      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller : api.timelogs
+    } );
+
   // -- API fallback --
   app.use( apiMw.methodNotAllowed );
   app.use( apiMw.handleError );
