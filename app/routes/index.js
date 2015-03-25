@@ -79,6 +79,10 @@ exports = module.exports = function( app ){
     .post( apiMw.requireParams( "assessment" ) )
     .post( api.mementos.create );
 
+  app.route( "/api/phases" )
+    .all( apiMw.requireUser )
+    .get( api.phases.list );
+
   registerDefaultRoutes( "/api/assessments",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
