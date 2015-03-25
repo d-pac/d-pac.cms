@@ -103,6 +103,12 @@ exports = module.exports = function( app ){
       controller : api.users
     } );
 
+  registerDefaultRoutes( "/api/comparisons",
+    app, {
+      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller : api.comparisons
+    } );
+
   // -- API fallback --
   app.use( apiMw.methodNotAllowed );
   app.use( apiMw.handleError );
