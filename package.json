@@ -5,9 +5,10 @@
   "dependencies": {
     "async": "^0.9.0",
     "bluebird": "^2.9.7",
-    "comparative-selection": "^1.0.0",
+    "comparative-selection": "^1.0.1",
     "connect-mongo": "^0.4.2",
     "cors": "^2.4.1",
+    "d-pac.cms": "^0.5.7",
     "debug": "^2.1.1",
     "deep-extend": "^0.3.2",
     "errors": "^0.2.0",
