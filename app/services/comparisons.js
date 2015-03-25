@@ -11,6 +11,7 @@ module.exports = base.mixin();
 module.exports.list = function list( opts ){
   return base.list( opts )
     .populate( "representations" )
+    .populate( "assessment" )
     .execAsync();
 };
 
