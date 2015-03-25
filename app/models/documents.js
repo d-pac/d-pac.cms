@@ -92,17 +92,7 @@ Document.add( config, "File", {
     dest     : "app/public/uploads",
     prefix   : "/uploads",
     required : false,
-    initial  : false,
-    filename : function( doc,
-                         file ){
-      return [
-        path.basename( file.originalname, '.' + file.extension ),
-        '-',
-        Date.now().toString(),
-        '.',
-        file.extension
-      ].join( '' );
-    }
+    initial  : false
   },
 
   link : {
@@ -141,10 +131,10 @@ Document.schema.pre( "save", function( callback ){
   }
   callback();
 } );
-//Document.schema.methods.toSafeJSON = function(){
-//  return _.pick( this, "_id", "url", "mimeType", "ext", "assessee", "assessment" );
-//};
-//
+
+Document.schema.methods.toJSON = function(){
+  return _.pick( this, "href");
+};
 
 Document.relationship( {
   path    : "representations",
