@@ -3,18 +3,22 @@
 module.exports = function registerDefaultRoutes( baseUrl,
                                                  app,
                                                  opts ){
-
-  var router = app.route( baseUrl );
-  if( opts.all ){
-    router = router.all( opts.all );
-  }
-
   var controller = opts.controller;
-  router.get( controller.list );
-  router = app.route( baseUrl + "/:_id" )
-    .get( controller.retrieve )
+  var listRouter = app.route( baseUrl );
+  if( opts.all ){
+    listRouter = listRouter.all( opts.all );
+  }
+  listRouter.get( controller.list );
+  var resourceRouter = app.route( baseUrl + "/:_id" );
+  if( opts.all ){
+    resourceRouter.all( opts.all );
+  }
+  resourceRouter.get( controller.retrieve )
     .patch( controller.update )
     .post( controller.create )
     .delete( controller.remove );
-  return router;
+  return {
+    list      : listRouter,
+    resources : resourceRouter
+  };
 };
