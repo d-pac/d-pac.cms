@@ -94,9 +94,11 @@ var config = {
 };
 
 Representation.schema.methods.compareWith = function( other ){
-  this.compared.push( other._id );
+  if( 0 > this.compared.indexOf( other._id ) ){
+    this.compared.push( other._id );
+    other.compared.push( this._id );
+  }
   this.comparedNum++;
-  other.compared.push( this._id );
   other.comparedNum++;
 };
 
