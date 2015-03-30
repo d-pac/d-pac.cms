@@ -54,22 +54,22 @@ User.schema.virtual( "canAccessKeystone" ).get( function(){
   return this.isAdmin;
 } );
 
-var jsonFields = _.keys( _.omit( config, "password" ) );
+//var jsonFields = _.keys( _.omit( config, "password" ) );
+//
+//User.schema.set( "toJSON", {
+//  virtuals  : true,
+//  transform : function( doc,
+//                        model,
+//                        options ){
+//    model = _.pick( model, "_id", jsonFields );
+//
+//    return model;
+//  }
+//} );
 
-User.schema.set( "toJSON", {
-  virtuals  : true,
-  transform : function( doc,
-                        model,
-                        options ){
-    model = _.pick( model, "_id", jsonFields );
-
-    return model;
-  }
-} );
-
-User.api = {
-  editable : [ "name", "email", "password" ]
-};
+//User.api = {
+//  editable : [ "name", "email", "password" ]
+//};
 
 /**
  * Registration

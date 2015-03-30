@@ -16,6 +16,19 @@ module.exports = base.mixin();
  * @param opts._id schema.id
  * @returns {Promise}
  */
+module.exports.list = function list( opts ){
+  debug( "#list", opts );
+
+  return base.list( opts )
+    .populate( "organization" )
+    .execAsync();
+};
+/**
+ *
+ * @param opts
+ * @param opts._id schema.id
+ * @returns {Promise}
+ */
 module.exports.retrieve = function retrieve( opts ){
   debug( "#retrieve", opts );
 
