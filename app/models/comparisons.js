@@ -46,11 +46,16 @@ var config = {
   },
 
   representations : {
-    type    : Types.Relationship,
-    ref     : "Representation",
-    index   : true,
-    initial : false,
-    many    : true
+    a : {
+      type    : Types.Relationship,
+      ref     : "Representation",
+      initial : false
+    },
+    b : {
+      type    : Types.Relationship,
+      ref     : "Representation",
+      initial : false
+    }
   },
 
   completed : {

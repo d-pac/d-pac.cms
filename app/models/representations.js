@@ -79,9 +79,14 @@ var config = {
   },
 
   ability : {
-    type    : Types.Number,
-    noedit  : true,
-    default : null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
+    value : {
+      type    : Types.Number,
+      default : null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
+    },
+    se    : {
+      type    : Types.Number,
+      default : null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
+    }
   },
 
   type : {
@@ -89,6 +94,13 @@ var config = {
     options : constants.representationTypes.list.toString(),
     default : constants.TO_RANK,
     index   : true
+  },
+
+  closeTo : {
+    label : "Witin range of benchmark",
+    type  : Types.Relationship,
+    ref   : "Representation",
+    many  : false
   }
 
 };
