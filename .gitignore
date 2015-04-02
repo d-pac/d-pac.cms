@@ -26,3 +26,5 @@ reports/*.csv
 
 shipping/*
 !shipping/EXAMPLE.js
+
+batch
