@@ -122,6 +122,6 @@ exports = module.exports = function( app ){
     } );
 
   // -- API fallback --
-  app.use( apiMw.methodNotAllowed );
-  app.use( apiMw.handleError );
+  app.all( "/api*", apiMw.methodNotAllowed );
+  app.all( "/api*", apiMw.handleError );
 };

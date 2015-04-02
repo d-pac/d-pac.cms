@@ -4,7 +4,9 @@ var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
 
 var Page = new keystone.List( 'Page', {
-  map : { name : 'title' }
+  map : {
+    name : 'title'
+  }
 } );
 
 Page.add( {
