@@ -71,21 +71,19 @@ keystone.set( "routes", require( "./routes" ) );
 // Configure the navigation bar in Keystone's Admin UI
 
 keystone.set( "nav", {
-  "content"    : [
+  "content" : [
     "posts",
     "post-categories",
     "enquiries"
   ],
-  "assessment" : [
+  "tool"    : [
     "phases",
     "assessments",
     "representations",
     "documents",
     "comparisons",
     "organizations",
-    "users"
-  ],
-  "reporting"  : [
+    "users",
     "timelogs"
   ]
 } );
