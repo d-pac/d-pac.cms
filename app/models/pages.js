@@ -4,12 +4,7 @@ var keystone = require( 'keystone' ),
   Types = keystone.Field.Types;
 
 var Page = new keystone.List( 'Page', {
-  map     : { name : 'title' },
-  autokey : {
-    path   : 'slug',
-    from   : 'title',
-    unique : true
-  }
+  map : { name : 'title' }
 } );
 
 Page.add( {
@@ -18,8 +13,10 @@ Page.add( {
     required : true
   },
   slug          : {
-    type  : String,
-    index : true
+    type   : String,
+    index  : true,
+    unique : true,
+    note   : "Warning: modifying this will affect the URL it's shown on."
   },
   state         : {
     type    : Types.Select,
