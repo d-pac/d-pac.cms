@@ -12,7 +12,6 @@
     "debug": "^2.1.1",
     "deep-extend": "^0.3.2",
     "errors": "^0.2.0",
-    "express": "^3.3.8",
     "fast-csv": "^0.5.4",
     "jade": "^1.8.0",
     "keystone": "^0.3.4",
