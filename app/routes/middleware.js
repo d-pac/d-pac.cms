@@ -31,11 +31,6 @@ exports.initLocals = function( req,
       href  : "/"
     },
     {
-      label : "Blog",
-      key   : "blog",
-      href  : "/blog"
-    },
-    {
       label : "Contact",
       key   : "contact",
       href  : "/contact"

@@ -1,0 +1,8 @@
+extends ../layouts/default
+
+block content
+	.container: .row: .col-sm-10
+		header
+			h1= data.page.title
+		.page
+			!= data.page.body
