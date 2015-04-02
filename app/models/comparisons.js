@@ -19,6 +19,12 @@ Comparison.api = {
 
 var config = {
 
+  completed : {
+    type    : Types.Boolean,
+    default : false,
+    initial : false
+  },
+
   assessment : {
     type     : Types.Relationship,
     ref      : "Assessment",
@@ -47,27 +53,27 @@ var config = {
 
   representations : {
     a : {
+      label   : "Representation A",
       type    : Types.Relationship,
       ref     : "Representation",
       initial : false
     },
     b : {
+      label   : "Representation B",
       type    : Types.Relationship,
       ref     : "Representation",
       initial : false
     }
   },
 
-  completed : {
-    type    : Types.Boolean,
-    default : false,
-    initial : false
-  }
-
+  data : {}
 };
 
-Comparison.add( config );
+_.each( constants.phases, function( phase ){
+  config.data[phase.type] = phase.field;
+} );
 
+Comparison.add( config );
 //Comparison.schema.path( "assessment" )
 //  .validate( function( value,
 //                       done ){

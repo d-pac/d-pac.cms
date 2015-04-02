@@ -1,6 +1,8 @@
 "use strict";
 
 var _ = require( "underscore" );
+var keystone = require( "keystone" );
+var Types = keystone.Field.Types;
 
 var constants = module.exports = {
   ASSESSOR  : "Assessor",
@@ -27,5 +29,43 @@ module.exports.publicationStates = {
 };
 
 module.exports.representationTypes = {
-  list : [constants.TO_RANK, constants.RANKED, constants.BENCHMARK]
+  list : [ constants.TO_RANK, constants.RANKED, constants.BENCHMARK ]
 };
+
+module.exports.phases = [
+  {
+    type  : "selection",
+    label : "Select best",
+    field : {
+      label    : "Selected Representation",
+      type     : Types.Relationship,
+      ref      : "Representation",
+      index    : true,
+      initial  : false,
+      required : false,
+      many     : false
+    }
+  },
+  {
+    type  : "comparative",
+    label : "Provide comparative Feedback",
+    field : {
+      label : "Comparative feedback",
+      type  : Types.Textarea
+    }
+  },
+  {
+    type  : "passfail",
+    label : "Indicate Pass/Fail",
+    field : {
+      a : {
+        label : "Representation A Passed?",
+        type  : Types.Boolean
+      },
+      b : {
+        label : "Representation B Passed?",
+        type  : Types.Boolean
+      }
+    }
+  }
+];
