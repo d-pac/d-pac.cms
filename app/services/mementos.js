@@ -111,12 +111,12 @@ module.exports.list = function listActives( opts ){
       memento.assessor = comparison.assessor;
       memento.assessment = comparison.assessment;
       memento.comparison = comparison;
-      comparison.assessment = comparison.assessment._id;
       mementos.push( memento );
     } );
-  } ).then( function getNumOfCompletedComparisons(){
-    var promises = _.map( mementos, function( memento ){
-      return comparisonsService.completedCount( {
+  } ).then( function handleRelationships(){
+    var promises = [];
+    _.each( mementos, function( memento ){
+      promises.push( comparisonsService.completedCount( {
         assessment : memento.assessment._id,
         assessor   : opts.assessor
       } ).then( function( completedNum ){
@@ -124,27 +124,17 @@ module.exports.list = function listActives( opts ){
           completedNum   : completedNum,
           comparisonsNum : memento.assessment.comparisonsNum
         };
-      } );
-    } );
-
-    return P.all( promises );
-  } ).then( function listPhases(){
-    var promises = _.map( mementos, function( memento ){
-      return phasesService.list( memento.assessment.phases )
+      } ) );
+      promises.push( phasesService.list( memento.assessment.phases )
         .then( function handlePhases( phases ){
           memento.phases = phases;
-        } );
-    } );
-
-    return P.all( promises );
-  } ).then( function listRepresentations(){
-    var promises = _.map( mementos, function( memento ){
-      return representationsService.listById( [
+        } ) );
+      promises.push( representationsService.listById( [
         memento.comparison.representations.a, memento.comparison.representations.b
       ] )
         .then( function handleRepresentations( representations ){
           memento.representations = representations;
-        } );
+        } ) );
     } );
     return P.all( promises );
   } ).then( function handleOutput(){
