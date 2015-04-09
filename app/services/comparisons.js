@@ -8,13 +8,6 @@ var P = require( "bluebird" );
 var base = new Service( schema );
 module.exports = base.mixin();
 
-module.exports.list = function list( opts ){
-  return base.list( opts )
-    .populate( "representations" )
-    .populate( "assessment" )
-    .execAsync();
-};
-
 module.exports.completedCount = function completedCount( opts ){
   debug( "#completedCount" );
   opts = _.defaults( opts, {

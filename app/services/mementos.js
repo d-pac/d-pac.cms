@@ -112,8 +112,6 @@ module.exports.list = function listActives( opts ){
       memento.assessment = comparison.assessment;
       memento.comparison = comparison;
       comparison.assessment = comparison.assessment._id;
-      memento.representations = comparison.representations;
-      comparison.representations = _.pluck( memento.representations, "_id" );
       mementos.push( memento );
     } );
   } ).then( function getNumOfCompletedComparisons(){
@@ -138,6 +136,16 @@ module.exports.list = function listActives( opts ){
         } );
     } );
 
+    return P.all( promises );
+  } ).then( function listRepresentations(){
+    var promises = _.map( mementos, function( memento ){
+      return representationsService.listById( [
+        memento.comparison.representations.a, memento.comparison.representations.b
+      ] )
+        .then( function handleRepresentations( representations ){
+          memento.representations = representations;
+        } );
+    } );
     return P.all( promises );
   } ).then( function handleOutput(){
     return mementos;

@@ -133,7 +133,7 @@ Document.schema.pre( "save", function( callback ){
 } );
 
 Document.schema.methods.toJSON = function(){
-  return _.pick( this, "href");
+  return _.pick( this, "href", "mimeType");
 };
 
 Document.relationship( {

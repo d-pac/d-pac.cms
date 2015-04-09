@@ -11,7 +11,7 @@ module.exports.status = function status( req,
   debug( "#status" );
   if( req.user ){
     return res.apiResponse( {
-      user : req.user
+      data : req.user
     } );
   }
 
@@ -29,7 +29,7 @@ module.exports.signin = function( req,
     debug( "signed in", user.id );
 
     return res.apiResponse( {
-      user : req.user.toJSON()
+      data : req.user.toJSON()
     } );
   }, function( err ){
     if( err ){
