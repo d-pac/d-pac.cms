@@ -2,10 +2,12 @@
   "verbose": false,
   "ignore": [
     "specs/*",
-    "templates/*",
-    "updates/*",
+    "app/templates/*",
+    "app/updates/*",
     "node_modules/*",
     "docs/*",
-    "config/*"
+    "config/*",
+    "batch/*",
+    "logs/*"
   ]
 }
