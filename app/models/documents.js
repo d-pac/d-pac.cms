@@ -18,7 +18,7 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 } );
 
 var utils = {
-  file : {
+  local  : {
     href     : function(){
       return this.file.href;
     },
@@ -32,7 +32,7 @@ var utils = {
       return this.file.originalname;
     }
   },
-  link : {
+  remote : {
     href     : function(){
       return this.link;
     },
@@ -72,15 +72,15 @@ var config = {
     initial  : true
   },
 
-  type : {
+  host : {
     hidden : true,
     type   : String,
     watch  : "link file",
     value  : function(){
       if( 0 < this.file.size ){
-        return "file";
+        return "local";
       }
-      return "link";
+      return "remote";
     }
   }
 };
@@ -112,28 +112,28 @@ Document.schema.path( "link" )
   }, "You need to supply either a local file OR an external link." );
 
 Document.schema.virtual( "href" ).get( function(){
-  return utils[ this.type ].href.call( this );
-} ).depends = [ "file", "type", "link" ];
+  return utils[ this.host ].href.call( this );
+} ).depends = [ "file", "host", "link" ];
 
 Document.schema.virtual( "mimeType" ).get( function(){
-  return utils[ this.type ].mimeType.call( this );
-} ).depends = [ "file", "type", "link" ];
+  return utils[ this.host ].mimeType.call( this );
+} ).depends = [ "file", "host", "link" ];
 
 Document.schema.virtual( "ext" ).get( function(){
-  return utils[ this.type ].ext.call( this );
-} ).depends = [ "file", "type", "link" ];
+  return utils[ this.host ].ext.call( this );
+} ).depends = [ "file", "host", "link" ];
 
 Document.schema.pre( "save", function( callback ){
   if( this.title ){
     this.name = this.title;
-  } else if( this.type ){
-    this.name = utils[ this.type ].name.call( this );
+  } else if( this.host ){
+    this.name = utils[ this.host ].name.call( this );
   }
   callback();
 } );
 
 Document.schema.methods.toJSON = function(){
-  return _.pick( this, "href", "mimeType");
+  return _.pick( this, "href", "mimeType" );
 };
 
 Document.relationship( {
