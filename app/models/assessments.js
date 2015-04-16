@@ -67,6 +67,13 @@ var config = {
     default : 0
   },
 
+  stage : {
+    type    : Types.Number,
+    label   : "Algorithm stage",
+    note    : "Multi-stage algorithms use this field for current stage storage",
+    default : 0
+  },
+
   uiCopy : {
     type    : Types.Code,
     lang    : 'json',
