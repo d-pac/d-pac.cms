@@ -74,6 +74,13 @@ var config = {
     default : 0
   },
 
+  enableTimeLogging : {
+    type    : Types.Boolean,
+    label   : "Enable time logging",
+    note    : "Will enable time logging, turn off when not necessary to reduce server strain.",
+    default : true
+  },
+
   uiCopy : {
     type    : Types.Code,
     lang    : 'json',
