@@ -15,24 +15,22 @@ var Phase = new keystone.List( "Phase", {
   hidden   : false
 } );
 
-var config = {
-
-  label : {
-    type     : Types.Text,
-    required : true,
-    initial  : true
-  },
-
-  slug : {
-    type     : Types.Text,
-    required : true,
-    initial  : true,
-    noedit   : true
-  }
-
-};
-
-Phase.add( config );
-
 Phase.defaultColumns = "label, slug";
-Phase.register();
+require( './helpers/setupList' )( Phase )
+  .add( {
+
+    label : {
+      type     : Types.Text,
+      required : true,
+      initial  : true
+    },
+
+    slug : {
+      type     : Types.Text,
+      required : true,
+      initial  : true,
+      noedit   : true
+    }
+
+  } )
+  .register();

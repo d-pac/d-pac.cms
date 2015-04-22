@@ -90,29 +90,25 @@ var config = {
   }
 
 };
-
-Assessment.add( config );
-
-Assessment.relationship( {
-  path    : "representations",
-  ref     : "Representation",
-  refPath : "assessment",
-  label   : "Representations"
-} );
-
-Assessment.relationship( {
-  path    : "comparisons",
-  ref     : "Comparison",
-  refPath : "assessment",
-  label   : "Comparisons"
-} );
-
-Assessment.relationship( {
-  path    : "assessors",
-  ref     : "User",
-  refPath : "assessments",
-  label   : "Assessors"
-} );
-
 Assessment.defaultColumns = "title, createdBy, state, order";
-Assessment.register();
+
+require( './helpers/setupList' )( Assessment )
+  .add( config )
+  .relate( {
+    path    : "representations",
+    ref     : "Representation",
+    refPath : "assessment",
+    label   : "Representations"
+  }, {
+    path    : "comparisons",
+    ref     : "Comparison",
+    refPath : "assessment",
+    label   : "Comparisons"
+  }, {
+    path    : "assessors",
+    ref     : "User",
+    refPath : "assessments",
+    label   : "Assessors"
+  } )
+  .register();
+

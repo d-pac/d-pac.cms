@@ -7,16 +7,6 @@ var mime = require( "mime" );
 var path = require( "path" );
 var constants = require( "./helpers/constants" );
 
-var Document = new keystone.List( "Document", {
-  track : true
-} );
-
-Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
-  model   : "Document",
-  field   : "_rid",
-  startAt : 1
-} );
-
 var utils = {
   local  : {
     href     : function(){
@@ -47,69 +37,15 @@ var utils = {
     }
   }
 };
-
-var config = {
-  name : {
-    type     : String,
-    default  : "Document name",
-    noedit   : true,
-    required : true,
-    note     : "uses the value of title, or is automatically generated"
-  },
-
-  title : {
-    type     : Types.Text,
-    required : false,
-    initial  : true
-  },
-
-  owner : {
-    type     : Types.Relationship,
-    ref      : "User",
-    index    : true,
-    required : true, // R01
-    many     : false, // R01
-    initial  : true
-  },
-
-  host : {
-    hidden : true,
-    type   : String,
-    watch  : "link file",
-    value  : function(){
-      if( 0 < this.file.size ){
-        return "local";
-      }
-      return "remote";
-    }
-  }
-};
-
-Document.add( config, "File", {
-  file : {
-    type     : Types.LocalFile,
-    label    : "Local file",
-    dest     : "app/public/uploads",
-    prefix   : "/uploads",
-    required : false,
-    initial  : false
-  },
-
-  link : {
-    type  : Types.Url,
-    label : "External file"
-  }
+var Document = new keystone.List( "Document", {
+  track : true
 } );
 
-Document.schema.path( "link" )
-  .validate( function( value,
-                       isValid ){
-    if( !!value ){
-      isValid( !this.file.size );
-    } else {
-      isValid( !!this.file.size );
-    }
-  }, "You need to supply either a local file OR an external link." );
+Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
+  model   : "Document",
+  field   : "_rid",
+  startAt : 1
+} );
 
 Document.schema.virtual( "href" ).get( function(){
   return utils[ this.host ].href.call( this );
@@ -132,16 +68,76 @@ Document.schema.pre( "save", function( callback ){
   callback();
 } );
 
-Document.schema.methods.toJSON = function(){
-  return _.pick( this, "href", "mimeType" );
-};
-
-Document.relationship( {
-  path    : "representations",
-  ref     : "Representation",
-  refPath : "document",
-  label   : "Representations"
-} );
-
 Document.defaultColumns = [ "name", "owner", "href|40%", "mimeType" ];
-Document.register();
+
+require( './helpers/setupList' )( Document )
+  .add( {
+    name : {
+      type     : String,
+      default  : "Document name",
+      noedit   : true,
+      required : true,
+      note     : "uses the value of title, or is automatically generated"
+    },
+
+    title : {
+      type     : Types.Text,
+      required : false,
+      initial  : true
+    },
+
+    owner : {
+      type     : Types.Relationship,
+      ref      : "User",
+      index    : true,
+      required : true, // R01
+      many     : false, // R01
+      initial  : true
+    },
+
+    host : {
+      hidden : true,
+      type   : String,
+      watch  : "link file",
+      value  : function(){
+        if( 0 < this.file.size ){
+          return "local";
+        }
+        return "remote";
+      }
+    }
+  }, "File", {
+    file : {
+      type     : Types.LocalFile,
+      label    : "Local file",
+      dest     : "app/public/uploads",
+      prefix   : "/uploads",
+      required : false,
+      initial  : false
+    },
+
+    link : {
+      type  : Types.Url,
+      label : "External file"
+    }
+  } )
+  .expose( "href", "mimeType", "ext" )
+  .validate( {
+    link : [
+      function( value,
+                isValid ){
+        if( !!value ){
+          isValid( !this.file.size );
+        } else {
+          isValid( !!this.file.size );
+        }
+      }, "You need to supply either a local file OR an external link."
+    ]
+  } )
+  .relate( {
+    path    : "representations",
+    ref     : "Representation",
+    refPath : "document",
+    label   : "Representations"
+  } )
+  .register();
