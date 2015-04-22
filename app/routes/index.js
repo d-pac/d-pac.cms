@@ -35,6 +35,7 @@ var routes = {
 var api = routes.api;
 var apiMw = api.helpers.middleware;
 var registerDefaultRoutes = api.helpers.registerDefaultRoutes;
+var initCORS = apiMw.createCors();
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
@@ -50,7 +51,9 @@ exports = module.exports = function( app ){
   // -- API setup --
   app.route( "/api*" )
     .all( appMw.reflectReq )
-    .all( apiMw.initAPI );
+    .all( apiMw.initAPI )
+    .all( initCORS );
+
 
   app.route( "/api/session" )
     .get( api.authentication.status )
