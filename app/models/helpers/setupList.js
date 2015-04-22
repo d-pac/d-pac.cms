@@ -1,5 +1,6 @@
 "use strict";
 var _ = require( "underscore" );
+var path = require("path");
 
 module.exports = function( list ){
   var builder = {
@@ -54,7 +55,19 @@ module.exports = function( list ){
                                                          ret,
                                                          options ){
           _.each( builder._exposed, function( exposed ){
-            if( !ret[ exposed ] ){
+            var parts = exposed.split( "." );
+            if( 1 < parts.length ){
+              var dr = doc;
+              var rr = ret;
+              _.times( parts.length - 1, function( i ){
+                var part = parts[ i ];
+                rr[ part ] = {};
+                rr = rr[ part ];
+                dr = dr[ part ];
+              } );
+              var last = parts[ parts.length - 1 ];
+              rr[ last ] = dr[ last ];
+            } else {
               ret[ exposed ] = doc[ exposed ];
             }
           } );
@@ -87,10 +100,13 @@ module.exports = function( list ){
     },
     register      : function(){
       builder.virtualize( {
-        type : function(){
+        type         : function(){
           return list.options.schema.collection;
+        },
+        "links.self" : function(){
+          return path.join(list.options.schema.collection, this._id.toString());
         }
-      } );
+      });
       list.register();
     },
     getFieldNames : function(){
