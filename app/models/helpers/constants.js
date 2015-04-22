@@ -34,7 +34,7 @@ module.exports.representationTypes = {
 
 module.exports.phases = [
   {
-    type  : "selection",
+    slug  : "selection",
     label : "Select best",
     field : {
       label    : "Selected Representation",
@@ -47,7 +47,7 @@ module.exports.phases = [
     }
   },
   {
-    type  : "comparative",
+    slug  : "comparative",
     label : "Provide comparative Feedback",
     field : {
       label : "Comparative feedback",
@@ -55,7 +55,7 @@ module.exports.phases = [
     }
   },
   {
-    type  : "passfail",
+    slug  : "passfail",
     label : "Indicate Pass/Fail",
     field : {
       a : {

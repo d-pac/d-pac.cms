@@ -23,7 +23,7 @@ var config = {
     initial  : true
   },
 
-  type : {
+  slug : {
     type     : Types.Text,
     required : true,
     initial  : true,
@@ -34,10 +34,5 @@ var config = {
 
 Phase.add( config );
 
-// Provide access to Keystone
-Phase.schema.virtual( "machinename" ).get( function(){
-  return _s.slugify( this.label + "-" + this.type );
-} );
-
-Phase.defaultColumns = "label, type, machinename";
+Phase.defaultColumns = "label, slug";
 Phase.register();
