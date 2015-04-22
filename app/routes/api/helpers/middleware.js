@@ -36,8 +36,21 @@ exports.initAPI = function initAPI( req,
     }
   };
 
-  res.apiError = function( error ){
-    res.apiResponse( error.status || 500, { errors : error } );
+  /**
+   *
+   * @param {Number} [status]
+   * @param {{}|{}[]} errors
+   */
+  res.apiError = function( status,
+                           errors ){
+    if( arguments.length === 1 ){
+      errors = status;
+      status = errors.status || 500;
+    }
+    if( !_.isArray( errors ) ){
+      errors = [ errors ];
+    }
+    res.apiResponse( status, { errors : errors } );
   };
 
   // console.log(req.headers);
@@ -163,7 +176,7 @@ exports.methodNotAllowed = function methodNotAllowed( req,
   return next( new errors.Http405Error() );
 };
 
-exports.initCORS = function(){
+exports.createCors = function(){
   var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
   var corsOpts = {
     origin         : function( url,
