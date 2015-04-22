@@ -89,7 +89,7 @@ var config = {
     }
   },
 
-  type : {
+  rankType : {
     type    : Types.Select,
     options : constants.representationTypes.list.toString(),
     default : constants.TO_RANK,
