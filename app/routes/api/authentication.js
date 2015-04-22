@@ -15,10 +15,7 @@ module.exports.status = function status( req,
     } );
   }
 
-  return next( new errors.Http401Error( {
-    message     : "Authentication error",
-    explanation : "Not logged in."
-  } ) );
+  return res.apiResponse( { data: false } );
 };
 
 module.exports.signin = function( req,
