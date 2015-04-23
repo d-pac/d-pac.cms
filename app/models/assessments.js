@@ -30,10 +30,20 @@ var config = {
     required : true
   },
 
-  description : {
-    type    : Types.Html,
-    wysiwyg : true,
-    height  : 400
+  assignments : {
+    assessor : {
+      type    : Types.Html,
+      label   : "Assessor assignment",
+      wysiwyg : true,
+      height  : 400
+    },
+
+    assessee : {
+      type    : Types.Html,
+      label   : "Assessee assignment",
+      wysiwyg : true,
+      height  : 400
+    }
   },
 
   phases : {
