@@ -81,7 +81,7 @@ module.exports = function( list ){
       return builder;
     },
     relate        : function( relationships ){
-      relationships = _.flatten( _.toArray( relationships ), true );
+      relationships = _.flatten( _.toArray( arguments ), true );
       _.each( relationships, function( relConfig ){
         list.relationship( relConfig );
       } );
