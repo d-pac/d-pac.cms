@@ -124,6 +124,12 @@ exports = module.exports = function( app ){
       controller : api.timelogs
     } );
 
+  registerDefaultRoutes( "/api/organizations",
+    app,{
+      all : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.organizations
+    }  );
+
   // -- API fallback --
   app.all( "/api*", apiMw.methodNotAllowed );
   app.use( apiMw.handleError );
