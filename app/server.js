@@ -42,8 +42,8 @@ keystone.init( {
   },
   "auth"                  : true,
   "user model"            : "User",
-  "cookie secret"         : process.env.COOKIE_SECRET
-
+  "cookie secret"         : process.env.COOKIE_SECRET,
+  "api root"              : "/api"
 } );
 
 // Load your project's Models

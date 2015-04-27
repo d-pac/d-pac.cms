@@ -1,6 +1,7 @@
 "use strict";
 var _ = require( "underscore" );
-var path = require("path");
+var keystone = require( "keystone" );
+var path = require( "path" );
 
 module.exports = function( list ){
   var builder = {
@@ -104,9 +105,9 @@ module.exports = function( list ){
           return list.options.schema.collection;
         },
         "links.self" : function(){
-          return path.join(list.options.schema.collection, this._id.toString());
+          return path.join( keystone.get( "api root" ), list.options.schema.collection, this._id.toString() );
         }
-      });
+      } );
       list.register();
     },
     getFieldNames : function(){

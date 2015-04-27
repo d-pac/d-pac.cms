@@ -39,6 +39,8 @@ var initCORS = apiMw.createCors();
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
+  var apiRoot = keystone.get( "api root" );
+
   // Views
   app.get( "/", routes.views.index );
   //app.get( "/blog/:category?", routes.views.blog );
@@ -49,88 +51,87 @@ exports = module.exports = function( app ){
   // # REST API
 
   // -- API setup --
-  app.route( "/api*" )
+  app.route( apiRoot + "*" )
     .all( appMw.reflectReq )
     .all( apiMw.initAPI )
     .all( initCORS );
 
-
-  app.route( "/api/session" )
+  app.route( apiRoot + "/session" )
     .get( api.authentication.status )
     .post( apiMw.requireParams( "email", "password" ) )
     .post( api.authentication.signin )
     .delete( apiMw.requireUser )
     .delete( api.authentication.signout );
 
-  app.route( "/api/user" )
+  app.route( apiRoot + "/user" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.retrieve )
     .patch( api.users.update );
 
-  app.route( "/api/user/assessments" )
+  app.route( apiRoot + "/user/assessments" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listAssessments );
 
-  app.route( "/api/user/mementos" )
+  app.route( apiRoot + "/user/mementos" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listMementos );
 
-  app.route( "/api/mementos" )
+  app.route( apiRoot + "/mementos" )
     .all( apiMw.requireUser )
     .post( apiMw.requireParams( "assessment" ) )
     .post( api.mementos.create );
 
-  app.route( "/api/phases" )
+  app.route( apiRoot + "/phases" )
     .all( apiMw.requireUser )
     .get( api.phases.list );
 
-  app.route( "/api/representations" )
+  app.route( apiRoot + "/representations" )
     .all( apiMw.requireUser )
     .get( api.representations.list );
-  app.route( "/api/representations/:_id" )
+  app.route( apiRoot + "/representations/:_id" )
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
-  registerDefaultRoutes( "/api/assessments",
+  registerDefaultRoutes( apiRoot + "/assessments",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
       controller : api.assessments
     } );
 
-  registerDefaultRoutes( "/api/documents",
+  registerDefaultRoutes( apiRoot + "/documents",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
       controller : api.documents
     } );
 
-  registerDefaultRoutes( "/api/users",
+  registerDefaultRoutes( apiRoot + "/users",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
       controller : api.users
     } );
 
-  registerDefaultRoutes( "/api/comparisons",
+  registerDefaultRoutes( apiRoot + "/comparisons",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
       controller : api.comparisons
     } );
 
-  registerDefaultRoutes( "/api/timelogs",
+  registerDefaultRoutes( apiRoot + "/timelogs",
     app, {
       all        : [ apiMw.requireUser, apiMw.requireAdmin ],
       controller : api.timelogs
     } );
 
-  registerDefaultRoutes( "/api/organizations",
-    app,{
-      all : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller: api.organizations
-    }  );
+  registerDefaultRoutes( apiRoot + "/organizations",
+    app, {
+      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller : api.organizations
+    } );
 
   // -- API fallback --
-  app.all( "/api*", apiMw.methodNotAllowed );
+  app.all( apiRoot + "*", apiMw.methodNotAllowed );
   app.use( apiMw.handleError );
 };
