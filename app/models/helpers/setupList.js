@@ -5,10 +5,18 @@ var path = require( "path" );
 
 module.exports = function( list ){
   var builder = {
-    _config       : undefined,
-    _exposed      : undefined,
-    _guarded      : undefined,
-    add           : function( config ){
+    _config: undefined,
+    _exposed: undefined,
+    _guarded: undefined,
+    idField: "_id",
+    get : function(settingsName){
+      return this[settingsName];
+    },
+    set : function(settingsName, value){
+      this[settingsName]  = value;
+      return this;
+    },
+    add: function( config ){
       builder._config = _.filter( _.toArray( arguments ), function( arg ){
         // filter labels out
         return !_.isString( arg );
@@ -16,7 +24,7 @@ module.exports = function( list ){
       list.add.apply( list, builder._config );
       return builder;
     },
-    virtualize    : function( virtuals ){
+    virtualize: function( virtuals ){
       var args = _.flatten( _.toArray( arguments ), true );
       _.each( args, function( arg ){
         _.each( arg, function( fn,
@@ -26,7 +34,7 @@ module.exports = function( list ){
       } );
       return builder.expose( _.keys( virtuals ) );
     },
-    retain        : function( fields ){
+    retain: function( fields ){
       var args = _.flatten( _.toArray( arguments ), true );
       if( builder._guarded ){
         args = builder._guarded.concat( args );
@@ -34,7 +42,7 @@ module.exports = function( list ){
       builder._guarded = args;
       return builder;
     },
-    expose        : function( fields ){
+    expose: function( fields ){
       var args = _.flatten( _.toArray( arguments ), true );
       fields = _.reduce( args, function( memo,
                                          arg ){
@@ -81,14 +89,14 @@ module.exports = function( list ){
       }
       return builder;
     },
-    relate        : function( relationships ){
+    relate: function( relationships ){
       relationships = _.flatten( _.toArray( arguments ), true );
       _.each( relationships, function( relConfig ){
         list.relationship( relConfig );
       } );
       return builder;
     },
-    validate      : function( map ){
+    validate: function( map ){
       _.each( map, function( mixed,
                              field ){
         if( _.isFunction( mixed ) ){
@@ -99,18 +107,18 @@ module.exports = function( list ){
       } );
       return builder;
     },
-    register      : function(){
+    register: function(){
       builder.virtualize( {
-        type         : function(){
+        type: function(){
           return list.options.schema.collection;
         },
-        "links.self" : function(){
-          return path.join( keystone.get( "api root" ), list.options.schema.collection, this._id.toString() );
+        "links.self": function(){
+          return path.join( keystone.get( "api root" ), list.options.schema.collection, this[ builder.get('idField') ].toString() );
         }
       } );
       list.register();
     },
-    getFieldNames : function(){
+    getFieldNames: function(){
       return _.keys( builder._config );
     }
   };

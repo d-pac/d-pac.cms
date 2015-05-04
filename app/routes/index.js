@@ -88,6 +88,11 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.phases.list );
 
+  app.route( apiRoot + "/pages" )
+    .get( api.pages.list );
+  app.route( apiRoot + "/pages/:slug" )
+    .get( api.pages.retrieve );
+
   app.route( apiRoot + "/representations" )
     .all( apiMw.requireUser )
     .get( api.representations.list );
