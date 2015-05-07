@@ -50,7 +50,7 @@ module.exports.create = function createMemento( opts ){
     .then( function handleCounts( completedNum ){
       memento.progress = {
         completedNum   : completedNum,
-        comparisonsNum : memento.assessment.comparisonsNum
+        comparisonsNum : memento.assessment.comparisonsNum.total
       };
     } )
     .then( function getRepresentationPair(){
@@ -122,7 +122,7 @@ module.exports.list = function listActives( opts ){
       } ).then( function( completedNum ){
         memento.progress = {
           completedNum   : completedNum,
-          comparisonsNum : memento.assessment.comparisonsNum
+          comparisonsNum : memento.assessment.comparisonsNum.total
         };
       } ) );
       promises.push( phasesService.list( memento.assessment.phases )
