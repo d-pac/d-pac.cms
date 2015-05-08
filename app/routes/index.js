@@ -29,8 +29,8 @@ keystone.pre( "render", appMw.flashMessages );
 
 // Import Route Controllers
 var routes = {
-  views : importRoutes( "./views" ),
-  api   : importRoutes( "./api" )
+  views: importRoutes( "./views" ),
+  api: importRoutes( "./api" )
 };
 var api = routes.api;
 var apiMw = api.helpers.middleware;
@@ -79,6 +79,11 @@ exports = module.exports = function( app ){
     .all( apiMw.setIdParamToUser )
     .get( api.users.listMementos );
 
+  app.route( apiRoot + "/user/comparisons" )
+    .all( apiMw.requireUser )
+    .all( apiMw.setIdParamToUser )
+    .get( api.users.listComparisons )
+
   app.route( apiRoot + "/mementos" )
     .all( apiMw.requireUser )
     .post( apiMw.requireParams( "assessment" ) )
@@ -102,38 +107,38 @@ exports = module.exports = function( app ){
 
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.assessments
+      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.assessments
     } );
 
   registerDefaultRoutes( apiRoot + "/documents",
     app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.documents
+      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.documents
     } );
 
   registerDefaultRoutes( apiRoot + "/users",
     app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.users
+      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.users
     } );
 
   registerDefaultRoutes( apiRoot + "/comparisons",
     app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.comparisons
+      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.comparisons
     } );
 
   registerDefaultRoutes( apiRoot + "/timelogs",
     app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.timelogs
+      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.timelogs
     } );
 
   registerDefaultRoutes( apiRoot + "/organizations",
     app, {
-      all        : [ apiMw.requireUser, apiMw.requireAdmin ],
-      controller : api.organizations
+      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      controller: api.organizations
     } );
 
   // -- API fallback --

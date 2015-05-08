@@ -11,11 +11,18 @@ module.exports = base.mixin();
 module.exports.completedCount = function completedCount( opts ){
   debug( "#completedCount" );
   opts = _.defaults( opts, {
-    completed : true
+    completed: true
   } );
 
   return P.promisifyAll(
     schema.model
       .count( opts )
   ).execAsync();
+};
+
+module.exports.listForAssessments = function listForAssessments( opts, assessments ){
+  debug( "#listForAssessments", opts );
+  return base.list( opts )
+    .where( "assessment" ).in( assessments )
+    .execAsync();
 };

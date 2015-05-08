@@ -1,11 +1,13 @@
 "use strict";
 
 var keystone = require( "keystone" );
+var _ = require( "underscore" );
 var debug = require( "debug" )( "dpac:services.users" );
 var schema = keystone.list( "User" );
 var Service = require( "./helpers/Service" );
-var assessments = require( "./assessments" );
-var mementos = require( "./mementos" );
+var assessmentsService = require( "./assessments" );
+var mementosService = require( "./mementos" );
+var comparisonsService = require( "./comparisons" );
 
 var base = new Service( schema );
 module.exports = base.mixin();
@@ -42,7 +44,17 @@ module.exports.listAssessments = function listAssessments( opts ){
   return base.retrieve( opts )
     .execAsync()
     .then( function( user ){
-      return assessments.listById( user.assessments );
+      return assessmentsService.listById( user.assessments );
+    } );
+};
+
+module.exports.listComparisons = function listComparisons( opts ){
+  return this.listAssessments( opts )
+    .then( function( assessments ){
+      console.log("services/users", assessments);
+      return comparisonsService.listForAssessments( {
+        assessor: opts._id
+      },_.pluck( assessments, "_id" ) );
     } );
 };
 
@@ -50,8 +62,8 @@ module.exports.listMementos = function listMementos( opts ){
   return base.retrieve( opts )
     .execAsync()
     .then( function( user ){
-      return mementos.list( {
-        assessor : user._id
+      return mementosService.list( {
+        assessor: user._id
       } );
     } );
 };
