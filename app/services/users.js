@@ -22,7 +22,6 @@ module.exports.list = function list( opts ){
   debug( "#list", opts );
 
   return base.list( opts )
-    .populate( "organization" )
     .execAsync();
 };
 /**
@@ -35,7 +34,6 @@ module.exports.retrieve = function retrieve( opts ){
   debug( "#retrieve", opts );
 
   return base.retrieve( opts )
-    .populate( "organization" )
     .execAsync();
 };
 
@@ -51,7 +49,6 @@ module.exports.listAssessments = function listAssessments( opts ){
 module.exports.listComparisons = function listComparisons( opts ){
   return this.listAssessments( opts )
     .then( function( assessments ){
-      console.log("services/users", assessments);
       return comparisonsService.listForAssessments( {
         assessor: opts._id
       },_.pluck( assessments, "_id" ) );
