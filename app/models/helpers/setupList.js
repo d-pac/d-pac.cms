@@ -37,6 +37,15 @@ module.exports = function( list ){
     },
     retain: function( fields ){
       var args = _.flatten( _.toArray( arguments ), true );
+      args = _.reduce( args, function( memo,
+                                       arg ){
+        if( "track" === arg ){
+          memo = memo.concat( "createdBy", "createdAt", "updatedBy", "updatedAt" );
+        } else {
+          memo.push( arg );
+        }
+        return memo;
+      }, [] );
       if( builder._guarded ){
         args = builder._guarded.concat( args );
       }
