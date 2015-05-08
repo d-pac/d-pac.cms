@@ -10,7 +10,7 @@ function Controller( service ){
 }
 
 _.extend( Controller.prototype, {
-  mixin : function( receiver ){
+  mixin: function( receiver ){
     receiver = receiver || {};
     var controller = this;
     receiver.retrieve = function( req,
@@ -18,7 +18,7 @@ _.extend( Controller.prototype, {
                                   next ){
       debug( "#retrieve" );
       controller.handleResult( controller.retrieve( {
-        _id : req.param( "_id" )
+        _id: req.param( "_id" )
       } ), res, next );
     };
     receiver.list = function( req,
@@ -53,20 +53,24 @@ _.extend( Controller.prototype, {
     return receiver;
   },
 
-  handleResult : function( p,
-                           res,
-                           next ){
+  handleResult: function( p,
+                          res,
+                          next,
+                          isWrapped ){
     debug( "#handleResult" );
     p.then( function( result ){
-      res.apiResponse( {
-        data : result
-      } );
+      if(!isWrapped){
+        result = {
+          data: result
+        };
+      }
+      res.apiResponse( result );
     } ).catch( function( err ){
       next( err );
     } );
   },
 
-  retrieve : function( opts ){
+  retrieve: function( opts ){
     debug( "#retrieve" );
     return this.service
       .retrieve( opts )
@@ -87,10 +91,10 @@ _.extend( Controller.prototype, {
    *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
    * @param req
    */
-  create : function( req ){
+  create: function( req ){
     debug( "#create" );
     var values = utils.parseValues( {
-      fields : this.service.getEditableFields()
+      fields: this.service.getEditableFields()
     }, req );
     return this.service
       .create( values )
@@ -111,13 +115,13 @@ _.extend( Controller.prototype, {
    *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
    * @param req
    */
-  update : function( req ){
+  update: function( req ){
     debug( "#update" );
     var opts = {
-      values : {
-        _id : req.param( "_id" )
+      values: {
+        _id: req.param( "_id" )
       },
-      fields : this.service.getEditableFields()
+      fields: this.service.getEditableFields()
     };
     var values = utils.parseValues( opts, req );
     return this.service
@@ -130,7 +134,7 @@ _.extend( Controller.prototype, {
       } );
   },
 
-  list : function( req ){
+  list: function( req ){
     var filter = req.param( "filter" );
     if( _.isString( filter ) ){
       filter = JSON.parse( filter );
@@ -145,10 +149,10 @@ _.extend( Controller.prototype, {
       } );
   },
 
-  remove : function( req ){
+  remove: function( req ){
     debug( "#remove" );
     return this.service.remove( {
-      _id : req.param( "_id" )
+      _id: req.param( "_id" )
     } )
       .then( function( result ){
         if( !result ){
