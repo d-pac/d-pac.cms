@@ -14,8 +14,6 @@ module.exports.list = function list( opts ){
     state : "published"
   } );
   return base.list( opts )
-    .sort( "order" )
-    .populate( "phases" )
     .execAsync();
 };
 
@@ -26,21 +24,5 @@ module.exports.listById = function listById( ids,
     state : "published"
   } );
   return base.listById( ids, opts )
-    .sort( "order" )
-    .populate( "phases" )
-    .execAsync();
-};
-
-/**
- *
- * @param opts
- * @param opts._id Assessment.id
- * @returns {Promise}
- */
-module.exports.retrieve = function retrieveAssessment( opts ){
-  debug( "#retrieve" );
-
-  return base.retrieve( opts )
-    .populate( "phases" )
     .execAsync();
 };
