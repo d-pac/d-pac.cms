@@ -9,11 +9,12 @@ module.exports = function( list ){
     _exposed: undefined,
     _guarded: undefined,
     idField: "_id",
-    get : function(settingsName){
-      return this[settingsName];
+    get: function( settingsName ){
+      return this[ settingsName ];
     },
-    set : function(settingsName, value){
-      this[settingsName]  = value;
+    set: function( settingsName,
+                   value ){
+      this[ settingsName ] = value;
       return this;
     },
     add: function( config ){
@@ -60,6 +61,7 @@ module.exports = function( list ){
         if( !list.schema.options.toJSON ){
           list.schema.options.toJSON = {};
         }
+
         list.schema.options.toJSON.transform = function( doc,
                                                          ret,
                                                          options ){
@@ -77,7 +79,9 @@ module.exports = function( list ){
               var last = parts[ parts.length - 1 ];
               rr[ last ] = dr[ last ];
             } else {
-              ret[ exposed ] = doc[ exposed ];
+              ret[ exposed ] = ( list.options.toJSON && list.options.toJSON.transformations && list.options.toJSON.transformations[ exposed ])
+                ? list.options.toJSON.transformations[ exposed ]( doc[ exposed ] )
+                : doc[ exposed ];
             }
           } );
           _.each( builder._guarded, function( guarded ){
@@ -113,9 +117,12 @@ module.exports = function( list ){
           return list.options.schema.collection;
         },
         "links.self": function(){
-          return path.join( keystone.get( "api root" ), list.options.schema.collection, this[ builder.get('idField') ].toString() );
+          return path.join( keystone.get( "api root" ), list.options.schema.collection, this[ builder.get( 'idField' ) ].toString() );
         }
       } );
+      if( list.options.toJSON && list.options.toJSON.transformations ){
+        builder.expose( _.keys( list.options.toJSON.transformations ) );
+      }
       list.register();
     },
     getFieldNames: function(){

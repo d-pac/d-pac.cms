@@ -25,16 +25,16 @@ module.exports.create = function createMemento( opts ){
   requireProp( opts, "assessor", "assessment" );
 
   var memento = {
-    assessor : opts.assessor
+    assessor: opts.assessor
   };
 
   return assessmentsService.retrieve( {
-    _id : opts.assessment
+    _id: opts.assessment
   } ).then( function handleAssessment( assessment ){
     if( !assessment ){
       throw new errors.Http422Error( {
-        message     : "Could not create memento.",
-        explanation : "Assessment not found."
+        message: "Could not create memento.",
+        explanation: "Assessment not found."
       } );
     }
     memento.assessment = assessment;
@@ -43,20 +43,20 @@ module.exports.create = function createMemento( opts ){
   } )
     .then( function getNumOfCompletedComparisons(){
       return comparisonsService.completedCount( {
-        assessment : opts.assessment,
-        assessor   : opts.assessor
+        assessment: opts.assessment,
+        assessor: opts.assessor
       } );
     } )
     .then( function handleCounts( completedNum ){
       memento.progress = {
-        completedNum   : completedNum,
-        comparisonsNum : memento.assessment.comparisonsNum.total
+        completedNum: completedNum,
+        comparisonsNum: memento.assessment.comparisonsNum.total
       };
     } )
     .then( function getRepresentationPair(){
       return representationsService.select( {
-        assessment : opts.assessment,
-        algorithm  : memento.assessment.algorithm
+        assessment: opts.assessment,
+        algorithm: memento.assessment.algorithm
       } );
     } )
     .then( function handleRepresentations( representations ){
@@ -77,10 +77,10 @@ module.exports.create = function createMemento( opts ){
       }
 
       return comparisonsService.create( {
-        assessor        : opts.assessor,
-        assessment      : opts.assessment,
-        phase           : firstPhase,
-        representations : representations
+        assessor: opts.assessor,
+        assessment: opts.assessment,
+        phase: firstPhase,
+        representations: representations
       } );
     } )
     .then( function handleComparison( comparison ){
@@ -103,8 +103,8 @@ module.exports.list = function listActives( opts ){
   var mementos = [];
 
   return comparisonsService.list( {
-    assessor  : opts.assessor,
-    completed : false
+    assessor: opts.assessor,
+    completed: false
   } ).then( function handleComparisons( comparisons ){
     _.each( comparisons, function( comparison ){
       var memento = {};
@@ -116,15 +116,25 @@ module.exports.list = function listActives( opts ){
   } ).then( function handleRelationships(){
     var promises = [];
     _.each( mementos, function( memento ){
-      promises.push( comparisonsService.completedCount( {
-        assessment : memento.assessment._id,
-        assessor   : opts.assessor
+      var p = assessmentsService.retrieve( {
+        _id: memento.assessment
+      } ).then( function( assessment ){
+        memento.assessment = assessment;
+        return assessment;
+      } ).then( function( assessment ){
+        return comparisonsService.completedCount( {
+          assessment: memento.assessment,
+          assessor: opts.assessor
+        } );
       } ).then( function( completedNum ){
         memento.progress = {
-          completedNum   : completedNum,
-          comparisonsNum : memento.assessment.comparisonsNum.total
+          completedNum: completedNum,
+          comparisonsNum: memento.assessment.comparisonsNum.total
         };
-      } ) );
+      } );
+
+      promises.push( p );
+
       promises.push( phasesService.list( memento.assessment.phases )
         .then( function handlePhases( phases ){
           memento.phases = phases;

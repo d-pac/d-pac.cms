@@ -11,7 +11,14 @@ var Assessment = new keystone.List( "Assessment", {
     name: "title"
   },
   track: true,
-  defaultSort: "order"
+  defaultSort: "order",
+  toJSON: {
+    transformations: {
+      uiCopy: function(val){
+        return JSON.parse(val);
+      }
+    }
+  }
 } );
 
 var config = {
@@ -114,6 +121,7 @@ Assessment.defaultColumns = "title, createdBy, state, parent";
 
 require( './helpers/setupList' )( Assessment )
   .add( config )
+  .retain("createdBy", "createdAt", "updatedBy", "updatedAt")
   .relate( {
     path: "representations",
     ref: "Representation",
