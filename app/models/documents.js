@@ -122,6 +122,7 @@ require( './helpers/setupList' )( Document )
     }
   } )
   .expose( "href", "mimeType", "ext" )
+  .retain("track", "link", "host", "title", "name", "file", "_id", "_rid", "owner", "type", "links")
   .validate( {
     link : [
       function( value,

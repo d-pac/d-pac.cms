@@ -18,14 +18,14 @@ module.exports.list = function list( opts ){
 module.exports.listById = function listById( opts ){
   debug( "listById" );
   return base.listById( opts )
-    .populate( "document" )
+    .populate( "document")
     .execAsync();
 };
 
 module.exports.retrieve = function list( opts ){
   debug( "list" );
   return base.retrieve( opts )
-    .populate( "document" )
+    .populate( "document")
     .execAsync();
 };
 
