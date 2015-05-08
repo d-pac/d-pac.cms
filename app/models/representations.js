@@ -114,6 +114,7 @@ require( './helpers/setupList' )( Representation )
     }
 
   } )
+  .retain("track")
   .relate( {
     path    : "comparisons",
     ref     : "Comparison",
