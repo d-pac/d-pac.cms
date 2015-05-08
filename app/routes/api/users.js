@@ -24,12 +24,3 @@ module.exports.listComparisons = function( req,
     _id : req.param( "_id" )
   } ), res, next );
 };
-
-module.exports.listMementos = function( req,
-                                        res,
-                                        next ){
-  debug("#listMementos");
-  base.handleResult( service.listMementos( {
-    _id : req.param( "_id" )
-  } ), res, next );
-};

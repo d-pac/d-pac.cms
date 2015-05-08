@@ -74,20 +74,10 @@ exports = module.exports = function( app ){
     .all( apiMw.setIdParamToUser )
     .get( api.users.listAssessments );
 
-  app.route( apiRoot + "/user/mementos" )
-    .all( apiMw.requireUser )
-    .all( apiMw.setIdParamToUser )
-    .get( api.users.listMementos );
-
   app.route( apiRoot + "/user/comparisons" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listComparisons )
-
-  app.route( apiRoot + "/mementos" )
-    .all( apiMw.requireUser )
-    .post( apiMw.requireParams( "assessment" ) )
-    .post( api.mementos.create );
 
   app.route( apiRoot + "/phases" )
     .all( apiMw.requireUser )
