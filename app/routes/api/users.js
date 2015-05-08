@@ -1,10 +1,10 @@
 "use strict";
 
 var debug = require( "debug" )( "dpac:api.users" );
-var _ = require('underscore');
+var _ = require( 'underscore' );
 
 var service = require( "../../services/users" );
-var representationsService = require("../../services/representations");
+var representationsService = require( "../../services/representations" );
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
@@ -31,11 +31,11 @@ module.exports.listComparisons = function( req,
     response.data = comparisons;
     var ids = _.reduce( comparisons, function( memo,
                                                comparison ){
-      return memo.concat( comparison.representations.a, comparison.representations.b );
+      return memo.concat( _.values( _.pick( comparison.representations, "a", "b", "c", "d" ) ) );
     }, [] );
-    return representationsService.listById(ids);
-  } ).then(function(representations){
-    response.included  = representations;
+    return representationsService.listById( ids );
+  } ).then( function( representations ){
+    response.included = representations;
     return response;
-  }), res, next, true );
+  } ), res, next, true );
 };
