@@ -88,23 +88,34 @@ require( './helpers/setupList' )( Representation )
       type: Types.Select,
       options: constants.representationTypes.list.toString(),
       default: constants.TO_RANK,
-      index: true
+      index: true,
+      watch: "closeTo",
+      value: function(){
+        if(this.closeTo){
+          return constants.RANKED;
+        }
+        return this.rankType;
+      },
+      note: "Automatically set to '"+constants.RANKED+"' if a benchmark is chosen in 'close to'"
     },
 
     closeTo: {
-      label: "Witin range of benchmark",
+      label: "Close to",
       type: Types.Relationship,
       ref: "Representation",
-      many: false
+      many: false,
+      filters: {
+        rankType: constants.BENCHMARK
+      }
     }
 
   } )
   .validate( {
     "ability.value": [function(){
-      return !(this.rankType === 'benchmark' && this.ability.value === null);
+      return !(this.rankType === constants.BENCHMARK && this.ability.value === null);
     }, "Representations of `rankType` 'benchmark' aren't allowed to have ability values of `null`"],
     "ability.se": [function(){
-      return !(this.rankType === 'benchmark' && this.ability.se === null);
+      return !(this.rankType === constants.BENCHMARK && this.ability.se === null);
     }, "Representations of `rankType` 'benchmark' aren't allowed to have ability SE's of `null`"]
   } )
   .retain( "track" )
