@@ -50,7 +50,7 @@ module.exports.listComparisons = function listComparisons( opts ){
     .then( function( assessments ){
       return comparisonsService.listForAssessments( {
         assessor: opts._id
-      },_.pluck( assessments, "_id" ) );
+      }, assessments );
     } );
 };
 

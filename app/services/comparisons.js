@@ -20,9 +20,27 @@ module.exports.completedCount = function completedCount( opts ){
   ).execAsync();
 };
 
-module.exports.listForAssessments = function listForAssessments( opts, assessments ){
+module.exports.listForAssessments = function listForAssessments( opts,
+                                                                 assessments ){
   debug( "#listForAssessments", opts );
+  var self = this;
   return base.list( opts )
-    .where( "assessment" ).in( assessments )
-    .execAsync();
+    .where( "assessment" ).in( _.pluck( assessments, "_id" ) )
+    .execAsync()
+    .map( function( comparison ){
+      comparison = comparison.toJSON();
+      return self.completedCount( {
+        assessment: comparison.assessment,
+        assessor: comparison.assessor
+      } ).then( function( count ){
+        var assessment = _.find( assessments, function( assessment ){
+          return assessment.id == comparison.assessment; //MUST BE `.id` and `==` [!]
+        } );
+        comparison.progress = {
+          total: assessment.comparisonsNum.total,
+          completed: count
+        };
+        return comparison;
+      } );
+    } );
 };
