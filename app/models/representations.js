@@ -15,13 +15,10 @@ var Representation = new keystone.List( "Representation", {
   track : true
 } );
 Representation.defaultColumns = "name, comparedNum";
+
 Representation.schema.methods.compareWith = function( other ){
-  if( 0 > this.compared.indexOf( other._id ) ){
     this.compared.push( other._id );
     other.compared.push( this._id );
-  }
-  this.comparedNum++;
-  other.comparedNum++;
 };
 
 require( './helpers/setupList' )( Representation )
@@ -67,18 +64,6 @@ require( './helpers/setupList' )( Representation )
       required : true,
       many     : false,
       index    : true
-    },
-
-    // let"s cache the number of comparisons this representation is used in,
-    // it"s NOT the same as using `compared.length` since `compared` has unique values only
-    // which means that if two representations have been compared with each other already
-    // this will not show up -> leads to uneven distribution
-    comparedNum : {
-      type    : Types.Number,
-      label   : "Times compared",
-      index   : true,
-      default : 0,
-      noedit  : true
     },
 
     compared : {
