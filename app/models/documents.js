@@ -10,7 +10,7 @@ var constants = require( "./helpers/constants" );
 var utils = {
   local  : {
     href     : function(){
-      return this.file.href;
+      return process.env.ROOT_URL + this.file.href;
     },
     mimeType : function(){
       return this.file.filetype;
