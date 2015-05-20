@@ -88,14 +88,13 @@ module.exports = function( list ){
               var last = parts[ parts.length - 1 ];
               rr[ last ] = dr[ last ];
             } else {
-              ret[ exposed ] = ( list.options.toJSON && list.options.toJSON.transformations && list.options.toJSON.transformations[ exposed ])
-                ? list.options.toJSON.transformations[ exposed ]( doc[ exposed ] )
-                : doc[ exposed ];
+              ret[ exposed ] = doc[ exposed ];
             }
           } );
           _.each( builder._guarded, function( guarded ){
             delete ret[ guarded ];
           } );
+          return ret;
         };
       } else {
         builder._exposed = builder._exposed.concat( fields );
