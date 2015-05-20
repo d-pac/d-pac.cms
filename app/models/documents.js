@@ -110,8 +110,8 @@ require( './helpers/setupList' )( Document )
     file : {
       type     : Types.LocalFile,
       label    : "Local file",
-      dest     : "app/public/uploads",
-      prefix   : "/uploads",
+      dest     : "app/uploads/media",
+      prefix   : "/media",
       required : false,
       initial  : false
     },
