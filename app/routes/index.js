@@ -36,13 +36,13 @@ var api = routes.api;
 var apiMw = api.helpers.middleware;
 var registerDefaultRoutes = api.helpers.registerDefaultRoutes;
 var initCORS = apiMw.createCors();
-var express = require('express');
 
 // Setup Route Bindings
 exports = module.exports = function( app ){
   var apiRoot = keystone.get( "api root" );
 
-  app.use(express.static(__dirname + '/../uploads'));
+  app.use(initCORS);
+  app.use(keystone.express.static(__dirname + '/../uploads'));
 
   // Views
   app.get( "/", routes.views.index );
@@ -56,8 +56,7 @@ exports = module.exports = function( app ){
   // -- API setup --
   app.route( apiRoot + "*" )
     .all( appMw.reflectReq )
-    .all( apiMw.initAPI )
-    .all( initCORS );
+    .all( apiMw.initAPI );
 
   app.route( apiRoot + "/session" )
     .get( api.authentication.status )

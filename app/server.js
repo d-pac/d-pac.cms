@@ -20,30 +20,31 @@ if( "development" === process.env.NODE_ENV ){
 var pkg = require( "../package.json" );
 keystone.init( {
 
-  "name"       : "d-pac",
-  "brand"      : "d-pac",
-  "appversion" : pkg.version + " (" + pkg.build + ")",
+  "name": "d-pac",
+  "brand": "d-pac",
+  "appversion": pkg.version + " (" + pkg.build + ")",
 
-  "less"    : "public",
-  "static"  : "public",
-  "favicon" : "public/favicon.ico",
+  "less": "public",
+  "static": "public",
+  "favicon": "public/favicon.ico",
 
-  "logger" : process.env.LOGGER || "dev",
+  "logger": process.env.LOGGER || "dev",
 
-  "views"       : "templates/views",
-  "view engine" : "jade",
+  "views": "templates/views",
+  "view engine": "jade",
 
-  "auto update" : true,
+  "auto update": true,
 
-  "session"               : true,
-  "session store"         : "connect-mongo",
-  "session store options" : {
-    url : process.env.MONGO_SESSIONS_URI
+  "session": true,
+  "session store": "connect-mongo",
+  "session store options": {
+    url: process.env.MONGO_SESSIONS_URI
   },
-  "auth"                  : true,
-  "user model"            : "User",
-  "cookie secret"         : process.env.COOKIE_SECRET,
-  "api root"              : "/api"
+  "auth": true,
+  "user model": "User",
+  "cookie secret": process.env.COOKIE_SECRET,
+  "api root": "/api",
+  mongoose: require( 'mongoose' )
 } );
 
 // Load your project's Models
@@ -55,10 +56,10 @@ keystone.import( "models" );
 // for each request) should be added to ./routes/middleware.js
 
 keystone.set( "locals", {
-  _        : require( "underscore" ),
-  env      : keystone.get( "env" ),
-  utils    : keystone.utils,
-  editable : keystone.content.editable
+  _: require( "underscore" ),
+  env: keystone.get( "env" ),
+  utils: keystone.utils,
+  editable: keystone.content.editable
 } );
 
 // Load your project's Routes
@@ -71,13 +72,13 @@ keystone.set( "routes", require( "./routes" ) );
 // Configure the navigation bar in Keystone's Admin UI
 
 keystone.set( "nav", {
-  "content" : [
+  "content": [
     "pages",
     "posts",
     "post-categories",
     "enquiries"
   ],
-  "tool"    : [
+  "tool": [
     "phases",
     "assessments",
     "representations",
