@@ -41,8 +41,8 @@ var initCORS = apiMw.createCors();
 exports = module.exports = function( app ){
   var apiRoot = keystone.get( "api root" );
 
-  app.use(initCORS);
-  app.use(keystone.express.static(__dirname + '/../uploads'));
+  app.use( initCORS );
+  app.use( keystone.express.static( __dirname + '/../uploads' ) );
 
   // Views
   app.get( "/", routes.views.index );
@@ -117,7 +117,7 @@ exports = module.exports = function( app ){
 
   registerDefaultRoutes( apiRoot + "/comparisons",
     app, {
-      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      all: [ apiMw.requireUser ],
       controller: api.comparisons
     } );
 
