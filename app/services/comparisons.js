@@ -24,7 +24,9 @@ module.exports.listForAssessments = function listForAssessments( opts,
                                                                  assessments ){
   debug( "#listForAssessments", opts );
   var self = this;
-  return base.list( opts )
+  return base.list( _.defaults( opts, {
+    completed: false
+  } ) )
     .where( "assessment" ).in( _.pluck( assessments, "_id" ) )
     .execAsync()
     .map( function( comparison ){
