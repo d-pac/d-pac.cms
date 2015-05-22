@@ -11,7 +11,7 @@ function Service( schema ){
 }
 
 _.extend( Service.prototype, {
-  mixin : function( receiver ){
+  mixin: function( receiver ){
     var methods = _.omit( _.keys( Service.prototype ), "mixin" );
     var service = this;
     receiver = receiver || {};
@@ -28,7 +28,7 @@ _.extend( Service.prototype, {
     return receiver;
   },
 
-  list : function list( opts ){
+  list: function list( opts ){
     debug( "#list", opts );
     return P.promisifyAll(
       this.schema.model
@@ -42,13 +42,13 @@ _.extend( Service.prototype, {
    * @param {object} [opts] Mongoose options
    * @returns {*}
    */
-  listById : function listById( ids,
-                                opts ){
+  listById: function listById( ids,
+                               opts ){
     debug( "#listById" );
     if( _.isString( ids ) ){
       return P.promisifyAll( this.schema.model
         .find( _.defaults( {
-          _id : ids
+          _id: ids
         } ), opts ) );
     } else if( _.isArray( ids ) ){
       return P.promisifyAll( this.schema.model.find( opts )
@@ -58,7 +58,7 @@ _.extend( Service.prototype, {
     throw new Error( "Incorrect parameter type for `ids`, `String` or `Array` expected" );
   },
 
-  retrieve : function( opts ){
+  retrieve: function( opts ){
     debug( "#retrieve" );
     return P.promisifyAll(
       this.schema.model
@@ -66,15 +66,13 @@ _.extend( Service.prototype, {
     );
   },
 
-  create : function( opts ){
-    debug( "#create" );
-    return P.promisifyAll(
-      this.schema.model.create( opts )
-    );
+  create: function( opts ){
+    debug( "#create", opts );
+    return P.promisify( this.schema.model.create, this.schema.model )( opts );
   },
 
-  update : function( promise,
-                     opts ){
+  update: function( promise,
+                    opts ){
     debug( "#update" );
     if( 2 > arguments.length ){
       opts = promise;
@@ -97,7 +95,7 @@ _.extend( Service.prototype, {
     return promise;
   },
 
-  remove : function( opts ){
+  remove: function( opts ){
     debug( "#remove" );
     var promise = this.retrieve( opts )
       .execAsync();
@@ -116,11 +114,11 @@ _.extend( Service.prototype, {
     return promise;
   },
 
-  getName : function( item ){
+  getName: function( item ){
     return this.schema.getDocumentName( item );
   },
 
-  getEditableFields : function(){
+  getEditableFields: function(){
     if( this.schema.api && this.schema.api.editable ){
       return this.schema.api.editable;
     }

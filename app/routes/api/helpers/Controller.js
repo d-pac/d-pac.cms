@@ -59,7 +59,7 @@ _.extend( Controller.prototype, {
                           isWrapped ){
     debug( "#handleResult" );
     p.then( function( result ){
-      if(!isWrapped){
+      if( !isWrapped ){
         result = {
           data: result
         };

@@ -21,28 +21,13 @@ module.exports.completedCount = function completedCount( opts ){
 };
 
 module.exports.listForAssessments = function listForAssessments( opts,
-                                                                 assessments ){
-  debug( "#listForAssessments", opts );
+                                                                 assessmentObjects ){
+  var assessmentIds = _.pluck(assessmentObjects, "_id");
+  debug( "#listForAssessments", opts, assessmentIds );
   var self = this;
   return base.list( _.defaults( opts, {
     completed: false
   } ) )
-    .where( "assessment" ).in( _.pluck( assessments, "_id" ) )
-    .execAsync()
-    .map( function( comparison ){
-      comparison = comparison.toJSON();
-      return self.completedCount( {
-        assessment: comparison.assessment,
-        assessor: comparison.assessor
-      } ).then( function( count ){
-        var assessment = _.find( assessments, function( assessment ){
-          return assessment.id == comparison.assessment; //MUST BE `.id` and `==` [!]
-        } );
-        comparison.progress = {
-          total: assessment.comparisonsNum.total,
-          completed: count
-        };
-        return comparison;
-      } );
-    } );
+    .where( "assessment" ).in( assessmentIds )
+    .execAsync();
 };

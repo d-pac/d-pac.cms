@@ -23,26 +23,25 @@ module.exports.list = function list( opts ){
   return base.list( opts )
     .execAsync();
 };
-/**
- *
- * @param opts
- * @param opts._id schema.id
- * @returns {Promise}
- */
-module.exports.retrieve = function retrieve( opts ){
-  debug( "#retrieve", opts );
 
-  return base.retrieve( opts )
-    .execAsync();
-};
 
 module.exports.listAssessments = function listAssessments( opts ){
   debug( "#listAssessments" );
-  return base.retrieve( opts )
-    .execAsync()
+  return this.retrieve( opts )
     .then( function( user ){
       return assessmentsService.listById( user.assessments );
-    } );
+    } ).map(function(assessment){
+      assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
+      return comparisonsService.completedCount({
+        assessment: assessment._id,
+        assessor: opts._id
+      }).then(function(count){
+        assessment.completedNum = count;
+        return assessment;
+      });
+    }).filter(function(assessment){
+      return assessment.comparisonsNum.total > assessment.completedNum;
+    });
 };
 
 module.exports.listComparisons = function listComparisons( opts ){

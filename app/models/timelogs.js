@@ -15,7 +15,7 @@ var Timelog = new keystone.List( "Timelog", {
 } );
 
 Timelog.api = {
-  editable : [ "end" ]
+  editable : [ "comparison", "phase", "begin", "end" ]
 };
 
 Timelog.defaultColumns = "name, comparison, phase, begin, end, duration";
@@ -52,6 +52,7 @@ var list = require( './helpers/setupList' )( Timelog )
     }
 
   } )
+  .retain('track')
   .virtualize( {
     duration : function(){
       if( this.end ){
