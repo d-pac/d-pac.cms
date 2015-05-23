@@ -124,6 +124,14 @@ _.extend( Service.prototype, {
     }
 
     return _.keys( this.schema.fields );
+  },
+
+  getCreatableFields: function(){
+    if( this.schema.api && this.schema.api.creatable ){
+      return this.schema.api.creatable;
+    }
+
+    return _.keys( this.schema.fields );
   }
 } );
 

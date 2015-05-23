@@ -94,8 +94,9 @@ _.extend( Controller.prototype, {
   create: function( req ){
     debug( "#create" );
     var values = utils.parseValues( {
-      fields: this.service.getEditableFields()
+      fields: this.service.getCreatableFields()
     }, req );
+    console.log("values", values);
     return this.service
       .create( values )
       .then( function( result ){

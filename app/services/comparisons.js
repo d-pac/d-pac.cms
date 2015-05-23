@@ -4,6 +4,8 @@ var keystone = require( "keystone" );
 var _ = require( "underscore" );
 var schema = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
+var assessmentsService = require( './assessments' );
+var representationsService = require( './representations' );
 var P = require( "bluebird" );
 var base = new Service( schema );
 module.exports = base.mixin();
@@ -22,7 +24,7 @@ module.exports.completedCount = function completedCount( opts ){
 
 module.exports.listForAssessments = function listForAssessments( opts,
                                                                  assessmentObjects ){
-  var assessmentIds = _.pluck(assessmentObjects, "_id");
+  var assessmentIds = _.pluck( assessmentObjects, "_id" );
   debug( "#listForAssessments", opts, assessmentIds );
   var self = this;
   return base.list( _.defaults( opts, {
@@ -30,4 +32,39 @@ module.exports.listForAssessments = function listForAssessments( opts,
   } ) )
     .where( "assessment" ).in( assessmentIds )
     .execAsync();
+};
+
+module.exports.create = function( opts ){
+  debug( '#create', opts );
+
+  return P.join(
+    representationsService.list( {
+      assessment: opts.assessment
+    } ),
+    this.list( {
+      assessment: opts.assessment
+    } ),
+    assessmentsService.retrieve( {
+      _id: opts.assessment
+    } ),
+
+    function( representations,
+              comparisons,
+              assesment,
+              user ){
+      var selectedPair = require( assesment.algorithm || "comparative-selection" ).select( representations,
+        comparisons,
+        assesment,
+        opts.assessor );
+      return base.create( {
+        assessment: opts.assessment,
+        assessor: opts.assessor._id,
+        phase: assesment.phases[0],
+        representations: {
+          a: selectedPair[0],
+          b: selectedPair[1]
+        }
+      } );
+    }
+  );
 };
