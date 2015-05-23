@@ -15,7 +15,7 @@ var Comparison = new keystone.List( "Comparison", {
 
 Comparison.api = {
   creatable: [ "assessment", 'assessor' ],
-  editable: [ 'phase', 'data' ]
+  editable: [ 'phase', 'data', 'completed' ]
 };
 
 var config = {

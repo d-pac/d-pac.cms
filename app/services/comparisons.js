@@ -52,6 +52,7 @@ module.exports.create = function( opts ){
               comparisons,
               assesment,
               user ){
+      console.log("CREATE COMPARISON", representations, comparisons, assesment, user);
       var selectedPair = require( assesment.algorithm || "comparative-selection" ).select( representations,
         comparisons,
         assesment,
@@ -67,4 +68,12 @@ module.exports.create = function( opts ){
       } );
     }
   );
+};
+
+module.exports.listRepresentationsForComparisons = function(comparisons){
+  var ids = _.reduce( comparisons, function( memo,
+                                             comparison ){
+    return memo.concat( _.values( _.pick( comparison.representations, "a", "b", "c", "d" ) ) );
+  }, [] );
+  return representationsService.listById( ids );
 };

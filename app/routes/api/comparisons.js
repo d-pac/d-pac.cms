@@ -1,13 +1,33 @@
 "use strict";
 
 var debug = require( "debug" )( "dpac:api.comparisons" );
-
+var representationsService = require( "../../services/representations" );
 var service = require( "../../services/comparisons" );
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
+var _ = require('underscore');
 module.exports = base.mixin();
 
 module.exports.create = function(req, res, next){
   req.body.assessor = req.user;
-  base.handleResult( base.create( req ), res, next );
+  var response = {};
+  base.handleResult( base.create( req ).then(function(comparison){
+    response.data = comparison;
+    return service.listRepresentationsForComparisons([comparison]).then(function(representations){
+      response.included = representations;
+      return response;
+    });
+  }), res, next, true );
 };
+
+module.exports.list = function(req, res, next){
+  var response = {};
+  base.handleResult( base.list( req ).then( function( comparisons ){
+    response.data = comparisons;
+    return service.listRepresentationsForComparisons(comparisons).then(function(representations){
+      response.included = representations;
+      return response;
+    });
+  } ), res, next, true );
+};
+
