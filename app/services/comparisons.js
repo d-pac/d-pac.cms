@@ -52,7 +52,6 @@ module.exports.create = function( opts ){
               comparisons,
               assesment,
               user ){
-      console.log("CREATE COMPARISON", representations, comparisons, assesment, user);
       var selectedPair = require( assesment.algorithm || "comparative-selection" ).select( representations,
         comparisons,
         assesment,

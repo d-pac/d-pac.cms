@@ -71,7 +71,7 @@ var config = {
 };
 
 _.each( constants.phases, function( phase ){
-  config.data[ phase.type ] = phase.field;
+  config.data[ phase.slug ] = phase.field;
 } );
 
 Comparison.schema.plugin( require( "./helpers/autoinc" ).plugin, {
