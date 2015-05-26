@@ -45,7 +45,7 @@ module.exports = function( shipit ){
     return shipit.remote( "cd " + this.config.options.dest + "; npm stop" );
   } );
 
-  shipit.task( "deploy", [ "transfer-app", "npm-install", "npm-start" ], function(){
+  shipit.task( "deploy", [ "transfer-app", "npm-install" ], function(){
     return true;
   } );
 };
