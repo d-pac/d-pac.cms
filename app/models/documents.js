@@ -90,7 +90,7 @@ require( './helpers/setupList' )( Document )
       type     : Types.Relationship,
       ref      : "User",
       index    : true,
-      required : true, // R01
+      required : false,
       many     : false, // R01
       initial  : true
     },
