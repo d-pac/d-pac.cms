@@ -5,7 +5,7 @@ var Page = keystone.list( 'Page' );
 
 module.exports = function( done ){
   Page.model.findOne( {
-    slug : 'homepage'
+    slug: 'homepage'
   } ).exec( function( err,
                       result ){
     if( result ){
@@ -13,10 +13,10 @@ module.exports = function( done ){
       return done();
     }
     var homepage = new Page.model( {
-      "slug"  : "homepage",
-      "title" : "Welkom",
-      "state" : "published",
-      "body"  : "<p>Dit is een onderdeel van de d-pac tool.</p>"
+      "title": "Welkom",
+      "state": "published",
+      "name": "cms-welcome",
+      "body": "<p>Dit is een onderdeel van de d-pac tool.</p>"
     } );
     homepage.save( function( err ){
       if( err ){
@@ -25,8 +25,17 @@ module.exports = function( done ){
         return done( err );
       }
 
-      console.log( "Added default homepage to the database." );
-      done();
+      homepage.slug = "homepage";
+      homepage.save(function (err){
+        if( err ){
+          console.error( "Error setting homepage slug:" );
+          console.error( err );
+          return done( err );
+        }
+        console.log( "Added default homepage to the database." );
+        done();
+      });
+
     } );
 
   } );
