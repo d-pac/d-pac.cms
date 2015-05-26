@@ -69,7 +69,6 @@
   "requireSpacesInsideParentheses": {
     "all": true
   },
-  "requireYodaConditions": true,
   "validateIndentation": 2,
   "validateLineBreaks": "LF",
   "validateParameterSeparator": ", ",
