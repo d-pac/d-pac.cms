@@ -21,6 +21,7 @@
     "moment-range": "^1.0.5",
     "mongoose": "^3.8.27",
     "mongoose-auto-increment": "^3.2.4",
+    "semver": "^4.3.4",
     "underscore": "^1.7.0",
     "underscore.string": "^3.0.0"
   },
