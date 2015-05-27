@@ -52,24 +52,27 @@ module.exports.create = function( opts ){
               comparisons,
               assesment,
               user ){
-      var selectedPair = require( assesment.algorithm || "comparative-selection" ).select( representations,
+      var data = require( assesment.algorithm || "comparative-selection" ).select( representations,
         comparisons,
         assesment,
         opts.assessor );
-      return base.create( {
-        assessment: opts.assessment,
-        assessor: opts.assessor._id,
-        phase: assesment.phases[0],
-        representations: {
-          a: selectedPair[0],
-          b: selectedPair[1]
-        }
-      } );
+      if( data.result && data.result.length ){
+        var selectedPair = data.result;
+        return base.create( {
+          assessment: opts.assessment,
+          assessor: opts.assessor._id,
+          phase: assesment.phases[ 0 ],
+          representations: {
+            a: selectedPair[ 0 ],
+            b: selectedPair[ 1 ]
+          }
+        } );
+      }
     }
   );
 };
 
-module.exports.listRepresentationsForComparisons = function(comparisons){
+module.exports.listRepresentationsForComparisons = function( comparisons ){
   var ids = _.reduce( comparisons, function( memo,
                                              comparison ){
     return memo.concat( _.values( _.pick( comparison.representations, "a", "b", "c", "d" ) ) );
