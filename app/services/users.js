@@ -24,24 +24,30 @@ module.exports.list = function list( opts ){
     .execAsync();
 };
 
-
 module.exports.listAssessments = function listAssessments( opts ){
   debug( "#listAssessments" );
   return this.retrieve( opts )
     .then( function( user ){
       return assessmentsService.listById( user.assessments );
-    } ).map(function(assessment){
+    } ).map( function( assessment ){
       assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
-      return comparisonsService.completedCount({
+      return comparisonsService.completedCount( {
         assessment: assessment._id,
         assessor: opts._id
-      }).then(function(count){
-        assessment.completedNum = count;
+      } ).then( function( count ){
+        var total = _.reduce( assessment.comparisonsNum.stage, function( total,
+                                                                         num ){
+          return total + num;
+        }, 0 );
+        assessment.progress = {
+          completedNum: count,
+          total: total
+        };
         return assessment;
-      });
-    }).filter(function(assessment){
-      return assessment.comparisonsNum.total > assessment.completedNum;
-    });
+      } );
+    } ).filter( function( assessment ){
+      return assessment.progress.total > assessment.progress.completedNum;
+    } );
 };
 
 module.exports.listComparisons = function listComparisons( opts ){

@@ -58,10 +58,10 @@ var config = {
   comparisonsNum: {
     total: {
       type: Types.Number,
-      label: "Number of comparisons wanted in total.",
-      required: true,
+      label: "Total number of comparisons",
+      required: false,
       initial: true,
-      default: 20
+      note: "(depends on the algoritm on how it is treated)"
     },
     stage: {
       type: Types.NumberArray,
