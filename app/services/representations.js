@@ -18,14 +18,14 @@ module.exports.list = function list( opts ){
 module.exports.listById = function listById( opts ){
   debug( "listById" );
   return base.listById( opts )
-    .populate( "document")
+    .populate( "document" )
     .execAsync();
 };
 
 module.exports.retrieve = function list( opts ){
   debug( "list" );
   return base.retrieve( opts )
-    .populate( "document")
+    .populate( "document" )
     .execAsync();
 };
 
@@ -34,11 +34,16 @@ module.exports.select = function select( opts ){
   requireProp( opts, "assessment" );
 
   opts = _.defaults( opts, {
-    algorithm : "comparative-selection"
+    algorithm: "comparative-selection"
   } );
 
   return this.list( _.omit( opts, 'algorithm' ) )
     .then( function( representations ){
-      return require( opts.algorithm ).select( representations );
+      var data = require( opts.algorithm ).select( representations );
+      if( data.result && data.result.length ){
+        return data.result;
+      } else {
+        throw new Error( 'TODO: implement this' );
+      }
     } );
 };
