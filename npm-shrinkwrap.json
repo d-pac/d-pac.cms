@@ -992,13 +992,13 @@
       }
     },
     "comparative-selection": {
-      "version": "1.0.2",
-      "from": "comparative-selection@>=1.0.2 <2.0.0",
+      "version": "2.0.0",
+      "from": "comparative-selection@2.0.0",
       "dependencies": {
         "lodash": {
-          "version": "3.6.0",
-          "from": "lodash@*",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.6.0.tgz"
+          "version": "3.9.3",
+          "from": "lodash@>=3.5.0 <4.0.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.9.3.tgz"
         }
       }
     },
@@ -7314,6 +7314,11 @@
           "resolved": "https://registry.npmjs.org/extend/-/extend-2.0.0.tgz"
         }
       }
+    },
+    "semver": {
+      "version": "4.3.4",
+      "from": "semver@*",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-4.3.4.tgz"
     },
     "underscore": {
       "version": "1.8.3",
