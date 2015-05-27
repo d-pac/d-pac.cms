@@ -52,10 +52,16 @@ module.exports.create = function( opts ){
               comparisons,
               assesment,
               user ){
-      var data = require( assesment.algorithm || "comparative-selection" ).select( representations,
-        comparisons,
-        assesment,
-        opts.assessor );
+      var data;
+      try{
+        data = require( assesment.algorithm || "comparative-selection" ).select( representations,
+          comparisons,
+          assesment,
+          opts.assessor );
+      }catch(error){
+        debug(error);
+        throw new Error('Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>');
+      }
       if( data.result && data.result.length ){
         var selectedPair = data.result;
         return base.create( {
