@@ -69,5 +69,29 @@ module.exports.phases = [
         type: Types.Boolean
       }
     }
+  },
+  {
+    slug: "seq-selection",
+    label: "Select best SEQ",
+    field: {
+      type: Types.Number,
+      label: "SEQ select best"
+    }
+  },
+  {
+    slug: "seq-comparative",
+    label: "Comparative feedback SEQ",
+    field: {
+      type: Types.Number,
+      label: "SEQ comparative feedback"
+    }
+  },
+  {
+    slug: "seq-passfail",
+    label: "Pass/fail SEQ",
+    field: {
+      type: Types.Number,
+      label: "SEQ pass fail"
+    }
   }
 ];
