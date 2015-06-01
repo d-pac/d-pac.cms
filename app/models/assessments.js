@@ -22,6 +22,13 @@ var config = {
     initial: true
   },
 
+  comment: {
+    type: Types.Text,
+    required: false,
+    initial: true,
+    note: "This value will be shown in the admin UI only, i.e. it helps to differentiate between assessments with identical/similar titles."
+  },
+
   algorithm: {
     type: Types.Select,
     label: "Selection algorithm",
@@ -110,11 +117,11 @@ var config = {
   }
 
 };
-Assessment.defaultColumns = "title, createdBy, state, parent";
+Assessment.defaultColumns = "title, comment, createdBy, state, parent";
 
 require( './helpers/setupList' )( Assessment )
   .add( config )
-  .retain( "track" )
+  .retain( "track", "comment" )
   .relate( {
     path: "representations",
     ref: "Representation",
