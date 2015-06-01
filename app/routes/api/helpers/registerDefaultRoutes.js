@@ -8,6 +8,12 @@ module.exports = function registerDefaultRoutes( baseUrl,
   if( opts.all ){
     listRouter = listRouter.all( opts.all );
   }
+  if( opts.list ){
+    listRouter.get( opts.list );
+  }
+  if( opts.create ){
+    listRouter.post( opts.create );
+  }
   listRouter.get( controller.list )
     .post( controller.create );
 
@@ -15,11 +21,20 @@ module.exports = function registerDefaultRoutes( baseUrl,
   if( opts.all ){
     resourceRouter.all( opts.all );
   }
+  if( opts.retrieve ){
+    resourceRouter.get(opts.retrieve);
+  }
+  if(opts.update){
+    resourceRouter.patch(opts.update);
+  }
+  if(opts.remove){
+    resourceRouter.delete(opts.remove);
+  }
   resourceRouter.get( controller.retrieve )
     .patch( controller.update )
     .delete( controller.remove );
   return {
-    list      : listRouter,
-    resources : resourceRouter
+    list: listRouter,
+    resources: resourceRouter
   };
 };

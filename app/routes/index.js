@@ -123,7 +123,10 @@ exports = module.exports = function( app ){
 
   registerDefaultRoutes( apiRoot + "/timelogs",
     app, {
-      all: [ apiMw.requireUser ],
+      list: [ apiMw.requireUser ],
+      create: [ apiMw.requireUser ],
+      retrieve: [ apiMw.requireUser ],
+      remove: [ apiMw.requireUser ],
       controller: api.timelogs
     } );
 
