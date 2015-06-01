@@ -5,7 +5,7 @@ var fs = require( "fs" );
 module.exports = function( shipit ){
   var config = _.defaults( {
     default : {
-      ignores : [ "app/public/uploads", ".DS_Store" ]
+      ignores : [ "app/uploads", ".DS_Store" ]
     }
   }, manifests );
 
