@@ -50,20 +50,20 @@ module.exports.create = function( opts ){
 
     function( representations,
               comparisons,
-              assesment,
-              user ){
+              assesment ){
       var data;
       try{
-        data = require( assesment.algorithm || "comparative-selection" ).select( representations,
+        data = require( assesment.algorithm ).select( representations,
           comparisons,
           assesment,
-          opts.assessor );
-      }catch(error){
-        debug(error);
-        throw new Error('Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>');
+          opts.assessor._id );
+      } catch( error ) {
+        debug( error );
+        throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
       }
       if( data.result && data.result.length ){
         var selectedPair = data.result;
+        selectedPair[0].compareWith(selectedPair[1]);
         return base.create( {
           assessment: opts.assessment,
           assessor: opts.assessor._id,
@@ -73,6 +73,9 @@ module.exports.create = function( opts ){
             b: selectedPair[ 1 ]
           }
         } );
+      }else if(data.messages){
+        data.type = "messages";
+        return data;
       }
     }
   );

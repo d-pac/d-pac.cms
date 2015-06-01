@@ -19,6 +19,8 @@ Representation.defaultColumns = "name, comparedNum";
 Representation.schema.methods.compareWith = function( other ){
   this.compared.push( other._id );
   other.compared.push( this._id );
+  this.save();
+  other.save();
 };
 
 require( './helpers/setupList' )( Representation )
