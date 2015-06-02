@@ -12,6 +12,7 @@
     "debug": "^2.1.1",
     "deep-extend": "^0.3.2",
     "errors": "^0.2.0",
+    "estimating-rasch-model": "^1.1.0",
     "fast-csv": "^0.5.7",
     "jade": "^1.8.0",
     "keystone": "^0.3.10",
