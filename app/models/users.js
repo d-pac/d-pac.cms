@@ -45,7 +45,8 @@ require( './helpers/setupList' )( User )
   }, "Permissions", {
     isAdmin : {
       type  : Boolean,
-      label : "Can access Keystone"
+      label : "Can access Keystone",
+      default: false
     }
   } )
   .virtualize( {

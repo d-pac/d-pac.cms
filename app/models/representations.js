@@ -72,7 +72,8 @@ require( './helpers/setupList' )( Representation )
       type: Types.Relationship,
       ref: "Representation",
       many: true,
-      noedit: true
+      noedit: true,
+      default : []
     },
 
     ability: {
