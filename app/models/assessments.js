@@ -7,26 +7,25 @@ var constants = require( "./helpers/constants" );
 var plugins = require( "keystone-dpac-plugins" );
 
 var Assessment = new keystone.List( "Assessment", {
-  map: {
-    name: "title"
-  },
   track: true,
   defaultSort: "order"
 } );
 
 var config = {
 
+  name: {
+    type: Types.Text,
+    required: true,
+    initial: true,
+    label: "Administrative name",
+    note: "Only used for administrative purposes, never shown in tool"
+  },
+
   title: {
     type: Types.Text,
     required: true,
-    initial: true
-  },
-
-  comment: {
-    type: Types.Text,
-    required: false,
     initial: true,
-    note: "This value will be shown in the admin UI only, i.e. it helps to differentiate between assessments with identical/similar titles."
+    note: "The title as shown in the tool"
   },
 
   algorithm: {
@@ -117,11 +116,11 @@ var config = {
   }
 
 };
-Assessment.defaultColumns = "title, comment, createdBy, state, parent";
+Assessment.defaultColumns = "name, title, createdBy, state, parent";
 
 require( './helpers/setupList' )( Assessment )
   .add( config )
-  .retain( "track", "comment" )
+  .retain( "track" )
   .relate( {
     path: "representations",
     ref: "Representation",
