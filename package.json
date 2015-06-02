@@ -4,7 +4,7 @@
   "build": "110",
   "dependencies": {
     "async": "^0.9.0",
-    "benchmarked-comparative-selection": "^1.0.0",
+    "benchmarked-comparative-selection": "^1.1.0",
     "bluebird": "^2.9.7",
     "comparative-selection": "^2.0.0",
     "connect-mongo": "^0.8.0",
