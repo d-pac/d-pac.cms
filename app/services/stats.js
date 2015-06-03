@@ -19,7 +19,6 @@ module.exports = {
       } );
       async.eachSeries( toRanks, function( representation,
                                            next ){
-        console.log("saving:", representation._id);
         representation.save( next );
       } );
     }, 500 );
