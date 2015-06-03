@@ -15,7 +15,7 @@ module.exports = {
     } ).send( {
         to: to,
         from: from,
-        subject: '[d-pac] Stage fully completed for ' + assessment.name,
+        subject: '[d-pac] ('+process.env.ROOT_URL+') Stage fully completed for ' + assessment.name,
         body: {
           assessment: assessment
         }
@@ -29,7 +29,7 @@ module.exports = {
     } ).send( {
         to: to,
         from: from,
-        subject: '[d-pac] Assessor ' + assessor.name.full + ' completed stage for ' + assessment.name,
+        subject: '[d-pac] ('+process.env.ROOT_URL+') Assessor ' + assessor.name.full + ' completed stage for ' + assessment.name,
         body: {
           assessment: assessment,
           assessor: assessor
