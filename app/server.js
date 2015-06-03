@@ -44,7 +44,8 @@ keystone.init( {
   "user model": "User",
   "cookie secret": process.env.COOKIE_SECRET,
   "api root": "/api",
-  mongoose: require( 'mongoose' )
+  mongoose: require( 'mongoose' ),
+  'emails': 'templates/emails'
 } );
 
 // Load your project's Models
