@@ -51,27 +51,41 @@ module.exports.create = function( opts ){
 
     function( representations,
               comparisons,
-              assesment ){
+              assessment ){
       var data;
+      var plainRepresentations = _.map(representations, function(doc){
+        return JSON.parse(JSON.stringify(doc));
+      });
+      var plainComparisons = _.map(comparisons, function(doc){
+        return JSON.parse(JSON.stringify(doc));
+      });
+      var plainAssessment = JSON.parse(JSON.stringify(assessment));
       try{
-        data = require( assesment.algorithm ).select( representations,
-          comparisons,
-          assesment,
-          opts.assessor._id );
+        data = require( assessment.algorithm ).select( plainRepresentations,
+          plainComparisons,
+          plainAssessment,
+          JSON.parse(JSON.stringify(opts.assessor._id)) );
       } catch( error ) {
-        debug( error );
+        console.log( error );
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
       }
       if( data.result && data.result.length ){
         var selectedPair = data.result;
-        selectedPair[ 0 ].compareWith( selectedPair[ 1 ] );
+
+        var repA = _.find(representations, function(rep){
+          return rep.id == selectedPair[0]._id;
+        });
+        var repB = _.find(representations, function(rep){
+          return rep.id == selectedPair[1]._id;
+        });
+        repA.compareWith( repB );
         return base.create( {
           assessment: opts.assessment,
           assessor: opts.assessor._id,
-          phase: assesment.phases[ 0 ],
+          phase: assessment.phases[ 0 ],
           representations: {
-            a: selectedPair[ 0 ],
-            b: selectedPair[ 1 ]
+            a: repA.id,
+            b: repB.id
           }
         } );
       } else if( data.messages ){
@@ -79,10 +93,10 @@ module.exports.create = function( opts ){
         _.each( data.messages, function( message ){
           switch( message ){
             case "assessor-stage-completed":
-              mailsService.sendAssessorStageCompleted( opts.assessor, assesment );
+              mailsService.sendAssessorStageCompleted( opts.assessor, assessment );
               break;
             case "stage-completed":
-              mailsService.sendStageCompleted( assesment );
+              mailsService.sendStageCompleted( assessment );
               break;
           }
         } );
