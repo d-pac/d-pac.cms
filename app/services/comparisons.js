@@ -4,9 +4,9 @@ var keystone = require( "keystone" );
 var _ = require( "underscore" );
 var schema = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
-var statsService = require( './stats' );
 var assessmentsService = require( './assessments' );
 var representationsService = require( './representations' );
+var mailsService = require( './mails' );
 var P = require( "bluebird" );
 var base = new Service( schema );
 module.exports = base.mixin();
@@ -76,9 +76,16 @@ module.exports.create = function( opts ){
         } );
       } else if( data.messages ){
 
-        if( data.messages.indexOf( "assessor-stage-completed" ) >= 0 ){
-          statsService.estimate( representations, comparisons );
-        }
+        _.each( data.messages, function( message ){
+          switch( message ){
+            case "assessor-stage-completed":
+              mailsService.sendAssessorStageCompleted( opts.assessor, assesment );
+              break;
+            case "stage-completed":
+              mailsService.sendStageCompleted( assesment );
+              break;
+          }
+        } );
         data.type = "messages";
         return data;
       }
