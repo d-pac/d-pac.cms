@@ -10,6 +10,7 @@
     "connect-mongo": "^0.8.0",
     "cors": "^2.4.1",
     "debug": "^2.1.1",
+    "deep-diff": "^0.3.2",
     "deep-extend": "^0.3.2",
     "errors": "^0.2.0",
     "estimating-rasch-model": "^1.1.0",
