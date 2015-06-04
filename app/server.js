@@ -87,6 +87,7 @@ keystone.set( "nav", {
     "comparisons",
     "organizations",
     "users",
+    "notes",
     "timelogs"
   ]
 } );

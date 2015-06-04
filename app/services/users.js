@@ -7,6 +7,7 @@ var schema = keystone.list( "User" );
 var Service = require( "./helpers/Service" );
 var assessmentsService = require( "./assessments" );
 var comparisonsService = require( "./comparisons" );
+var notesService = require( './notes' );
 
 var base = new Service( schema );
 module.exports = base.mixin();
@@ -57,6 +58,12 @@ module.exports.listComparisons = function listComparisons( opts ){
         assessor: opts._id
       }, assessments );
     } );
+};
+
+module.exports.listNotes = function listNotes( opts ){
+  return notesService.list( {
+    author: opts._id
+  } );
 };
 
 module.exports.update = function update( opts ){

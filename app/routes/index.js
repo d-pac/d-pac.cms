@@ -79,7 +79,12 @@ exports = module.exports = function( app ){
   app.route( apiRoot + "/user/comparisons" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
-    .get( api.users.listComparisons )
+    .get( api.users.listComparisons );
+
+  app.route( apiRoot + "/user/notes" )
+    .all( apiMw.requireUser )
+    .all( apiMw.setIdParamToUser )
+    .get( api.users.listNotes );
 
   app.route( apiRoot + "/phases" )
     .all( apiMw.requireUser )
@@ -119,6 +124,12 @@ exports = module.exports = function( app ){
     app, {
       all: [ apiMw.requireUser ],
       controller: api.comparisons
+    } );
+
+  registerDefaultRoutes( apiRoot + "/notes",
+    app, {
+      all: [ apiMw.requireUser ],
+      controller: api.notes
     } );
 
   registerDefaultRoutes( apiRoot + "/timelogs",

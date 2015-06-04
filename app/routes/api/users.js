@@ -5,6 +5,7 @@ var _ = require( 'underscore' );
 
 var service = require( "../../services/users" );
 var comparisonsService = require( "../../services/comparisons" );
+var notesService = require( '../../services/notes' );
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
@@ -24,14 +25,34 @@ module.exports.listComparisons = function( req,
                                            next ){
   debug( "#listComparisons" );
 
-  var response = {};
+  var userId = req.param( "_id" );
+  var response = { included: [] };
   base.handleResult( service.listComparisons( {
-    _id: req.param( "_id" )
+    _id: userId
   } ).then( function( comparisons ){
     response.data = comparisons;
-    return comparisonsService.listRepresentationsForComparisons(comparisons).then(function(representations){
-      response.included = representations;
-      return response;
-    });
+    return comparisonsService.listRepresentationsForComparisons( comparisons );
+  } ).then( function( representations ){
+    response.included = response.included.concat( representations );
+    return representations;
+  } ).then( function( representations ){
+    var documentIds = _.chain( representations ).pluck( "document" ).pluck( "_id" ).value();
+    return notesService.listByDocuments( {
+      author: userId
+    }, documentIds );
+  } ).then(function(notes){
+    response.included = response.included.concat( notes );
+    return notes;
+  }).then( function(){
+    return response;
   } ), res, next, true );
+};
+
+module.exports.listNotes = function( req,
+                                     res,
+                                     next ){
+  debug( "#listNotes" );
+  base.handleResult( service.listNotes( {
+    _id: req.param( "_id" )
+  } ), res, next );
 };

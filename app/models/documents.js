@@ -96,7 +96,7 @@ require( './helpers/setupList' )( Document )
     },
 
     host : {
-      hidden : true,
+      noedit : true,
       type   : String,
       watch  : "link file",
       value  : function(){
@@ -122,7 +122,7 @@ require( './helpers/setupList' )( Document )
     }
   } )
   .expose( "href", "mimeType", "ext" )
-  .retain("track", "link", "host", "title", "name", "file", "_id", "_rid", "owner", "type", "links")
+  .retain("track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links")
   .validate( {
     link : [
       function( value,
