@@ -116,7 +116,7 @@ var config = {
   }
 
 };
-Assessment.defaultColumns = "name, title, createdBy, state, parent";
+Assessment.defaultColumns = "name, title, stage, state, parent";
 
 require( './helpers/setupList' )( Assessment )
   .add( config )
