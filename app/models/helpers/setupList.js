@@ -125,7 +125,10 @@ module.exports = function( list ){
           return list.options.schema.collection;
         },
         "links.self": function(){
-          return path.join( keystone.get( "api root" ), list.options.schema.collection, this[ builder.get( 'idField' ) ].toString() );
+          var a = keystone.get( "api root" ) || "/";
+          var b = list.options.schema.collection;
+          var c = this[ builder.get( 'idField' ) ].toString();
+          return path.join( a, b, c );
         }
       } );
       if( list.options.toJSON && list.options.toJSON.transformations ){
