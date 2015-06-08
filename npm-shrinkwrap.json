@@ -1144,6 +1144,11 @@
         }
       }
     },
+    "deep-diff": {
+      "version": "0.3.2",
+      "from": "deep-diff@*",
+      "resolved": "https://registry.npmjs.org/deep-diff/-/deep-diff-0.3.2.tgz"
+    },
     "deep-extend": {
       "version": "0.3.3",
       "from": "deep-extend@>=0.3.2 <0.4.0",
@@ -1155,8 +1160,8 @@
       "resolved": "https://registry.npmjs.org/errors/-/errors-0.2.0.tgz"
     },
     "estimating-rasch-model": {
-      "version": "1.1.0",
-      "from": "estimating-rasch-model@*",
+      "version": "1.1.1",
+      "from": "estimating-rasch-model@>=1.1.0 <2.0.0",
       "dependencies": {
         "lodash": {
           "version": "3.9.3",
