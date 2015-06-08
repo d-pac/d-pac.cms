@@ -71,7 +71,12 @@ module.exports.create = function( opts ){
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
       }
       if( data.result && data.result.length ){
-        var selectedPair = data.result;
+        var selectedPair;
+        if( keystone.get( "disable selection shuffle" ) ){
+          selectedPair = data.result;
+        } else {
+          selectedPair = _.shuffle( data.result );
+        }
 
         var repA = _.find( representations, function( rep ){
           return rep.id == selectedPair[ 0 ]._id;
