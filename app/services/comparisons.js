@@ -7,6 +7,7 @@ var Service = require( "./helpers/Service" );
 var assessmentsService = require( './assessments' );
 var representationsService = require( './representations' );
 var mailsService = require( './mails' );
+var statsService = require( './stats' );
 var P = require( "bluebird" );
 var base = new Service( schema );
 module.exports = base.mixin();
@@ -53,18 +54,18 @@ module.exports.create = function( opts ){
               comparisons,
               assessment ){
       var data;
-      var plainRepresentations = _.map(representations, function(doc){
-        return JSON.parse(JSON.stringify(doc));
-      });
-      var plainComparisons = _.map(comparisons, function(doc){
-        return JSON.parse(JSON.stringify(doc));
-      });
-      var plainAssessment = JSON.parse(JSON.stringify(assessment));
+      var plainRepresentations = _.map( representations, function( doc ){
+        return JSON.parse( JSON.stringify( doc ) );
+      } );
+      var plainComparisons = _.map( comparisons, function( doc ){
+        return JSON.parse( JSON.stringify( doc ) );
+      } );
+      var plainAssessment = JSON.parse( JSON.stringify( assessment ) );
       try{
         data = require( assessment.algorithm ).select( plainRepresentations,
           plainComparisons,
           plainAssessment,
-          JSON.parse(JSON.stringify(opts.assessor._id)) );
+          JSON.parse( JSON.stringify( opts.assessor._id ) ) );
       } catch( error ) {
         console.log( error );
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
@@ -72,12 +73,12 @@ module.exports.create = function( opts ){
       if( data.result && data.result.length ){
         var selectedPair = data.result;
 
-        var repA = _.find(representations, function(rep){
-          return rep.id == selectedPair[0]._id;
-        });
-        var repB = _.find(representations, function(rep){
-          return rep.id == selectedPair[1]._id;
-        });
+        var repA = _.find( representations, function( rep ){
+          return rep.id == selectedPair[ 0 ]._id;
+        } );
+        var repB = _.find( representations, function( rep ){
+          return rep.id == selectedPair[ 1 ]._id;
+        } );
         repA.compareWith( repB );
         return base.create( {
           assessment: opts.assessment,
@@ -97,6 +98,13 @@ module.exports.create = function( opts ){
               break;
             case "stage-completed":
               mailsService.sendStageCompleted( assessment );
+              statsService.estimate( {
+                documents: representations,
+                objects: plainRepresentations
+              }, {
+                documents: comparisons,
+                objects: plainComparisons
+              } );
               break;
           }
         } );
