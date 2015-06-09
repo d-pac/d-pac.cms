@@ -9,7 +9,9 @@ keystone.importer( __dirname )( "patches" );
 
 var errors = require( "errors" );
 
-if( "development" === process.env.NODE_ENV ){
+var nodeEnv = process.env.NODE_ENV || "development";
+
+if( "development" === nodeEnv ){
   errors.stacks( true );
 }
 
@@ -47,6 +49,10 @@ keystone.init( {
   mongoose: require( 'mongoose' ),
   'emails': 'templates/emails'
 } );
+
+console.log( '------------------------------------------------' );
+console.log('Environment:', nodeEnv);
+console.log( 'Node', process.version, '-', 'Keystone', keystone.version, '-', keystone.get( 'name' ), keystone.get( 'appversion' ) );
 
 // Load your project's Models
 
