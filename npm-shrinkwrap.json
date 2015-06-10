@@ -1160,12 +1160,12 @@
       "resolved": "https://registry.npmjs.org/errors/-/errors-0.2.0.tgz"
     },
     "estimating-rasch-model": {
-      "version": "1.1.1",
-      "from": "estimating-rasch-model@>=1.1.0 <2.0.0",
+      "version": "1.1.2",
+      "from": "estimating-rasch-model@>=1.1.1 <2.0.0",
       "dependencies": {
         "lodash": {
           "version": "3.9.3",
-          "from": "lodash@>=3.6.0 <4.0.0",
+          "from": "lodash@>=3.9.3 <4.0.0",
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.9.3.tgz"
         },
         "math": {
