@@ -14,3 +14,11 @@ module.exports.list = function list( opts ){
     .sort( "comparison begin" )
     .execAsync();
 };
+
+module.exports.listForComparisonIds = function listForComparisonIds( opts,
+                                                                     comparisonIds ){
+  return base.list( opts )
+    .where( "comparison" ).in( comparisonIds )
+    .populate("phase", "slug")
+    .execAsync();
+};

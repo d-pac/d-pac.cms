@@ -59,7 +59,7 @@ var list = require( './helpers/setupList' )( Timelog )
         return moment.range( this.begin, this.end ).diff( "s" );
       }
 
-      return "-";
+      return 0;
     }
   } )
   .register();
