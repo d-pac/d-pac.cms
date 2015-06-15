@@ -7209,6 +7209,11 @@
         }
       }
     },
+    "lodash-compat": {
+      "version": "3.9.3",
+      "from": "lodash-compat@*",
+      "resolved": "https://registry.npmjs.org/lodash-compat/-/lodash-compat-3.9.3.tgz"
+    },
     "microtime": {
       "version": "1.4.2",
       "from": "microtime@*",

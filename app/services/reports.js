@@ -1,6 +1,7 @@
 "use strict";
 var keystone = require( "keystone" );
 var _ = require( "underscore" );
+var _get = require( 'lodash-compat/object/get' );
 var fs = require( "fs" );
 var P = require( 'bluebird' );
 
@@ -17,12 +18,14 @@ var FALSE = 0;
 var NIL = -1;
 
 module.exports.listRepresentationsForAssessmentIds = function listRepresentationsForAssessmentIds( assessmentIds ){
-  return P.promisifyAll( Representation.model
-      .find()
-      .where( "assessment" ).in( assessmentIds )
-      .populate( 'document', 'name' )
-      .populate( 'assessment', 'name' )
-  ).execAsync();
+  var q = Representation.model
+    .find()
+    .populate( 'document', 'name' )
+    .populate( 'assessment', 'name' );
+  if( assessmentIds && assessmentIds.length ){
+    q = q.where( "assessment" ).in( assessmentIds );
+  }
+  return P.promisifyAll( q ).execAsync();
 };
 
 module.exports.listComparisonsForAssessmentIds = function listComparisonsForAssessmentIds( assessmentIds ){
@@ -35,16 +38,6 @@ module.exports.listComparisonsForAssessmentIds = function listComparisonsForAsse
       .populate( 'data.selection' )
   ).execAsync();
 };
-
-function getTimelog( map,
-                     comparisonId,
-                     phase ){
-  if( map[ comparisonId ] ){
-    return map[ comparisonId ][ phase ] || UNDEFINED;
-  }
-
-  return UNDEFINED;
-}
 
 function getDocument( map,
                       representationModel ){
@@ -112,15 +105,13 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
           "completed": (comparisonModel.completed)
             ? TRUE
             : FALSE,
-          "comparative feedback": (comparisonModel.data.comparative)
-            ? comparisonModel.data.comparative.replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" )
-            : LEFT_EMPTY,
-          "selection SEQ": comparisonModel.data[ 'seq-selection' ] || NIL,
-          "comparative SEQ": comparisonModel.data[ 'seq-comparative' ] || NIL,
-          "selection duration": getTimelog( timelogsByComparison, comparisonId, 'selection' ),
-          "selection SEQ duration": getTimelog( timelogsByComparison, comparisonId, 'seq-selection' ),
-          "comparative feedback duration": getTimelog( timelogsByComparison, comparisonId, 'comparative' ),
-          "comparative feedback SEQ duration": getTimelog( timelogsByComparison, comparisonId, 'seq-comparative' ),
+          "comparative feedback": _get(comparisonModel, 'data.comparative', '').replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" ),
+          "selection SEQ": _get(comparisonModel, 'data.seq-selection', NIL),
+          "comparative SEQ": _get(comparisonModel, 'data.seq-comparative', NIL),
+          "selection duration": _get(timelogsByComparison, [comparisonId, 'selection'], UNDEFINED ),
+          "selection SEQ duration": _get( timelogsByComparison, [comparisonId, 'seq-selection'], UNDEFINED ),
+          "comparative feedback duration": _get( timelogsByComparison, [comparisonId, 'comparative'], UNDEFINED ),
+          "comparative feedback SEQ duration": _get( timelogsByComparison, [comparisonId, 'seq-comparative'], UNDEFINED ),
           "total": _.reduce( timelogsByComparison[ comparisonId ], function( memo,
                                                                              value ){
             return memo + value;
@@ -134,11 +125,11 @@ module.exports.listRepresentations = function listRepresentations( assessmentIds
   return module.exports.listRepresentationsForAssessmentIds( assessmentIds )
     .map( function( representationModel ){
       return {
-        assessment: representationModel.assessment.name,
-        name: representationModel.document.name,
-        ability: representationModel.ability.value,
-        se: representationModel.ability.se,
-        rankType: representationModel.rankType
+        assessment: _get(representationModel, 'assessment.name', ''),
+        name:  _get(representationModel, 'document.name', ''),
+        ability:  _get(representationModel, 'ability.value', UNDEFINED),
+        se:  _get(representationModel, 'ability.se', UNDEFINED),
+        rankType: representationModel.rankType || UNDEFINED
       };
     } );
 };

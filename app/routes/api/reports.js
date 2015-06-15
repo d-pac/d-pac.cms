@@ -6,6 +6,14 @@ var service = require( "../../services/reports" );
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
 
-module.exports.listComparisons = function(req, res, next){
+module.exports.listComparisons = function( req,
+                                           res,
+                                           next ){
+  base.handleResult( service.listComparisons(), res, next );
+};
 
+module.exports.listRepresentations = function( req,
+                                               res,
+                                               next ){
+  base.handleResult( service.listRepresentations(), res, next );
 };

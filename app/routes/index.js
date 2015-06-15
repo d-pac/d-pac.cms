@@ -102,6 +102,14 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
+  app.route( apiRoot + "/reports/comparisons" )
+    .all( apiMw.requireUser, apiMw.requireAdmin )
+    .get( api.reports.listComparisons );
+
+  app.route( apiRoot + "/reports/representations" )
+    .all( apiMw.requireUser, apiMw.requireAdmin )
+    .get( api.reports.listRepresentations );
+
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {
       all: [ apiMw.requireUser, apiMw.requireAdmin ],
