@@ -5,6 +5,7 @@ var fs = require( "fs" );
 var P = require( 'bluebird' );
 
 var Comparison = keystone.list( "Comparison" );
+var Representation = keystone.list( "Representation" );
 var assessmentsService = require( './assessments' );
 var documentsService = require( './documents' );
 var timelogsService = require( './timelogs' );
@@ -14,6 +15,15 @@ var UNDEFINED = "N/A";
 var TRUE = 1;
 var FALSE = 0;
 var NIL = -1;
+
+module.exports.listRepresentationsForAssessmentIds = function listRepresentationsForAssessmentIds( assessmentIds ){
+  return P.promisifyAll( Representation.model
+      .find()
+      .where( "assessment" ).in( assessmentIds )
+      .populate( 'document', 'name' )
+      .populate( 'assessment', 'name' )
+  ).execAsync();
+};
 
 module.exports.listComparisonsForAssessmentIds = function listComparisonsForAssessmentIds( assessmentIds ){
   return P.promisifyAll( Comparison.model
@@ -120,3 +130,15 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
     } );
 };
 
+module.exports.listRepresentations = function listRepresentations( assessmentIds ){
+  return module.exports.listRepresentationsForAssessmentIds( assessmentIds )
+    .map( function( representationModel ){
+      return {
+        assessment: representationModel.assessment.name,
+        name: representationModel.document.name,
+        ability: representationModel.ability.value,
+        se: representationModel.ability.se,
+        rankType: representationModel.rankType
+      };
+    } );
+};

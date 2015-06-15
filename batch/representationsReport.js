@@ -13,8 +13,8 @@ module.exports = function( assessmentIds,
     assessmentIds = assessmentIds.split( "," );
   }
   var t0 = microtime.now();
-  reportsService.listComparisons( assessmentIds ).then( function( comparisons ){
-    return convertersService.jsonToCSV( comparisons );
+  reportsService.listRepresentations( assessmentIds ).then( function( representations ){
+    return convertersService.jsonToCSV( representations );
   } ).then( function( csv ){
     var t1 = microtime.now();
     var t = (t1-t0);
