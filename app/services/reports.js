@@ -41,13 +41,7 @@ module.exports.listComparisonsForAssessmentIds = function listComparisonsForAsse
 
 function getDocument( map,
                       representationModel ){
-  if( !representationModel || !representationModel.document ){
-    return UNDEFINED;
-  }
-  var document = map[ representationModel.document.toString() ];
-  return document
-    ? document.name
-    : UNDEFINED;
+  return _get(map, [_get(representationModel, 'document', '').toString(), 'name' ], UNDEFINED);
 }
 
 module.exports.listComparisons = function listComparisons( assessmentIds ){
@@ -89,7 +83,7 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
           if( !memo[ comparisonId ][ phase ] ){
             memo[ comparisonId ][ phase ] = 0;
           }
-          memo[ comparisonId ][ phase ] += timelog.duration;
+          memo[ comparisonId ][ phase ] = timelog.duration;
           return memo;
         }, timelogsByComparison );
     } ).then( function(){
@@ -97,21 +91,23 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
         var comparisonId = comparisonModel.id.toString();
         return {
           comparison: comparisonModel._rid,
-          assessment: assessmentsById[ comparisonModel.assessment.toString() ].name,
-          assessor: comparisonModel.assessor.email,
-          "representation A": getDocument( documentsById, comparisonModel.representations.a ),
-          "representation B": getDocument( documentsById, comparisonModel.representations.b ),
-          "selected representation": getDocument( documentsById, comparisonModel.data.selection ),
+          assessment: _get(assessmentsById, [ _get(comparisonModel, 'assessment', '').toString(), 'name']),
+          assessor: _get(comparisonModel, 'assessor.email', UNDEFINED),
+          "representation A": getDocument( documentsById, _get( comparisonModel, 'representations.a' ) ),
+          "representation B": getDocument( documentsById, _get( comparisonModel, 'representations.b' ) ),
+          "selected representation": getDocument( documentsById, _get(comparisonModel, 'data.selection') ),
           "completed": (comparisonModel.completed)
             ? TRUE
             : FALSE,
-          "comparative feedback": _get(comparisonModel, 'data.comparative', '').replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" ),
-          "selection SEQ": _get(comparisonModel, 'data.seq-selection', NIL),
-          "comparative SEQ": _get(comparisonModel, 'data.seq-comparative', NIL),
-          "selection duration": _get(timelogsByComparison, [comparisonId, 'selection'], UNDEFINED ),
-          "selection SEQ duration": _get( timelogsByComparison, [comparisonId, 'seq-selection'], UNDEFINED ),
-          "comparative feedback duration": _get( timelogsByComparison, [comparisonId, 'comparative'], UNDEFINED ),
-          "comparative feedback SEQ duration": _get( timelogsByComparison, [comparisonId, 'seq-comparative'], UNDEFINED ),
+          "comparative feedback": _get( comparisonModel, 'data.comparative', '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" ),
+          "selection SEQ": _get( comparisonModel, 'data.seq-selection', NIL ),
+          "comparative SEQ": _get( comparisonModel, 'data.seq-comparative', NIL ),
+          "selection duration": _get( timelogsByComparison, [ comparisonId, 'selection' ], UNDEFINED ),
+          "selection SEQ duration": _get( timelogsByComparison, [ comparisonId, 'seq-selection' ], UNDEFINED ),
+          "comparative feedback duration": _get( timelogsByComparison, [ comparisonId, 'comparative' ], UNDEFINED ),
+          "comparative feedback SEQ duration": _get( timelogsByComparison, [
+            comparisonId, 'seq-comparative'
+          ], UNDEFINED ),
           "total": _.reduce( timelogsByComparison[ comparisonId ], function( memo,
                                                                              value ){
             return memo + value;
@@ -125,10 +121,10 @@ module.exports.listRepresentations = function listRepresentations( assessmentIds
   return module.exports.listRepresentationsForAssessmentIds( assessmentIds )
     .map( function( representationModel ){
       return {
-        assessment: _get(representationModel, 'assessment.name', ''),
-        name:  _get(representationModel, 'document.name', ''),
-        ability:  _get(representationModel, 'ability.value', UNDEFINED),
-        se:  _get(representationModel, 'ability.se', UNDEFINED),
+        assessment: _get( representationModel, 'assessment.name', '' ),
+        name: _get( representationModel, 'document.name', '' ),
+        ability: _get( representationModel, 'ability.value', UNDEFINED ),
+        se: _get( representationModel, 'ability.se', UNDEFINED ),
         rankType: representationModel.rankType || UNDEFINED
       };
     } );

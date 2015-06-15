@@ -102,11 +102,11 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
-  app.route( apiRoot + "/reports/comparisons" )
+  app.route( apiRoot + "/reports/comparisons/:format" )
     .all( apiMw.requireUser, apiMw.requireAdmin )
     .get( api.reports.listComparisons );
 
-  app.route( apiRoot + "/reports/representations" )
+  app.route( apiRoot + "/reports/representations/:format" )
     .all( apiMw.requireUser, apiMw.requireAdmin )
     .get( api.reports.listRepresentations );
 

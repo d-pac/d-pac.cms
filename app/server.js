@@ -93,19 +93,29 @@ keystone.set( "nav", {
     "comparisons",
     "organizations",
     "users",
-    "notes",
-    "timelogs"
+    "notes"
   ],
   "reports": [
+    "timelogs",
     {
-      label: "Comparisons (CSV)",
+      label: "comparisons.csv",
       key: "comparisons-report",
-      path: "/api/reports/comparisons"
+      path: "/api/reports/comparisons/csv"
     },
     {
-      label: "Representations (CSV)",
+      label: "comparisons.json",
+      key: "comparisons-report",
+      path: "/api/reports/comparisons/json"
+    },
+    {
+      label: "representations.csv",
       key: "representations-report",
-      path: "/api/reports/representations"
+      path: "/api/reports/representations/csv"
+    },
+    {
+      label: "representations.json",
+      key: "representations-report",
+      path: "/api/reports/representations/json"
     }
   ]
 } );
