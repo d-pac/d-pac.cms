@@ -120,6 +120,17 @@ Assessment.defaultColumns = "name, title, stage, state, parent";
 
 require( './helpers/setupList' )( Assessment )
   .add( config )
+  .validate({
+    uiCopy: [function(value){
+      var isValid=true;
+      try{
+        JSON.parse(value);
+      }catch(err){
+        isValid=false;
+      }
+      return isValid;
+    }, '"UI texts" contains invalid JSON']
+  })
   .retain( "track" )
   .relate( {
     path: "representations",
