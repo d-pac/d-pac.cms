@@ -8,55 +8,65 @@ var path = require( "path" );
 var constants = require( "./helpers/constants" );
 
 var utils = {
-  local  : {
-    href     : function(){
+  local: {
+    href: function(){
       return process.env.ROOT_URL + this.file.href;
     },
-    mimeType : function(){
+    mimeType: function(){
       return this.file.filetype;
     },
-    ext      : function(){
+    ext: function(){
       return "." + mime.extension( this.file.filetype );
     },
-    name     : function(){
+    name: function(){
       return this.file.originalname;
     }
   },
-  remote : {
-    href     : function(){
+  remote: {
+    href: function(){
       return this.link;
     },
-    mimeType : function(){
+    mimeType: function(){
       return mime.lookup( this.link );
     },
-    ext      : function(){
+    ext: function(){
       return path.extname( this.link );
     },
-    name     : function(){
+    name: function(){
       return path.basename( this.link );
     }
   }
 };
+
+var callUtil = function callUtil( obj,
+                                  prop ){
+  var fn = _.get( utils, obj.host + '.' + prop );
+  if( !fn ){
+    return false;
+  }
+  return fn.call( obj );
+};
+
 var Document = new keystone.List( "Document", {
-  track : true
+  track: true
 } );
 
 Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
-  model   : "Document",
-  field   : "_rid",
-  startAt : 1
+  model: "Document",
+  field: "_rid",
+  startAt: 1
 } );
 
 Document.schema.virtual( "href" ).get( function(){
-  return utils[ this.host ].href.call( this );
+  return callUtil( this, 'href' ) || process.env.ROOT_URL + '/images/nodocument.png';
 } ).depends = [ "file", "host", "link" ];
 
 Document.schema.virtual( "mimeType" ).get( function(){
-  return utils[ this.host ].mimeType.call( this );
+  return callUtil( this, 'mimeType' ) || 'image/png';
 } ).depends = [ "file", "host", "link" ];
 
 Document.schema.virtual( "ext" ).get( function(){
-  return utils[ this.host ].ext.call( this );
+  return callUtil( this, 'ext' ) || '.png';
 } ).depends = [ "file", "host", "link" ];
 
 Document.schema.pre( "save", function( callback ){
@@ -72,34 +82,34 @@ Document.defaultColumns = [ "name", "owner", "href|40%", "mimeType" ];
 
 require( './helpers/setupList' )( Document )
   .add( {
-    name : {
-      type     : String,
-      default  : "Document name",
-      noedit   : true,
-      required : true,
-      note     : "uses the value of title, or is automatically generated"
+    name: {
+      type: String,
+      default: "Document name",
+      noedit: true,
+      required: true,
+      note: "uses the value of title, or is automatically generated"
     },
 
-    title : {
-      type     : Types.Text,
-      required : false,
-      initial  : true
+    title: {
+      type: Types.Text,
+      required: false,
+      initial: true
     },
 
-    owner : {
-      type     : Types.Relationship,
-      ref      : "User",
-      index    : true,
-      required : false,
-      many     : false, // R01
-      initial  : true
+    owner: {
+      type: Types.Relationship,
+      ref: "User",
+      index: true,
+      required: false,
+      many: false, // R01
+      initial: true
     },
 
-    host : {
-      noedit : true,
-      type   : String,
-      watch  : "link file",
-      value  : function(){
+    host: {
+      noedit: true,
+      type: String,
+      watch: "link file",
+      value: function(){
         if( 0 < this.file.size ){
           return "local";
         }
@@ -107,24 +117,24 @@ require( './helpers/setupList' )( Document )
       }
     }
   }, "File", {
-    file : {
-      type     : Types.LocalFile,
-      label    : "Local file",
-      dest     : "app/uploads/media",
-      prefix   : "/media",
-      required : false,
-      initial  : false
+    file: {
+      type: Types.LocalFile,
+      label: "Local file",
+      dest: "app/uploads/media",
+      prefix: "/media",
+      required: false,
+      initial: false
     },
 
-    link : {
-      type  : Types.Url,
-      label : "External file"
+    link: {
+      type: Types.Url,
+      label: "External file"
     }
   } )
   .expose( "href", "mimeType", "ext" )
-  .retain("track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links")
+  .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links" )
   .validate( {
-    link : [
+    link: [
       function( value,
                 isValid ){
         if( !!value ){
@@ -136,9 +146,9 @@ require( './helpers/setupList' )( Document )
     ]
   } )
   .relate( {
-    path    : "representations",
-    ref     : "Representation",
-    refPath : "document",
-    label   : "Representations"
+    path: "representations",
+    ref: "Representation",
+    refPath: "document",
+    label: "Representations"
   } )
   .register();
