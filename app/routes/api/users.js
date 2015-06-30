@@ -1,7 +1,7 @@
 "use strict";
 
 var debug = require( "debug" )( "dpac:api.users" );
-var _ = require( 'underscore' );
+var _ = require( 'lodash' );
 
 var service = require( "../../services/users" );
 var comparisonsService = require( "../../services/comparisons" );

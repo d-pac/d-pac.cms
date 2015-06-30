@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require( 'underscore' );
+var _ = require( 'lodash' );
 var keystone = require( 'keystone' );
 var async = require( 'async' );
 var debug = require( "debug" )( "dpac:services.stats" );

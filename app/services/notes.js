@@ -1,6 +1,5 @@
 "use strict";
 var debug = require( "debug" )( "dpac:services.notes" );
-var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var schema = keystone.list( "Note" );
 var Service = require( "./helpers/Service" );

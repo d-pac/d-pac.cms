@@ -1,7 +1,6 @@
 "use strict";
 var debug = require( "debug" )( "dpac:api.authentication" );
 
-var _ = require( "underscore" );
 var errors = require( "errors" );
 var keystone = require( "keystone" );
 

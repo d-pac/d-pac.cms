@@ -1,6 +1,6 @@
 "use strict";
 var debug = require( "debug" )( "dpac:services.assessments" );
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 
 var keystone = require( "keystone" );
 var schema = keystone.list( "Assessment" );

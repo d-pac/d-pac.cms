@@ -1,6 +1,6 @@
 "use strict";
 
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 
 module.exports.toSafeJSON = function toSafeJSON( docs ){
   if( _.isArray( docs ) ){

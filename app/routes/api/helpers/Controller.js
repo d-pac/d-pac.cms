@@ -1,7 +1,7 @@
 "use strict";
 var debug = require( "debug" )( "dpac:api.helpers.Controller" );
 
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 var errors = require( "errors" );
 var utils = require( "./utils" );
 

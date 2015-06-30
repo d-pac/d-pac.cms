@@ -1,6 +1,5 @@
 var keystone = require( 'keystone' );
 var async = require( 'async' );
-var _ = require( "underscore" );
 var constants = require( "../models/helpers/constants" );
 var Assessment = keystone.list( 'Assessment' );
 

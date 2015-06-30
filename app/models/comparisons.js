@@ -1,5 +1,5 @@
 "use strict";
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 

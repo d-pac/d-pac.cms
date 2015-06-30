@@ -1,6 +1,5 @@
 "use strict";
 var keystone = require( 'keystone' );
-var _ = require('underscore');
 var async = require('async');
 var Assessment = keystone.list( 'Assessment' );
 exports = module.exports = function( done ){

@@ -1,6 +1,6 @@
 "use strict";
 var debug = require( "debug" )( "dpac:services.pages" );
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var schema = keystone.list( "Page" );
 var Service = require( "./helpers/Service" );

@@ -18,7 +18,6 @@
  * http://expressjs.com/api.html#app.VERB
  */
 
-var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var appMw = require( "./middleware" );
 var importRoutes = keystone.importer( __dirname );

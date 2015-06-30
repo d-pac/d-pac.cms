@@ -1,7 +1,7 @@
 "use strict";
 
 var keystone = require( "keystone" );
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 var debug = require( "debug" )( "dpac:services.users" );
 var schema = keystone.list( "User" );
 var Service = require( "./helpers/Service" );

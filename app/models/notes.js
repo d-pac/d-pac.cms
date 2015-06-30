@@ -1,7 +1,6 @@
 'use strict';
 
 var keystone = require( 'keystone' );
-var _ = require( 'underscore' );
 var Types = keystone.Field.Types;
 
 var Note = new keystone.List( 'Note', {

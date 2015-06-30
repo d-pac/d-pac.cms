@@ -8,7 +8,6 @@ var statsService = require('../../services/stats');
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
-var _ = require( 'underscore' );
 module.exports = base.mixin();
 
 module.exports.create = function( req,

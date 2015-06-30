@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require( "underscore" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 var moment = require( "moment-range" );

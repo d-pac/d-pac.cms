@@ -1,7 +1,7 @@
 "use strict";
 var debug = require( "debug" )( "dpac:services.helpers.Service" );
 
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 var errors = require( "errors" );
 var P = require( "bluebird" );
 var deepExtend = require( "deep-extend" );
