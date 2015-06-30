@@ -1,4 +1,4 @@
-var _ = require( "underscore" );
+var _ = require( "lodash" );
 var manifests = require( "require-directory" )( module, "./shipping" );
 var fs = require( "fs" );
 
