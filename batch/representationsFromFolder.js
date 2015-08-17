@@ -8,6 +8,7 @@ var async = require( "async" );
 var fs = require( 'fs' );
 var path = require( 'path' );
 var Document = keystone.list( "Document" );
+var Representation = keystone.list( "Representation" );
 
 var ignored = [ '.DS_Store' ];
 
@@ -22,7 +23,8 @@ function getStats( resolved ){
   return stats;
 }
 
-exports = module.exports = function( folder,
+exports = module.exports = function( assessmentId,
+                                     folder,
                                      done ){
 
   var resolvedFolder = path.resolve( folder );
@@ -40,7 +42,7 @@ exports = module.exports = function( folder,
     var resolvedFile = path.resolve( folder, fileName );
     var stats = getStats( resolvedFile );
     if( stats.isFile() ){
-      var documentData = {
+      var documentModel = new Document.model( {
         title: path.basename( fileName, path.extname( fileName ) ),
         file: {
           filename: fileName,
@@ -50,8 +52,13 @@ exports = module.exports = function( folder,
           filetype: mime.lookup( fileName )
         },
         host: 'local'
-      };
-      saveQueue.push( new Document.model( documentData ) );
+      } );
+      saveQueue.push( documentModel );
+      var representationModel = new Representation.model( {
+        assessment: assessmentId,
+        document: documentModel.id.toString()
+      } );
+      saveQueue.push(representationModel);
     }
   } );
 
