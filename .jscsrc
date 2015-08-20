@@ -37,7 +37,6 @@
     "allowUrlComments": true,
     "allowRegex": true
   },
-  "requireAlignedObjectValues": "ignoreLineBreak",
   "requireBlocksOnNewline": true,
   "requireCamelCaseOrUpperCaseIdentifiers": true,
   "requireCapitalizedConstructors": true,
@@ -58,7 +57,6 @@
     "return",
     "case"
   ],
-  "requireSpaceAfterObjectKeys": true,
   "requireSpaceBeforeBinaryOperators": true,
   "requireSpaceBeforeKeywords": true,
   "requireSpaceBeforeObjectValues": true,
@@ -66,9 +64,6 @@
   "requireSpacesInConditionalExpression": true,
   "requireSpacesInsideArrayBrackets": "all",
   "requireSpacesInsideObjectBrackets": "all",
-  "requireSpacesInsideParentheses": {
-    "all": true
-  },
   "validateIndentation": 2,
   "validateLineBreaks": "LF",
   "validateParameterSeparator": ", ",

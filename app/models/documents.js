@@ -10,7 +10,7 @@ var constants = require( "./helpers/constants" );
 var utils = {
   local: {
     href: function(){
-      return process.env.ROOT_URL + this.file.href;
+      return process.env.ROOT_URL + (this.file.href || '/images/nodocument.png');
     },
     mimeType: function(){
       return this.file.filetype;
@@ -58,15 +58,15 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 } );
 
 Document.schema.virtual( "href" ).get( function(){
-  return callUtil( this, 'href' ) || process.env.ROOT_URL + '/images/nodocument.png';
+  return callUtil( this, 'href' ) || "none";
 } ).depends = [ "file", "host", "link" ];
 
 Document.schema.virtual( "mimeType" ).get( function(){
-  return callUtil( this, 'mimeType' ) || 'image/png';
+  return callUtil( this, 'mimeType' ) || 'text/html';
 } ).depends = [ "file", "host", "link" ];
 
 Document.schema.virtual( "ext" ).get( function(){
-  return callUtil( this, 'ext' ) || '.png';
+  return callUtil( this, 'ext' ) || '.html';
 } ).depends = [ "file", "host", "link" ];
 
 Document.schema.pre( "save", function( callback ){
@@ -87,13 +87,15 @@ require( './helpers/setupList' )( Document )
       default: "Document name",
       noedit: true,
       required: true,
-      note: "uses the value of title, or is automatically generated"
+      note: "Not shown in tool. Purely for administrative purposes. " +
+      "Uses the value of title, or is automatically generated"
     },
 
     title: {
       type: Types.Text,
       required: false,
-      initial: true
+      initial: true,
+      note: "Leave blank for automatic title generation"
     },
 
     owner: {
@@ -108,15 +110,26 @@ require( './helpers/setupList' )( Document )
     host: {
       noedit: true,
       type: String,
-      watch: "link file",
+      watch: "link file text",
+      note: "Value automatically generated based on the choice of document type below.",
       value: function(){
         if( 0 < this.file.size ){
           return "local";
+        } else if( this.link ){
+          return "remote";
         }
-        return "remote";
+        return "none";
       }
     }
-  }, "File", {
+  }, "Document", {
+    text: {
+      type: Types.Html,
+      required: false,
+      initial: true,
+      note: "The value of this field will be shown for all media types. " +
+      "Leave the file and link fields empty to create text-only documents."
+    },
+
     file: {
       type: Types.LocalFile,
       label: "Local file",
@@ -139,10 +152,12 @@ require( './helpers/setupList' )( Document )
                 isValid ){
         if( !!value ){
           isValid( !this.file.size );
-        } else {
+        } else if( !this.text ){
           isValid( !!this.file.size );
+        } else {
+          isValid( true );
         }
-      }, "You need to supply either a local file OR an external link."
+      }, "You need to supply a local file, an external link or a text."
     ]
   } )
   .relate( {
