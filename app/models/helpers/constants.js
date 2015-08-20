@@ -56,6 +56,28 @@ module.exports.phases = [
     }
   },
   {
+    slug: "pros-cons",
+    label: "Pros & cons",
+    field: {
+      aPositive: {
+        label: "Positive in representation A",
+        type: Types.Text
+      },
+      aNegative: {
+        label: "Negative in representation A",
+        type: Types.Text
+      },
+      bPositive: {
+        label: "Positive in representation B",
+        type: Types.Text
+      },
+      bNegative: {
+        label: "Negative in representation B",
+        type: Types.Text
+      }
+    }
+  },
+  {
     slug: "passfail",
     label: "Indicate Pass/Fail",
     field: {

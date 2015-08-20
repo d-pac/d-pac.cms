@@ -50,7 +50,6 @@
   "requireDotNotation": true,
   "requireKeywordsOnNewLine": [],
   "requireLineFeedAtFileEnd": true,
-  "requirePaddingNewLinesInObjects": true,
   "requireParenthesesAroundIIFE": true,
   "requireSpaceAfterBinaryOperators": true,
   "requireSpaceAfterKeywords": [
