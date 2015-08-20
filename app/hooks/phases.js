@@ -6,11 +6,12 @@ var Comparison = keystone.list( 'Comparison' );
 
 function createPhase( phase,
                       done ){
-  Phase.model.find({slug:phase.slug}).exec(function(err, existing){
-    if(existing && existing.length){
-      console.log('Phase already exists: "'+ phase.label+'"');
+  Phase.model.find( { slug: phase.slug } ).exec( function( err,
+                                                           existing ){
+    if( existing && existing.length ){
+      console.log( 'Phase already exists: "' + phase.label + '"' );
       done();
-    }else{
+    } else {
       var doc = new Phase.model( phase );
       doc.save( function( err ){
         if( err ){
@@ -22,7 +23,7 @@ function createPhase( phase,
         done();
       } );
     }
-  });
+  } );
 }
 
 exports = module.exports = function( done ){

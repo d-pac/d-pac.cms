@@ -51,7 +51,7 @@ keystone.init( {
 } );
 
 console.log( '------------------------------------------------' );
-console.log('Environment:', nodeEnv);
+console.log( 'Environment:', nodeEnv );
 console.log( 'Node', process.version, '-', 'Keystone', keystone.version, '-', keystone.get( 'name' ), keystone.get( 'appversion' ) );
 
 // Load your project's Models
@@ -119,6 +119,8 @@ keystone.set( "nav", {
     }
   ]
 } );
+
+keystone.pre( 'updates', require( './hooks/phases' ) );
 
 // Start Keystone to connect to your database and initialise the web server
 keystone.start();
