@@ -175,8 +175,13 @@ require( './helpers/setupList' )( Assessment )
   }, {
     path: "assessors",
     ref: "User",
-    refPath: "assessments",
+    refPath: "assessments.assessor",
     label: "Assessors"
+  }, {
+    path: "assessees",
+    ref: "User",
+    refPath: "assessments.assessee",
+    label: "Assessees"
   }, {
     path: "next",
     ref: "Assessment",

@@ -11,45 +11,57 @@ User.defaultColumns = "name, email, isAdmin";
 
 require( './helpers/setupList' )( User )
   .add( {
-    name         : {
-      type     : Types.Name,
-      required : true,
-      index    : true
+    name: {
+      type: Types.Name,
+      required: true,
+      index: true
     },
-    organization : {
-      type    : Types.Relationship,
-      ref     : "Organization",
-      index   : true,
-      initial : true
+    organization: {
+      type: Types.Relationship,
+      ref: "Organization",
+      index: true,
+      initial: true
     },
-    email        : {
-      type     : Types.Email,
-      initial  : true,
-      required : true,
-      index    : true
+    email: {
+      type: Types.Email,
+      initial: true,
+      required: true,
+      index: true
     },
-    password     : {
-      type     : Types.Password,
-      initial  : true,
-      required : false
+    password: {
+      type: Types.Password,
+      initial: true,
+      required: false
     },
-    assessments  : {
-      type     : Types.Relationship,
-      ref      : "Assessment",
-      index    : true,
-      initial  : false,
-      required : false,
-      many     : true
+    assessments: {
+      assessor: {
+        type: Types.Relationship,
+        ref: "Assessment",
+        index: true,
+        initial: false,
+        required: false,
+        many: true,
+        label: "Assessor assessments"
+      },
+      assessee: {
+        type: Types.Relationship,
+        ref: "Assessment",
+        index: true,
+        initial: false,
+        required: false,
+        many: true,
+        label: "Assessee assessments"
+      }
     }
   }, "Permissions", {
-    isAdmin : {
-      type  : Boolean,
-      label : "Can access Keystone",
+    isAdmin: {
+      type: Boolean,
+      label: "Can access Keystone",
       default: false
     }
   } )
   .virtualize( {
-    canAccessKeystone : function(){
+    canAccessKeystone: function(){
       return this.isAdmin;
     }
   } )
