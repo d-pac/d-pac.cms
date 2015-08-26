@@ -46,16 +46,11 @@ _.extend( Service.prototype, {
                                opts ){
     debug( "#listById" );
     if( _.isString( ids ) ){
-      return P.promisifyAll( this.schema.model
-        .find( _.defaults( {
-          _id: ids
-        } ), opts ) );
-    } else if( _.isArray( ids ) ){
-      return P.promisifyAll( this.schema.model.find( opts )
-        .where( "_id" ).in( ids ) );
+      ids = [ ids ];
     }
 
-    throw new Error( "Incorrect parameter type for `ids`, `String` or `Array` expected" );
+    return P.promisifyAll( this.schema.model.find( opts )
+      .where( "_id" ).in( ids ) );
   },
 
   retrieve: function( opts ){

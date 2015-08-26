@@ -70,7 +70,7 @@ exports = module.exports = function( app ){
     .get( api.users.retrieve )
     .patch( api.users.update );
 
-  app.route( apiRoot + "/user/assessments" )
+  app.route( apiRoot + "/user/assessments/:type" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listAssessments );

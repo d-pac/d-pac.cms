@@ -135,13 +135,11 @@ _.extend( Controller.prototype, {
   },
 
   list: function( req ){
-    var filter = req.param( "filter" );
-    if( _.isString( filter ) ){
-      filter = JSON.parse( filter );
-    }
-    return this.service
-      .list( filter )
-      .then( function( result ){
+    var filter = req.param( "_id" );
+    var p = ( filter )
+      ? this.service.listById( filter )
+      : this.service.list();
+    return p.then( function( result ){
         if( !result ){
           result = [];
         }
