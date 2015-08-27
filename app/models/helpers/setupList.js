@@ -134,6 +134,9 @@ module.exports = function( list ){
       if( list.options.toJSON && list.options.toJSON.transformations ){
         builder.expose( _.keys( list.options.toJSON.transformations ) );
       }
+      list.schema.post('init', function(){
+        this.__original = JSON.parse(JSON.stringify(this));
+      });
       list.register();
     },
     getFieldNames: function(){

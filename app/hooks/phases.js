@@ -26,6 +26,8 @@ function createPhase( phase,
   } );
 }
 
-exports = module.exports = function( done ){
-  async.eachSeries( constants.phases, createPhase, done );
+module.exports.init = function(){
+  keystone.pre( 'updates', function( done ){
+    async.eachSeries( constants.phases, createPhase, done );
+  } );
 };

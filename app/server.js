@@ -1,6 +1,7 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 
+var _ = require( 'lodash' );
 var grappling = require( 'grappling-hook' );
 
 var konfy = require( "konfy" );
@@ -19,7 +20,6 @@ if( "development" === nodeEnv ){
 }
 
 keystone.hooks = grappling.create( { strict: false } );
-keystone.hooks.post( 'comparative-selection', require( './hooks/benchmarked-comparative-selection' ) );
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
@@ -126,7 +126,12 @@ keystone.set( "nav", {
   ]
 } );
 
-keystone.pre( 'updates', require( './hooks/phases' ) );
+//keystone.pre( 'updates', require( './hooks/phases' ) );
+//require( './hooks/benchmarked-comparative-selection' ).init();
+
+_.each( keystone.import( 'hooks' ), function( handler ){
+  handler.init();
+} );
 
 // Start Keystone to connect to your database and initialise the web server
 keystone.start();

@@ -67,7 +67,7 @@ module.exports.create = function( opts ){
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
       }
 
-      var output;
+      var output, hookData;
 
       if( data.result && data.result.length ){
         var selectedPair = ( keystone.get( "disable selection shuffle" ) )
@@ -92,8 +92,10 @@ module.exports.create = function( opts ){
         } );
         output.representations.a = repA;
         output.representations.b = repB;
+        hookData = selectedPair;
       } else if( data.messages ){
-        output = {
+        data.type = "messages";
+        hookData = _.defaults({
           assessor: opts.assessor,
           assessment: opts.assessment,
           representations: {
@@ -103,12 +105,11 @@ module.exports.create = function( opts ){
           comparisons: {
             documents: comparisons,
             objects: plainComparisons
-          },
-          messages: data,
-          type: "messages"
-        };
+          }
+        }, data);
+        output = data;
       }
-      keystone.hooks.callHook( 'post:' + assessment.algorithm, output );
+      keystone.hooks.callHook( 'post:' + assessment.algorithm + '.select', hookData );
       return output;
     }
   );
