@@ -4,7 +4,7 @@ var debug = require( "debug" )( "dpac:api.comparisons" );
 var representationsService = require( "../../services/representations" );
 var service = require( "../../services/comparisons" );
 var assessmentsService = require( '../../services/assessments' );
-var statsService = require('../../services/stats');
+var statsService = require( '../../services/stats' );
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
@@ -38,20 +38,4 @@ module.exports.list = function( req,
       return response;
     } );
   } ), res, next, true );
-};
-
-module.exports.update = function( req,
-                                  res,
-                                  next ){
-  base.handleResult( base.update( req ).then( function( comparison ){
-    if( req.body.completed ){
-      assessmentsService.retrieve({
-        _id: comparison.assessment
-      }).then(function(assessment){
-        if(assessment.stage === 1){
-          statsService.estimateForAssessment(assessment.id);
-        }
-      });
-    }
-  } ), res, next );
 };
