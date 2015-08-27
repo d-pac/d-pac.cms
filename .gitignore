@@ -22,7 +22,7 @@ node_modules
 .grunt
 public/assessors
 *.sh
-reports/*.csv
+reports
 
 shipping/*
 !shipping/EXAMPLE.js

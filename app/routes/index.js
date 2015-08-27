@@ -43,6 +43,8 @@ exports = module.exports = function( app ){
   app.use( initCORS );
   app.use( keystone.express.static( __dirname + '/../uploads' ) );
 
+  app.use( '/reports', apiMw.requireUser, apiMw.requireAdmin, keystone.express.static( __dirname + '/../reports' ) );
+
   // Views
   app.get( "/", routes.views.index );
   //app.get( "/blog/:category?", routes.views.blog );
@@ -101,13 +103,6 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
-  app.route( apiRoot + "/reports/comparisons/:format" )
-    .all( apiMw.requireUser, apiMw.requireAdmin )
-    .get( api.reports.listComparisons );
-
-  app.route( apiRoot + "/reports/representations/:format" )
-    .all( apiMw.requireUser, apiMw.requireAdmin )
-    .get( api.reports.listRepresentations );
 
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {

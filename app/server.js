@@ -53,7 +53,8 @@ keystone.init( {
   "cookie secret": process.env.COOKIE_SECRET,
   "api root": "/api",
   mongoose: require( 'mongoose' ),
-  'emails': 'templates/emails'
+  'emails': 'templates/emails',
+  'dpac reports dir': 'reports'
 } );
 
 console.log( '------------------------------------------------' );
@@ -99,30 +100,9 @@ keystone.set( "nav", {
     "comparisons",
     "organizations",
     "users",
-    "notes"
-  ],
-  "reports": [
+    "notes",
     "timelogs",
-    {
-      label: "comparisons.csv",
-      key: "comparisons-report",
-      path: "/api/reports/comparisons/csv"
-    },
-    {
-      label: "comparisons.json",
-      key: "comparisons-report",
-      path: "/api/reports/comparisons/json"
-    },
-    {
-      label: "representations.csv",
-      key: "representations-report",
-      path: "/api/reports/representations/csv"
-    },
-    {
-      label: "representations.json",
-      key: "representations-report",
-      path: "/api/reports/representations/json"
-    }
+    "reports"
   ]
 } );
 
