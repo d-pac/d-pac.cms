@@ -2,13 +2,13 @@
 var debug = require( "debug" )( "dpac:services.comparisons" );
 var keystone = require( "keystone" );
 var _ = require( "lodash" );
+var P = require( "bluebird" );
+
 var schema = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
 var assessmentsService = require( './assessments' );
 var representationsService = require( './representations' );
-var mailsService = require( './mails' );
-var statsService = require( './stats' );
-var P = require( "bluebird" );
+
 var base = new Service( schema );
 module.exports = base.mixin();
 
@@ -54,12 +54,8 @@ module.exports.create = function( opts ){
               comparisons,
               assessment ){
       var data;
-      var plainRepresentations = _.map( representations, function( doc ){
-        return JSON.parse( JSON.stringify( doc ) );
-      } );
-      var plainComparisons = _.map( comparisons, function( doc ){
-        return JSON.parse( JSON.stringify( doc ) );
-      } );
+      var plainComparisons = JSON.parse( JSON.stringify( comparisons ) );
+      var plainRepresentations = JSON.parse( JSON.stringify( representations ) );
       var plainAssessment = JSON.parse( JSON.stringify( assessment ) );
       try{
         data = require( assessment.algorithm ).select( plainRepresentations,
@@ -70,13 +66,13 @@ module.exports.create = function( opts ){
         console.log( error );
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
       }
+
+      var output;
+
       if( data.result && data.result.length ){
-        var selectedPair;
-        if( keystone.get( "disable selection shuffle" ) ){
-          selectedPair = data.result;
-        } else {
-          selectedPair = _.shuffle( data.result );
-        }
+        var selectedPair = ( keystone.get( "disable selection shuffle" ) )
+          ? data.result
+          : _.shuffle( data.result );
 
         var repA = _.find( representations, function( rep ){
           return rep.id == selectedPair[ 0 ]._id;
@@ -85,7 +81,7 @@ module.exports.create = function( opts ){
           return rep.id == selectedPair[ 1 ]._id;
         } );
         repA.compareWith( repB );
-        return base.create( {
+        output = base.create( {
           assessment: opts.assessment,
           assessor: opts.assessor._id,
           phase: assessment.phases[ 0 ],
@@ -94,28 +90,26 @@ module.exports.create = function( opts ){
             b: repB.id
           }
         } );
+        output.representations.a = repA;
+        output.representations.b = repB;
       } else if( data.messages ){
-
-        _.each( data.messages, function( message ){
-          switch( message ){
-            case "assessor-stage-completed":
-              mailsService.sendAssessorStageCompleted( opts.assessor, assessment );
-              break;
-            case "stage-completed":
-              mailsService.sendStageCompleted( assessment );
-              statsService.estimate( {
-                documents: representations,
-                objects: plainRepresentations
-              }, {
-                documents: comparisons,
-                objects: plainComparisons
-              } );
-              break;
-          }
-        } );
-        data.type = "messages";
-        return data;
+        output = {
+          assessor: opts.assessor,
+          assessment: opts.assessment,
+          representations: {
+            documents: representations,
+            objects: plainRepresentations
+          },
+          comparisons: {
+            documents: comparisons,
+            objects: plainComparisons
+          },
+          messages: data,
+          type: "messages"
+        };
       }
+      keystone.hooks.callHook( 'post:' + assessment.algorithm, output );
+      return output;
     }
   );
 };

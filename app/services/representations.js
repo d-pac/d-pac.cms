@@ -28,22 +28,22 @@ module.exports.retrieve = function list( opts ){
     .populate( "document" )
     .execAsync();
 };
-
-module.exports.select = function select( opts ){
-  debug( "#select", opts );
-  requireProp( opts, "assessment" );
-
-  opts = _.defaults( opts, {
-    algorithm: "comparative-selection"
-  } );
-
-  return this.list( _.omit( opts, 'algorithm' ) )
-    .then( function( representations ){
-      var data = require( opts.algorithm ).select( representations );
-      if( data.result && data.result.length ){
-        return data.result;
-      } else {
-        throw new Error( 'TODO: implement this' );
-      }
-    } );
-};
+//
+//module.exports.select = function select( opts ){
+//  debug( "#select", opts );
+//  requireProp( opts, "assessment" );
+//
+//  opts = _.defaults( opts, {
+//    algorithm: "comparative-selection"
+//  } );
+//
+//  return this.list( _.omit( opts, 'algorithm' ) )
+//    .then( function( representations ){
+//      var data = require( opts.algorithm ).select( representations );
+//      if( data.result && data.result.length ){
+//        return data.result;
+//      } else {
+//        throw new Error( 'TODO: implement this' );
+//      }
+//    } );
+//};

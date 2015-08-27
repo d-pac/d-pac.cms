@@ -1,5 +1,8 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
+
+var grappling = require( 'grappling-hook' );
+
 var konfy = require( "konfy" );
 konfy.load();
 
@@ -14,6 +17,9 @@ var nodeEnv = process.env.NODE_ENV || "development";
 if( "development" === nodeEnv ){
   errors.stacks( true );
 }
+
+keystone.hooks = grappling.create( { strict: false } );
+keystone.hooks.post( 'comparative-selection', require( './hooks/benchmarked-comparative-selection' ) );
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options

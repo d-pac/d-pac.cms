@@ -7,8 +7,7 @@
   "disallowMultipleLineStrings": true,
   "disallowNewlineBeforeBlockStatements": true,
   "disallowOperatorBeforeLineBreak": [
-    "?",
-    ":"
+    "?"
   ],
   "disallowPaddingNewlinesInBlocks": true,
   "disallowSpaceBeforePostfixUnaryOperators": true,
