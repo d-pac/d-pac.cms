@@ -77,14 +77,7 @@ var list = require( './helpers/setupList' )( Report )
 
     url: {
       type: Types.Url,
-      noedit: true,
-      watch: true,
-      value: function(){
-        return '/reports/' + this.filename;
-      },
-      format: function( url ){
-        return url;
-      }
+      noedit: true
     }
   } )
   .register();

@@ -24,6 +24,7 @@ function updateDoc( report,
     assessment: assessmentName,
     datatype: report.datatype
   } );
+  report.url = '/reports/' + report.filename;
   return P.resolve( report );
 }
 
@@ -47,10 +48,11 @@ function removeFile( report ){
 function reportCreatedHandler( next ){
   if( this.isNew ){
     var report = this;
-    var p;
+    var p, assessmentId;
     if( report.assessment ){
+      assessmentId = report.assessment.toString();
       p = assessmentsService.retrieve( {
-        _id: report.assessment.toString()
+        _id: assessmentId
       } ).then( function( assessment ){
         return updateDoc( report, assessment.name );
       } );
@@ -60,9 +62,9 @@ function reportCreatedHandler( next ){
     p.then( function(){
       switch( report.datatype ){
         case "representations":
-          return reportsService.listRepresentations( report.assessment.toString() );
+          return reportsService.listRepresentations( assessmentId );
         case "comparisons":
-          return reportsService.listComparisons( report.assessment.toString() );
+          return reportsService.listComparisons( assessmentId );
         default:
           throw new Error( 'Invalid data type' );
       }
