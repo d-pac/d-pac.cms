@@ -11,7 +11,7 @@ var assessmentsService = require( '../services/assessments' );
 var reportsService = require( '../services/reports' );
 var convertersService = require( '../services/converters' );
 
-var reportsDir = __dirname + "/../reports";
+var reportsDir = keystone.get('dpac reports dir');
 
 function updateDoc( report,
                     assessmentName ){

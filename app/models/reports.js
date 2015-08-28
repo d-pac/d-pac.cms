@@ -13,7 +13,7 @@ var Report = new keystone.List( "Report", {
   noedit: true
 } );
 
-Report.defaultColumns = "name, url|50%, createdAt, createdBy";
+Report.defaultColumns = "name, assessment, url|50%, createdAt, createdBy";
 
 Report.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Report",

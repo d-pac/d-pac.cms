@@ -54,7 +54,8 @@ keystone.init( {
   "api root": "/api",
   mongoose: require( 'mongoose' ),
   'emails': 'templates/emails',
-  'dpac reports dir': 'reports'
+  'dpac reports dir': 'app/reports',
+  'dpac documents dir': 'app/uploads/media'
 } );
 
 console.log( '------------------------------------------------' );
@@ -92,7 +93,7 @@ keystone.set( "nav", {
     "post-categories",
     "enquiries"
   ],
-  "tool": [
+  "data": [
     "phases",
     "assessments",
     "representations",
@@ -101,7 +102,9 @@ keystone.set( "nav", {
     "organizations",
     "users",
     "notes",
-    "timelogs",
+    "timelogs"
+  ],
+  "actions": [
     "reports"
   ]
 } );
