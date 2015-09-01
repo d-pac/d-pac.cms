@@ -133,7 +133,7 @@ require( './helpers/setupList' )( Document )
     file: {
       type: Types.LocalFile,
       label: "Local file",
-      dest: keystone.get('dpac documents dir'),
+      dest: constants.directories.documents,
       prefix: "/media",
       required: false,
       initial: false

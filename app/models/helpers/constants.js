@@ -11,7 +11,16 @@ var constants = module.exports = {
   ARCHIVED: "archived",
   BENCHMARK: "benchmark",
   TO_RANK: "to rank",
-  RANKED: "ranked"
+  RANKED: "ranked",
+  OVERWRITE: 'overwrite',
+  REUSE: 'reuse',
+  RENAME: 'rename'
+};
+
+module.exports.directories = {
+  bulk: 'app/uploads/bulk',
+  reports: 'app/reports',
+  documents: 'app/uploads/media'
 };
 
 module.exports.roles = {
@@ -29,6 +38,10 @@ module.exports.publicationStates = {
 
 module.exports.representationTypes = {
   list: [ constants.TO_RANK, constants.RANKED, constants.BENCHMARK ]
+};
+
+module.exports.conflicts = {
+  list: [ constants.OVERWRITE, constants.REUSE, constants.RENAME]
 };
 
 module.exports.phases = [
@@ -116,3 +129,4 @@ module.exports.phases = [
     }
   }
 ];
+

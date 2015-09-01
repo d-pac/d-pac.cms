@@ -53,9 +53,7 @@ keystone.init( {
   "cookie secret": process.env.COOKIE_SECRET,
   "api root": "/api",
   mongoose: require( 'mongoose' ),
-  'emails': 'templates/emails',
-  'dpac reports dir': 'app/reports',
-  'dpac documents dir': 'app/uploads/media'
+  'emails': 'templates/emails'
 } );
 
 console.log( '------------------------------------------------' );
@@ -105,7 +103,8 @@ keystone.set( "nav", {
     "timelogs"
   ],
   "actions": [
-    "reports"
+    "reports",
+    "bulkuploads"
   ]
 } );
 

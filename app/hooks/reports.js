@@ -10,8 +10,9 @@ var path = require( 'path' );
 var assessmentsService = require( '../services/assessments' );
 var reportsService = require( '../services/reports' );
 var convertersService = require( '../services/converters' );
+var constants = require('../models/helpers/constants');
 
-var reportsDir = keystone.get('dpac reports dir');
+var reportsDir = constants.directories.reports;
 
 function updateDoc( report,
                     assessmentName ){

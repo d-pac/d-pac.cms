@@ -14,6 +14,7 @@
     "deep-extend": "^0.3.2",
     "errors": "^0.2.0",
     "estimating-rasch-model": "^1.1.2",
+    "extract-zip": "^1.0.3",
     "fast-csv": "^0.5.7",
     "grappling-hook": "^3.0.0",
     "jade": "^1.8.0",
@@ -28,8 +29,10 @@
     "mongoose": "^3.8.27",
     "mongoose-auto-increment": "^3.2.4",
     "node-schedule": "^0.2.9",
+    "rimraf": "^2.4.3",
     "semver": "^4.3.4",
-    "underscore.string": "^3.0.0"
+    "underscore.string": "^3.0.0",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
