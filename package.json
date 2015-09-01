@@ -15,6 +15,7 @@
     "errors": "^0.2.0",
     "estimating-rasch-model": "^1.1.2",
     "fast-csv": "^0.5.7",
+    "grappling-hook": "^3.0.0",
     "jade": "^1.8.0",
     "keystone": "^0.3.10",
     "keystone-dpac-plugins": "^1.0.3",

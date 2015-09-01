@@ -1249,6 +1249,10 @@
         }
       }
     },
+    "grappling-hook": {
+      "version": "3.0.0",
+      "from": "grappling-hook@*"
+    },
     "jade": {
       "version": "1.9.2",
       "from": "jade@>=1.8.0 <2.0.0",
@@ -4819,13 +4823,13 @@
           }
         },
         "grappling-hook": {
-          "version": "2.4.0",
+          "version": "2.5.0",
           "from": "grappling-hook@>=2.4.0 <3.0.0",
           "dependencies": {
             "lodash": {
-              "version": "3.9.1",
+              "version": "3.10.1",
               "from": "lodash@>=3.7.0 <4.0.0",
-              "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.9.1.tgz"
+              "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz"
             }
           }
         },
