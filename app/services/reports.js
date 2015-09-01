@@ -21,10 +21,15 @@ module.exports.listRepresentationsForAssessmentIds = function listRepresentation
     .find()
     .populate( 'document', 'name' )
     .populate( 'assessment', 'name' );
-  if( assessmentIds && assessmentIds.length ){
+  if( assessmentIds ){
+    if( _.isString( assessmentIds ) ){
+      assessmentIds = [ assessmentIds ];
+    }
     q = q.where( "assessment" ).in( assessmentIds );
   }
-  return P.promisifyAll( q ).execAsync();
+  return P.promisifyAll( q ).execAsync().then( function( result ){
+    return result;
+  } );
 };
 
 module.exports.listComparisonsForAssessmentIds = function listComparisonsForAssessmentIds( assessmentIds ){
@@ -40,7 +45,7 @@ module.exports.listComparisonsForAssessmentIds = function listComparisonsForAsse
 
 function getDocument( map,
                       representationModel ){
-  return _.get(map, [_.get(representationModel, 'document', '').toString(), 'name' ], UNDEFINED);
+  return _.get( map, [ _.get( representationModel, 'document', '' ).toString(), 'name' ], UNDEFINED );
 }
 
 module.exports.listComparisons = function listComparisons( assessmentIds ){
@@ -90,11 +95,11 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
         var comparisonId = comparisonModel.id.toString();
         return {
           comparison: comparisonModel._rid,
-          assessment: _.get(assessmentsById, [ _.get(comparisonModel, 'assessment', '').toString(), 'name']),
-          assessor: _.get(comparisonModel, 'assessor.email', UNDEFINED),
+          assessment: _.get( assessmentsById, [ _.get( comparisonModel, 'assessment', '' ).toString(), 'name' ] ),
+          assessor: _.get( comparisonModel, 'assessor.email', UNDEFINED ),
           "representation A": getDocument( documentsById, _.get( comparisonModel, 'representations.a' ) ),
           "representation B": getDocument( documentsById, _.get( comparisonModel, 'representations.b' ) ),
-          "selected representation": getDocument( documentsById, _.get(comparisonModel, 'data.selection') ),
+          "selected representation": getDocument( documentsById, _.get( comparisonModel, 'data.selection' ) ),
           "completed": (comparisonModel.completed)
             ? TRUE
             : FALSE,
