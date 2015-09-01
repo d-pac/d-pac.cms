@@ -36,7 +36,7 @@ function representationsSelectedHandler( result ){
 
 function comparisonSavedHandler(){
   var comparison = this;
-  if( !comparison.__original.completed && comparison.completed ){
+  if( comparison.__original && !comparison.__original.completed && comparison.completed ){
     assessmentsService.retrieve( {
       _id: comparison.assessment
     } ).then( function( assessment ){

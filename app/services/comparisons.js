@@ -81,6 +81,7 @@ module.exports.create = function( opts ){
           return rep.id == selectedPair[ 1 ]._id;
         } );
         repA.compareWith( repB );
+        hookData = selectedPair;
         output = base.create( {
           assessment: opts.assessment,
           assessor: opts.assessor._id,
@@ -89,13 +90,14 @@ module.exports.create = function( opts ){
             a: repA.id,
             b: repB.id
           }
+        } ).then( function( comparison ){
+          comparison.representations.a = repA;
+          comparison.representations.b = repB;
+          return comparison;
         } );
-        output.representations.a = repA;
-        output.representations.b = repB;
-        hookData = selectedPair;
       } else if( data.messages ){
         data.type = "messages";
-        hookData = _.defaults({
+        hookData = _.defaults( {
           assessor: opts.assessor,
           assessment: opts.assessment,
           representations: {
@@ -106,7 +108,7 @@ module.exports.create = function( opts ){
             documents: comparisons,
             objects: plainComparisons
           }
-        }, data);
+        }, data );
         output = data;
       }
       keystone.hooks.callHook( 'post:' + assessment.algorithm + '.select', hookData );
