@@ -35,6 +35,13 @@ var config = {
     required: true
   },
 
+  state: {
+    type: Types.Select,
+    options: constants.publicationStates.list.toString(),
+    default: constants.publicationStates.draft,
+    index: true
+  },
+
   schedule: {
     active: {
       type: Boolean,
@@ -101,13 +108,6 @@ var config = {
       label: "Number of comparisons wanted per stage.",
       default: [ 5 ]
     }
-  },
-
-  state: {
-    type: Types.Select,
-    options: constants.publicationStates.list.toString(),
-    default: constants.publicationStates.draft,
-    index: true
   },
 
   parent: {

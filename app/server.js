@@ -109,9 +109,6 @@ keystone.set( "nav", {
   ]
 } );
 
-//keystone.pre( 'updates', require( './hooks/phases' ) );
-//require( './hooks/benchmarked-comparative-selection' ).init();
-
 _.each( keystone.import( 'hooks' ), function( handler ){
   handler.init();
 } );
