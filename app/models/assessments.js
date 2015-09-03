@@ -35,6 +35,34 @@ var config = {
     required: true
   },
 
+  schedule: {
+    active: {
+      type: Boolean,
+      default: false,
+      label: "Activate schedule"
+    },
+    begin: {
+      type: Types.Date,
+      label: "Begin date",
+      note: "Automatically sets assessment to 'published' on this date (at 0:01)." +
+      "<br/>Leave blank to disable automatic publication.",
+      required: false,
+      dependsOn: {
+        "schedule.active": true
+      }
+    },
+    end: {
+      type: Types.Date,
+      label: "End date",
+      note: "Automatically sets assessment to 'archived' on this date (at 0:01 the next day)." +
+      "<br/>Leave blank to disable automatic archiving.",
+      required: false,
+      dependsOn: {
+        "schedule.active": true
+      }
+    }
+  },
+
   assignments: {
     assessor: {
       type: Types.Html,
