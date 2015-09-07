@@ -10,6 +10,7 @@ var assessmentsService = require( './assessments' );
 var documentsService = require( './documents' );
 var timelogsService = require( './timelogs' );
 var phasesService = require( './phases' );
+var constants = require( '../models/helpers/constants' );
 
 var LEFT_EMPTY = "empty";
 var UNDEFINED = "N/A";
@@ -84,11 +85,12 @@ function getAssessmentsMap( assessmentIds ){
 function getTimelogsMap( comparisonIds,
                          phasesMap ){
   return timelogsService
-    .listForComparisonIds( null, comparisonIds )
+    .listForComparisonIds( comparisonIds )
     .reduce( function( memo,
                        timelog ){
       var comparisonId = timelog.comparison.toString();
-      _.set( memo, comparisonId + "." + timelog.phase.slug, timelog.duration );
+      var phaseId = timelog.phase.toString();
+      _.set( memo, comparisonId + "." + phaseId, timelog.duration );
       return memo;
     }, {} );
 }
@@ -100,30 +102,62 @@ function createComparisonsReportData( phasesMap,
   return function( timelogsMap ){
     return _.map( comparisonsList, function( comparisonModel ){
       var comparisonId = comparisonModel.id.toString();
-      return {
+      var assessmentId = _.get( comparisonModel, 'assessment', '' ).toString();
+      var assessment = assessmentsMap[ assessmentId ];
+      var output = {
         comparison: comparisonModel._rid,
-        assessment: _.get( assessmentsMap, [ _.get( comparisonModel, 'assessment', '' ).toString(), 'name' ] ),
+        assessment: assessment.name,
         assessor: _.get( comparisonModel, 'assessor.email', UNDEFINED ),
         "representation A": getDocument( documentsMap, _.get( comparisonModel, 'representations.a' ) ),
         "representation B": getDocument( documentsMap, _.get( comparisonModel, 'representations.b' ) ),
         "selected representation": getDocument( documentsMap, _.get( comparisonModel, 'data.selection' ) ),
         "completed": (comparisonModel.completed)
           ? TRUE
-          : FALSE,
-        "comparative feedback": _.get( comparisonModel, 'data.comparative', '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" ),
-        "selection SEQ": _.get( comparisonModel, 'data.seq-selection', NIL ),
-        "comparative SEQ": _.get( comparisonModel, 'data.seq-comparative', NIL ),
-        "selection duration": _.get( timelogsMap, [ comparisonId, 'selection' ], UNDEFINED ),
-        "selection SEQ duration": _.get( timelogsMap, [ comparisonId, 'seq-selection' ], UNDEFINED ),
-        "comparative feedback duration": _.get( timelogsMap, [ comparisonId, 'comparative' ], UNDEFINED ),
-        "comparative feedback SEQ duration": _.get( timelogsMap, [
-          comparisonId, 'seq-comparative'
-        ], UNDEFINED ),
-        "total": _.reduce( timelogsMap[ comparisonId ], function( memo,
-                                                                  value ){
-          return memo + value;
-        }, 0 )
+          : FALSE
       };
+      _.each( assessment.phases, function( phaseId ){
+        var phase = phasesMap[ phaseId.toString() ];
+        switch( phase.slug ){
+          case constants.SEQ_COMPARATIVE:
+          case constants.SEQ_PASSFAIL:
+          case constants.SEQ_SELECTION:
+            output[ phase.label ] = _.get( comparisonModel, [ 'data', phase.slug ], NIL );
+            break;
+          case constants.COMPARATIVE:
+            output[ phase.label ] = _.get( comparisonModel, [
+              'data', phase.slug
+            ], '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+            break;
+          case constants.PROSCONS:
+            output[ "A+" ] = _.get( comparisonModel, [
+              'data', phase.slug, 'aPositive'
+            ], '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+            output[ "A-" ] = _.get( comparisonModel, [
+              'data', phase.slug, 'aNegative'
+            ], '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+            output[ "B+" ] = _.get( comparisonModel, [
+              'data', phase.slug, 'bPositive'
+            ], '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+            output[ "B-" ] = _.get( comparisonModel, [
+              'data', phase.slug, 'bNegative'
+            ], '' ).replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+            break;
+          case constants.PASSFAIL:
+            output[ "A passed" ] = _.get( comparisonModel, [ 'data', phase.slug, 'a' ], UNDEFINED );
+            output[ "B passed" ] = _.get( comparisonModel, [ 'data', phase.slug, 'b' ], UNDEFINED );
+            break;
+        }
+        if( assessment.enableTimeLogging ){
+          output[ phase.label + " duration" ] = _.get( timelogsMap, [ comparisonId, phaseId.toString() ], UNDEFINED );
+        }
+      } );
+      if( assessment.enableTimeLogging ){
+        output[ "total duration" ] = _.reduce( timelogsMap[ comparisonId ], function( memo,
+                                                                                      value ){
+          return memo + value;
+        }, 0 );
+      }
+      return output;
     } );
   };
 }
@@ -139,7 +173,7 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
               documentsMap,
               assessmentsMap,
               comparisonsList ){
-      return getTimelogsMap( _.pluck( comparisonsList, "_id" ) )
+      return getTimelogsMap( _.pluck( comparisonsList, "_id" ), phasesMap )
         .then( createComparisonsReportData( phasesMap, documentsMap, assessmentsMap, comparisonsList ) );
     }
   );

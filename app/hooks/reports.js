@@ -96,7 +96,6 @@ function reportRemovedHandler( next ){
 }
 
 module.exports.init = function(){
-
   keystone.list( 'Report' ).schema.pre( 'save', reportCreatedHandler );
   keystone.list( 'Report' ).schema.pre( 'remove', reportRemovedHandler );
 };

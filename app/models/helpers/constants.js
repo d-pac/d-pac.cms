@@ -14,7 +14,14 @@ var constants = module.exports = {
   RANKED: "ranked",
   OVERWRITE: 'overwrite',
   REUSE: 'reuse',
-  RENAME: 'rename'
+  RENAME: 'rename',
+  SELECTION: 'selection',
+  COMPARATIVE: "comparative",
+  PROSCONS: "pros-cons",
+  PASSFAIL: "passfail",
+  SEQ_SELECTION: "seq-selection",
+  SEQ_COMPARATIVE: "seq-comparative",
+  SEQ_PASSFAIL: "seq-passfail"
 };
 
 module.exports.directories = {
@@ -46,7 +53,7 @@ module.exports.conflicts = {
 
 module.exports.phases = [
   {
-    slug: "selection",
+    slug: constants.SELECTION,
     label: "Select best",
     field: {
       label: "Selected Representation",
@@ -60,7 +67,7 @@ module.exports.phases = [
     }
   },
   {
-    slug: "comparative",
+    slug: constants.COMPARATIVE,
     label: "Provide comparative Feedback",
     field: {
       label: "Comparative feedback",
@@ -69,7 +76,7 @@ module.exports.phases = [
     }
   },
   {
-    slug: "pros-cons",
+    slug: constants.PROSCONS,
     label: "Pros & cons",
     field: {
       aPositive: {
@@ -91,7 +98,7 @@ module.exports.phases = [
     }
   },
   {
-    slug: "passfail",
+    slug: constants.PASSFAIL,
     label: "Indicate Pass/Fail",
     field: {
       a: {
@@ -105,7 +112,7 @@ module.exports.phases = [
     }
   },
   {
-    slug: "seq-selection",
+    slug: constants.SEQ_SELECTION,
     label: "Select best SEQ",
     field: {
       type: Types.Number,
@@ -113,7 +120,7 @@ module.exports.phases = [
     }
   },
   {
-    slug: "seq-comparative",
+    slug: constants.SEQ_COMPARATIVE,
     label: "Comparative feedback SEQ",
     field: {
       type: Types.Number,
@@ -121,7 +128,7 @@ module.exports.phases = [
     }
   },
   {
-    slug: "seq-passfail",
+    slug: constants.SEQ_PASSFAIL,
     label: "Pass/fail SEQ",
     field: {
       type: Types.Number,
