@@ -3,7 +3,7 @@
 var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
-var constants = require('./helpers/constants');
+var constants = require( './helpers/constants' );
 
 var Bulkupload = new keystone.List( "Bulkupload", {
   map: {
@@ -31,7 +31,7 @@ var list = require( './helpers/setupList' )( Bulkupload )
     },
     comment: {
       type: Types.Text,
-      required: true,
+      required: false,
       initial: true,
       label: "Note",
       note: "Short description of this bulkupload"
@@ -62,6 +62,14 @@ var list = require( './helpers/setupList' )( Bulkupload )
       required: true,
       note: "What needs to be done in case files with the same name already exist.",
       label: "Conflict resolution"
+    },
+    jsonfile: {
+      type: Types.LocalFile,
+      dest: constants.directories.bulk,
+      required: false,
+      initial: false,
+      allowedTypes: [ "application/json" ],
+      note: "Optional. JSON file with representation data."
     },
     completed: {
       type: Boolean,

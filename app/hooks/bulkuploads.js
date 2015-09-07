@@ -18,11 +18,22 @@ var constants = require( '../models/helpers/constants' );
 
 var ignored = [ '.DS_Store' ];
 
-function extractZipfile( bulkupload,
-                         opts ){
+function extractZipfile( opts ){
   return unzip( opts.file, {
     dir: opts.temp
   } );
+}
+
+function retrieveJSONData( opts ){
+  if( opts.json ){
+    return _.reduce( require( opts.json ), function( memo,
+                                                     item ){
+      memo[ item.fileName ] = item;
+      return memo;
+    }, {} );
+  }
+
+  return false;
 }
 
 function updateDocument( document,
@@ -91,13 +102,17 @@ function removeFile( fileData ){
 function reuseStrategy( files,
                         assessment,
                         opts ){
+  files.src.originalname = files.src.filename;
   return findDocuments( files.dest )
     .then( function( documents ){
       var document = (documents && documents.length)
         ? documents[ 0 ]
         : new Document.model();
       document = updateDocument( document, files.src, opts );
-      return [ document, createRepresentation( document, assessment ) ];
+      return {
+        document: document,
+        representation: createRepresentation( document, assessment )
+      };
     } );
 }
 
@@ -105,6 +120,7 @@ function overwriteStrategy( files,
                             assessment,
                             opts ){
   files.dest.stats = files.src.stats;
+  files.dest.originalname = files.src.filename;
   return P.join(
     findDocuments( files.dest ),
     removeFile( files.dest )
@@ -116,7 +132,10 @@ function overwriteStrategy( files,
         ? documents[ 0 ]
         : new Document.model();
       document = updateDocument( document, files.dest, opts );
-      return [ document, createRepresentation( document, assessment ) ];
+      return {
+        document: document,
+        representation: createRepresentation( document, assessment )
+      };
     }
   );
 }
@@ -124,23 +143,31 @@ function overwriteStrategy( files,
 function createStrategy( files,
                          assessment,
                          opts ){
+  files.src.originalname = files.src.filename;
   return moveFile( files.src, files.dest )
     .then( function(){
       var document = updateDocument( new Document.model(), files.src, opts );
-      return [ document, createRepresentation( document, assessment ) ];
+      return {
+        document: document,
+        representation: createRepresentation( document, assessment )
+      };
     } );
 }
 
 function renameStrategy( files,
+                         jsonData,
                          assessment,
                          opts ){
-  files.dest = createFileData(uuid.v4() + path.extname( files.src.filename ), constants.directories.documents);
+  files.dest = createFileData( uuid.v4() + path.extname( files.src.filename ), constants.directories.documents );
   files.dest.originalname = files.src.filename;
   files.dest.stats = files.src.stats;
   return moveFile( files.src, files.dest )
     .then( function(){
       var document = updateDocument( new Document.model(), files.dest, opts );
-      return [ document, createRepresentation( document, assessment ) ];
+      return {
+        document: document,
+        representation: createRepresentation( document, assessment, jsonData[ files.dest.originalname ] )
+      };
     } );
 }
 
@@ -159,6 +186,7 @@ strategies[ constants.OVERWRITE ] = overwriteStrategy;
  */
 
 function processFiles( bulkupload,
+                       jsonData,
                        assessment,
                        opts ){
   return readDirectoryContents( opts )
@@ -177,11 +205,33 @@ function processFiles( bulkupload,
 
       return new P( function( resolve,
                               reject ){
-        strategy( files, assessment, opts ).then( function( result ){
-          resolve( memo.concat( result ) );
-        } );
+        strategy( files, assessment, opts )
+          .then( function( result ){
+            var id = result.document.file.originalname;
+            memo.documents[ id ] = result.document;
+            memo.representations[ id ] = result.representation;
+            resolve( memo );
+          } );
       } );
-    }, [] ).each( function( doc ){
+    }, {
+      documents: {},
+      representations: {}
+    } )
+    .then( function( mapByFilename ){
+      if( jsonData ){
+        _.each( jsonData, function( item ){
+          var representation = mapByFilename.representations[ item.fileName ];
+          if( item.closeTo ){
+            representation.closeTo = mapByFilename.representations[ item.closeTo ].id;
+          }
+          representation.ability.value = Number(item.ability.value);
+          representation.ability.se = Number(item.ability.se);
+          representation.rankType = item.rankType;
+        } );
+      }
+      return _.values( mapByFilename.documents ).concat( _.values( mapByFilename.representations ) );
+    } )
+    .each( function( doc ){
       return P.promisify( doc.save, doc )();
     } );
 }
@@ -189,6 +239,11 @@ function processFiles( bulkupload,
 function cleanup( bulkupload,
                   opts ){
   return removeFile( { resolved: opts.file } )
+    .then( function(){
+      if( opts.json ){
+        return removeFile( { resolved: opts.json } );
+      }
+    } )
     .then( function(){
       return rimraf( opts.temp );
     } ).then( function(){
@@ -211,20 +266,28 @@ function bulkuploadSavedHandler( next ){
   }
 
   var opts = {
-    file: path.join( constants.directories.bulk, bulkupload.zipfile.filename ),
+    dest: constants.directories.documents,
     temp: path.join( constants.directories.bulk, bulkupload._rid.toString() ),
-    dest: constants.directories.documents
+    file: path.join( constants.directories.bulk, _.get( bulkupload, 'zipfile.filename' ) ),
+    json: false
   };
 
-  extractZipfile( bulkupload, opts )
-    .then( function(){
-      return assessmentsService.retrieve( {
-        _id: bulkupload.assessment.toString()
-      } );
-    } )
-    .then( function( assessment ){
-      return processFiles( bulkupload, assessment, opts );
-    } )
+  var jsonfile = _.get( bulkupload, 'jsonfile.filename', false );
+  if( jsonfile ){
+    opts.json = path.resolve( path.join( constants.directories.bulk, jsonfile ) );
+  }
+
+  P.join(
+    extractZipfile( opts ),
+    retrieveJSONData( opts ),
+    assessmentsService.retrieve( {
+      _id: bulkupload.assessment.toString()
+    } ), function( extracted,
+                   jsonData,
+                   assessment ){
+      return processFiles( bulkupload, jsonData, assessment, opts );
+    }
+  )
     .then( function(){
       return cleanup( bulkupload, opts );
     } )
