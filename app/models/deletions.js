@@ -10,8 +10,7 @@ var Deletion = new keystone.List( "Deletion", {
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: true,
-  label: "Delete"
+  noedit: true
 } );
 
 Deletion.defaultColumns = "name, result, createdAt";
