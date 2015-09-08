@@ -26,7 +26,8 @@ module.exports = function( shipit ){
       "app",
       "package.json",
       "npm-shrinkwrap.json",
-      ".env"
+      ".env",
+      "process.json"
     ] );
 
     files = files.join( " " );
