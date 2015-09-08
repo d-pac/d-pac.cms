@@ -224,8 +224,8 @@ function processFiles( bulkupload,
           if( item.closeTo ){
             representation.closeTo = mapByFilename.representations[ item.closeTo ].id;
           }
-          representation.ability.value = Number(item.ability.value);
-          representation.ability.se = Number(item.ability.se);
+          representation.ability.value = Number( item.ability.value );
+          representation.ability.se = Number( item.ability.se );
           representation.rankType = item.rankType;
         } );
       }
@@ -292,9 +292,13 @@ function bulkuploadSavedHandler( next ){
       return cleanup( bulkupload, opts );
     } )
     .then( function(){
+      bulkupload.result = "Bulk upload successfully completed.";
       next();
     } )
-    .catch( next );
+    .catch( function( err ){
+      bulkupload.result = "Bulk upload failed: " + err.message;
+      next( err );
+    } );
 }
 
 module.exports.init = function(){

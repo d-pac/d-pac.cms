@@ -78,6 +78,12 @@ var list = require( './helpers/setupList' )( Report )
     url: {
       type: Types.Url,
       noedit: true
+    },
+    result: {
+      type: Types.Html,
+      wysiwyg: true,
+      noedit: true,
+      default: ''
     }
   } )
   .register();

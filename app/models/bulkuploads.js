@@ -74,7 +74,13 @@ var list = require( './helpers/setupList' )( Bulkupload )
     completed: {
       type: Boolean,
       default: false,
-      noedit: true
+      hidden: true
+    },
+
+    result: {
+      type: Types.Text,
+      noedit: true,
+      default: ''
     }
   } )
   .register();

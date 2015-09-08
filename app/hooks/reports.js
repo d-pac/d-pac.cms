@@ -10,9 +10,16 @@ var path = require( 'path' );
 var assessmentsService = require( '../services/assessments' );
 var reportsService = require( '../services/reports' );
 var convertersService = require( '../services/converters' );
-var constants = require('../models/helpers/constants');
+var constants = require( '../models/helpers/constants' );
 
 var reportsDir = constants.directories.reports;
+
+var templateOpts = { interpolate: /{{([\s\S]+?)}}/g };
+var templates = {
+  success: _.template( 'Report successfully generated: ' +
+    '<a href="{{ url }}" target="_blank">{{ filename }}</a>', templateOpts ),
+  failure: _.template( 'An error occurred when generating the report: {{message}}', templateOpts )
+};
 
 function updateDoc( report,
                     assessmentName ){
@@ -81,8 +88,12 @@ function reportCreatedHandler( next ){
     } ).then( function( reportData ){
       return writeFile( report, reportData );
     } ).then( function(){
+      report.result = templates.success( report );
       next();
-    } ).catch( next );
+    } ).catch( function( err ){
+      report.result = templates.failure( err );
+      next( err );
+    } );
   } else {
     next();
   }
