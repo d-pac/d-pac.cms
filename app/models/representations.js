@@ -22,6 +22,16 @@ Representation.schema.methods.compareWith = function( other ){
   other.save();
 };
 
+Representation.schema.methods.uncompareWith = function( other ){
+  var ti = this.compared.indexOf(other.id);
+  this.compared.splice(ti, 1);
+  var oi = other.compared.indexOf(this.id);
+  other.compared.splice(oi, 1);
+
+  this.save();
+  other.save();
+};
+
 require( './helpers/setupList' )( Representation )
   .add( {
     name: {
