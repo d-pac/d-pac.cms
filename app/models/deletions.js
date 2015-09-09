@@ -10,7 +10,10 @@ var Deletion = new keystone.List( "Deletion", {
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: true
+  noedit: true,
+  label: "Removals",
+  singular: "Removal",
+  plural: "Removals"
 } );
 
 Deletion.defaultColumns = "name, result, createdAt";
@@ -28,15 +31,16 @@ var list = require( './helpers/setupList' )( Deletion )
       options: [
         {
           label: "Assessment",
-          value: "assessment"
+          value: "10"
         }
-        //{
-        //  label: "Comparison",
-        //  value: "comparison"
-        //}
+      //{
+      //  label: "Comparison",
+      //  value: 20
+      //}
       ],
       initial: true,
-      required: true
+      required: true,
+      label: "Data type"
     },
 
     assessment: {
@@ -44,9 +48,10 @@ var list = require( './helpers/setupList' )( Deletion )
       ref: "Assessment",
       required: false,
       initial: true,
-      note: "Will delete this assessment and all depending data: comparisons, representations and timelogs",
+      note: "Will delete/reset this assessment and its representations.<br/>" +
+      "Comparisons and timelogs will always be deleted.",
       dependsOn: {
-        subject: "assessment"
+        subject: "10"
       }
     },
 
@@ -57,8 +62,32 @@ var list = require( './helpers/setupList' )( Deletion )
       initial: true,
       note: "Will delete this comparison and adjust representation data",
       dependsOn: {
-        subject: "comparison"
+        subject: "20"
       }
+    },
+
+    removalType: {
+      type: Types.Select,
+      options: [
+        {
+          label: "Reset",
+          value: "1"
+        },
+        {
+          label: "Delete",
+          value: "2"
+        }
+      ],
+      label: "Action",
+      initial: true,
+      required: true
+    },
+
+    confirm: {
+      type: Types.Boolean,
+      default: false,
+      initial: true,
+      label: "Yes, I realize this will delete data in the database."
     },
 
     result: {
@@ -67,4 +96,12 @@ var list = require( './helpers/setupList' )( Deletion )
       default: ''
     }
   } )
+  .validate({
+    confirm: [
+      function(value){
+        return value;
+      },
+      "You must confirm!"
+    ]
+  })
   .register();

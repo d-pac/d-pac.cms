@@ -29,26 +29,49 @@ function deleteComparison( comparisonId ){
   } );
 }
 
-function deleteAssessment( assessmentId ){
-  var payload = {
-    assessment: assessmentId
-  };
-  return P.join(
-    comparisonsService.list( payload ),
-    P.promisify( Representation.model.remove, Representation.model )( payload )
-  )
-    .spread( function( comparisonsList ){
-      var comparisonsIds = _.pluck( comparisonsList, "id" );
+function deleteAssessmentAssociates( assessmentId ){
+  return comparisonsService.list( {
+    assessment: assessmentId.toString()
+  } )
+    .each( function( comparison ){
+      return P.promisify( comparison.remove, comparison )();
+    } )
+    .then( function( comparisonsList ){
+      return _.pluck( comparisonsList, "id" );
+    } )
+    .then( function( comparisonIds ){
       return P.promisify( Timelog.model.remove, Timelog.model )( {
         comparison: {
-          $in: comparisonsIds
+          $in: comparisonIds
         }
-      } )
-        .then( function( timelogsRemoval ){
-          return P.each( comparisonsList, function( comparison ){
-            return P.promisify( comparison.remove, comparison )();
-          } );
-        } );
+      } );
+    } );
+}
+
+function resetAssessment( assessmentId ){
+  return deleteAssessmentAssociates( assessmentId )
+    .then( function(){
+      return representationsService.list( {
+        assessment: assessmentId
+      } );
+    } )
+    .each( function( representation ){
+      representation.compared = [];
+      return P.promisify( representation.save, representation )();
+    } )
+    .then( function(){
+      return assessmentsService.retrieve( {
+        _id: assessmentId.toString()
+      } );
+    } );
+}
+
+function deleteAssessment( assessmentId ){
+  return deleteAssessmentAssociates( assessmentId )
+    .then( function(){
+      return P.promisify( Representation.model.remove, Representation.model )( {
+        assessment: assessmentId
+      } );
     } )
     .then( function(){
       return usersService.list();
@@ -74,8 +97,16 @@ function deleteAssessment( assessmentId ){
 
 function deletionCreatedHandler( next ){
   var deletion = this;
-  switch( deletion.subject ){
-    case "assessment":
+  switch( parseInt( deletion.subject ) + parseInt( deletion.removalType ) ){
+    case 11:
+      resetAssessment( deletion.assessment )
+        .then( function( assessment ){
+          deletion.result = "Assessment successfully reset: " + assessment.name;
+          next();
+        } )
+        .catch( next );
+      break;
+    case 12:
       deleteAssessment( deletion.assessment )
         .then( function( assessment ){
           deletion.result = "Assessment successfully removed: " + assessment.name;
@@ -83,7 +114,7 @@ function deletionCreatedHandler( next ){
         } )
         .catch( next );
       break;
-    case "comparison":
+    case 22:
       deleteComparison( deletion.comparison )
         .then( next )
         .catch( next );
