@@ -15,6 +15,18 @@ module.exports.list = function list( opts ){
     .execAsync();
 };
 
+module.exports.listWithoutUser = function( userId,
+                                           opts ){
+  debug( "listWithoutUser" );
+  return base.list( opts )
+    .populate( "document" )
+    .execAsync()
+    .filter( function( representation ){
+      var owner = _.get(representation, 'document.owner') || '';
+      return owner.toString() !== userId.toString();
+    } );
+};
+
 module.exports.listById = function listById( opts ){
   debug( "listById" );
   return base.listById( opts )

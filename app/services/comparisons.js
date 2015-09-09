@@ -40,7 +40,7 @@ module.exports.create = function( opts ){
   debug( '#create', opts );
 
   return P.join(
-    representationsService.list( {
+    representationsService.listWithoutUser( opts.assessor.id, {
       assessment: opts.assessment
     } ),
     this.list( {
