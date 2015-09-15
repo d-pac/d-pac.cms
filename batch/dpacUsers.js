@@ -4,35 +4,37 @@ var keystone = require( "keystone" );
 var async = require( "async" );
 var User = keystone.list( "User" );
 
-function createAdmin( admin,
+function createUsers( users,
                       done ){
-  var newAdmin = new User.model( admin );
-
-  newAdmin.isAdmin = true;
-  newAdmin.save( function( err ){
-    if( err ){
-      console.error( "Error adding admin '" + admin.email + "' to the database:" );
-      console.error( err );
-    } else {
-      console.log( "Added admin '" + admin.email + "' to the database." );
+  User.model.create( users, function( err,
+                                      created ){
+    if( created && created.length ){
+      created.forEach( function( user ){
+        console.log( 'User created: ' + user.email );
+      } );
     }
-    done();
+    done( err );
   } );
 }
 
-exports = module.exports = function( admins,
+exports = module.exports = function( users,
                                      done ){
-  async.forEach( admins, function( admin,
-                                   next ){
+  async.reduce( users, [], function( memo,
+                                     user,
+                                     next ){
     User.model.findOne( {
-      email: admin.email
+      email: user.email
     } ).exec( function( err,
                         result ){
       if( result ){
-        console.log( "Admin '" + admin.email + "' already exists." );
-        return next();
+        console.log( "user '" + user.email + "' already exists." );
+      } else {
+        memo.push( user );
       }
-      createAdmin( admin, next );
+      return next( null, memo );
     } );
-  }, done );
+  }, function( err,
+               users ){
+    createUsers( users, done );
+  } );
 };
