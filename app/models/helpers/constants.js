@@ -27,7 +27,8 @@ var constants = module.exports = {
 module.exports.directories = {
   bulk: 'app/uploads/bulk',
   reports: 'app/reports',
-  documents: 'app/uploads/media'
+  documents: 'app/uploads/media',
+  archive: 'app/archive'
 };
 
 module.exports.roles = {

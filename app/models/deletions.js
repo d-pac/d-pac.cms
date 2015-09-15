@@ -11,12 +11,12 @@ var Deletion = new keystone.List( "Deletion", {
   track: true,
   defaultSort: '-_rid',
   noedit: true,
-  label: "Removals",
-  singular: "Removal",
-  plural: "Removals"
+  label: "Assessment Actions",
+  singular: "Assessment Action",
+  plural: "Assessment Actions"
 } );
 
-Deletion.defaultColumns = "name, result, createdAt";
+Deletion.defaultColumns = "name, line, removalType, success, createdAt";
 
 Deletion.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Deletion",
@@ -26,44 +26,13 @@ Deletion.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 
 var list = require( './helpers/setupList' )( Deletion )
   .add( {
-    subject: {
-      type: Types.Select,
-      options: [
-        {
-          label: "Assessment",
-          value: "10"
-        }
-      //{
-      //  label: "Comparison",
-      //  value: 20
-      //}
-      ],
-      initial: true,
-      required: true,
-      label: "Data type"
-    },
-
     assessment: {
       type: Types.Relationship,
       ref: "Assessment",
-      required: false,
+      required: true,
       initial: true,
       note: "Will delete/reset this assessment and its representations.<br/>" +
-      "Comparisons and timelogs will always be deleted.",
-      dependsOn: {
-        subject: "10"
-      }
-    },
-
-    comparison: {
-      type: Types.Relationship,
-      ref: "Comparison",
-      required: false,
-      initial: true,
-      note: "Will delete this comparison and adjust representation data",
-      dependsOn: {
-        subject: "20"
-      }
+      "Comparisons and timelogs will always be deleted."
     },
 
     removalType: {
@@ -71,14 +40,18 @@ var list = require( './helpers/setupList' )( Deletion )
       options: [
         {
           label: "Reset",
-          value: "1"
+          value: "reset"
         },
         {
           label: "Delete",
-          value: "2"
+          value: "delete"
+        },
+        {
+          label: "Archive",
+          value: "archive"
         }
       ],
-      label: "Action",
+      label: "Action Type",
       initial: true,
       required: true
     },
@@ -90,10 +63,22 @@ var list = require( './helpers/setupList' )( Deletion )
       label: "Yes, I realize this will delete data in the database."
     },
 
-    result: {
+    line: {
       type: Types.Text,
       noedit: true,
       default: ''
+    },
+
+    log: {
+      type: Types.Html,
+      wysiwyg: true,
+      noedit: true,
+      default: ''
+    },
+
+    success: {
+      type: Boolean,
+      default: false
     }
   } )
   .validate({
