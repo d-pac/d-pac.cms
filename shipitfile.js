@@ -1,33 +1,34 @@
 var _ = require( "lodash" );
 var manifests = require( "require-directory" )( module, "./shipping" );
 var fs = require( "fs" );
+var path = require( 'path' );
 
 module.exports = function( shipit ){
   var config = _.defaults( {
-    default : {
-      ignores : [ "app/uploads", ".DS_Store" ]
+    default: {
+      ignores: [ "app/uploads", ".DS_Store" ]
     }
   }, manifests );
 
   shipit.initConfig( config );
 
-  shipit.blTask( "npm-shrinkwrap", function(){
-    return shipit.local( "npm prune" ).then( function(){
-      return shipit.local( "npm shrinkwrap" );
-    } );
-  } );
-
   shipit.blTask( "transfer-app", function(){
-    var specEnv = ".env." + this.options.environment;
-    var files = ( fs.existsSync( specEnv ) )
-      ? [ specEnv ]
-      : [];
+    var processEnv = "process." + this.options.environment + ".json";
+    var files = [ processEnv ];
+    var processConfig = require( './' + processEnv );
+    var envs = _.pluck( processConfig.apps, [ "env", "NODE_ENV" ] );
+    envs.forEach( function( env ){
+      var envFile = ".env." + env;
+      if( fs.existsSync( envFile ) ){
+        files.push( envFile );
+      }
+    } );
+
     files = files.concat( [
       "app",
       "package.json",
       "npm-shrinkwrap.json",
-      ".env",
-      "process.json"
+      ".env"
     ] );
 
     files = files.join( " " );
@@ -35,18 +36,4 @@ module.exports = function( shipit ){
     return shipit.remoteCopy( files, dest );
   } );
 
-  shipit.blTask( "npm-install", function(){
-    return shipit.remote( "cd " + this.config.options.dest + "; npm install --production" );
-  } );
-
-  shipit.blTask( "npm-start", function(){
-    return shipit.remote( "cd " + this.config.options.dest + "; npm start" );
-  } );
-  shipit.blTask( "npm-stop", function(){
-    return shipit.remote( "cd " + this.config.options.dest + "; npm stop" );
-  } );
-
-  shipit.task( "deploy", [ "transfer-app", "npm-install" ], function(){
-    return true;
-  } );
 };

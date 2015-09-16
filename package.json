@@ -35,7 +35,9 @@
     "underscore.string": "^3.0.0",
     "uuid": "^2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "require-directory": "^2.1.1"
+  },
   "engines": {
     "node": ">=0.10.22",
     "npm": ">=1.3.14"
