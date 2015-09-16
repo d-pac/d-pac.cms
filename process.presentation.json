@@ -1,0 +1,32 @@
+{
+  "apps": [
+    {
+      "name": "sandbox.d-pac",
+      "script": "app/server.js",
+      "exec_interpreter": "/usr/local/n/versions/node/0.12.4/bin/node",
+      "error_file": "./logs/sandbox-err.log",
+      "out_file": "./logs/sandbox-out.log",
+      "exec_mode": "fork",
+      "instances": 1,
+      "max_restarts": 5,
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_ENV": "sandbox"
+      }
+    },
+    {
+      "name": "demo.d-pac",
+      "script": "app/server.js",
+      "exec_interpreter": "/usr/local/n/versions/node/0.12.4/bin/node",
+      "error_file": "./logs/demo-err.log",
+      "out_file": "./logs/demo-out.log",
+      "exec_mode": "fork",
+      "instances": 1,
+      "max_restarts": 5,
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_ENV": "demo"
+      }
+    }
+  ]
+}

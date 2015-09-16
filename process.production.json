@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "production.d-pac",
+      "script": "app/server.js",
+      "exec_interpreter": "/usr/local/n/versions/node/0.12.4/bin/node",
+      "error_file": "./logs/err.log",
+      "out_file": "./logs/out.log",
+      "exec_mode": "fork",
+      "instances": 1,
+      "max_restarts": 5,
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
