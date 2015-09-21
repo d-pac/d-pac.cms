@@ -1,11 +1,11 @@
 {
   "apps": [
     {
-      "name": "production.d-pac",
+      "name": "production",
       "script": "app/server.js",
       "exec_interpreter": "/usr/local/n/versions/node/0.12.4/bin/node",
-      "error_file": "./logs/err.log",
-      "out_file": "./logs/out.log",
+      "error_file": "app/logs/process-error.log",
+      "out_file": "app/logs/process-out.log",
       "exec_mode": "fork",
       "instances": 1,
       "max_restarts": 5,

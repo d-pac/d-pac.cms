@@ -1,9 +1,8 @@
 {
   "apps": [
     {
-      "name": "staging",
+      "name": "sandbox",
       "script": "app/server.js",
-      "exec_interpreter": "/usr/local/n/versions/0.12.4/bin/node",
       "error_file": "app/logs/process-error.log",
       "out_file": "app/logs/process-out.log",
       "exec_mode": "fork",
@@ -11,7 +10,7 @@
       "max_restarts": 5,
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
-        "NODE_ENV": "staging"
+        "NODE_ENV": "sandbox"
       }
     }
   ]

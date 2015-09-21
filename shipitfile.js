@@ -14,26 +14,18 @@ module.exports = function( shipit ){
 
   shipit.blTask( "transfer-app", function(){
     var processEnv = "process." + this.options.environment + ".json";
-    var files = [ processEnv ];
-    var processConfig = require( './' + processEnv );
-    var envs = _.pluck( processConfig.apps, [ "env", "NODE_ENV" ] );
-    envs.forEach( function( env ){
-      var envFile = ".env." + env;
-      if( fs.existsSync( envFile ) ){
-        files.push( envFile );
-      }
-    } );
-
-    files = files.concat( [
+    var envEnv = ".env." + this.options.environment;
+    var files = [
+      processEnv,
+      envEnv,
       "app",
       "package.json",
       "npm-shrinkwrap.json",
       ".env"
-    ] );
+    ];
 
     files = files.join( " " );
     var dest = this.config.options.dest;
     return shipit.remoteCopy( files, dest );
   } );
-
 };
