@@ -35,6 +35,9 @@ exports = module.exports = function( users,
     } );
   }, function( err,
                users ){
+    if( err ){
+      return console.log( "Error occurred:", err );
+    }
     createUsers( users, done );
   } );
 };
