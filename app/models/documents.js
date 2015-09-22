@@ -7,6 +7,10 @@ var mime = require( "mime" );
 var path = require( "path" );
 var constants = require( "./helpers/constants" );
 
+var allowedTypes = [ 'png', 'jpg', 'pdf', 'html', 'svg' ].map( function( ext ){
+  return mime.lookup( ext );
+} );
+
 var utils = {
   local: {
     href: function(){
@@ -136,7 +140,8 @@ require( './helpers/setupList' )( Document )
       dest: constants.directories.documents,
       prefix: "/media",
       required: false,
-      initial: false
+      initial: false,
+      allowedTypes: allowedTypes
     },
 
     link: {
