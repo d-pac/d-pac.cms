@@ -9,7 +9,7 @@
     "comparative-selection": "^2.0.2",
     "connect-mongo": "^0.8.0",
     "cors": "^2.4.1",
-    "d-pac.plugins-parser": "^1.1.2",
+    "d-pac.plugins-parser": "^1.1.3",
     "debug": "^2.1.1",
     "deep-diff": "^0.3.2",
     "deep-extend": "^0.4.0",
