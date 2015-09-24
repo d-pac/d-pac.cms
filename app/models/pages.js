@@ -3,13 +3,7 @@
 var keystone = require( 'keystone' );
 var Types = keystone.Field.Types;
 
-var Page = new keystone.List( 'Page', {
-  autokey: {
-    path: 'slug',
-    from: 'name',
-    unique: true
-  }
-} );
+var Page = new keystone.List( 'Page' );
 
 Page.defaultColumns = 'title, slug, state|20%, author, publishedDate, expose';
 var fields = {
