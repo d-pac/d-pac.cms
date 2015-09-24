@@ -31,3 +31,4 @@ batch/*
 !batch/*.js
 
 archive
+process.*
