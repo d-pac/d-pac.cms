@@ -21,6 +21,7 @@ module.exports = function( shipit ){
       "app",
       "package.json",
       "npm-shrinkwrap.json",
+      "headstone.json",
       ".env"
     ];
 
