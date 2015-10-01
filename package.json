@@ -6,7 +6,7 @@
     "async": "^1.4.2",
     "benchmarked-comparative-selection": "^1.1.4",
     "bluebird": "^2.9.7",
-    "comparative-selection": "^2.0.2",
+    "comparative-selection": "^2.1.0",
     "connect-mongo": "^0.8.0",
     "cors": "^2.4.1",
     "d-pac.plugins-parser": "^1.1.3",
