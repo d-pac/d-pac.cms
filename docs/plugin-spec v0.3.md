@@ -1,4 +1,4 @@
-# Plugin spec
+# Plugin spec v0.3.0
 
 ## Mandatory configuration
 
@@ -47,14 +47,14 @@ function select(representations, comparisons, assessment, assessor){
 	* `comparedNum`: {`Number`} Number of times compared (might deviate from `compared.length` if `compared` stores unique id's only and a representation is compared to another specific representation multiple times)
 
 * `comparisons` an Array of objects with following (minimal) structure:
-	
+
 	* `_id`: {`String`} unique object identifier
 	* `assessor`: {`String`} user id
 	* `assessment`: {`String`} assessment id
-	* `representations`: 
+	* `representations`:
 		* `a`: {`String`} representation id
 		* `b`: {`String`} representation id
-	* `data`: 
+	* `data`:
 		* `selection`: {`String`} representation id, selected representation
 
 * `assessment` an object with structure:
