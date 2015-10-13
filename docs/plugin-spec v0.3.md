@@ -1,4 +1,4 @@
-# Plugin spec v0.3.0
+# Plugin spec v0.3.1
 
 ## Mandatory configuration
 
@@ -14,7 +14,7 @@ Your `package.json` manifest file **must** include:
 			"description" : "Description of the plugin",
 			"type" : "select",
 			"entry" : "select",
-			"compatibility":"*"
+			"satisfies":"^0.3.1"
 		} ]
 	}
 	```
@@ -23,7 +23,8 @@ Your `package.json` manifest file **must** include:
 	* `description`: {`String`} _**(required)**_ A description of the algorithm.
 	* `type`: {`String`} _**(required)**_ The type of the algorithm.
 	* `entry`: {`String`} _(optional)_ The main access point to your algorithm, by default the same value as `type` is assumed.
-	* `compatibility`: {`String`|`Array`} _(optional)_ [Semver](http://semver.org) version specification of d-pac.cms versions this plugin is compatible with.
+	* `satisfies`: {`String`|`Array`} _**required**_ (v0.3.1 and up) [Semver](http://semver.org) version specification of the **d-pac plugin specification** (i.e. this document) the plugin is compatible with. E.g. `"^0.3.1"`
+	* `compatibility`: {`String`|`Array`} _(optional)_ **DEPRECATED in v0.3.1** [Semver](http://semver.org) version specification of d-pac.cms versions this plugin is compatible with.
 
 ## Mandatory API
 
