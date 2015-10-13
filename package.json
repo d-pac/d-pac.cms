@@ -47,5 +47,9 @@
     "restart": "forever restart app/server.js",
     "monitor": "nodemon app/server.js",
     "stop": "forever stop app/server.js"
+  },
+  "d-pac": {
+    "api": "0.2.0",
+    "plugins": "0.3.0"
   }
 }
