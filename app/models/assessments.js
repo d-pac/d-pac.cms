@@ -3,7 +3,7 @@
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 var constants = require( "./helpers/constants" );
-var plugins = require( "keystone-dpac-plugins" );
+var plugins = require( "../lib/pluginsScrobbler" );
 
 var Assessment = new keystone.List( "Assessment", {
   track: true,
