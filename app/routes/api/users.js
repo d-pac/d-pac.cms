@@ -40,10 +40,10 @@ module.exports.listComparisons = function( req,
     return notesService.listByDocuments( {
       author: userId
     }, documentIds );
-  } ).then(function(notes){
+  } ).then( function( notes ){
     response.included = response.included.concat( notes );
     return notes;
-  }).then( function(){
+  } ).then( function(){
     return response;
   } ), res, next, true );
 };
