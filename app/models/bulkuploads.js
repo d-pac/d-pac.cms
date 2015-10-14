@@ -41,7 +41,10 @@ var list = require( './helpers/setupList' )( Bulkupload )
       dest: constants.directories.bulk,
       required: false,
       initial: false,
-      allowedTypes: [ "application/zip" ],
+      allowedTypes: [
+        "application/zip", "application/x-zip-compressed", "application/zip-compressed", "multipart/x-zip",
+        "application/octet-stream"
+      ],
       note: "Zipfiles can be really large, i.e. this could take a LOOOOOOONG time!"
     },
     conflicts: {
