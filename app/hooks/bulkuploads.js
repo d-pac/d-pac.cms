@@ -6,6 +6,7 @@ var P = require( 'bluebird' );
 var unzip = P.promisify( require( 'extract-zip' ) );
 var rimraf = P.promisify( require( 'rimraf' ) );
 var fs = P.promisifyAll( require( 'fs' ) );
+var dirops = P.promisifyAll( require( 'node-dir' ) );
 var path = require( 'path' );
 var mime = require( 'mime' );
 var uuid = require( 'uuid' );
@@ -21,7 +22,9 @@ var ignored = [ '.DS_Store' ];
 function extractZipfile( opts ){
   return unzip( opts.file, {
     dir: opts.temp
-  } );
+  } ).catch( function( err ){
+    console.error( 'ERROR:', err );
+  } )
 }
 
 function retrieveJSONData( opts ){
@@ -52,17 +55,25 @@ function updateDocument( document,
 }
 
 function readDirectoryContents( opts ){
-  return fs.readdirAsync( opts.temp )
+  return dirops.filesAsync( opts.temp )
     .then( function( files ){
-      return _.without.apply( _, [ files ].concat( ignored ) );
+      return files.filter( function( file ){
+        return ignored.indexOf( file ) < 0;
+      } );
     } );
+  //return fs.readdirAsync( opts.temp )
+  //  .then( function( files ){
+  //    return _.without.apply( _, [ files ].concat( ignored ) );
+  //  } );
 }
 
-function createFileData( filename,
+function createFileData( filepath,
                          dir ){
   var fileData = {};
-  fileData.filename = filename;
-  fileData.resolved = path.join( dir, filename );
+  fileData.filename = path.basename( filepath );
+  fileData.resolved = (dir)
+    ? path.join( dir, fileData.filename )
+    : filepath;
   try{
     fileData.stats = fs.statSync( fileData.resolved );
   } catch( err ) {
@@ -191,14 +202,14 @@ function processFiles( bulkupload,
                        opts ){
   return readDirectoryContents( opts )
     .reduce( function( memo,
-                       filename ){
+                       filepath ){
       var files = {
-        src: createFileData( filename, opts.temp )
+        src: createFileData( filepath )
       };
       if( !files.src.stats.isFile() ){
         return memo;
       }
-      files.dest = createFileData( filename, opts.dest );
+      files.dest = createFileData( filepath, opts.dest );
       var strategy = ( files.dest.stats.isFile() )
         ? strategies[ bulkupload.conflicts ]
         : strategies.create;
@@ -282,12 +293,12 @@ function bulkuploadSavedHandler( next ){
     retrieveJSONData( opts ),
     assessmentsService.retrieve( {
       _id: bulkupload.assessment.toString()
-    } ), function( extracted,
+    } ), function( nothingreturned,
                    jsonData,
                    assessment ){
       return processFiles( bulkupload, jsonData, assessment, opts );
     }
-  )
+    )
     .then( function(){
       return cleanup( bulkupload, opts );
     } )
