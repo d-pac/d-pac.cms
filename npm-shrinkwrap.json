@@ -7189,6 +7189,37 @@
         }
       }
     },
+    "node-dir": {
+      "version": "0.1.10",
+      "from": "node-dir@*",
+      "resolved": "https://registry.npmjs.org/node-dir/-/node-dir-0.1.10.tgz",
+      "dependencies": {
+        "minimatch": {
+          "version": "2.0.10",
+          "from": "minimatch@>=2.0.10 <2.1.0",
+          "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-2.0.10.tgz",
+          "dependencies": {
+            "brace-expansion": {
+              "version": "1.1.1",
+              "from": "brace-expansion@>=1.0.0 <2.0.0",
+              "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.1.tgz",
+              "dependencies": {
+                "balanced-match": {
+                  "version": "0.2.0",
+                  "from": "balanced-match@>=0.2.0 <0.3.0",
+                  "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-0.2.0.tgz"
+                },
+                "concat-map": {
+                  "version": "0.0.1",
+                  "from": "concat-map@0.0.1",
+                  "resolved": "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "node-schedule": {
       "version": "0.2.9",
       "from": "https://registry.npmjs.org/node-schedule/-/node-schedule-0.2.9.tgz",
