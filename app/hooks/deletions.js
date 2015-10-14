@@ -63,6 +63,17 @@ function resetAssessment( assessmentId ){
     } );
 }
 
+function removeAssessmentFromUser( assessmentId,
+                                   user,
+                                   fieldName ){
+  var index = _.get( user, "assessments." + fieldName, [] ).indexOf( assessmentId );
+  if( index >= 0 ){
+    user.assessments[ fieldName ].splice( index, 1 );
+    return true;
+  }
+  return false;
+}
+
 function deleteAssessment( assessmentId ){
   return deleteAssessmentAssociates( assessmentId )
     .then( function(){
@@ -75,9 +86,8 @@ function deleteAssessment( assessmentId ){
     } )
     .reduce( function( memo,
                        user ){
-      var index = user.assessments.indexOf( assessmentId );
-      if( index >= 0 ){
-        user.assessments.splice( index, 1 );
+      if( removeAssessmentFromUser( assessmentId, user, 'assessor' )
+        || removeAssessmentFromUser( assessmentId, user, 'assessee' ) ){
         memo.push( user );
       }
       return memo;
