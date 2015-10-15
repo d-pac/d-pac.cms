@@ -24,9 +24,9 @@ exports.initAPI = function initAPI( req,
 
     debug( "<<<<<<<<<<<<<<<<<<<< RESPONSE: " );
     debug( "\n", {
-      STATUS  : status,
-      BODY    : data,
-      HEADERS : res._headers
+      STATUS: status,
+      BODY: data,
+      HEADERS: res._headers
     } );
 
     if( req.query.callback ){
@@ -50,7 +50,7 @@ exports.initAPI = function initAPI( req,
     if( !_.isArray( errors ) ){
       errors = [ errors ];
     }
-    res.apiResponse( status, { errors : errors } );
+    res.apiResponse( status, { errors: errors } );
   };
 
   // console.log(req.headers);
@@ -78,7 +78,7 @@ exports.requireUser = function( req,
 
   if( !req.user ){
     output = new errors.Http401Error( {
-      explanation : "You need to be logged in."
+      explanation: "You need to be logged in."
     } );
   }
 
@@ -102,8 +102,8 @@ function parseValidationErrors( err ){
   var messages = _.pluck( err.errors, "message" );
 
   return new errors.Http422Error( {
-    message     : err.message,
-    explanation : messages
+    message: err.message,
+    explanation: messages
   } );
 }
 
@@ -124,12 +124,12 @@ exports.handleError = function( err,
       return res.apiError( parseValidationErrors( err ) );
     case "CastError":
       return res.apiError( new errors.Http400Error( {
-        explanation : "Invalid id."
+        explanation: "Invalid id."
       } ) );
     /* falls through */
     default:
       return res.apiError( new errors.Http500Error( {
-        explanation : err.message
+        explanation: err.message
       } ) );
   }
 };
@@ -165,7 +165,7 @@ exports.verifyCSRF = function( req,
   }
 
   return next( new errors.Http403Error( {
-    reason : "Failed CSRF authentication"
+    reason: "Failed CSRF authentication"
   } ) );
 };
 
@@ -179,14 +179,14 @@ exports.methodNotAllowed = function methodNotAllowed( req,
 exports.createCors = function(){
   var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
   var corsOpts = {
-    origin         : function( url,
-                               callback ){
+    origin: function( url,
+                      callback ){
       callback( null, -1 < allowedOrigins.indexOf( url ) );
     },
-    methods        : process.env.CORS_ALLOWED_METHODS,
-    allowedHeaders : process.env.CORS_ALLOWED_HEADERS,
-    exposedHeaders : process.env.CORS_EXPOSED_HEADERS,
-    credentials    : true
+    methods: process.env.CORS_ALLOWED_METHODS,
+    allowedHeaders: process.env.CORS_ALLOWED_HEADERS,
+    exposedHeaders: process.env.CORS_EXPOSED_HEADERS,
+    credentials: true
   };
 
   return cors( corsOpts );
@@ -207,14 +207,14 @@ exports.requireParams = function(){
     debug( "#verifyRequiredParam" );
     var missing = [];
     _.each( args, function( paramName ){
-      if( "undefined" === typeof req.param( paramName ) ){
+      if( "undefined" === typeof req.params[ paramName ] ){
         missing.push( paramName );
       }
     } );
 
     if( missing.length ){
       return next( new errors.Http400Error( {
-        explanation : "Missing parameters: '" + missing.join( "', '" ) + "'"
+        explanation: "Missing parameters: '" + missing.join( "', '" ) + "'"
       } ) );
     }
 

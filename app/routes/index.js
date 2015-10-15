@@ -115,7 +115,6 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
-
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {
       all: [ apiMw.requireUser, apiMw.requireAdmin ],

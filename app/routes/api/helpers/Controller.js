@@ -18,7 +18,7 @@ _.extend( Controller.prototype, {
                                   next ){
       debug( "#retrieve" );
       controller.handleResult( controller.retrieve( {
-        _id: req.param( "_id" )
+        _id: req.params._id
       } ), res, next );
     };
     receiver.list = function( req,
@@ -47,8 +47,8 @@ _.extend( Controller.prototype, {
         .then( function( result ){
           res.apiResponse( 204 );
         } ).catch( function( err ){
-          next( err );
-        } );
+        next( err );
+      } );
     };
     return receiver;
   },
@@ -119,7 +119,7 @@ _.extend( Controller.prototype, {
     debug( "#update" );
     var opts = {
       values: {
-        _id: req.param( "_id" )
+        _id: req.params._id
       },
       fields: this.service.getEditableFields()
     };
@@ -135,11 +135,9 @@ _.extend( Controller.prototype, {
   },
 
   list: function( req ){
-    var filter = req.param( "_id" );
-    var p = ( filter )
-      ? this.service.listById( filter )
-      : this.service.list();
-    return p.then( function( result ){
+    return this.service
+      .list()
+      .then( function( result ){
         if( !result ){
           result = [];
         }
@@ -150,8 +148,8 @@ _.extend( Controller.prototype, {
   remove: function( req ){
     debug( "#remove" );
     return this.service.remove( {
-      _id: req.param( "_id" )
-    } )
+        _id: req.params._id
+      } )
       .then( function( result ){
         if( !result ){
           throw new errors.Http404Error();
