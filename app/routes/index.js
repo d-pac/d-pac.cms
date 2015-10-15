@@ -75,6 +75,18 @@ exports = module.exports = function( app ){
   app.route( apiRoot + "/user/assessments" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
+    .get( function( req,
+                    res,
+                    next ){
+      //backwards-compatibility
+      console.warn( 'Deprecated: GET /user/assessments' );
+      req.params.role = "assessor";
+      return api.users.listAssessments( req, res, next );
+    } );
+
+  app.route( apiRoot + "/user/assessments/:role" )
+    .all( apiMw.requireUser )
+    .all( apiMw.setIdParamToUser )
     .get( api.users.listAssessments );
 
   app.route( apiRoot + "/user/comparisons" )

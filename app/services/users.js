@@ -25,11 +25,11 @@ module.exports.list = function list( opts ){
     .execAsync();
 };
 
-module.exports.listAssessments = function listAssessments( opts ){
+module.exports.listAssessments = function listAssessments( role, opts ){
   debug( "#listAssessments" );
   return this.retrieve( opts )
     .then( function( user ){
-      return assessmentsService.listById( user.assessments );
+      return assessmentsService.listById( user.assessments[role] );
     } ).map( function( assessment ){
       assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {

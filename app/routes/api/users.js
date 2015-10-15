@@ -15,8 +15,8 @@ module.exports.listAssessments = function( req,
                                            res,
                                            next ){
   debug( "#listAssessments" );
-  base.handleResult( service.listAssessments( {
-    _id: req.param( "_id" )
+  base.handleResult( service.listAssessments( req.params.role, {
+    _id: req.params._id
   } ), res, next );
 };
 
@@ -25,7 +25,7 @@ module.exports.listComparisons = function( req,
                                            next ){
   debug( "#listComparisons" );
 
-  var userId = req.param( "_id" );
+  var userId = req.params._id;
   var response = { included: [] };
   base.handleResult( service.listComparisons( {
     _id: userId
@@ -53,6 +53,6 @@ module.exports.listNotes = function( req,
                                      next ){
   debug( "#listNotes" );
   base.handleResult( service.listNotes( {
-    _id: req.param( "_id" )
+    _id: req.params._id
   } ), res, next );
 };

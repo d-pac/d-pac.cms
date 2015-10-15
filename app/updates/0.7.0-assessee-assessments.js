@@ -15,7 +15,8 @@ exports = module.exports = function( done ){
     } )
     .map( function( user ){
       user.assessments = {
-        assessor: user.assessments
+        assessor: user.assessments,
+        assessee: []
       };
       return user;
     } ).then( function( users ){
