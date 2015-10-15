@@ -45,7 +45,6 @@ function select(representations, comparisons, assessment, assessor){
 
 	* `_id`: {`String`} unique object identifier
 	* `compared`: {`String[]`} Array of `_id`s
-	* `comparedNum`: {`Number`} Number of times compared (might deviate from `compared.length` if `compared` stores unique id's only and a representation is compared to another specific representation multiple times)
 
 * `comparisons` an Array of objects with following (minimal) structure:
 
@@ -74,15 +73,8 @@ E.g.
 //index.js
 var _ = require("underscore");
 module.exports = {
-	manifest: [{
-		name : "Name of the plugin",
-		description : "Description of the plugin",
-		options : {
-			type: "select"
-		}
-	}],
-	select : function(items){
-		return { result: _.first(items)};
+	select : function(representations){
+		return { result: _.first(representations)};
 	}
 }
 ```
