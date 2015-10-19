@@ -2,11 +2,12 @@
 
 var _ = require( 'lodash' );
 var fs = require( 'fs' );
+var keystone = require('keystone');
 
 var constants = require( '../models/helpers/constants' );
 
-module.exports = function( done ){
-  var dirs = [ 'app/uploads' ].concat( constants.directories );
+function createDirectories( done ){
+  var dirs = [ 'app/uploads' ].concat( _.values(constants.directories) );
   _.each( dirs, function( dir ){
     try{
       fs.mkdirSync( dir );
@@ -17,4 +18,10 @@ module.exports = function( done ){
     }
   } );
   done();
+};
+
+
+
+module.exports.init = function(){
+  keystone.pre( 'updates', createDirectories );
 };
