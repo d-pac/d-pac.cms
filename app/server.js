@@ -60,6 +60,9 @@ console.log( '------------------------------------------------' );
 console.log( 'Environment:', nodeEnv );
 console.log( 'Node', process.version, '-', 'Keystone', keystone.version, '-', keystone.get( 'name' ), keystone.get( 'appversion' ) );
 
+
+require('./lib/pluginsScrobbler' ).init(pkg);
+
 // Load your project's Models
 
 keystone.import( "models" );
