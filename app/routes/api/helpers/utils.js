@@ -32,7 +32,7 @@ module.exports.verifyChangesAllowed = function verifyChangesAllowed( modified,
 
     if( notallowed && notallowed.length ){
       throw new errors.Http422Error( {
-        explanation : [ "Modification not allowed for: '" + notallowed.join( "', '" ) + "'" ]
+        explanation: [ "Modification not allowed for: '" + notallowed.join( "', '" ) + "'" ]
       } );
     }
 
@@ -57,7 +57,7 @@ module.exports.parseValues = function( opts,
   }
   var temp = {};
   _.each( opts.fields, function( field ){
-    var value = req.body( field );
+    var value = req.body[ field ];
 
     if( value ){
       temp[ field ] = value;

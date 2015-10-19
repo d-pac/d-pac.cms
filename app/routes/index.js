@@ -61,7 +61,6 @@ exports = module.exports = function( app ){
 
   app.route( apiRoot + "/session" )
     .get( api.authentication.status )
-    .post( apiMw.requireParams( "email", "password" ) )
     .post( api.authentication.signin )
     .delete( apiMw.requireUser )
     .delete( api.authentication.signout );

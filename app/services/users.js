@@ -52,7 +52,7 @@ module.exports.listAssessments = function listAssessments( role, opts ){
 };
 
 module.exports.listComparisons = function listComparisons( opts ){
-  return this.listAssessments( opts )
+  return this.listAssessments( 'assessor', opts )
     .then( function( assessments ){
       return comparisonsService.listForAssessments( {
         assessor: opts._id
