@@ -98,14 +98,15 @@ var config = {
   comparisonsNum: {
     total: {
       type: Types.Number,
-      label: "Total number of comparisons",
+      label: "Number of comparisons per representation",
       required: false,
-      initial: true,
-      note: "(depends on the algoritm on how it is treated)"
+      initial: false,
+      note: "NOT USED IN comparative-selection !!!!!!!!",
+      default: 0
     },
     stage: {
       type: Types.NumberArray,
-      label: "Number of comparisons wanted per stage.",
+      label: "Number of comparisons per assessor (per stage)",
       default: [ 5 ]
     }
   },
@@ -132,7 +133,7 @@ var config = {
     type: Types.Boolean,
     label: "Enable time logging",
     note: "Will enable time logging, turn off when not necessary to reduce server strain.",
-    default: true
+    default: false
   },
 
   uiCopy: {
