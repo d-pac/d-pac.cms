@@ -211,6 +211,7 @@ function deletionCreatedHandler( next ){
       resetAssessment( deletion.assessment )
         .then( function( assessment ){
           deletion.line = "Assessment: " + assessment.name;
+          deletion.log = "Successfully reset";
           deletion.success = true;
           next();
         } )
@@ -220,6 +221,7 @@ function deletionCreatedHandler( next ){
       deleteAssessment( deletion.assessment )
         .then( function( assessment ){
           deletion.line = "Assessment: " + assessment.name;
+          deletion.log = "Successfully deleted";
           deletion.success = true;
           next();
         } )
