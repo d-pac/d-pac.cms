@@ -18,18 +18,16 @@ Representation.defaultColumns = "name, comparedNum";
 Representation.schema.methods.compareWith = function( other ){
   this.compared.push( other._id );
   other.compared.push( this._id );
-  this.save();
-  other.save();
+  return P.all( P.promisify(this.save, this)(), P.promisify(other.save, other)() );
 };
 
 Representation.schema.methods.uncompareWith = function( other ){
-  var ti = this.compared.indexOf(other.id);
-  this.compared.splice(ti, 1);
-  var oi = other.compared.indexOf(this.id);
-  other.compared.splice(oi, 1);
+  var ti = this.compared.indexOf( other.id );
+  this.compared.splice( ti, 1 );
+  var oi = other.compared.indexOf( this.id );
+  other.compared.splice( oi, 1 );
 
-  this.save();
-  other.save();
+  return P.all( P.promisify(this.save, this)(), P.promisify(other.save, other)() );
 };
 
 require( './helpers/setupList' )( Representation )
@@ -82,7 +80,7 @@ require( './helpers/setupList' )( Representation )
       ref: "Representation",
       many: true,
       noedit: true,
-      default : []
+      default: []
     },
 
     ability: {
@@ -103,12 +101,12 @@ require( './helpers/setupList' )( Representation )
       index: true,
       watch: "closeTo",
       value: function(){
-        if(this.closeTo){
+        if( this.closeTo ){
           return constants.RANKED;
         }
         return this.rankType;
       },
-      note: "Automatically set to '"+constants.RANKED+"' if a benchmark is chosen in 'close to'"
+      note: "Automatically set to '" + constants.RANKED + "' if a benchmark is chosen in 'close to'"
     },
 
     closeTo: {
@@ -123,12 +121,16 @@ require( './helpers/setupList' )( Representation )
 
   } )
   .validate( {
-    "ability.value": [function(){
-      return !(this.rankType === constants.BENCHMARK && this.ability.value === null);
-    }, "Representations of `rankType` 'benchmark' aren't allowed to have ability values of `null`"],
-    "ability.se": [function(){
-      return !(this.rankType === constants.BENCHMARK && this.ability.se === null);
-    }, "Representations of `rankType` 'benchmark' aren't allowed to have ability SE's of `null`"]
+    "ability.value": [
+      function(){
+        return !(this.rankType === constants.BENCHMARK && this.ability.value === null);
+      }, "Representations of `rankType` 'benchmark' aren't allowed to have ability values of `null`"
+    ],
+    "ability.se": [
+      function(){
+        return !(this.rankType === constants.BENCHMARK && this.ability.se === null);
+      }, "Representations of `rankType` 'benchmark' aren't allowed to have ability SE's of `null`"
+    ]
   } )
   .retain( "track" )
   .relate( {
