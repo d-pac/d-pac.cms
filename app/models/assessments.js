@@ -100,14 +100,17 @@ var config = {
       type: Types.Number,
       label: "Number of comparisons per representation",
       required: false,
-      initial: false,
-      note: "NOT USED IN comparative-selection !!!!!!!!",
-      default: 0
+      initial: true,
+      default: 0,
+      dependsOn: {
+        algorithm : 'benchmarked-comparative-selection'
+      }
     },
     stage: {
       type: Types.NumberArray,
-      label: "Number of comparisons per assessor (per stage)",
-      default: [ 5 ]
+      label: "Number of comparisons per assessor (per stage if applicable)",
+      default: [ 5 ],
+      initial: true
     }
   },
 
