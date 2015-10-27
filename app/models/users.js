@@ -66,4 +66,15 @@ require( './helpers/setupList' )( User )
     }
   } )
   .retain( "password" )
+  .relate({
+      path: "documents",
+      ref: "Document",
+      refPath: "owner",
+      label: "Documents"
+    }, {
+      path: "comparisons",
+      ref: "Comparison",
+      refPath: "assessor",
+      label: "Comparisons"
+    })
   .register();
