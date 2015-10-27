@@ -33,14 +33,17 @@ function archiveScheduledAssessments(){
   } );
 }
 
+function doAssessmentActions(){
+  return activateScheduledAssessments().then( function(){
+    return archiveScheduledAssessments();
+  } );
+}
+
 module.exports.init = function(){
 
   keystone.post( 'updates', function( done ){
-    scheduler.scheduleJob( '0 1 * * * *', function(){ // 0:01 every day
-      activateScheduledAssessments().then( function(){
-        return archiveScheduledAssessments();
-      } );
-    } );
-    done();
+    //0:01 every day
+    scheduler.scheduleJob( '0 1 * * * *', doAssessmentActions);
+    doAssessmentActions().then(done, done);
   } );
 };
