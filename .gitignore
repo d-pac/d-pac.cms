@@ -25,10 +25,11 @@ public/assessors
 reports
 
 shipping/*
-!shipping/EXAMPLE.js
 
 batch/*
 !batch/*.js
 
 archive
 process.*
+
+shipitfile.js
