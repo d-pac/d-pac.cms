@@ -148,7 +148,7 @@ var config = {
   }
 
 };
-Assessment.defaultColumns = "name, title, stage, state, parent";
+Assessment.defaultColumns = "name, title, algorithm, stage, state, parent";
 
 require( './helpers/setupList' )( Assessment )
   .add( config )
