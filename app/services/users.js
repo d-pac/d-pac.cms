@@ -25,19 +25,20 @@ module.exports.list = function list( opts ){
     .execAsync();
 };
 
-module.exports.listAssessments = function listAssessments( role, opts ){
+module.exports.listAssessments = function listAssessments( role,
+                                                           opts ){
   debug( "#listAssessments" );
   return this.retrieve( opts )
     .then( function( user ){
-      return assessmentsService.listById( user.assessments[role] );
+      return assessmentsService.listById( user.assessments[ role ] );
     } ).map( function( assessment ){
       assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {
         assessment: assessment._id,
         assessor: opts._id
       } ).then( function( count ){
-        var total = _.reduce( assessment.comparisonsNum.stage, function( total,
-                                                                         num ){
+        var total = _.reduce( assessment.comparisonsNum.perAssessor, function( total,
+                                                                               num ){
           return total + num;
         }, 0 );
         assessment.progress = {

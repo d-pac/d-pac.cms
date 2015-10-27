@@ -96,21 +96,22 @@ var config = {
   },
 
   comparisonsNum: {
-    total: {
-      type: Types.Number,
-      label: "Number of comparisons per representation",
+    perRepresentation: {
+      type: Types.NumberArray,
+      label: "Maximum number of comparisons per representation",
       required: false,
       initial: true,
-      default: 0,
+      default: [],
       dependsOn: {
         algorithm : 'benchmarked-comparative-selection'
       }
     },
-    stage: {
+    perAssessor: {
       type: Types.NumberArray,
-      label: "Number of comparisons per assessor (per stage if applicable)",
+      label: "Maxmimum number of comparisons per assessor",
       default: [ 5 ],
-      initial: true
+      initial: true,
+      note: 'per stage if applicable'
     }
   },
 

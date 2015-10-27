@@ -19,10 +19,12 @@ exports = module.exports = function( done ){
         assessee: []
       };
       return user;
-    } ).then( function( users ){
+    } )
+    .then( function( users ){
       async.eachSeries( users, function( user,
                                          next ){
         User.model.update( { _id: user._id }, user, next );
       }, done );
-    } );
+    } )
+    .catch( done );
 };
