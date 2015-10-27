@@ -10,7 +10,9 @@ var Comparison = new keystone.List( "Comparison", {
   map: {
     name: "_rid"
   },
-  track: true
+  track: true,
+  nocreate: true,
+  noedit: true
 } );
 
 Comparison.api = {
