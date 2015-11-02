@@ -6,13 +6,15 @@ var Types = keystone.Field.Types;
 var constants = require( "./helpers/constants" );
 var Assessment = keystone.list( "Assessment" );
 
+var isDevEnv = (process.env.NODE_ENV === 'development');
+
 var Comparison = new keystone.List( "Comparison", {
   map: {
     name: "_rid"
   },
   track: true,
-  nocreate: true,
-  noedit: true
+  nocreate: !isDevEnv,
+  noedit: !isDevEnv
 } );
 
 Comparison.api = {
