@@ -13,12 +13,12 @@ exports = module.exports = function( done ){
       return JSON.parse( JSON.stringify( doc ) );
     })
     .filter( function( doc ){
-      return !_.isUndefined( doc.comparisonsNum.stage );
+      return !_.isUndefined( doc.comparisonsNum.stage ) || !_.isUndefined(doc.comparisonsNum.total);
     } )
     .map( function( doc ){
       doc.comparisonsNum = {
-        perRepresentation: doc.comparisonsNum.total,
-        perAssessor: doc.comparisonsNum.stage
+        perRepresentation: doc.comparisonsNum.total || 0,
+        perAssessor: doc.comparisonsNum.stage || 0
       };
       return doc;
     } )

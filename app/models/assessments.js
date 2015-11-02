@@ -97,11 +97,11 @@ var config = {
 
   comparisonsNum: {
     perRepresentation: {
-      type: Types.NumberArray,
+      type: Types.Number,
       label: "Maximum number of comparisons per representation",
       required: false,
       initial: true,
-      default: [],
+      default: 10,
       dependsOn: {
         algorithm : 'benchmarked-comparative-selection'
       }
