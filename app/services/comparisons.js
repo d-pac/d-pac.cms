@@ -30,8 +30,8 @@ module.exports.listForAssessments = function listForAssessments( opts,
   debug( "#listForAssessments", opts, assessmentIds );
   var self = this;
   return base.list( _.defaults( opts, {
-    completed: false
-  } ) )
+      completed: false
+    } ) )
     .where( "assessment" ).in( assessmentIds )
     .execAsync();
 };
@@ -58,10 +58,12 @@ module.exports.create = function( opts ){
       var plainRepresentations = JSON.parse( JSON.stringify( representations ) );
       var plainAssessment = JSON.parse( JSON.stringify( assessment ) );
       try{
-        data = require( assessment.algorithm ).select( plainRepresentations,
-          plainComparisons,
-          plainAssessment,
-          JSON.parse( JSON.stringify( opts.assessor._id ) ) );
+        data = require( assessment.algorithm ).select( {
+          representations: plainRepresentations,
+          comparisons: plainComparisons,
+          assessment: plainAssessment,
+          assessor: JSON.parse( JSON.stringify( opts.assessor._id ) )
+        } );
       } catch( error ) {
         console.log( error );
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
