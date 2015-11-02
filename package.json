@@ -4,10 +4,10 @@
   "build": "110",
   "dependencies": {
     "async": "^1.4.2",
-    "benchmarked-comparative-selection": "^1.1.4",
+    "benchmarked-comparative-selection": "^2.0.0",
     "bluebird": "^2.9.7",
     "chalk": "^1.1.1",
-    "comparative-selection": "^2.1.0",
+    "comparative-selection": "^3.0.0",
     "connect-mongo": "^0.8.0",
     "cors": "^2.4.1",
     "d-pac.plugins-spec": "^0.4.0",
