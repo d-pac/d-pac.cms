@@ -2,6 +2,8 @@
 
 var debug = require( "debug" )( "dpac:api.users" );
 var _ = require( 'lodash' );
+var P = require( 'bluebird' );
+var errors = require( 'errors' );
 
 var service = require( "../../services/users" );
 var comparisonsService = require( "../../services/comparisons" );
@@ -55,4 +57,17 @@ module.exports.listNotes = function( req,
   base.handleResult( service.listNotes( {
     _id: req.params._id
   } ), res, next );
+};
+
+module.exports.update = function( req,
+                                  res,
+                                  next ){
+  var p;
+  if( req.body.password !== req.body.password_confirm ){
+    p = P.reject( new errors.Http422Error( { explanation: 'passwords do not match' } ) );
+  } else {
+    p = base.update( req );
+  }
+  base.handleResult( p, res, next );
+
 };
