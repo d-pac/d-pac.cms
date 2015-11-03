@@ -72,3 +72,21 @@ module.exports.update = function update( opts ){
   return base.update( this.retrieve( opts ), opts )
     .execAsync();
 };
+
+module.exports.listForAssessments = function listForAssessments( role,
+                                                                 assessmentIds ){
+  return base.list()
+    .execAsync()
+    .filter( function( user ){
+      return !!_.find( assessmentIds, function( assessmentId ){
+        var found = false;
+        if( role === 'assessor' || role === 'both' ){
+          found = found || user.assessments.assessor.indexOf( assessmentId ) > -1;
+        }
+        if( role === 'assessee' || role === 'both' ){
+          found = found || user.assessments.assessee.indexOf( assessmentId ) > -1;
+        }
+        return found;
+      } );
+    } );
+};
