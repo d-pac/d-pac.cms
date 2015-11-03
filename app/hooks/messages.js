@@ -99,7 +99,7 @@ function messageSavedHandler( done ){
   if( message.isNew ){
     addToLog( message, 'Draft created' );
   } else {
-    if( message.state === 'handled' ){
+    if( message.state === 'handled' && process.env.NODE_ENV !== 'development' ){
       return done( new Error( 'You cannot resend a message' ) );
     }
     switch( message.strategy ){
