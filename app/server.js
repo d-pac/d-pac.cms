@@ -108,7 +108,8 @@ keystone.set( "nav", {
   "actions": [
     "reports",
     "bulkuploads",
-    "deletions"
+    "deletions",
+    "messages"
   ]
 } );
 
