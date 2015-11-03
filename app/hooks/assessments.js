@@ -12,7 +12,7 @@ function activateScheduledAssessments(){
       $lte: new Date()
     }
   } ).each( function( assessment ){
-    console.log('Scheduler: auto-publishing assessment', assessment.name);
+    console.log( 'Scheduler: auto-publishing assessment', assessment.name );
     assessment.state = constants.PUBLISHED;
     assessment.save();
   } );
@@ -26,7 +26,7 @@ function archiveScheduledAssessments(){
       $lte: new Date()
     }
   } ).each( function( assessment ){
-    console.log('Scheduler: auto-archiving assessment', assessment.name);
+    console.log( 'Scheduler: auto-archiving assessment', assessment.name );
     assessment.state = constants.ARCHIVED;
     assessment.schedule.active = false;
     assessment.save();
@@ -34,16 +34,21 @@ function archiveScheduledAssessments(){
 }
 
 function doAssessmentActions(){
-  return activateScheduledAssessments().then( function(){
-    return archiveScheduledAssessments();
-  } );
+  return activateScheduledAssessments()
+    .then( function(){
+      return archiveScheduledAssessments();
+    } );
 }
 
 module.exports.init = function(){
 
   keystone.post( 'updates', function( done ){
     //0:01 every day
-    scheduler.scheduleJob( '0 1 * * * *', doAssessmentActions);
-    doAssessmentActions().then(done, done);
+    scheduler.scheduleJob( '0 1 * * *', doAssessmentActions );
+    doAssessmentActions()
+      .catch( function( err ){
+        console.log( 'Scheduled assessment actions failure:' + err );
+      } );
+    done();//call immediately, we don't want to wait on this!
   } );
 };
