@@ -90,7 +90,7 @@ var list = require( './helpers/setupList' )( Message )
     schedule: {
       type: Types.Datetime,
       label: "When",
-      note: "Automatically sends message on this date and time.",
+      note: "Scheduled messages are sent in discrete bulks, i.e. account for a delay of up to 30 minutes.",
       required: false,
       dependsOn: {
         "strategy": "scheduled"
@@ -113,16 +113,13 @@ var list = require( './helpers/setupList' )( Message )
       type: Types.Select,
       options: [
         {
-          label: 'scheduled',
+          label: 'Scheduled',
           value: 'scheduled'
         }, {
-          label: 'sent',
-          value: 'sent'
+          label: 'Processed',
+          value: 'handled'
         }, {
-          label: 'failed',
-          value: 'failed'
-        }, {
-          label: 'editing',
+          label: 'Editing',
           value: 'editing'
         }
       ],
@@ -132,7 +129,8 @@ var list = require( './helpers/setupList' )( Message )
     },
 
     log: {
-      type: Types.Text,
+      type: Types.Html,
+      wysiwyg: true,
       noedit: true,
       default: ''
     },
