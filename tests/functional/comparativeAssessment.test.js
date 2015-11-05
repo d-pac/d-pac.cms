@@ -5,7 +5,7 @@ var _ = require( 'lodash' );
 var expect = require( 'must' );
 
 var fixtures = require( './fixtures' );
-var env = require( '../env' )
+var env = require( '../env' );
 var mocks;
 
 describe( 'comparative assessment', function(){

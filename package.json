@@ -48,7 +48,8 @@
   "scripts": {
     "start": "pm2 start process.$NODE_ENV.json",
     "monitor": "nodemon app/server.js",
-    "stop": "pm2 stop $NODE_ENV"
+    "stop": "pm2 stop $NODE_ENV",
+    "test": "mocha tests/functional/*.test.js -R dot"
   },
   "d-pac": {
     "api": "0.2.0",
