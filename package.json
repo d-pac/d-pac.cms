@@ -50,7 +50,7 @@
     "start": "pm2 start process.$NODE_ENV.json",
     "monitor": "nodemon app/server.js",
     "stop": "pm2 stop $NODE_ENV",
-    "test": "mocha tests/functional/*.test.js -R dot"
+    "test": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/functional/*.test.js -R dot --timeout 60000"
   },
   "d-pac": {
     "api": "0.2.0",
