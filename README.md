@@ -6,6 +6,9 @@
 
 **NOT PRODUCTION READY**
 
+Please visit [http://www.d-pac.be](http://www.d-pac.be) for more information.
+If you want to contribute you can [start here](http://d-pac.github.io/d-pac.docs/)
+
 Not by a long shot.
 
 [D-PAC  Copyright (C) 2014  d-pac](LICENSE)
