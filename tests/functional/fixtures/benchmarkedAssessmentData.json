@@ -1,0 +1,1037 @@
+﻿[
+  {
+    "fileName": "0506_kinderen_3.pdf",
+    "ability": {
+      "value": "-4.86083100953108",
+      "se": "1.19344007065948"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0314_Kinderen2.pdf",
+    "ability": {
+      "value": "-4.81588290082005",
+      "se": "1.29269517350331"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0518_Kinderen_1.pdf",
+    "ability": {
+      "value": "-4.26866736927678",
+      "se": "1.10976282295395"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0515_Kinderen_3.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0101_Kinderen3.pdf",
+    "ability": {
+      "value": "-4.05195052848866",
+      "se": "1.10189385061959"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0516_kinderen_1.pdf",
+    "ability": {
+      "value": "-4.02966315741462",
+      "se": "1.12450788356006"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0517_kinderen_1.pdf",
+    "ability": {
+      "value": "-3.824961253596",
+      "se": "1.01368796541926"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0513_Kinderen1.pdf",
+    "ability": {
+      "value": "-3.68356322239825",
+      "se": "1.11691938483481"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0520_Kinderen_3.pdf",
+    "ability": {
+      "value": "-3.60582968965097",
+      "se": "1.01539856204364"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0508_kinderen_3.pdf",
+    "ability": {
+      "value": "-3.59266251783412",
+      "se": "1.05847254603387"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0808_kinderen_3.pdf",
+    "ability": {
+      "value": "-3.48367688557211",
+      "se": "1.07767311538191"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "1008_kinderen_3.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0107_Kinderen2.pdf",
+    "ability": {
+      "value": "-3.39716589536798",
+      "se": "1.01360468890952"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0103_Kinderen_2.pdf",
+    "ability": {
+      "value": "-3.21045397341717",
+      "se": "0.972113256991916"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0908EMT_kinderen_1.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0509_Kinderen_2.pdf",
+    "ability": {
+      "value": "-3.18062764321631",
+      "se": "0.95766902898124"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0411_Kinderen2.pdf",
+    "ability": {
+      "value": "-3.05092070074085",
+      "se": "0.965961333090511"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0112_Kinderen_2.pdf",
+    "ability": {
+      "value": "-2.98154686211189",
+      "se": "0.883412161266506"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "1006_Kinderen_2.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0111_Kinderen_3.pdf",
+    "ability": {
+      "value": "-2.66463403647925",
+      "se": "0.875854858089465"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0420_Kinderen2.pdf",
+    "ability": {
+      "value": "-2.5563080779581",
+      "se": "0.906280875620211"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0815_Kinderen2.pdf",
+    "ability": {
+      "value": "-2.46994730295958",
+      "se": "0.882004906456339"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0106_Kinderen_1.pdf",
+    "ability": {
+      "value": "-2.41855410653664",
+      "se": "0.844502406406291"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0104_Kinderen_1.pdf",
+    "ability": {
+      "value": "-2.35760714093298",
+      "se": "0.879558643012146"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0302_kinderen_3.pdf",
+    "ability": {
+      "value": "-2.29064019690632",
+      "se": "0.894911301876504"
+    },
+    "rankType": "benchmark",
+    "closeTo": null
+  },
+  {
+    "fileName": "0301_Kinderen_1.pdf",
+    "ability": {
+      "value": "-2.20963120658471",
+      "se": "0.869199362036741"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0519_kinderen_3.pdf",
+    "ability": {
+      "value": "-2.19162119636379",
+      "se": "0.8445056271443"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0705EMT_Kinderen3.pdf",
+    "ability": {
+      "value": "-2.14699102553168",
+      "se": "0.854642857382641"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "1004_Kinderen_2.pdf",
+    "ability": {
+      "value": "-2.11681323376705",
+      "se": "0.842558239572948"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0303_Kinderen_1.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0819_Kinderen3.pdf",
+    "ability": {
+      "value": "-2.04924237933278",
+      "se": "0.878312745834561"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0616_Kinderen3.pdf",
+    "ability": {
+      "value": "-2.02879614503091",
+      "se": "0.856210666535343"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0407_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.95431227475687",
+      "se": "0.837423940024892"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0310_Kinderen2.pdf",
+    "ability": {
+      "value": "-1.94286311712089",
+      "se": "0.886117798243308"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0903EMT_kinderen_2.pdf",
+    "ability": {
+      "value": "-1.92577343255981",
+      "se": "0.869336760643354"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0510_kinderen_2.pdf",
+    "ability": {
+      "value": "-1.91018502727846",
+      "se": "0.820411712069442"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0105_Kinderen_3.pdf",
+    "ability": {
+      "value": "-1.90874973963585",
+      "se": "0.867377794711581"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0415_Kinderen2.pdf",
+    "ability": {
+      "value": "-1.82298952507056",
+      "se": "0.838972535068945"
+    },
+    "rankType": "ranked",
+    "closeTo": "0302_kinderen_3.pdf"
+  },
+  {
+    "fileName": "0423_Kinderen3.pdf",
+    "ability": {
+      "value": "-1.77973261488417",
+      "se": "0.850342930906277"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0109_Kinderen_2.pdf",
+    "ability": {
+      "value": "-1.77333303732898",
+      "se": "0.871720659190344"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0907EMT_kinderen_2.pdf",
+    "ability": {
+      "value": "-1.76126868516218",
+      "se": "0.810286534480306"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0409_Kinderen3.pdf",
+    "ability": {
+      "value": "-1.67258136061997",
+      "se": "0.820246216571702"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0502_kinderen_2.pdf",
+    "ability": {
+      "value": "-1.62778107314946",
+      "se": "0.8249545875001"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0915EMT_Kinderen_1.pdf",
+    "ability": {
+      "value": "-1.61623048430971",
+      "se": "0.874431926735457"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0816_Kinderen_1.pdf",
+    "ability": {
+      "value": "-1.61064840318809",
+      "se": "0.870070326472249"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0701EMT Kinderen2.pdf",
+    "ability": {
+      "value": "-1.58711549050521",
+      "se": "0.809485072550549"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0408_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.5708058254632",
+      "se": "0.807362046564436"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0419_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.56949630183091",
+      "se": "0.860633468549307"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0812_Kinderen_2.pdf",
+    "ability": {
+      "value": "-1.5652065142909",
+      "se": "0.907186987563186"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0805_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.55598613815338",
+      "se": "0.821739556357511"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0821_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.52598185961498",
+      "se": "0.84754870574051"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0507_Kinderen1.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0505_kinderen_2.pdf",
+    "ability": {
+      "value": "-1.4191476796763",
+      "se": "0.898261323973517"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0615_Kinderen1.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0820_Kinderen3.pdf",
+    "ability": {
+      "value": "-1.38555775367436",
+      "se": "0.836087845692189"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0710EMT Kinderen2.pdf",
+    "ability": {
+      "value": "-1.351912354719",
+      "se": "0.815926665139844"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0606_Kinderen2.pdf",
+    "ability": {
+      "value": "-1.34087801654637",
+      "se": "0.854150300016893"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0602_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.27089666662294",
+      "se": "0.870823619390998"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "401_Kinderen3.pdf",
+    "ability": {
+      "value": "-1.22711600477118",
+      "se": "0.86533501030627"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0702EMT Kinderen1.pdf",
+    "ability": {
+      "value": "-1.22141385273721",
+      "se": "0.86161054108745"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0804_Kinderen2.pdf",
+    "ability": {
+      "value": "-1.03112439617029",
+      "se": "0.848795614974897"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0213EMT_Kinderen_2.pdf",
+    "ability": {
+      "value": "-1.02197808233788",
+      "se": "0.793484429796484"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0406_Kinderen1.pdf",
+    "ability": {
+      "value": "-1.01656251754307",
+      "se": "0.832971052360541"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0102_Kinderen2.pdf",
+    "ability": {
+      "value": "-0.96340861047259",
+      "se": "0.880456946896633"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "1003_Kinderen1.pdf",
+    "ability": {
+      "value": "-0.878349305197625",
+      "se": "0.83254226724627"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0613_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.82648494015242",
+      "se": "0.848542085592438"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0412_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.814880895668924",
+      "se": "0.873871902534462"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0902EMT_kinderen_3.pdf",
+    "ability": {
+      "value": "-0.81319749161512",
+      "se": "0.807893756513292"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0605_Kinderen2.pdf",
+    "ability": {
+      "value": "-0.798862720934658",
+      "se": "0.907152394067784"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0418_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.785855227793585",
+      "se": "0.887912485019126"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0906_Kinderen2.pdf",
+    "ability": {
+      "value": "-0.775018939410927",
+      "se": "0.794913163491281"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0803_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.750741500021316",
+      "se": "0.839143189260416"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0604_Kinderen2.pdf",
+    "ability": {
+      "value": "-0.745092671118311",
+      "se": "0.82309112398953"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0215EMT_kinderen_3.pdf",
+    "ability": {
+      "value": "-0.73247013440286",
+      "se": "0.864968880589378"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0212EMT_Kinderen_1.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0609_Kinderen1.pdf",
+    "ability": {
+      "value": "-0.704772520623477",
+      "se": "0.860784709113359"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0521_kinderen_2.pdf",
+    "ability": {
+      "value": "-0.67471973354245",
+      "se": "0.831740878415101"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0918EMT_Kinderen_2.pdf",
+    "ability": {
+      "value": "-0.600273017608045",
+      "se": "0.853284829451444"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0910_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.592257243238349",
+      "se": "0.867192972148534"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0802_Kinderen_1.pdf",
+    "ability": {
+      "value": "-0.580810992649259",
+      "se": "0.869409880882225"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "1002_kinderen_1.pdf",
+    "ability": {
+      "value": "-0.575649195359183",
+      "se": "0.8176558239251"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0424_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.571686001799187",
+      "se": "0.814236424183082"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0813_Kinderen_3.pdf",
+    "ability": {
+      "value": "-0.487700539321833",
+      "se": "0.878073948409368"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0210EMT_Kinderen_1.pdf",
+    "ability": {
+      "value": "-0.316159078131498",
+      "se": "0.848509803599074"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0905EMT_kinderen_3.pdf",
+    "ability": {
+      "value": "-0.315797531831184",
+      "se": "0.889330343257556"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0912EMT_kinderen_2.pdf",
+    "ability": {
+      "value": "-0.185603114366672",
+      "se": "0.852272782457451"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0911EMT_kinderen_1.pdf",
+    "ability": {
+      "value": "-0.179883735075278",
+      "se": "0.923265521668857"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0414_Kinderen1.pdf",
+    "ability": {
+      "value": "-0.157563975811334",
+      "se": "0.885554067303258"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0425_Kinderen1.pdf",
+    "ability": {
+      "value": "-0.0895100577006703",
+      "se": "0.854851623543385"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0413_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.088498605216349",
+      "se": "0.834271930718031"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0404_Kinderen2.pdf",
+    "ability": {
+      "value": "-0.0759963210156247",
+      "se": "0.879501376062322"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0410_Kinderen3.pdf",
+    "ability": {
+      "value": "-0.0589492770387041",
+      "se": "0.807725936878432"
+    },
+    "rankType": "benchmark",
+    "closeTo": null
+  },
+  {
+    "fileName": "0913EMT_Kinderen_3.pdf",
+    "ability": {
+      "value": "0",
+      "se": "0"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0706EMT Kinderen3.pdf",
+    "ability": {
+      "value": "0.00239752207438919",
+      "se": "0.903705799740439"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0611_Kinderen1.pdf",
+    "ability": {
+      "value": "0.03302225944923",
+      "se": "0.910634955741314"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0601_Kinderen3.pdf",
+    "ability": {
+      "value": "0.0771294933582957",
+      "se": "0.865971941858364"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0402_Kinderen2.pdf",
+    "ability": {
+      "value": "0.112482040973289",
+      "se": "0.85757496817997"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0909EMT_kinderen_3.pdf",
+    "ability": {
+      "value": "0.167701498335268",
+      "se": "0.970663474752514"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0814_Kinderen_1.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0307_Kinderen_1.pdf",
+    "ability": {
+      "value": "0.293890076082594",
+      "se": "0.892272990066887"
+    },
+    "rankType": "ranked",
+    "closeTo": "0410_Kinderen3.pdf"
+  },
+  {
+    "fileName": "0421_Kinderen3.pdf",
+    "ability": {
+      "value": "0.423058180646204",
+      "se": "0.843647037192678"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0216EMT_Kinderen_3.pdf",
+    "ability": {
+      "value": "0.475171328456306",
+      "se": "0.944148411239373"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0901EMT_Kinderen_2.pdf",
+    "ability": {
+      "value": "0.55210261550525",
+      "se": "0.934229355131207"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0810_kinderen_1.pdf",
+    "ability": {
+      "value": "0.63006121297965",
+      "se": "0.900173904700407"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0704EMT Kinderen2.pdf",
+    "ability": {
+      "value": null,
+      "se": null
+    },
+    "rankType": "to rank",
+    "closeTo": null
+  },
+  {
+    "fileName": "0917EMT_Kinderen_2.pdf",
+    "ability": {
+      "value": "0.809377529442534",
+      "se": "0.975434426334861"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0916_Kinderen3.pdf",
+    "ability": {
+      "value": "0.895691387367343",
+      "se": "0.949292285373148"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0405_Kinderen2.pdf",
+    "ability": {
+      "value": "1.25174558890441",
+      "se": "0.953909688364728"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0201_Kinderen1.pdf",
+    "ability": {
+      "value": "1.63415215551707",
+      "se": "1.09963589848442"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0904EMT_kinderen_1.pdf",
+    "ability": {
+      "value": "1.65513442280853",
+      "se": "1.12617769404235"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0914EMT_kinderen_1.pdf",
+    "ability": {
+      "value": "1.75322475639774",
+      "se": "1.07658241364805"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0208EMT_Kinderen_2.pdf",
+    "ability": {
+      "value": "1.79484129045259",
+      "se": "1.10945727599737"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0108_Kinderen_1.pdf",
+    "ability": {
+      "value": "2.30702217696601",
+      "se": "1.45802793377207"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0416_Kinderen2.pdf",
+    "ability": {
+      "value": "2.34053504543219",
+      "se": "1.53612173542553"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  },
+  {
+    "fileName": "0709EMT Kinderen1.pdf",
+    "ability": {
+      "value": "3.44148994039541",
+      "se": "1.7869767729068"
+    },
+    "rankType": "ranked",
+    "closeTo": null
+  }
+]

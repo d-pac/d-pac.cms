@@ -57,6 +57,11 @@ require( './helpers/setupList' )( Representation )
       note: "is automatically generated"
     },
 
+    title: {
+      type: String,
+      note: 'Purely for administrative or testing purposes'
+    },
+
     assessment: {
       type: Types.Relationship,
       ref: "Assessment",

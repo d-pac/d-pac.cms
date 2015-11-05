@@ -32,6 +32,7 @@ keystone.init( {
   "brand": "d-pac",
   "appversion": pkg.version + " (" + pkg.build + ")",
 
+  "mongo uri": process.env.MONGO_URI,
   "less": "public",
   "static": "public",
   "favicon": "public/favicon.ico",
@@ -60,8 +61,7 @@ console.log( '------------------------------------------------' );
 console.log( 'Environment:', nodeEnv );
 console.log( 'Node', process.version, '-', 'Keystone', keystone.version, '-', keystone.get( 'name' ), keystone.get( 'appversion' ) );
 
-
-require('./lib/pluginsScrobbler' ).init(pkg);
+require( './lib/pluginsScrobbler' ).init( pkg );
 
 // Load your project's Models
 
@@ -116,6 +116,9 @@ keystone.set( "nav", {
 _.each( keystone.import( 'hooks' ), function( handler ){
   handler.init();
 } );
+module.exports = keystone;
 
-// Start Keystone to connect to your database and initialise the web server
-keystone.start();
+if( !module.parent ){
+  // Start Keystone to connect to your database and initialise the web server
+  keystone.start();
+}
