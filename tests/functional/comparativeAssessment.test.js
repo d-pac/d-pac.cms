@@ -31,36 +31,98 @@ describe( 'comparative assessment', function(){
       .catch( done );
   } );
 
-  describe( '', function(){
-    it( 'should create a valid comparison', function( done ){
-      var assessor = _.sample( mocks.assessors );
-      env.services.comparisons.create( {
-          assessor: assessor,
-          assessment: mocks.assessment.id
-        } )
-        .then( function( comparison ){
-          expect( helpers.comparisons.isInstanceOf( comparison ),
-            'result is not a comparison' ).to.be.true();
-          expect( comparison.assessment.equals( mocks.assessment.id ),
-            'comparison.assessment should reference selected assessment' ).to.be.true();
-          expect( helpers.assessors.areEqual( comparison.assessor, assessor ),
-            'comparison.assessor should reference selected user' ).to.be.true();
-          return P.props( {
-            a: env.services.representations.retrieve( { _id: comparison.representations.a } ),
-            b: env.services.representations.retrieve( { _id: comparison.representations.b } )
-          } );
-        } )
-        .then( function( selected ){
-          expect( selected.a,
-            'comparison.representations.a is not persisted to database' ).to.not.be.undefined();
-          expect( selected.b,
-            'comparison.representations.b is not persisted to database' ).to.not.be.undefined();
-          expect( helpers.representations.occursInList( selected.a.compared, selected.b ),
-            'comparisons.representations.a is not compared with representation b' ).to.be.true();
-          expect( helpers.representations.occursInList( selected.b.compared, selected.a ),
-            'comparisons.representations.b is not compared with representation a' ).to.be.true();
-        } )
-        .then( done );
-    } )
+  describe( 'Multiple iterations', function(){
+    var representationCounts;
+    var candidates, required;
+
+    function hasId( list,
+                    idStr ){
+      return !!_.find( list, function( item ){
+        return item.id === idStr;
+      } );
+    }
+
+    before( function(){
+      representationCounts = _.reduce( mocks.representations, function( memo,
+                                                                        representation ){
+        var idStr = representation.id.toString();
+        memo[ idStr ] = {
+          value: 0,
+          id: idStr
+        };
+        return memo;
+      }, {} );
+    } );
+    beforeEach( function(){
+      var grouped = _.groupBy( representationCounts, function( item ){
+        return item.value;
+      } );
+      var values = Object.keys( grouped ).sort( function( a,
+                                                          b ){
+        return a - b;
+      } );
+      candidates = grouped[ values[ 0 ] ];
+      if( candidates.length < 2 ){
+        required = candidates;
+        candidates = grouped[ values[ 1 ] ]
+      } else {
+        required = [];
+      }
+    } );
+    _.times( 200, function(i){
+      it( 'should create a valid comparison for iteration '+ i, function( done ){
+        var assessor = _.sample( mocks.assessors );
+        env.services.comparisons.create( {
+            assessor: assessor,
+            assessment: mocks.assessment.id
+          } )
+          .then( function( comparison ){
+            expect( helpers.comparisons.isInstanceOf( comparison ),
+              'result is not a comparison' ).to.be.true();
+            expect( comparison.assessment.equals( mocks.assessment.id ),
+              'comparison.assessment should reference selected assessment' ).to.be.true();
+            expect( helpers.assessors.areEqual( comparison.assessor, assessor ),
+              'comparison.assessor should reference selected user' ).to.be.true();
+            return P.props( {
+              a: env.services.representations.retrieve( { _id: comparison.representations.a } ),
+              b: env.services.representations.retrieve( { _id: comparison.representations.b } )
+            } );
+          } )
+          .then( function( selected ){
+            var aId = selected.a.id.toString();
+            var bId = selected.b.id.toString();
+            switch( required.length ){
+              case 2:
+                expect( hasId( required, aId ) && hasId( required, bId ), "Required representation was not selected" ).to.be.true();
+                break;
+              case 1:
+                if( hasId( required, aId ) ){
+                  expect( hasId( candidates, bId ), "Selected representation was not a candidate" ).to.be.true();
+                } else if( hasId( required, bId ) ){
+                  expect( hasId( candidates, aId ), "Selected representation was not a candidate" ).to.be.true();
+                } else {
+                  throw new Error( "Required representation was not selected" );
+                }
+                break;
+              case 0:
+                expect( hasId( candidates, aId ) && hasId( candidates, bId ) ).to.be.true();
+                break;
+              default:
+                throw Error( "Cannot have more than 2 representations required" );
+            }
+            expect( selected.a,
+              'comparison.representations.a is not persisted to database' ).to.not.be.undefined();
+            expect( selected.b,
+              'comparison.representations.b is not persisted to database' ).to.not.be.undefined();
+            expect( helpers.representations.occursInList( selected.a.compared, selected.b ),
+              'comparisons.representations.a is not compared with representation b' ).to.be.true();
+            expect( helpers.representations.occursInList( selected.b.compared, selected.a ),
+              'comparisons.representations.b is not compared with representation a' ).to.be.true();
+            representationCounts[ aId ].value++;
+            representationCounts[ bId ].value++;
+          } )
+          .then( done );
+      } );
+    } );
   } );
 } );
