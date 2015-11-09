@@ -8,6 +8,9 @@ var path = require( 'path' );
 var url = require( 'url' );
 var _ = require( 'lodash' );
 var P = require( 'bluebird' );
+P.onPossiblyUnhandledRejection( function( err ){
+  throw err;
+} );
 var propsParser = P.promisifyAll( require( 'properties' ) );
 
 function getConfig(){
@@ -70,8 +73,7 @@ function resetDatabase(){
     } );
 }
 
-before( function( done ){
-  return getConfig()
+getConfig()
     .then( getApp )
     .then( destroyDatabase )
     .then( function(){
@@ -81,9 +83,8 @@ before( function( done ){
         module.exports.app.start( resolve );
       } );
     } )
-    .then( done )
-    .catch( done );
-} );
+    .then( run )
+    .catch( run );
 
 after( function( done ){
   destroyDatabase().then( done );
