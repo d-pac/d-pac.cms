@@ -39,19 +39,26 @@ describe( 'comparative assessment', function(){
           assessment: mocks.assessment.id
         } )
         .then( function( comparison ){
-          expect( helpers.comparisons.isInstanceOf( comparison ) ).to.be.true();
-          expect( comparison.assessment.equals( mocks.assessment.id ) ).to.be.true();
-          expect( helpers.assessors.areEqual( comparison.assessor, assessor ) ).to.be.true();
+          expect( helpers.comparisons.isInstanceOf( comparison ),
+            'result is not a comparison' ).to.be.true();
+          expect( comparison.assessment.equals( mocks.assessment.id ),
+            'comparison.assessment should reference selected assessment' ).to.be.true();
+          expect( helpers.assessors.areEqual( comparison.assessor, assessor ),
+            'comparison.assessor should reference selected user' ).to.be.true();
           return P.props( {
             a: env.services.representations.retrieve( { _id: comparison.representations.a } ),
             b: env.services.representations.retrieve( { _id: comparison.representations.b } )
           } );
         } )
         .then( function( selected ){
-          expect( selected.a ).to.not.be.undefined();
-          expect( selected.b ).to.not.be.undefined();
-          expect( helpers.representations.occursInList( selected.a.compared, selected.b ) ).to.be.true();
-          expect( helpers.representations.occursInList( selected.b.compared, selected.a ) ).to.be.true();
+          expect( selected.a,
+            'comparison.representations.a is not persisted to database' ).to.not.be.undefined();
+          expect( selected.b,
+            'comparison.representations.b is not persisted to database' ).to.not.be.undefined();
+          expect( helpers.representations.occursInList( selected.a.compared, selected.b ),
+            'comparisons.representations.a is not compared with representation b' ).to.be.true();
+          expect( helpers.representations.occursInList( selected.b.compared, selected.a ),
+            'comparisons.representations.b is not compared with representation a' ).to.be.true();
         } )
         .then( done );
     } )
