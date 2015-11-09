@@ -69,7 +69,7 @@ module.exports.create = function( opts ){
         throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
       }
 
-      var output, hookData;
+      var p, hookData;
 
       if( data.result && data.result.length ){
         var selectedPair = ( keystone.get( "disable selection shuffle" ) )
@@ -82,21 +82,24 @@ module.exports.create = function( opts ){
         var repB = _.find( representations, function( rep ){
           return rep.id == selectedPair[ 1 ]._id;
         } );
-        repA.compareWith( repB );
         hookData = selectedPair;
-        output = base.create( {
-          assessment: opts.assessment,
-          assessor: opts.assessor._id,
-          phase: assessment.phases[ 0 ],
-          representations: {
-            a: repA.id,
-            b: repB.id
-          }
-        } ).then( function( comparison ){
-          comparison.representations.a = repA;
-          comparison.representations.b = repB;
-          return comparison;
-        } );
+        p = repA.compareWith( repB )
+          .then( function(){
+            return base.create( {
+              assessment: opts.assessment,
+              assessor: opts.assessor._id,
+              phase: assessment.phases[ 0 ],
+              representations: {
+                a: repA.id,
+                b: repB.id
+              }
+            } );
+          } )
+          .then( function( comparison ){
+            comparison.representations.a = repA;
+            comparison.representations.b = repB;
+            return comparison;
+          } );
       } else if( data.messages ){
         data.type = "messages";
         hookData = _.defaults( {
@@ -111,10 +114,12 @@ module.exports.create = function( opts ){
             objects: plainComparisons
           }
         }, data );
-        output = data;
+        p = P.resolve( data );
       }
-      keystone.hooks.callHook( 'post:' + assessment.algorithm + '.select', hookData );
-      return output;
+      return p.then( function( output ){
+        keystone.hooks.callHook( 'post:' + assessment.algorithm + '.select', hookData );
+        return output;
+      } );
     }
   );
 };
