@@ -5,9 +5,24 @@ var Types = keystone.Field.Types;
  * Users
  * =====
  */
-
+var _ = require( 'lodash' );
 var User = new keystone.List( "User" );
 User.defaultColumns = "name, email, isAdmin";
+
+function hasAssessmentId( arr,
+                          needleId ){
+  return _.any( arr, function( assessmentId ){
+    return assessmentId.equals( needleId );
+  } );
+}
+
+User.schema.methods.isAssessorFor = function( assessmentId ){
+  return hasAssessmentId( this.assessments.assessor, assessmentId );
+};
+
+User.schema.methods.isAssesseeFor = function( assessmentId ){
+  return hasAssessmentId( this.assessments.assessee, assessmentId );
+};
 
 require( './helpers/setupList' )( User )
   .add( {
@@ -66,15 +81,15 @@ require( './helpers/setupList' )( User )
     }
   } )
   .retain( "password" )
-  .relate({
-      path: "documents",
-      ref: "Document",
-      refPath: "owner",
-      label: "Documents"
-    }, {
-      path: "comparisons",
-      ref: "Comparison",
-      refPath: "assessor",
-      label: "Comparisons"
-    })
+  .relate( {
+    path: "documents",
+    ref: "Document",
+    refPath: "owner",
+    label: "Documents"
+  }, {
+    path: "comparisons",
+    ref: "Comparison",
+    refPath: "assessor",
+    label: "Comparisons"
+  } )
   .register();
