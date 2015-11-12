@@ -173,7 +173,9 @@ exports.methodNotAllowed = function methodNotAllowed( req,
                                                       res,
                                                       next ){
   debug( "#methodNotAllowed" );
-  return next( new errors.Http405Error() );
+  //return next( new errors.Http405Error() );
+  // we're gonna hide behind a 404
+  return next( new errors.Http404Error() );
 };
 
 exports.createCors = function(){
