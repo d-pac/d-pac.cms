@@ -59,6 +59,9 @@ exports = module.exports = function( app ){
     .all( appMw.reflectReq )
     .all( apiMw.initAPI );
 
+  app.route( apiRoot + "/system/:action" )
+    .get( api.system.action );
+
   app.route( apiRoot + "/session" )
     .get( api.authentication.status )
     .post( api.authentication.signin )

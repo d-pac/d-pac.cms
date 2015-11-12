@@ -33,6 +33,22 @@ e.g.
 
 These fields are sometimes omitted from the examples.
 
+### system status
+
+#### ping
+
+##### Request
+
+```
+GET /api/system/ping
+```
+
+##### Response
+
+```
+200 OK
+```
+
 ### authorization
 
 #### retrieve session
