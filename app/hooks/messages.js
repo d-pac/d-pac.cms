@@ -96,7 +96,7 @@ function sendScheduledMessages(){
 
 function messageSavedHandler( done ){
   var message = this;
-  if( message.isNew ){
+  if( message.isNew && !message.fromAPI ){
     addToLog( message, 'Draft created' );
   } else {
     if( message.state === 'handled' && process.env.NODE_ENV !== 'development' ){

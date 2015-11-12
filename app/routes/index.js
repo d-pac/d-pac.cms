@@ -114,6 +114,10 @@ exports = module.exports = function( app ){
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
+  app.route( apiRoot + "/messages" )
+    .all( apiMw.requireUser )
+    .post( api.messages.create );
+
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {
       all: [ apiMw.requireUser, apiMw.requireAdmin ],

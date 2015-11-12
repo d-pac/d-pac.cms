@@ -141,7 +141,13 @@ var list = require( './helpers/setupList' )( Message )
         strategy: 'send'
       },
       label: 'Yes I want to send this message immediately'
+    },
+    fromAPI: {
+      type: Boolean,
+      default: false,
+      hidden: true
     }
 
   } )
+  .retain(["recipientType", "log", "confirm", "fromAPI", "body", "strategy", "recipients"])
   .register();
