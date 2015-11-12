@@ -1,4 +1,4 @@
-## REST API v0.2
+## REST API v0.2.1
 
 <!-- toc -->
 
@@ -1447,5 +1447,40 @@ DELETE /api/organizations/:id
 }
 ```
 
+#### create message
 
+##### Request
+
+```
+POST /api/messages
+```
+```json
+{
+  "assessment":"56274576d8441e060a5649b9",
+  "subject": "Message sent by REST API",
+  "body": "Lorem ipsum"
+}
+```
+
+##### Response
+
+```
+200 OK
+```
+```json
+{
+    "_rid": 20,
+    "updatedAt": "2015-11-12T11:58:06.523Z",
+    "createdAt": "2015-11-12T11:58:06.523Z",
+    "createdBy": "56121c4d85bcf1308178d0c2",
+    "assessment": "56274576d8441e060a5649b9",
+    "state": "handled",
+    "subject": "Message sent by REST API",
+    "_id": "56447ece2db881bb473dc504",
+    "type": "messages",
+    "links": {
+        "self": "/api/messages/56447ece2db881bb473dc504"
+    }
+}
+```
 
