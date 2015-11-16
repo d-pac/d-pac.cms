@@ -18,7 +18,7 @@ Representation.defaultColumns = "name, comparedNum";
 Representation.schema.methods.compareWith = function( other ){
   this.compared.push( other._id );
   other.compared.push( this._id );
-  return P.all( P.promisify(this.save, this)(), P.promisify(other.save, other)() );
+  return P.all( P.promisify( this.save, this )(), P.promisify( other.save, other )() );
 };
 
 Representation.schema.methods.uncompareWith = function( other ){
@@ -27,7 +27,7 @@ Representation.schema.methods.uncompareWith = function( other ){
   var oi = other.compared.indexOf( this.id );
   other.compared.splice( oi, 1 );
 
-  return P.all( P.promisify(this.save, this)(), P.promisify(other.save, other)() );
+  return P.all( P.promisify( this.save, this )(), P.promisify( other.save, other )() );
 };
 
 require( './helpers/setupList' )( Representation )
@@ -139,9 +139,15 @@ require( './helpers/setupList' )( Representation )
   } )
   .retain( "track" )
   .relate( {
-    path: "comparisons",
-    ref: "Comparison",
-    refPath: "representations",
-    label: "Comparisons"
-  } )
+      path: "comparisonsA",
+      ref: "Comparison",
+      refPath: "representations.a",
+      label: "Comparisons (A)"
+    },
+    {
+      path: "comparisonsB",
+      ref: "Comparison",
+      refPath: "representations.b",
+      label: "Comparisons (B)"
+    } )
   .register();
