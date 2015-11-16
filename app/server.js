@@ -105,10 +105,10 @@ keystone.set( "nav", {
     "notes",
     "timelogs"
   ],
-  "actions": [
+  "misc": [
     "reports",
     "bulkuploads",
-    "deletions",
+    "actions",
     "messages"
   ]
 } );

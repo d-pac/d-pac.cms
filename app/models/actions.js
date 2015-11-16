@@ -4,27 +4,24 @@ var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
-var Deletion = new keystone.List( "Deletion", {
+var Action = new keystone.List( "Action", {
   map: {
     name: "_rid"
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: true,
-  label: "Assessment Actions",
-  singular: "Assessment Action",
-  plural: "Assessment Actions"
+  noedit: true
 } );
 
-Deletion.defaultColumns = "name, line, removalType, success, createdAt";
+Action.defaultColumns = "name, line, actionType, success, createdAt";
 
-Deletion.schema.plugin( require( "./helpers/autoinc" ).plugin, {
-  model: "Deletion",
+Action.schema.plugin( require( "./helpers/autoinc" ).plugin, {
+  model: "Action",
   field: "_rid",
   startAt: 1
 } );
 
-var list = require( './helpers/setupList' )( Deletion )
+var list = require( './helpers/setupList' )( Action )
   .add( {
     assessment: {
       type: Types.Relationship,
@@ -35,7 +32,7 @@ var list = require( './helpers/setupList' )( Deletion )
       "Comparisons and timelogs will always be deleted."
     },
 
-    removalType: {
+    actionType: {
       type: Types.Select,
       options: [
         {

@@ -196,53 +196,53 @@ function archiveAssessment( assessmentId ){
     } );
 }
 
-function deletionCreatedHandler( next ){
-  var deletion = this;
+function actionCreatedHandler( next ){
+  var action = this;
 
   function failureHandler( err ){
-    deletion.line = "FAILED";
-    deletion.success = false;
-    deletion.log = err;
+    action.line = "FAILED";
+    action.success = false;
+    action.log = err;
     next();
   }
 
-  switch( deletion.removalType ){
+  switch( action.actionType ){
     case "reset":
-      resetAssessment( deletion.assessment )
+      resetAssessment( action.assessment )
         .then( function( assessment ){
-          deletion.line = "Assessment: " + assessment.name;
-          deletion.log = "Successfully reset";
-          deletion.success = true;
+          action.line = "Assessment: " + assessment.name;
+          action.log = "Successfully reset";
+          action.success = true;
           next();
         } )
         .catch( failureHandler );
       break;
     case "delete":
-      deleteAssessment( deletion.assessment )
+      deleteAssessment( action.assessment )
         .then( function( assessment ){
-          deletion.line = "Assessment: " + assessment.name;
-          deletion.log = "Successfully deleted";
-          deletion.success = true;
+          action.line = "Assessment: " + assessment.name;
+          action.log = "Successfully deleted";
+          action.success = true;
           next();
         } )
         .catch( failureHandler );
       break;
     case "archive":
-      archiveAssessment( deletion.assessment )
+      archiveAssessment( action.assessment )
         .then( function( result ){
-          deletion.line = "Assessment: " + result.assessment.name;
-          deletion.log = result.out;
-          deletion.success = true;
+          action.line = "Assessment: " + result.assessment.name;
+          action.log = result.out;
+          action.success = true;
           next();
         } )
         .catch( failureHandler );
       break;
     default:
-      next( new Error( "Unhandled deletion action: " + deletion.removalType ) );
+      next( new Error( "Unhandled action: " + action.actionType ) );
   }
 }
 
 module.exports.init = function(){
-  keystone.list( 'Deletion' ).schema.pre( 'save', deletionCreatedHandler );
+  keystone.list( 'Action' ).schema.pre( 'save', actionCreatedHandler );
 };
 
