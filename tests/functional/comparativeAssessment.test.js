@@ -1,6 +1,6 @@
 'use strict';
 var debug = require( "debug" )( "dpac:tests:functional:comparativeAssessment" );
-
+var util = require( 'util' );
 var _ = require( 'lodash' );
 var expect = require( 'must' );
 var P = require( 'bluebird' );
@@ -69,8 +69,8 @@ describe( 'comparative assessment', function(){
         required = [];
       }
     } );
-    _.times( 200, function(i){
-      it( 'should create a valid comparison for iteration '+ i, function( done ){
+    _.times( 200, function( i ){
+      it( 'should create a valid comparison for iteration ' + i, function( done ){
         var assessor = _.sample( mocks.assessors );
         env.services.comparisons.create( {
             assessor: assessor,
@@ -105,7 +105,8 @@ describe( 'comparative assessment', function(){
                 }
                 break;
               case 0:
-                expect( hasId( candidates, aId ) && hasId( candidates, bId ) ).to.be.true();
+                expect( hasId( candidates, aId ) && hasId( candidates, bId ),
+                  "Selected representation was not a candidate" ).to.be.true();
                 break;
               default:
                 throw Error( "Cannot have more than 2 representations required" );
@@ -120,8 +121,16 @@ describe( 'comparative assessment', function(){
               'comparisons.representations.b is not compared with representation a' ).to.be.true();
             representationCounts[ aId ].value++;
             representationCounts[ bId ].value++;
+            return {
+              a: representationCounts[ aId ],
+              b: representationCounts[ bId ]
+            }
           } )
-          .then( done );
+          .then( function( compared ){
+            debug( 'Comparison finalized:', util.inspect( compared ) );
+            done();
+          } )
+          .catch( done );
       } );
     } );
   } );
