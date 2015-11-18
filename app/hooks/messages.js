@@ -3,7 +3,7 @@ var scheduler = require( 'node-schedule' );
 var P = require( 'bluebird' );
 var _ = require( 'lodash' );
 var moment = require( 'moment' );
-
+var constants = require( '../models/helpers/constants' );
 var keystone = require( 'keystone' );
 var usersService = require( '../services/users' );
 var messagesService = require( '../services/messages' );
@@ -19,16 +19,16 @@ function addToLog( message,
 
 function getRecipients( message ){
   switch( message.recipientType ){
-    case 'assessors':
+    case constants.recipientTypes.ASSESSORS.value:
       return usersService.listForAssessments( 'assessor', [ message.assessment ] );
       break;
-    case 'assessees':
+    case constants.recipientTypes.ASSESSEES.value:
       return usersService.listForAssessments( 'assessee', [ message.assessment ] );
       break;
-    case 'assessment':
+    case constants.recipientTypes.ASSESSMENT.value:
       return usersService.listForAssessments( 'both', [ message.assessment ] );
       break;
-    case 'pam':
+    case constants.recipientTypes.PAM.value:
       return assessmentsService
         .retrieve( {
           _id: message.assessment
@@ -42,8 +42,12 @@ function getRecipients( message ){
           return [ user ];
         } );
       break;
-    case 'manual':
+    case constants.recipientTypes.ANY.value:
       return usersService.listById( message.recipients );
+      break;
+    case constants.recipientTypes.ADMIN.value:
+    default:
+      return keystone.get("mail admin");
       break;
   }
 }
@@ -77,7 +81,7 @@ function sendMessage( message ){
 }
 
 function sendScheduledMessages(){
-  console.log('Sending scheduled messages:', moment().format('DD/MM/YY HH:mm:ss'));
+  console.log( 'Sending scheduled messages:', moment().format( 'DD/MM/YY HH:mm:ss' ) );
   return messagesService.list( {
       strategy: 'scheduled',
       schedule: {

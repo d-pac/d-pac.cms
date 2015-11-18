@@ -3,6 +3,7 @@
 var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
+var constants = require( './helpers/constants' );
 
 var Message = new keystone.List( "Message", {
   map: {
@@ -24,28 +25,7 @@ var list = require( './helpers/setupList' )( Message )
   .add( {
     recipientType: {
       type: Types.Select,
-      options: [
-        {
-          label: 'Assessors',
-          value: 'assessors'
-        },
-        {
-          label: 'Assessees',
-          value: 'assessees'
-        },
-        {
-          label: 'Assessees & assessors',
-          value: 'assessment'
-        },
-        {
-          label: 'PAM',
-          value: 'pam'
-        },
-        {
-          label: 'Select manually',
-          value: 'manual'
-        }
-      ],
+      options: constants.recipientTypes.list,
       initial: true,
       label: 'Recipients'
     },
@@ -54,7 +34,10 @@ var list = require( './helpers/setupList' )( Message )
       ref: "Assessment",
       required: false,
       dependsOn: {
-        recipientType: [ 'assessors', 'assessees', 'assessment', 'pam' ]
+        recipientType: [
+          constants.recipientTypes.ASSESSORS.value, constants.recipientTypes.ASSESSEES.value,
+          constants.recipientTypes.ASSESSMENT.value, constants.recipientTypes.PAM.value
+        ]
       },
       initial: true
     },
@@ -63,7 +46,7 @@ var list = require( './helpers/setupList' )( Message )
       ref: 'User',
       many: true,
       dependsOn: {
-        recipientType: 'manual'
+        recipientType: constants.recipientTypes.ANY.value
       },
       initial: true,
       label: "Users"
@@ -149,5 +132,5 @@ var list = require( './helpers/setupList' )( Message )
     }
 
   } )
-  .retain(["recipientType", "log", "confirm", "fromAPI", "body", "strategy", "recipients"])
+  .retain( [ "recipientType", "log", "confirm", "fromAPI", "body", "strategy", "recipients" ] )
   .register();

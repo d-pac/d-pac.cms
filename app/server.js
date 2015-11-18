@@ -32,6 +32,7 @@ keystone.init( {
   "brand": "d-pac",
   "appversion": pkg.version + " (" + pkg.build + ")",
 
+  "root url": process.env.ROOT_URL,
   "mongo uri": process.env.MONGO_URI,
   "less": "public",
   "static": "public",
@@ -54,7 +55,15 @@ keystone.init( {
   "cookie secret": process.env.COOKIE_SECRET,
   "api root": "/api",
   mongoose: require( 'mongoose' ),
-  'emails': 'templates/emails'
+  'emails': 'templates/emails',
+  "mail admin": {
+    name: "d-pac administrator",
+    email: process.env.MAIL_ADMIN || 'info@d-pac.be'
+  },
+  "mail noreply": {
+    name: "automated d-pac mailer",
+    email: "no-reply@d-pac.be"
+  }
 } );
 
 console.log( '------------------------------------------------' );

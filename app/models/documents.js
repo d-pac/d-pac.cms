@@ -14,7 +14,7 @@ var allowedTypes = [ 'png', 'jpg', 'pdf', 'html', 'svg' ].map( function( ext ){
 var utils = {
   local: {
     href: function(){
-      return process.env.ROOT_URL + (this.file.href || '/images/nodocument.png');
+      return keystone.get("root url") + (this.file.href || '/images/nodocument.png');
     },
     mimeType: function(){
       return this.file.filetype;

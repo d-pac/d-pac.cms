@@ -3,13 +3,6 @@ var keystone = require( "keystone" );
 var _ = require( 'lodash' );
 var P = require( 'bluebird' );
 
-//todo: move this to settings
-var to = [ 'info@d-pac.be' ];
-var from = {
-  name: "automated d-pac mailer",
-  email: "no-reply@d-pac.be"
-};
-
 module.exports = {
   //todo: promisify
   sendStageCompleted: function( assessment,
@@ -17,9 +10,9 @@ module.exports = {
     return new keystone.Email( {
       templateName: 'stage-completed'
     } ).send( {
-      to: to,
-      from: from,
-      subject: '[d-pac] (' + process.env.ROOT_URL + ') Stage fully completed for ' + assessment.name,
+      to: keystone.get( "mail admin" ),
+      from: keystone.get( "mail noreply" ),
+      subject: '[d-pac] (' + keystone.get("root url") + ') Stage fully completed for ' + assessment.name,
       body: {
         assessment: assessment
       }
@@ -32,9 +25,9 @@ module.exports = {
     return new keystone.Email( {
       templateName: 'assessor-stage-completed'
     } ).send( {
-      to: to,
-      from: from,
-      subject: '[d-pac] (' + process.env.ROOT_URL + ') Assessor ' + assessor.name.full + ' completed stage for ' + assessment.name,
+      to: keystone.get( "mail admin" ),
+      from: keystone.get( "mail noreply" ),
+      subject: '[d-pac] (' + keystone.get("root url") + ') Assessor ' + assessor.name.full + ' completed stage for ' + assessment.name,
       body: {
         assessment: assessment,
         assessor: assessor

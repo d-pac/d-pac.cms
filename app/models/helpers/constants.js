@@ -49,8 +49,43 @@ module.exports.representationTypes = {
 };
 
 module.exports.conflicts = {
-  list: [ constants.OVERWRITE, constants.REUSE, constants.RENAME]
+  list: [ constants.OVERWRITE, constants.REUSE, constants.RENAME ]
 };
+
+module.exports.recipientTypes = {
+  ASSESSORS: {
+    label: 'Assessors',
+    value: 'assessors'
+  },
+  ASSESSEES: {
+    label: 'Assessees',
+    value: 'assessees'
+  },
+  ASSESSMENT: {
+    label: 'Both (assessors & assessees)',
+    value: 'assessment'
+  },
+  PAM: {
+    label: 'PAM',
+    value: 'pam'
+  },
+  ADMIN: {
+    label: 'Administrator',
+    value: 'admin'
+  },
+  ANY: {
+    label: 'Select manually',
+    value: 'manual'
+  }
+};
+module.exports.recipientTypes.list = [
+  module.exports.recipientTypes.ASSESSORS,
+  module.exports.recipientTypes.ASSESSEES,
+  module.exports.recipientTypes.ASSESSMENT,
+  module.exports.recipientTypes.PAM,
+  module.exports.recipientTypes.ADMIN,
+  module.exports.recipientTypes.ANY
+];
 
 module.exports.phases = [
   {
