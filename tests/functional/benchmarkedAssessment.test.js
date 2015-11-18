@@ -8,7 +8,7 @@ var fixtures = require( './fixtures' );
 var env = require( '../env' )
 var mocks;
 
-describe( 'benchmarked assessment', function(){
+describe.skip( 'benchmarked assessment', function(){
   before( function( done ){
     env.setup()
       .then( function(){

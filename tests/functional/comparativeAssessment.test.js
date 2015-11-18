@@ -1,5 +1,6 @@
 'use strict';
 var debug = require( "debug" )( "dpac:tests:functional:comparativeAssessment" );
+
 var util = require( 'util' );
 var _ = require( 'lodash' );
 var expect = require( 'must' );
@@ -62,7 +63,7 @@ describe( 'comparative assessment', function(){
         return a - b;
       } );
       candidates = grouped[ values[ 0 ] ];
-      if( candidates.length < 2 ){
+      if( candidates.length <= 2 ){
         required = candidates;
         candidates = grouped[ values[ 1 ] ]
       } else {
@@ -91,25 +92,31 @@ describe( 'comparative assessment', function(){
           .then( function( selected ){
             var aId = selected.a.id.toString();
             var bId = selected.b.id.toString();
-            switch( required.length ){
-              case 2:
-                expect( hasId( required, aId ) && hasId( required, bId ), "Required representation was not selected" ).to.be.true();
-                break;
-              case 1:
-                if( hasId( required, aId ) ){
-                  expect( hasId( candidates, bId ), "Selected representation was not a candidate" ).to.be.true();
-                } else if( hasId( required, bId ) ){
-                  expect( hasId( candidates, aId ), "Selected representation was not a candidate" ).to.be.true();
-                } else {
-                  throw new Error( "Required representation was not selected" );
-                }
-                break;
-              case 0:
-                expect( hasId( candidates, aId ) && hasId( candidates, bId ),
-                  "Selected representation was not a candidate" ).to.be.true();
-                break;
-              default:
-                throw Error( "Cannot have more than 2 representations required" );
+            try{
+              switch( required.length ){
+                case 2:
+                  expect( hasId( required, aId ) && hasId( required, bId ), "Required representation was not selected (2a)" ).to.be.true();
+                  break;
+                case 1:
+                  if( hasId( required, aId ) ){
+                    expect( hasId( candidates, bId ), "Selected representation was not a candidate (1a)" ).to.be.true();
+                  } else if( hasId( required, bId ) ){
+                    expect( hasId( candidates, aId ), "Selected representation was not a candidate (1b)" ).to.be.true();
+                  } else {
+                    throw new Error( "Required representation was not selected (1c)" );
+                  }
+                  break;
+                case 0:
+                  var aWasCandidate = hasId( candidates, aId );
+                  var bWasCandidate = hasId( candidates, bId );
+                  expect( aWasCandidate && bWasCandidate,
+                    "Selected representation was not a candidate (0a)" ).to.be.true();
+                  break;
+                default:
+                  throw Error( "Cannot have more than 2 representations required" );
+              }
+            }catch(err){
+              throw err;
             }
             expect( selected.a,
               'comparison.representations.a is not persisted to database' ).to.not.be.undefined();

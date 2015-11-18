@@ -5,28 +5,37 @@ var _ = require( 'lodash' );
 var base = require( './base' );
 var assert = require( 'assert' );
 
-var REPRESENTATIONS_NUM_DEFAULT = 5;
+var REPRESENTATIONS_NUM_DEFAULT = 10;
 
 module.exports.create = function( env,
                                   opts ){
   var data;
   opts = _.defaults( {}, opts, {
-    name: 'comparative assessment',
+    name: 'peer assessment',
     algorithm: 'comparative-selection',
-    representationsNum: REPRESENTATIONS_NUM_DEFAULT
+    representationsNum: REPRESENTATIONS_NUM_DEFAULT,
+    documentsNum: REPRESENTATIONS_NUM_DEFAULT,
+    assessorsNum: REPRESENTATIONS_NUM_DEFAULT
   } );
-  return base.create( env, opts)
+  return base.create( env, opts )
     .then( function( basedata ){
       data = basedata;
     } )
     .then( function(){
-      var documentId = data.documents[0].id;
+      return P.each( data.documents, function( document, i ){
+        var assessee = data.assessors[ i ];
+        document.owner = assessee.id;
+        return P.promisify( document.save, document )();
+      } );
+    } )
+    .then( function(){
       return env.services.representations.create( _.times( opts.representationsNum, function( i ){
+        var document = data.documents[ i ];
         return {
           name: i,
           title: i,
           assessment: data.assessment.id,
-          document: documentId
+          document: document.id
         };
       } ) );
     } )

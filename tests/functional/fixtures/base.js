@@ -4,10 +4,15 @@ var P = require( 'bluebird' );
 var _ = require( 'lodash' );
 var assert = require( 'assert' );
 
-var ASSESSORS_NUM = 4;
+var ASSESSORS_NUM_DEFAULT = 4;
+var DOCUMENTS_NUM_DEFAULT = 1;
 module.exports.create = function( env,
                                   opts ){
   var data = {};
+  opts = _.defaults( {}, opts, {
+    assessorsNum: ASSESSORS_NUM_DEFAULT,
+    documentsNum: DOCUMENTS_NUM_DEFAULT
+  } );
   return env.services.assessments.create( {
       name: opts.name,
       title: opts.name,
@@ -22,7 +27,7 @@ module.exports.create = function( env,
       data.assessment = doc;
     } )
     .then( function createAssessors(){
-      return env.services.users.create( _.times( ASSESSORS_NUM, function( i ){
+      return env.services.users.create( _.times( opts.assessorsNum, function( i ){
         return {
           name: {
             first: i.toString(),
@@ -33,25 +38,31 @@ module.exports.create = function( env,
             assessor: [ data.assessment.id ]
           }
         };
-      } ) )
+      } ) );
     } )
     .then( function( assessors ){
       data.assessors = assessors;
     } )
     .then( function createDocument(){
-      return env.services.documents.create( {
-        name: 'dummy document',
-        link: 'http://example.com/dummy.pdf'
-      } )
+      return env.services.documents.create( _.times( opts.documentsNum, function( i ){
+        return {
+          name: 'dummy document ' + i,
+          link: 'http://example.com/dummy-' + i + '.pdf'
+        };
+      } ) );
     } )
-    .then( function( doc ){
-      data.document = doc;
+    .then( function( docs ){
+      if( !_.isArray( docs ) ){ //single doc
+        docs = [ docs ];
+      }
+      data.documents = docs;
     } )
     .then( function(){
       assert( data.assessment, 'Assessment not created' );
-      assert( data.document, 'Document not created' );
+      assert( data.documents, 'Documents not created' );
+      assert.equal( data.documents.length, opts.documentsNum, 'Documents incorrectly created' );
       assert( data.assessors, 'Assessors not created' );
-      assert.equal( data.assessors.length, ASSESSORS_NUM, 'Assessors not/incorrectly created' );
+      assert.equal( data.assessors.length, opts.assessorsNum, 'Assessors not/incorrectly created' );
 
       return data;
     } );
