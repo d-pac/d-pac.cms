@@ -92,6 +92,12 @@ describe( 'comparative assessment', function(){
           .then( function( selected ){
             var aId = selected.a.id.toString();
             var bId = selected.b.id.toString();
+            representationCounts[ aId ].value++;
+            representationCounts[ bId ].value++;
+            var compared = {
+              a: representationCounts[ aId ],
+              b: representationCounts[ bId ]
+            };
             try{
               switch( required.length ){
                 case 2:
@@ -115,7 +121,8 @@ describe( 'comparative assessment', function(){
                 default:
                   throw Error( "Cannot have more than 2 representations required" );
               }
-            }catch(err){
+            } catch( err ) {
+              debug( 'Comparison ' + i + ' finalized:', util.inspect( compared ) );
               throw err;
             }
             expect( selected.a,
@@ -126,15 +133,10 @@ describe( 'comparative assessment', function(){
               'comparisons.representations.a is not compared with representation b' ).to.be.true();
             expect( helpers.representations.occursInList( selected.b.compared, selected.a ),
               'comparisons.representations.b is not compared with representation a' ).to.be.true();
-            representationCounts[ aId ].value++;
-            representationCounts[ bId ].value++;
-            return {
-              a: representationCounts[ aId ],
-              b: representationCounts[ bId ]
-            }
+            return compared;
           } )
           .then( function( compared ){
-            debug( 'Comparison finalized:', util.inspect( compared ) );
+            debug( 'Comparison ' + i + ' finalized:', util.inspect( compared ) );
             done();
           } )
           .catch( done );
