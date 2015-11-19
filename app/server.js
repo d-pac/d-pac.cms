@@ -24,7 +24,7 @@ keystone.hooks = grappling.create( { strict: false } );
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
-
+var env = process.env;
 var pkg = require( "../package.json" );
 keystone.init( {
 
@@ -32,13 +32,13 @@ keystone.init( {
   "brand": "d-pac",
   "appversion": pkg.version + " (" + pkg.build + ")",
 
-  "root url": process.env.ROOT_URL,
-  "mongo uri": process.env.MONGO_URI,
+  "root url": env.ROOT_URL,
+  "mongo uri": env.MONGO_URI,
   "less": "public",
   "static": "public",
   "favicon": "public/favicon.ico",
 
-  "logger": process.env.LOGGER || "dev",
+  "logger": env.LOGGER || "dev",
 
   "views": "templates/views",
   "view engine": "jade",
@@ -48,23 +48,28 @@ keystone.init( {
   "session": true,
   "session store": "connect-mongo",
   "session store options": {
-    url: process.env.MONGO_SESSIONS_URI
+    url: env.MONGO_SESSIONS_URI
   },
   "auth": true,
   "user model": "User",
-  "cookie secret": process.env.COOKIE_SECRET,
+  "cookie secret": env.COOKIE_SECRET,
   "api root": "/api",
   mongoose: require( 'mongoose' ),
   'emails': 'templates/emails',
   "mail admin": {
     name: "d-pac administrator",
-    email: process.env.MAIL_ADMIN || 'info@d-pac.be'
+    email: env.MAIL_ADMIN || 'info@d-pac.be'
   },
   "mail noreply": {
     name: "automated d-pac mailer",
     email: "no-reply@d-pac.be"
-  }
+  },
+  "api disable": env.API_DISABLE || ''
 } );
+
+keystone.isDisabled = function(op){
+  return this.get('api disable').indexOf(op)>-1;
+};
 
 console.log( '------------------------------------------------' );
 console.log( 'Environment:', nodeEnv );

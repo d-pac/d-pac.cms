@@ -4,6 +4,7 @@ var debug = require( "debug" )( "dpac:api.users" );
 var _ = require( 'lodash' );
 var P = require( 'bluebird' );
 var errors = require( 'errors' );
+var keystone = require( 'keystone' );
 
 var service = require( "../../services/users" );
 var comparisonsService = require( "../../services/comparisons" );
@@ -62,6 +63,12 @@ module.exports.listNotes = function( req,
 module.exports.update = function( req,
                                   res,
                                   next ){
+  if( keystone.isDisabled( 'save_account' ) ){
+    return next( new errors.Http403Error( {
+      message: "Not Allowed",
+      explanation: 'account modification disabled'
+    } ) );
+  }
   var p;
   if( req.body.password !== req.body.password_confirm ){
     p = P.reject( new errors.Http422Error( { explanation: 'passwords do not match' } ) );
