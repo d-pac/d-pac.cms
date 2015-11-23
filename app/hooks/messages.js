@@ -81,7 +81,7 @@ function sendMessage( message ){
 }
 
 function sendScheduledMessages(){
-  console.log( 'Sending scheduled messages:', moment().format( 'DD/MM/YY HH:mm:ss' ) );
+  //console.log( 'Sending scheduled messages:', moment().format( 'DD/MM/YY HH:mm:ss' ) );
   return messagesService.list( {
       strategy: 'scheduled',
       schedule: {

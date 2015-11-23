@@ -34,6 +34,8 @@ function comparisonSavedHandler(done){
     } ).catch( function( err ){
       done( err );
     } )
+  }else{
+    done();
   }
 }
 
