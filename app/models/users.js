@@ -30,10 +30,6 @@ User.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt: 1
 } );
 
-//User.schema.virtual( "anonymized" ).get( function(){
-//  return 'user-' + _.padLeft( this._rid, 5, "0" );
-//} ).depends = [ "_rid" ];
-
 require( './helpers/setupList' )( User )
   .add( {
     _rid: {

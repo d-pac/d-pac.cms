@@ -14,7 +14,7 @@ var allowedTypes = [ 'png', 'jpg', 'pdf', 'html', 'svg' ].map( function( ext ){
 var utils = {
   local: {
     href: function(){
-      return keystone.get("root url") + (this.file.href || '/images/nodocument.png');
+      return keystone.get( "root url" ) + (this.file.href || '/images/nodocument.png');
     },
     mimeType: function(){
       return this.file.filetype;
@@ -60,18 +60,6 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   field: "_rid",
   startAt: 1
 } );
-
-Document.schema.virtual( "href" ).get( function(){
-  return callUtil( this, 'href' ) || "none";
-} ).depends = [ "file", "host", "link" ];
-
-Document.schema.virtual( "mimeType" ).get( function(){
-  return callUtil( this, 'mimeType' ) || 'text/html';
-} ).depends = [ "file", "host", "link" ];
-
-Document.schema.virtual( "ext" ).get( function(){
-  return callUtil( this, 'ext' ) || '.html';
-} ).depends = [ "file", "host", "link" ];
 
 Document.schema.pre( "save", function( callback ){
   if( this.title ){
@@ -151,6 +139,26 @@ require( './helpers/setupList' )( Document )
   } )
   .expose( "href", "mimeType", "ext" )
   .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links" )
+  .virtualize( {
+    href: {
+      get: function(){
+        return callUtil( this, 'href' ) || "none";
+      },
+      depends: [ "file", "host", "link" ]
+    },
+    mimeType: {
+      get: function(){
+        return callUtil( this, 'mimeType' ) || 'text/html';
+      },
+      depends: [ "file", "host", "link" ]
+    },
+    ext: {
+      get: function(){
+        return callUtil( this, 'ext' ) || '.html';
+      },
+      depends: [ "file", "host", "link" ]
+    }
+  } )
   .validate( {
     link: [
       function( value,
