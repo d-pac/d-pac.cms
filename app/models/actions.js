@@ -10,7 +10,8 @@ var Action = new keystone.List( "Action", {
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: true
+  noedit: true,
+  nodelete: true
 } );
 
 Action.defaultColumns = "name, line, actionType, success, createdAt";

@@ -10,7 +10,8 @@ var Bulkupload = new keystone.List( "Bulkupload", {
     name: "_rid"
   },
   track: true,
-  defaultSort: '-_rid'
+  defaultSort: '-_rid',
+  nodelete: true
 } );
 
 Bulkupload.defaultColumns = "name, comment, createdAt, createdBy";
