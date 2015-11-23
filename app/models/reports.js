@@ -10,7 +10,7 @@ var Report = new keystone.List( "Report", {
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: true
+  noedit: !keystone.get('dev env')
 } );
 
 Report.defaultColumns = "name, assessment, url|50%, createdAt, createdBy";

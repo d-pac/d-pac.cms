@@ -10,8 +10,8 @@ var Action = new keystone.List( "Action", {
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: true,
-  nodelete: true
+  noedit: !keystone.get('dev env'),
+  nodelete: !keystone.get('dev env')
 } );
 
 Action.defaultColumns = "name, line, actionType, success, createdAt";

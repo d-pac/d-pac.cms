@@ -8,9 +8,9 @@ var Phase = new keystone.List( "Phase", {
   map      : {
     name : "label"
   },
-  noedit   : true,
-  nocreate : true,
-  nodelete : true,
+  noedit   : !keystone.get('dev env'),
+  nocreate : !keystone.get('dev env'),
+  nodelete : !keystone.get('dev env'),
   hidden   : false
 } );
 

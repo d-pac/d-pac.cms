@@ -11,7 +11,10 @@ var Timelog = new keystone.List( "Timelog", {
     name: "id"
   },
   track: true,
-  defaultSort: "comparison"
+  defaultSort: "comparison",
+  noedit: !keystone.get('dev env'),
+  nodelete: !keystone.get('dev env'),
+  nocreate: !keystone.get('dev env')
 } );
 
 Timelog.api = {

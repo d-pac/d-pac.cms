@@ -15,9 +15,6 @@ var errors = require( "errors" );
 
 var nodeEnv = process.env.NODE_ENV || "development";
 
-if( "development" === nodeEnv ){
-  errors.stacks( true );
-}
 
 keystone.hooks = grappling.create( { strict: false } );
 
@@ -64,8 +61,14 @@ keystone.init( {
     name: "automated d-pac mailer",
     email: "no-reply@d-pac.be"
   },
-  "api disable": env.API_DISABLE || ''
+  "api disable": env.API_DISABLE || '',
+  "dev env": ( "development" === nodeEnv )
 } );
+
+
+if(keystone.get('dev env')){
+  errors.stacks( true );
+}
 
 keystone.isDisabled = function(op){
   return this.get('api disable').indexOf(op)>-1;

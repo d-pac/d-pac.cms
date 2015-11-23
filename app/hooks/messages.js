@@ -103,7 +103,7 @@ function messageSavedHandler( done ){
   if( message.isNew && !message.fromAPI ){
     addToLog( message, 'Draft created' );
   } else {
-    if( message.state === 'handled' && process.env.NODE_ENV !== 'development' ){
+    if( message.state === 'handled' && !keystone.get('dev env') ){
       return done( new Error( 'You cannot resend a message' ) );
     }
     switch( message.strategy ){
