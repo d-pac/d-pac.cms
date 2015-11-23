@@ -28,9 +28,13 @@ module.exports = function( list ){
     virtualize: function( virtuals ){
       var args = _.flatten( _.toArray( arguments ), true );
       _.each( args, function( arg ){
-        _.each( arg, function( fn,
+        _.each( arg, function( virtualizer,
                                field ){
-          list.schema.virtual( field ).get( fn );
+          if( _.isFunction( virtualizer ) ){
+            list.schema.virtual( field ).get( virtualizer );
+          } else if( _.isObject( virtualizer ) ){
+            list.schema.virtual( field ).get( virtualizer.get ).depends = virtualizer.depends;
+          }
         } );
       } );
       return builder.expose( _.keys( virtuals ) );
@@ -134,9 +138,9 @@ module.exports = function( list ){
       if( list.options.toJSON && list.options.toJSON.transformations ){
         builder.expose( _.keys( list.options.toJSON.transformations ) );
       }
-      list.schema.post('init', function(){
-        this.__original = JSON.parse(JSON.stringify(this));
-      });
+      list.schema.post( 'init', function(){
+        this.__original = JSON.parse( JSON.stringify( this ) );
+      } );
       list.register();
     },
     getFieldNames: function(){

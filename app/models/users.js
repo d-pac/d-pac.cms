@@ -1,3 +1,4 @@
+var _ = require( 'lodash' );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
@@ -5,9 +6,8 @@ var Types = keystone.Field.Types;
  * Users
  * =====
  */
-var _ = require( 'lodash' );
 var User = new keystone.List( "User" );
-User.defaultColumns = "name, email, isAdmin";
+User.defaultColumns = "name, anonymized, email, isAdmin";
 
 function hasAssessmentId( arr,
                           needleId ){
@@ -24,8 +24,24 @@ User.schema.methods.isAssesseeFor = function( assessmentId ){
   return hasAssessmentId( this.assessments.assessee, assessmentId );
 };
 
+User.schema.plugin( require( "./helpers/autoinc" ).plugin, {
+  model: "User",
+  field: "_rid",
+  startAt: 1
+} );
+
+//User.schema.virtual( "anonymized" ).get( function(){
+//  return 'user-' + _.padLeft( this._rid, 5, "0" );
+//} ).depends = [ "_rid" ];
+
 require( './helpers/setupList' )( User )
   .add( {
+    _rid: {
+      type: Number,
+      noedit: true,
+      label: 'Unique number',
+      note: 'Used for anonymization'
+    },
     name: {
       type: Types.Name,
       required: true,
@@ -78,6 +94,12 @@ require( './helpers/setupList' )( User )
   .virtualize( {
     canAccessKeystone: function(){
       return this.isAdmin;
+    },
+    anonymized: {
+      get: function(){
+        return 'user-' + _.padLeft( this._rid, 5, "0" );
+      },
+      depends: [ "_rid" ]
     }
   } )
   .retain( "password" )
