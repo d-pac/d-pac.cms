@@ -6,6 +6,8 @@ var Types = keystone.Field.Types;
 var constants = require( "./helpers/constants" );
 var Assessment = keystone.list( "Assessment" );
 
+var format = "DD/MM/YYYY HH:mm:ss";
+
 var Comparison = new keystone.List( "Comparison", {
   map: {
     name: "_rid"
@@ -69,7 +71,17 @@ var config = {
     }
   },
 
-  data: {}
+  data: {},
+
+  selectionMadeAt: {
+    type: Types.Datetime,
+    format: format,
+    noedit: !keystone.get("dev env"),
+    watch: "data.selection",
+    value: function(){
+      return Date.now();
+    }
+  }
 };
 
 _.each( constants.phases, function( phase ){
