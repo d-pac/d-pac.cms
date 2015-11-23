@@ -16,9 +16,28 @@ function comparisonRemovedHandler( next ){
     next();
   } ).catch( function( err ){
     next( err );
-  } )
+  } );
+}
+
+function comparisonSavedHandler(done){
+  var comparison = this;
+  if(comparison.isNew){
+    P.join( representationServices.retrieve( {
+      _id: comparison.representations.a
+    } ), representationServices.retrieve( {
+      _id: comparison.representations.b
+    } ), function( repA,
+                   repB ){
+      return repA.compareWith( repB );
+    } ).then( function(){
+      done();
+    } ).catch( function( err ){
+      done( err );
+    } )
+  }
 }
 
 module.exports.init = function(){
   keystone.list( 'Comparison' ).schema.pre( 'remove', comparisonRemovedHandler );
+  keystone.list( 'Comparison' ).schema.pre( 'save', comparisonSavedHandler );
 };

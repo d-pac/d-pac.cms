@@ -36,6 +36,19 @@ module.exports.listForAssessments = function listForAssessments( opts,
     .execAsync();
 };
 
+module.exports.listForRepresentation = function listForRepresentation( representation ){
+  //return base.list({})
+  //  .where( { "representations.a": representation.id } )
+  //  //.or( [ { "representations.b": representation.id } ] )
+  //  .execAsync();
+  return base.list( {
+    $or: [
+      { "representations.a": representation.id },
+      { "representations.b": representation.id }
+    ]
+  } ).execAsync();
+};
+
 module.exports.create = function( opts ){
   debug( '#create', opts );
 
@@ -83,17 +96,14 @@ module.exports.create = function( opts ){
           return rep.id == selectedPair[ 1 ]._id;
         } );
         hookData = selectedPair;
-        p = repA.compareWith( repB )
-          .then( function(){
-            return base.create( {
-              assessment: opts.assessment,
-              assessor: opts.assessor._id,
-              phase: assessment.phases[ 0 ],
-              representations: {
-                a: repA.id,
-                b: repB.id
-              }
-            } );
+        p = base.create( {
+            assessment: opts.assessment,
+            assessor: opts.assessor._id,
+            phase: assessment.phases[ 0 ],
+            representations: {
+              a: repA.id,
+              b: repB.id
+            }
           } )
           .then( function( comparison ){
             comparison.representations.a = repA;

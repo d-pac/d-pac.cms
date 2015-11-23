@@ -59,13 +59,13 @@ var config = {
       label: "Representation A",
       type: Types.Relationship,
       ref: "Representation",
-      initial: false
+      initial: true
     },
     b: {
       label: "Representation B",
       type: Types.Relationship,
       ref: "Representation",
-      initial: false
+      initial: true
     }
   },
 
