@@ -28,9 +28,7 @@ var list = require( './helpers/setupList' )( Action )
       type: Types.Relationship,
       ref: "Assessment",
       required: true,
-      initial: true,
-      note: "Will delete/reset this assessment and its representations.<br/>" +
-      "Comparisons and timelogs will always be deleted."
+      initial: true
     },
 
     actionType: {
@@ -39,6 +37,10 @@ var list = require( './helpers/setupList' )( Action )
         {
           label: "Reset",
           value: "reset"
+        },
+        {
+          label: "Clear",
+          value: "clear"
         },
         {
           label: "Delete",
@@ -51,7 +53,11 @@ var list = require( './helpers/setupList' )( Action )
       ],
       label: "Action Type",
       initial: true,
-      required: true
+      required: true,
+      note: "<strong>Reset</strong>: comparisons removed, representations <em>not</em>.<br/>" +
+      "<strong>Clear</strong>: comparisons removed, representations removed.<br/>" +
+      "<strong>Delete</strong>: comparisons removed, representations removed, assessment removed<br/>" +
+      "<strong>Archive</strong>: assessment archived, assessment DELETE"
     },
 
     confirm: {

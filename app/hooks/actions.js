@@ -63,6 +63,23 @@ function resetAssessment( assessmentId ){
     } );
 }
 
+function clearAssessment( assessmentId ){
+  return deleteAssessmentAssociates( assessmentId )
+    .then( function(){
+      return representationsService.list( {
+        assessment: assessmentId
+      } );
+    } )
+    .each( function( representation ){
+      return P.promisify( representation.remove, representation )();
+    } )
+    .then( function(){
+      return assessmentsService.retrieve( {
+        _id: assessmentId.toString()
+      } );
+    } );
+}
+
 function removeAssessmentFromUser( assessmentId,
                                    user,
                                    fieldName ){
@@ -212,6 +229,16 @@ function actionCreatedHandler( next ){
         .then( function( assessment ){
           action.line = "Assessment: " + assessment.name;
           action.log = "Successfully reset";
+          action.success = true;
+          next();
+        } )
+        .catch( failureHandler );
+      break;
+    case "clear":
+      clearAssessment( action.assessment )
+        .then( function( assessment ){
+          action.line = "Assessment: " + assessment.name;
+          action.log = "Successfully cleared";
           action.success = true;
           next();
         } )
