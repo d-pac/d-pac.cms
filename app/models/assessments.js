@@ -37,8 +37,8 @@ var config = {
 
   state: {
     type: Types.Select,
-    options: constants.publicationStates.list.toString(),
-    default: constants.publicationStates.draft,
+    options: constants.assessmentStates.list,
+    default: constants.assessmentStates.DRAFT,
     index: true
   },
 

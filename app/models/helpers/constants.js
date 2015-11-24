@@ -1,14 +1,11 @@
 "use strict";
-
+var _ = require('lodash');
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
 var constants = module.exports = {
   ASSESSOR: "Assessor",
   ASSESSEE: "Assessee",
-  DRAFT: "draft",
-  PUBLISHED: "published",
-  ARCHIVED: "archived",
   BENCHMARK: "benchmark",
   TO_RANK: "to rank",
   RANKED: "ranked",
@@ -37,12 +34,15 @@ module.exports.roles = {
   assessee: constants.ASSESSEE
 };
 
-module.exports.publicationStates = {
-  list: [ constants.DRAFT, constants.PUBLISHED, constants.ARCHIVED ],
-  draft: constants.DRAFT,
-  published: constants.PUBLISHED,
-  archived: constants.ARCHIVED
+module.exports.assessmentStates = {
+  DRAFT: "draft",
+  PUBLISHED: "published",
+  COMPLETED: "completed",
+  CALCULATED: "calculated",
+  ARCHIVED: "archived",
 };
+module.exports.assessmentStates.list = _.values(module.exports.assessmentStates);
+
 
 module.exports.representationTypes = {
   list: [ constants.TO_RANK, constants.RANKED, constants.BENCHMARK ]

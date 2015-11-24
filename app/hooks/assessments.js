@@ -6,28 +6,28 @@ var constants = require( '../models/helpers/constants' );
 
 function activateScheduledAssessments(){
   return assessmentsService.list( {
-    state: constants.DRAFT,
+    state: constants.assessmentStates.DRAFT,
     'schedule.active': true,
     'schedule.begin': {
       $lte: new Date()
     }
   } ).each( function( assessment ){
     console.log( 'Scheduler: auto-publishing assessment', assessment.name );
-    assessment.state = constants.PUBLISHED;
+    assessment.state = constants.assessmentStates.PUBLISHED;
     assessment.save();
   } );
 }
 
 function archiveScheduledAssessments(){
   return assessmentsService.list( {
-    state: constants.PUBLISHED,
+    state: constants.assessmentStates.PUBLISHED,
     'schedule.active': true,
     'schedule.end': {
       $lte: new Date()
     }
   } ).each( function( assessment ){
     console.log( 'Scheduler: auto-archiving assessment', assessment.name );
-    assessment.state = constants.ARCHIVED;
+    assessment.state = constants.assessmentStates.ARCHIVED;
     assessment.schedule.active = false;
     assessment.save();
   } );
