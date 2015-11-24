@@ -3,6 +3,7 @@ var keystone = require( "keystone" );
 var _ = require( "lodash" );
 var fs = require( "fs" );
 var P = require( 'bluebird' );
+var moment = require( 'moment' );
 
 var Comparison = keystone.list( "Comparison" );
 var Representation = keystone.list( "Representation" );
@@ -111,6 +112,9 @@ function createComparisonsReportData( phasesMap,
         "representation A": getDocument( documentsMap, _.get( comparisonModel, 'representations.a' ) ),
         "representation B": getDocument( documentsMap, _.get( comparisonModel, 'representations.b' ) ),
         "selected representation": getDocument( documentsMap, _.get( comparisonModel, 'data.selection' ) ),
+        "selected at": (comparisonModel.selectionMadeAt)
+          ? moment( comparisonModel.selectionMadeAt ).format( "YYYY/MM/DD HH:mm:ss" )
+          : UNDEFINED,
         "completed": (comparisonModel.completed)
           ? TRUE
           : FALSE
