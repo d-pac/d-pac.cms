@@ -4,7 +4,7 @@
   "build": "110",
   "dependencies": {
     "async": "^1.4.2",
-    "benchmarked-comparative-selection": "^2.0.0",
+    "benchmarked-comparative-selection": "^2.0.1",
     "bluebird": "^2.9.7",
     "chalk": "^1.1.1",
     "comparative-selection": "^3.0.0",
