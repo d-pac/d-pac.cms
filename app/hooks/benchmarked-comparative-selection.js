@@ -2,6 +2,7 @@
 
 var _ = require( 'lodash' );
 var keystone = require( 'keystone' );
+var algorithm = require( 'benchmarked-comparative-selection' );
 
 var mailsService = require( '../services/mails' );
 var statsService = require( '../services/stats' );
@@ -12,10 +13,10 @@ var handlers = {
   messages: function( data ){
     _.each( data.messages, function( message ){
       switch( message ){
-        case "assessor-stage-completed":
+        case algorithm.constants.messages.ASSESSOR_STAGE_COMPLETED:
           mailsService.sendAssessorStageCompleted( data.assessor, data.assessment );
           break;
-        case "stage-completed":
+        case algorithm.constants.messages.STAGE_COMPLETED:
           mailsService.sendStageCompleted( data.assessment );
           statsService.estimate( data.representations, data.comparisons );
           break;
