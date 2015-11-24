@@ -4,7 +4,6 @@ var debug = require( "debug" )( "dpac:api.comparisons" );
 var representationsService = require( "../../services/representations" );
 var service = require( "../../services/comparisons" );
 var assessmentsService = require( '../../services/assessments' );
-var statsService = require( '../../services/stats' );
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
