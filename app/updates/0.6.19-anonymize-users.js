@@ -4,6 +4,8 @@ var usersService = require( '../services/users' );
 var P = require( 'bluebird' );
 var autoinc = require( '../models/helpers/autoinc' );
 
+var log = _.partial(console.log, require('path').basename(__filename) + ':');
+
 exports = module.exports = function( done ){
   var counter = 0;
   usersService.list()
@@ -19,6 +21,7 @@ exports = module.exports = function( done ){
       } );
     } )
     .then( function(){
+      log("Updated", counter, "users");
       done();
     } )
     .catch( done );

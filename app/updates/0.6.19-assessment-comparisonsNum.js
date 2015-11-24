@@ -5,15 +5,16 @@ var _ = require( 'lodash' );
 var assessmentsService = require( '../services/assessments' );
 var Assessment = keystone.list( 'Assessment' );
 var P = require( 'bluebird' );
+var log = _.partial( console.log, require('path').basename( __filename ) + ':' );
 
 exports = module.exports = function( done ){
   assessmentsService
     .list( {} )
-    .map(function(doc){
+    .map( function( doc ){
       return JSON.parse( JSON.stringify( doc ) );
-    })
+    } )
     .filter( function( doc ){
-      return !_.isUndefined( doc.comparisonsNum.stage ) || !_.isUndefined(doc.comparisonsNum.total);
+      return !_.isUndefined( doc.comparisonsNum.stage ) || !_.isUndefined( doc.comparisonsNum.total );
     } )
     .map( function( doc ){
       doc.comparisonsNum = {
@@ -26,7 +27,10 @@ exports = module.exports = function( done ){
       async.eachSeries( assessments, function( assessment,
                                                next ){
         Assessment.model.update( { _id: assessment._id }, assessment, next );
-      }, done );
+      }, function(){
+        log( "Updated", assessments.length, "assessments" );
+        done();
+      } );
     } )
-    .catch(done);
+    .catch( done );
 };
