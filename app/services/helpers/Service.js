@@ -28,6 +28,10 @@ _.extend( Service.prototype, {
     return receiver;
   },
 
+  count: function count(opts){
+    debug('#count', opts);
+    return P.promisifyAll(this.schema.model.count(opts));
+  },
   list: function list( opts ){
     debug( "#list", opts );
     return P.promisifyAll(

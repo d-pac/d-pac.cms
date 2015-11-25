@@ -7,6 +7,15 @@ var debug = require( "debug" )( "dpac:services.stats" );
 var estimate = require( 'estimating-rasch-model' );
 var P = require( 'bluebird' );
 var diff = require( 'deep-diff' ).diff;
+var usersService = require( './users' );
+var comparisonsService = require( './comparisons' );
+var representationsService = require( './representations' );
+var timelogsService = require( './timelogs' );
+var fns = require( 'd-pac.functions' );
+
+var getAbility = _.partialRight( _.get, 'ability.value' );
+var getSE = _.partialRight( _.get, 'ability.se' );
+var getReliability = fns.pm.reliabilityFunctor( getAbility, getSE );
 
 module.exports = {
   estimate: function( representations,
@@ -73,7 +82,7 @@ module.exports = {
           console.log( err );
           //return fail( err );
         }
-        console.log( "Updated representations:", saveQueue.length );
+        //console.log( "Updated representations:", saveQueue.length );
         succeed( saveQueue );
       } );
     }, 500 );
@@ -91,5 +100,47 @@ module.exports = {
                                                                                          representationDocs ){
       return self.estimate( representationDocs, comparisonDocs );
     } );
-  }
+  },
+
+  statsForAssessment: function( assessment ){
+    var assessmentId = assessment.id;
+    return P.props( {
+        assessors: usersService.listForAssessments( 'assessor', [ assessmentId ] ),
+        comparisons: comparisonsService.listForAssessments( {}, [ assessmentId ] ),
+        toRankRepresentations: representationsService.list( { assessment: assessmentId, rankType: "to rank" } )
+      } )
+      .then( function( docs ){
+        docs.timelogs = timelogsService.listForComparisonIds( _.pluck( docs.comparisons, '_id' ) );
+        return P.props( docs );
+      } )
+      .then( function( docs ){
+        var totals = {
+          reliability: getReliability( docs.toRankRepresentations ),
+          assessorsNum: docs.assessors.length,
+          comparisonsNum: docs.comparisons.length,
+          representationsNum: docs.toRankRepresentations.length,
+          duration: _.reduce( docs.timelogs, function( memo,
+                                                       timelog ){
+            return memo + timelog.duration;
+          }, 0 )
+        };
+        var byRepresentation = _.reduce( docs.comparisons, function( memo,
+                                                                     comparison ){
+          var aId = comparison.representations.a.toString();
+          var bId = comparison.representations.b.toString();
+          _.set( memo, [ aId, 'comparisonsNum' ], _.get( memo, [ aId, 'comparisonsNum' ], 0 ) + 1 );
+          _.set( memo, [ bId, 'comparisonsNum' ], _.get( memo, [ bId, 'comparisonsNum' ], 0 ) + 1 );
+          return memo;
+        }, {} );
+        return {
+          totals: totals,
+          averages: {
+            comparisonsPerRepresentation: (totals.comparisonsNum / totals.representationsNum).toFixed( 3 ),
+            comparisonsPerAssessor: (totals.comparisonsNum / totals.assessorsNum).toFixed( 3 ),
+            durationPerAssessor: (totals.duration / totals.assessorsNum).toFixed(3)
+          },
+          byRepresentation: byRepresentation
+        }
+      } );
+  },
 };

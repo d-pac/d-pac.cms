@@ -52,12 +52,13 @@ module.exports.listAssessments = function listAssessments( role,
     } );
 };
 
-module.exports.listComparisons = function listComparisons( opts ){
+module.exports.listIncompleteComparisons = function listIncompleteComparisons( opts ){
   return this.listAssessments( 'assessor', opts )
     .then( function( assessments ){
       return comparisonsService.listForAssessments( {
-        assessor: opts._id
-      }, assessments );
+        assessor: opts._id,
+        completed: false
+      }, _.pluck(assessments, '_id') );
     } );
 };
 
@@ -88,5 +89,13 @@ module.exports.listForAssessments = function listForAssessments( role,
         }
         return found;
       } );
+    } );
+};
+
+module.exports.countInAssessment = function countInAssessment( role,
+                                                               assessmentId ){
+  return this.listForAssessments( role, [ assessmentId ] )
+    .then( function( assessors ){
+      return assessors.length;
     } );
 };

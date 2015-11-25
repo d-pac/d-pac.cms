@@ -18,20 +18,14 @@ module.exports.completedCount = function completedCount( opts ){
     completed: true
   } );
 
-  return P.promisifyAll(
-    schema.model
-      .count( opts )
-  ).execAsync();
+  return this.count( opts ).execAsync();
 };
 
 module.exports.listForAssessments = function listForAssessments( opts,
-                                                                 assessmentObjects ){
-  var assessmentIds = _.pluck( assessmentObjects, "_id" );
+                                                                 assessmentIds ){
   debug( "#listForAssessments", opts, assessmentIds );
   var self = this;
-  return base.list( _.defaults( opts, {
-      completed: false
-    } ) )
+  return base.list( opts )
     .where( "assessment" ).in( assessmentIds )
     .execAsync();
 };

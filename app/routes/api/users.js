@@ -23,32 +23,37 @@ module.exports.listAssessments = function( req,
   } ), res, next );
 };
 
-module.exports.listComparisons = function( req,
-                                           res,
-                                           next ){
+module.exports.listIncompleteComparisons = function( req,
+                                                     res,
+                                                     next ){
   debug( "#listComparisons" );
 
   var userId = req.params._id;
   var response = { included: [] };
-  base.handleResult( service.listComparisons( {
-    _id: userId
-  } ).then( function( comparisons ){
-    response.data = comparisons;
-    return comparisonsService.listRepresentationsForComparisons( comparisons );
-  } ).then( function( representations ){
-    response.included = response.included.concat( representations );
-    return representations;
-  } ).then( function( representations ){
-    var documentIds = _.chain( representations ).pluck( "document" ).pluck( "_id" ).value();
-    return notesService.listByDocuments( {
-      author: userId
-    }, documentIds );
-  } ).then( function( notes ){
-    response.included = response.included.concat( notes );
-    return notes;
-  } ).then( function(){
-    return response;
-  } ), res, next, true );
+  base.handleResult( service.listIncompleteComparisons( {
+      _id: userId
+    } )
+    .then( function( comparisons ){
+      response.data = comparisons;
+      return comparisonsService.listRepresentationsForComparisons( comparisons );
+    } )
+    .then( function( representations ){
+      response.included = response.included.concat( representations );
+      return representations;
+    } )
+    .then( function( representations ){
+      var documentIds = _.chain( representations ).pluck( "document" ).pluck( "_id" ).value();
+      return notesService.listByDocuments( {
+        author: userId
+      }, documentIds );
+    } )
+    .then( function( notes ){
+      response.included = response.included.concat( notes );
+      return notes;
+    } )
+    .then( function(){
+      return response;
+    } ), res, next, true );
 };
 
 module.exports.listNotes = function( req,

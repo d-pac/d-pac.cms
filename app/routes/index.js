@@ -94,7 +94,7 @@ exports = module.exports = function( app ){
   app.route( apiRoot + "/user/comparisons" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
-    .get( api.users.listComparisons );
+    .get( api.users.listIncompleteComparisons );
 
   app.route( apiRoot + "/user/notes" )
     .all( apiMw.requireUser )
