@@ -18,7 +18,7 @@ module.exports.completedCount = function completedCount( opts ){
     completed: true
   } );
 
-  return this.count( opts ).execAsync();
+  return base.count( opts ).execAsync();
 };
 
 module.exports.listForAssessments = function listForAssessments( opts,
