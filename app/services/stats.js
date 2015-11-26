@@ -14,7 +14,13 @@ var timelogsService = require( './timelogs' );
 var fns = require( 'd-pac.functions' );
 
 var getAbility = _.partialRight( _.get, 'ability.value' );
-var getSE = _.partialRight( _.get, 'ability.se' );
+var getSE = function( item ){
+  var se = _.get( item, 'ability.se', 0 );
+  if( se > 3 ){
+    return 3;
+  }
+  return se;
+};
 var getReliability = fns.pm.reliabilityFunctor( getAbility, getSE );
 
 module.exports = {
@@ -107,7 +113,10 @@ module.exports = {
     return P.props( {
         assessors: usersService.listForAssessments( 'assessor', [ assessmentId ] ),
         comparisons: comparisonsService.listForAssessments( {}, [ assessmentId ] ),
-        toRankRepresentations: representationsService.list( { assessment: assessmentId, rankType: "to rank" } )
+        toRankRepresentations: representationsService.list( {
+          assessment: assessmentId,
+          rankType: "to rank"
+        } )
       } )
       .then( function( docs ){
         docs.timelogs = timelogsService.listForComparisonIds( _.pluck( docs.comparisons, '_id' ) );
@@ -137,7 +146,7 @@ module.exports = {
           averages: {
             comparisonsPerRepresentation: (totals.comparisonsNum / totals.representationsNum).toFixed( 3 ),
             comparisonsPerAssessor: (totals.comparisonsNum / totals.assessorsNum).toFixed( 3 ),
-            durationPerAssessor: (totals.duration / totals.assessorsNum).toFixed(3)
+            durationPerAssessor: (totals.duration / totals.assessorsNum).toFixed( 3 )
           },
           byRepresentation: byRepresentation
         }
