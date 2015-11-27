@@ -191,6 +191,11 @@ require( './helpers/setupList' )( Assessment )
     refPath: "assessments.assessee",
     label: "Assessees"
   }, {
+    path: "pams",
+    ref: "User",
+    refPath: "assessments.pam",
+    label: "PAMs"
+  }, {
     path: "next",
     ref: "Assessment",
     refPath: "parent",
