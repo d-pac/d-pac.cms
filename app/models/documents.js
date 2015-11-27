@@ -138,12 +138,9 @@ require( './helpers/setupList' )( Document )
     },
 
     representation: {
-      type: Boolean,
+      type: Types.Boolean,
       default: false,
-      label: "Create representation",
-      note: "When checked this will create a new representation for this document. " +
-      "To avoid accidentally creating multiple, unnecessary representations, " +
-      "this is unchecked automatically again after the representation is created."
+      label: "Create representation"
     },
 
     assessment: {
@@ -152,8 +149,11 @@ require( './helpers/setupList' )( Document )
       index: true,
       required: false,
       many: false,
-      initial:false,
-      dependsOn: { representation: true},
+      initial: false,
+      dependsOn: { representation: true },
+      note: "When 'create representation' is checked a new representation will be created for this document. " +
+      "To avoid accidental creation of multiple, unnecessary representations, " +
+      "this field is unchecked automatically again after the representation is created."
     },
 
   } )

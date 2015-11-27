@@ -21,7 +21,10 @@ function removingDocumentHandler( done ){
 
 function saveDocumentHandler( done ){
   var document = this;
-  if(document.representation){
+  if( document.representation ){
+    if( !document.assessment ){
+      return done( new Error( 'Assessment is required if "Create representation" is checked.' ) );
+    }
     representationsService.create( {
         document: document.id,
         assessment: document.assessment
@@ -34,7 +37,7 @@ function saveDocumentHandler( done ){
       .catch( function( err ){
         done( err );
       } );
-  }else{
+  } else {
     done();
   }
 }
