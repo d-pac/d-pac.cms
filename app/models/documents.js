@@ -117,7 +117,7 @@ require( './helpers/setupList' )( Document )
     text: {
       type: Types.Html,
       required: false,
-      initial: true,
+      initial: false,
       note: "The value of this field will be shown for all media types. " +
       "Leave the file and link fields empty to create text-only documents."
     },
@@ -135,7 +135,27 @@ require( './helpers/setupList' )( Document )
     link: {
       type: Types.Url,
       label: "External file"
-    }
+    },
+
+    representation: {
+      type: Boolean,
+      default: false,
+      label: "Create representation",
+      note: "When checked this will create a new representation for this document. " +
+      "To avoid accidentally creating multiple, unnecessary representations, " +
+      "this is unchecked automatically again after the representation is created."
+    },
+
+    assessment: {
+      type: Types.Relationship,
+      ref: "Assessment",
+      index: true,
+      required: false,
+      many: false,
+      initial:false,
+      dependsOn: { representation: true},
+    },
+
   } )
   .expose( "href", "mimeType", "ext" )
   .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links" )

@@ -19,6 +19,27 @@ function removingDocumentHandler( done ){
     .catch( done );
 }
 
+function saveDocumentHandler( done ){
+  var document = this;
+  if(document.representation){
+    representationsService.create( {
+        document: document.id,
+        assessment: document.assessment
+      } )
+      .then( function( representation ){
+        document.representation = false;
+        document.assessment = null;
+        done();
+      } )
+      .catch( function( err ){
+        done( err );
+      } );
+  }else{
+    done();
+  }
+}
+
 module.exports.init = function(){
   keystone.list( 'Document' ).schema.pre( 'remove', removingDocumentHandler );
+  keystone.list( 'Document' ).schema.pre( 'save', saveDocumentHandler );
 };
