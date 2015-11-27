@@ -28,9 +28,18 @@ module.exports.list = function list( opts ){
 module.exports.listAssessments = function listAssessments( role,
                                                            opts ){
   debug( "#listAssessments" );
-  return this.retrieve( opts )
+  return this.retrieve( _.defaults( {}, opts, {
+      fields: (role)
+        ? "assessments." + role
+        : "assessments"
+    } ) )
     .then( function( user ){
-      return assessmentsService.listById( user.assessments[ role ] );
+      var ids = _.reduce( user.assessments.toJSON(), function( memo,
+                                                               assessmentIds ){
+        //no need to filter: duplicate id's get automatically consolidated by mongoose
+        return memo.concat( assessmentIds );
+      }, [] );
+      return assessmentsService.listById( ids );
     } ).map( function( assessment ){
       assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {
@@ -58,7 +67,7 @@ module.exports.listIncompleteComparisons = function listIncompleteComparisons( o
       return comparisonsService.listForAssessments( {
         assessor: opts._id,
         completed: false
-      }, _.pluck(assessments, '_id') );
+      }, _.pluck( assessments, '_id' ) );
     } );
 };
 
