@@ -116,6 +116,7 @@ require( './helpers/setupList' )( Representation )
 
     closeTo: {
       label: "Close to",
+      note: "Shows representations with rankType 'benchmark' only.",
       type: Types.Relationship,
       ref: "Representation",
       many: false,
