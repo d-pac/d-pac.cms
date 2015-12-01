@@ -30,6 +30,14 @@ Representation.schema.methods.uncompareWith = function( other ){
   return P.all( P.promisify( this.save, this )(), P.promisify( other.save, other )() );
 };
 
+Representation.api = {
+  filterable: [
+    'assessment',
+    'rankType',
+    'closeTo'
+  ]
+};
+
 require( './helpers/setupList' )( Representation )
   .add( {
     name: {
