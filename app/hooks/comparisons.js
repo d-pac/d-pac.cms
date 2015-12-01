@@ -11,7 +11,9 @@ function comparisonRemovedHandler( next ){
     _id: comparison.representations.b
   } ), function( repA,
                  repB ){
-    return repA.uncompareWith( repB );
+    if(repA && repB){
+      return repA.uncompareWith( repB );
+    }
   } ).then( function(){
     next();
   } ).catch( function( err ){
