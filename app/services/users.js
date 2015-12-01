@@ -56,8 +56,6 @@ module.exports.listAssessments = function listAssessments( role,
         };
         return assessment;
       } );
-    } ).filter( function( assessment ){
-      return assessment.progress.total > assessment.progress.completedNum;
     } );
 };
 

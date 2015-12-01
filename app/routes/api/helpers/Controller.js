@@ -1,6 +1,6 @@
 "use strict";
 var debug = require( "debug" )( "dpac:api.helpers.Controller" );
-
+var P = require( 'bluebird' );
 var _ = require( "lodash" );
 var errors = require( "errors" );
 var utils = require( "./utils" );
@@ -135,8 +135,21 @@ _.extend( Controller.prototype, {
   },
 
   list: function( req ){
+    var filter = {};
+    var qFilter = _.get( req, 'query.filter', '' );
+    if(qFilter && _.isString(qFilter)){
+      try{
+        qFilter = JSON.parse( qFilter );
+      } catch( err ) {
+        debug( 'Error: filter is not JSON parseable', qFilter );
+      }
+      filter = _.pick( qFilter, this.service.getFilterableFields() );
+      if( _.keys( qFilter ).length !== _.keys( filter ).length ){
+        return P.reject( new errors.Http400Error( { explanation: 'Specified field not filterable' } ) );
+      }
+    }
     return this.service
-      .list()
+      .list( filter )
       .then( function( result ){
         if( !result ){
           result = [];

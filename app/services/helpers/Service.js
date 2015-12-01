@@ -28,9 +28,9 @@ _.extend( Service.prototype, {
     return receiver;
   },
 
-  count: function count(opts){
-    debug('#count', opts);
-    return P.promisifyAll(this.schema.model.count(opts));
+  count: function count( opts ){
+    debug( '#count', opts );
+    return P.promisifyAll( this.schema.model.count( opts ) );
   },
   list: function list( opts ){
     debug( "#list", opts );
@@ -118,19 +118,15 @@ _.extend( Service.prototype, {
   },
 
   getEditableFields: function(){
-    if( this.schema.api && this.schema.api.editable ){
-      return this.schema.api.editable;
-    }
-
-    return _.keys( this.schema.fields );
+    return _.get( this.schema, 'api.editable', _.keys( this.schema.fields ) );
   },
 
   getCreatableFields: function(){
-    if( this.schema.api && this.schema.api.creatable ){
-      return this.schema.api.creatable;
-    }
+    return _.get( this.schema, 'api.creatable', _.keys( this.schema.fields ) );
+  },
 
-    return _.keys( this.schema.fields );
+  getFilterableFields: function(){
+    return _.get( this.schema, 'api.filterable', _.keys( this.schema.fields ) );
   }
 } );
 

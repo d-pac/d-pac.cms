@@ -7,7 +7,7 @@ var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
 module.exports = base.mixin();
 
-module.exports.list = function create( req,
+module.exports.list = function list( req,
                                        res,
                                        next ){
   debug( "#list" );
