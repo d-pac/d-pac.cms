@@ -103,8 +103,10 @@ function deleteAssessment( assessmentId ){
     } )
     .reduce( function( memo,
                        user ){
-      if( removeAssessmentFromUser( assessmentId, user, 'assessor' )
-        || removeAssessmentFromUser( assessmentId, user, 'assessee' ) ){
+      var needsSaving = _.reduce( constants.roles.list, function( dirty, role ){
+        return removeAssessmentFromUser( assessmentId, user, role.value ) || dirty;
+      }, false );
+      if( needsSaving ){
         memo.push( user );
       }
       return memo;

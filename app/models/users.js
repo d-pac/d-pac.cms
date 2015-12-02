@@ -24,6 +24,10 @@ User.schema.methods.isAssesseeFor = function( assessmentId ){
   return hasAssessmentId( this.assessments.assessee, assessmentId );
 };
 
+User.schema.methods.isPamFor = function( assessmentId ){
+  return hasAssessmentId( this.assessments.pam, assessmentId );
+};
+
 User.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "User",
   field: "_rid",

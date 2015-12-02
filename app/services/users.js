@@ -102,7 +102,7 @@ module.exports.listForAssessments = function listForAssessments( role,
 module.exports.countInAssessment = function countInAssessment( role,
                                                                assessmentId ){
   return this.listForAssessments( role, [ assessmentId ] )
-    .then( function( assessors ){
-      return assessors.length;
+    .then( function( users ){
+      return users.length;
     } );
 };

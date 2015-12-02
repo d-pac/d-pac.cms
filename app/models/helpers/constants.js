@@ -4,8 +4,6 @@ var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
 var constants = module.exports = {
-  ASSESSOR: "Assessor",
-  ASSESSEE: "Assessee",
   BENCHMARK: "benchmark",
   TO_RANK: "to rank",
   RANKED: "ranked",
@@ -29,10 +27,20 @@ module.exports.directories = {
 };
 
 module.exports.roles = {
-  list: [ constants.ASSESSOR, constants.ASSESSEE ],
-  assessor: constants.ASSESSOR,
-  assessee: constants.ASSESSEE
+  ASSESSOR: {
+    label: "Assessor",
+    value: 'assessor'
+  },
+  ASSESSEE: {
+    label: "Assessee",
+    value: 'assessee'
+  },
+  PAM: {
+    label: 'PAM',
+    value: 'pam'
+  },
 };
+module.exports.roles.list = [ module.exports.roles.ASSESSOR, module.exports.roles.ASSESSEE, module.exports.roles.PAM ];
 
 module.exports.assessmentStates = {
   DRAFT: "draft",
