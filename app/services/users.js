@@ -39,7 +39,7 @@ module.exports.listAssessments = function listAssessments( role,
         //no need to filter: duplicate id's get automatically consolidated by mongoose
         return memo.concat( assessmentIds );
       }, [] );
-      return assessmentsService.listById( ids );
+      return assessmentsService.listById( ids, { state: { $in: [ 'calculated', 'published' ] } } );
     } ).map( function( assessment ){
       assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {
