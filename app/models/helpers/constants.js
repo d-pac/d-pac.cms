@@ -1,5 +1,5 @@
 "use strict";
-var _ = require( 'lodash' );
+var _ = require('lodash');
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
@@ -49,11 +49,8 @@ module.exports.assessmentStates = {
   CALCULATED: "calculated",
   ARCHIVED: "archived",
 };
-module.exports.assessmentStates.list = [
-  module.exports.assessmentStates.DRAFT,
-  module.exports.assessmentStates.PUBLISHED,
-  module.exports.assessmentStates.ARCHIVED
-]; //_.values(module.exports.assessmentStates);
+module.exports.assessmentStates.list = _.values(module.exports.assessmentStates);
+
 
 module.exports.representationTypes = {
   list: [ constants.TO_RANK, constants.RANKED, constants.BENCHMARK ]
