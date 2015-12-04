@@ -15,7 +15,6 @@ var errors = require( "errors" );
 
 var nodeEnv = process.env.NODE_ENV || "development";
 
-
 keystone.hooks = grappling.create( { strict: false } );
 
 // Initialise Keystone with your project's configuration.
@@ -23,11 +22,14 @@ keystone.hooks = grappling.create( { strict: false } );
 // and documentation.
 var env = process.env;
 var pkg = require( "../package.json" );
+var appversion = (process.env.APP_VERSION_LABEL)
+  ? pkg.version + "-" + process.env.APP_VERSION_LABEL
+  : pkg.version;
 keystone.init( {
 
   "name": "d-pac",
   "brand": "d-pac",
-  "appversion": pkg.version + " (" + pkg.build + ")",
+  "appversion": appversion,
 
   "root url": env.ROOT_URL,
   "mongo uri": env.MONGO_URI,
@@ -65,13 +67,12 @@ keystone.init( {
   "dev env": ( "development" === nodeEnv || env.DEV_ENV )
 } );
 
-
-if(keystone.get('dev env')){
+if( keystone.get( 'dev env' ) ){
   errors.stacks( true );
 }
 
-keystone.isDisabled = function(op){
-  return this.get('api disable').indexOf(op)>-1;
+keystone.isDisabled = function( op ){
+  return this.get( 'api disable' ).indexOf( op ) > -1;
 };
 
 console.log( '------------------------------------------------' );
