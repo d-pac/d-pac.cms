@@ -25,7 +25,7 @@ exports.initAPI = function initAPI( req,
     debug( "<<<<<<<<<<<<<<<<<<<< RESPONSE: " );
     debug( "\n", {
       STATUS: status,
-      BODY: data,
+      //BODY: data,
       HEADERS: res._headers
     } );
 
