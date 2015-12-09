@@ -108,7 +108,7 @@ module.exports.create = function( opts ){
         data.type = "messages";
         hookData = _.defaults( {
           assessor: opts.assessor,
-          assessment: opts.assessment,
+          assessment: assessment,
           representations: {
             documents: representations,
             objects: plainRepresentations

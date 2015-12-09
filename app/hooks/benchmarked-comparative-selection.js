@@ -1,5 +1,4 @@
 'use strict';
-
 var _ = require( 'lodash' );
 var keystone = require( 'keystone' );
 var algorithm = require( 'benchmarked-comparative-selection' );
@@ -20,8 +19,12 @@ var handlers = {
           mailsService.sendStageCompleted( data.assessment );
           statsService.estimate( data.representations, data.comparisons );
           break;
+        case algorithm.constants.messages.ASSESSMENT_COMPLETED:
+          data.assessment.state = 'completed';
+          data.assessment.save();
+          break;
         default:
-          throw new Error( 'Handler for message "' + message
+         console.error( '[dpac:hooks.benchmarked-comparative-selection]', 'ERROR: Handler for message "' + message
             + '" in hook "benchmarked-comparative-selection" not implemented' );
       }
     } );
