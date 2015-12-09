@@ -140,6 +140,13 @@ var config = {
     default: false
   },
 
+  enableNotes: {
+    type: Types.Boolean,
+    label: "Enable notes",
+    note: "Allow assessors to take notes during a comparison",
+    default: true
+  },
+
   uiCopy: {
     type: Types.Code,
     lang: 'json',
