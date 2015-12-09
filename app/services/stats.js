@@ -144,9 +144,10 @@ module.exports = {
         return {
           totals: totals,
           averages: {
-            comparisonsPerRepresentation: (totals.comparisonsNum / totals.representationsNum *2).toFixed( 3 ),
+            comparisonsPerRepresentation: (totals.comparisonsNum / totals.representationsNum * 2).toFixed( 3 ),
             comparisonsPerAssessor: (totals.comparisonsNum / totals.assessorsNum).toFixed( 3 ),
-            durationPerAssessor: (totals.duration / totals.assessorsNum).toFixed( 3 )
+            durationPerAssessor: (totals.duration / totals.assessorsNum).toFixed( 3 ),
+            durationPerRepresentation: (totals.duration / totals.representationsNum).toFixed( 3 )
           },
           byRepresentation: byRepresentation
         }
