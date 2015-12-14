@@ -158,7 +158,7 @@ require( './helpers/setupList' )( Document )
 
   } )
   .expose( "href", "mimeType", "ext" )
-  .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links" )
+  .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links", "assessment", "representation" )
   .virtualize( {
     href: {
       get: function(){
