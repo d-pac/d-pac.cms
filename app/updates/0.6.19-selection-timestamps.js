@@ -14,7 +14,7 @@ exports = module.exports = function( done ){
       slug: 'selection'
     } ),
     comparisonsService.list( {
-      selectionMadeAt: { $eq: null }
+      selectionMadeAt: null
     } ),
     function( phases,
               comparisons ){
