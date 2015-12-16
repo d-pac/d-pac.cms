@@ -66,3 +66,11 @@ module.exports.parseValues = function( opts,
 
   return _.defaults( opts.values || {}, temp );
 };
+
+module.exports.getResultsByType = ( res,
+                                    type ) =>{
+  return _.get( res, 'locals.results', [] )
+    .filter( ( item ) =>{
+      return item.type === type;
+    } );
+};

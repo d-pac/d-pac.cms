@@ -1,4 +1,4 @@
-## REST API v0.3
+## REST API v0.3.1
 
 <!-- toc -->
 
@@ -33,6 +33,9 @@ e.g.
 
 These fields are sometimes omitted from the examples.
 
+Any extra (i.e. dependent) resources returned by any of the methods will be contained in an `included` field.
+The resources themselves are contained in `data`.
+
 ### authorization
 
 #### retrieve session
@@ -43,25 +46,37 @@ These fields are sometimes omitted from the examples.
 GET 	/api/session
 ```
 
-##### Response
+##### Response - when session exists
 
 ```
 200 OK
 ```
 ```json
 {
-    "_id": "55113f1742ff1a0877242a39",
-    "name": {
-        "first": "Admin",
-        "last": "User",
-        "full": "Admin User"
+    "data": {
+        "type": "sessions"
     },
-    "organization": "5512857ab22121c7cbd0af46",
-    "email": "user@keystonejs.com",
-    "assessments": [
-        "5511410927f4401a785dff0b"
-    ]
+    "included":[    {
+        "_id": "55113f1742ff1a0877242a39",
+        "name": {
+            "first": "Admin",
+            "last": "User",
+            "full": "Admin User"
+        },
+        "organization": "5512857ab22121c7cbd0af46",
+        "email": "user@keystonejs.com",
+        "assessments": [
+            "5511410927f4401a785dff0b"
+        ],
+        "type": "users"
+    }]
 }
+```
+
+##### Response - when session does not exist
+
+```
+204 No Content
 ```
 
 #### create session
@@ -82,23 +97,31 @@ POST 	/api/session
 ##### Response
 
 ```
-200 OK
+201 OK
 ```
 ```json
 {
-    "_id": "55113f1742ff1a0877242a39",
-    "name": {
-        "first": "Admin",
-        "last": "User",
-        "full": "Admin User"
+    "data": {
+        "isNew": true,
+        "type": "sessions"
     },
-    "organization": "5512857ab22121c7cbd0af46",
-    "email": "user@keystonejs.com",
-    "assessments": [
-        "5511410927f4401a785dff0b"
-    ]
+    "included":[    {
+        "_id": "55113f1742ff1a0877242a39",
+        "name": {
+            "first": "Admin",
+            "last": "User",
+            "full": "Admin User"
+        },
+        "organization": "5512857ab22121c7cbd0af46",
+        "email": "user@keystonejs.com",
+        "assessments": [
+            "5511410927f4401a785dff0b"
+        ],
+        "type": "users"
+    }]
 }
 ```
+
 
 #### remove session
 

@@ -60,31 +60,39 @@ exports = module.exports = function( app ){
     .all( apiMw.initAPI );
 
   app.route( apiRoot + "/system/:action" )
+    .all( apiMw.setType( 'actions', 'single' ) )
     .get( api.system.action );
 
   app.route( apiRoot + "/session" )
-    .get( api.authentication.status )
-    .post( api.authentication.signin )
-    .delete( apiMw.requireUser )
-    .delete( api.authentication.signout );
+    .all( apiMw.setType( 'sessions', 'single' ) )
+    .get( api.authentication.status,
+      api.users.includeUser )
+    .post( api.authentication.signin,
+      api.users.includeUser )
+    .delete( apiMw.requireUser,
+      api.authentication.signout );
 
   app.route( apiRoot + "/user" )
+    .all( apiMw.setType( 'users', 'single' ) )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.retrieve )
     .patch( api.users.update );
 
   app.route( apiRoot + "/user/assessments" )
+    .all( apiMw.setType( 'assessments', 'multiple' ) )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listAssessments );
 
   app.route( apiRoot + "/user/assessments/:role" )
+    .all( apiMw.setType( 'assessments', 'multiple' ) )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listAssessments );
 
   app.route( apiRoot + "/user/comparisons" )
+    .all( apiMw.setType( 'comparisons', 'multiple' ) )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listIncompleteComparisons,
@@ -92,58 +100,78 @@ exports = module.exports = function( app ){
       api.users.includeNotes );
 
   app.route( apiRoot + "/user/notes" )
+    .all( apiMw.setType( 'notes', 'multiple' ) )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
     .get( api.users.listNotes );
 
   app.route( apiRoot + "/phases" )
+    .all( apiMw.setType( 'phases', 'multiple' ) )
     .all( apiMw.requireUser )
     .get( api.phases.list );
 
   app.route( apiRoot + "/pages" )
+    .all( apiMw.setType( 'pages', 'multiple' ) )
     .get( api.pages.list );
   app.route( apiRoot + "/pages/:slug" )
+    .all( apiMw.setType( 'pages', 'multiple' ) )
     .get( api.pages.retrieve );
 
   app.route( apiRoot + "/representations" )
+    .all( apiMw.setType( 'representations', 'multiple' ) )
     .all( apiMw.requireUser )
     .get( api.representations.list );
   app.route( apiRoot + "/representations/:_id" )
+    .all( apiMw.setType( 'representations', 'single' ) )
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
 
   app.route( apiRoot + "/messages" )
+    .all( apiMw.setType( 'messages', 'multiple' ) )
     .all( apiMw.requireUser )
     .post( api.messages.create );
 
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {
-      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [
+        apiMw.requireUser,
+        apiMw.requireAdmin
+      ],
       controller: api.assessments
     } );
 
   registerDefaultRoutes( apiRoot + "/documents",
     app, {
-      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [
+        apiMw.requireUser,
+        apiMw.requireAdmin
+      ],
       controller: api.documents
     } );
 
   registerDefaultRoutes( apiRoot + "/users",
     app, {
-      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [
+        apiMw.requireUser,
+        apiMw.requireAdmin
+      ],
       controller: api.users
     } );
 
   registerDefaultRoutes( apiRoot + "/comparisons",
     app, {
-      'pre:all': [ apiMw.requireUser ],
+      'pre:all': [
+        apiMw.requireUser
+      ],
       controller: api.comparisons,
       'post:create': [ api.comparisons.includeRepresentations ]
     } );
 
   registerDefaultRoutes( apiRoot + "/notes",
     app, {
-      'pre:all': [ apiMw.requireUser ],
+      'pre:all': [
+        apiMw.requireUser
+      ],
       controller: api.notes
     } );
 
@@ -158,11 +186,14 @@ exports = module.exports = function( app ){
 
   registerDefaultRoutes( apiRoot + "/organizations",
     app, {
-      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [
+        apiMw.requireUser,
+        apiMw.requireAdmin
+      ],
       controller: api.organizations
     } );
 
   // -- API fallback --
-  app.all( apiRoot + "*", apiMw.methodNotAllowed );
+  app.all( apiRoot + "*", apiMw.sendData );
   app.use( apiMw.handleError );
 };

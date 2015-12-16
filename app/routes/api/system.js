@@ -18,7 +18,8 @@ module.exports.action = function( req,
 module.exports._ping = function( req ){
   debug( '#ping' );
   return {
-    value: Date.now(),
-    type: 'ping'
+    name: 'ping',
+    now: Date.now(),
+    type: 'actions'
   };
 };

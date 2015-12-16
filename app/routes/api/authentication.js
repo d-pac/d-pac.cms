@@ -11,7 +11,10 @@ module.exports.status = ( req,
                           res,
                           next ) =>{
   debug( "#status" );
-  return base.handleResult( req.user || false, res, next );
+  let data = (req.user)
+    ? { 'type': 'sessions' }
+    : null;
+  return base.handleResult( data, res, next );
 };
 
 module.exports.signin = ( req,
@@ -22,13 +25,16 @@ module.exports.signin = ( req,
   keystone.session.signin( req.body, req, res,
     ( user ) =>{
       debug( "signed in", user.id );
-      return base.handleResult( req.user.toJSON(), res, next );
+      return base.handleResult( {
+        isNew: true,
+        'type': 'sessions'
+      }, res, next );
     },
     ( err ) =>{
       return base.handleResult( err || new errors.Http401Error( {
           message: "Authentication error",
           explanation: "Bad credentials."
-        } ) , res, next );
+        } ), res, next );
     } );
 };
 
@@ -37,8 +43,6 @@ module.exports.signout = ( req,
                            next ) =>{
   debug( "signout" );
   keystone.session.signout( req, res, () =>{
-    //TODO: rewrite to??
-    //return res.apiResponse( 204 );
-    next();
+    base.handleResult( null, res, next );
   } );
 };

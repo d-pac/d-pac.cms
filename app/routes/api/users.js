@@ -23,6 +23,12 @@ module.exports.listAssessments = function( req,
   } ), res, next );
 };
 
+module.exports.includeUser = ( req,
+                               res,
+                               next ) =>{
+  base.handleResult( req.user, res, next );
+};
+
 module.exports.listIncompleteComparisons = function( req,
                                                      res,
                                                      next ){

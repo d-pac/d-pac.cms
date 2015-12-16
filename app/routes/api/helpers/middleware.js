@@ -17,10 +17,10 @@ exports.initAPI = function initAPI( req,
     var rid = req.get( "Request-UUID" );
     res.header( "Request-UUID", rid );
 
-    if( !data && !_.isNumber( status ) ){
-      data = status;
-      status = 200;
-    }
+    //if( !data && !_.isNumber( status ) ){
+    //  data = status;
+    //  status = 200;
+    //}
 
     debug( "<<<<<<<<<<<<<<<<<<<< RESPONSE: " );
     debug( "\n", {
@@ -231,4 +231,46 @@ module.exports.parseUserId = function parseUserId( req,
     req.params._id = req.user.id;
   }
   next();
+};
+
+module.exports.setType = ( name,
+                           quantity ) =>{
+  return ( req,
+           res,
+           next ) =>{
+    _.set( res, 'locals.type', {
+      name: name,
+      quantity: quantity
+    } );
+    next();
+  }
+};
+
+module.exports.sendData = ( req,
+                            res,
+                            next ) =>{
+  const type = _.get( res, 'locals.type', {} );
+  const results = _.get( res, 'locals.results' );
+  let status = 200;
+  let payload;
+  if( !results ){
+    status = 204;
+  } else {
+    let requestedResults = results.filter( ( item ) =>{
+      return item.type === type.name;
+    } );
+    let data = requestedResults;
+    if( type.quantity === 'single' && requestedResults.length === 1 ){
+      data = requestedResults[ 0 ];
+      if(data.isNew){
+        status = 201;
+      }
+    }
+    payload = {
+      data: data,
+      included: _.difference( results, requestedResults )
+    };
+  }
+
+  res.apiResponse(status, payload);
 };

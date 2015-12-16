@@ -30,27 +30,23 @@ _.extend( Controller.prototype, {
 
   getResultsByType( res,
                     type ){
-    return _.get( res, 'locals.results', [] )
-      .filter( ( item ) =>{
-        return item.type === type;
-      } );
+    return utils.getResultsByType( res, type );
   },
 
   handleResult: function( mixed,
                           res,
-                          next,
-                          isWrapped ){
+                          next ){
     debug( "#handleResult" );
     function handle( result ){
       if( result ){
+        if( result.toJSON ){
+          result = result.toJSON();
+        }
+
         let results = _.get( res, 'locals.results', [] );
         _.set( res, 'locals.results', results.concat( result ) );
-        return results;
       }
-    }
-
-    if( typeof isWrapped !== 'undefined' ){
-      throw Error( 'isWrapped used!' );
+      next();
     }
 
     if( isThenable( mixed ) ){
@@ -93,6 +89,7 @@ _.extend( Controller.prototype, {
         if( !result ){
           throw new errors.Http500Error();
         }
+        result.isNew = true;
         return result;
       } );
   },
