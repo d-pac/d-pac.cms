@@ -279,11 +279,11 @@ function bulkuploadSavedHandler( next ){
   var opts = {
     dest: constants.directories.documents,
     temp: path.join( constants.directories.bulk, bulkupload._rid.toString() ),
-    file: path.join( constants.directories.bulk, _.get( bulkupload, 'zipfile.filename' ) ),
+    file: path.join( constants.directories.bulk, _.get( bulkupload, [ 'zipfile', 'filename' ] ) ),
     json: false
   };
 
-  var jsonfile = _.get( bulkupload, 'jsonfile.filename', false );
+  var jsonfile = _.get( bulkupload, [ 'jsonfile', 'filename' ], false );
   if( jsonfile ){
     opts.json = path.resolve( path.join( constants.directories.bulk, jsonfile ) );
   }

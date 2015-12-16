@@ -43,8 +43,8 @@ _.extend( Controller.prototype, {
           result = result.toJSON();
         }
 
-        let results = _.get( res, 'locals.results', [] );
-        _.set( res, 'locals.results', results.concat( result ) );
+        let results = _.get( res, [ 'locals', 'results' ], [] );
+        _.set( res, [ 'locals', 'results' ], results.concat( result ) );
       }
       next();
     }
@@ -115,7 +115,7 @@ _.extend( Controller.prototype, {
 
   list: function( req ){
     var filter = {};
-    var qFilter = _.get( req, 'query.filter', '' );
+    var qFilter = _.get( req, [ 'query', 'filter' ], '' );
     if( qFilter && _.isString( qFilter ) ){
       try{
         qFilter = JSON.parse( qFilter );

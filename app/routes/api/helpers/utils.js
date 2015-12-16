@@ -69,7 +69,7 @@ module.exports.parseValues = function( opts,
 
 module.exports.getResultsByType = ( res,
                                     type ) =>{
-  return _.get( res, 'locals.results', [] )
+  return _.get( res, [ 'locals', 'results' ], [] )
     .filter( ( item ) =>{
       return item.type === type;
     } );

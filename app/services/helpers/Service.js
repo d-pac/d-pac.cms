@@ -118,15 +118,15 @@ _.extend( Service.prototype, {
   },
 
   getEditableFields: function(){
-    return _.get( this.schema, 'api.editable', _.keys( this.schema.fields ) );
+    return _.get( this.schema, [ 'api', 'editable' ], _.keys( this.schema.fields ) );
   },
 
   getCreatableFields: function(){
-    return _.get( this.schema, 'api.creatable', _.keys( this.schema.fields ) );
+    return _.get( this.schema, [ 'api', 'creatable' ], _.keys( this.schema.fields ) );
   },
 
   getFilterableFields: function(){
-    return _.get( this.schema, 'api.filterable', _.keys( this.schema.fields ) );
+    return _.get( this.schema, [ 'api', 'filterable' ], _.keys( this.schema.fields ) );
   }
 } );
 

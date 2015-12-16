@@ -83,7 +83,7 @@ function clearAssessment( assessmentId ){
 function removeAssessmentFromUser( assessmentId,
                                    user,
                                    fieldName ){
-  var index = _.get( user, "assessments." + fieldName, [] ).indexOf( assessmentId );
+  var index = _.get( user, [ "assessments", fieldName ], [] ).indexOf( assessmentId );
   if( index >= 0 ){
     user.assessments[ fieldName ].splice( index, 1 );
     return true;
@@ -103,7 +103,8 @@ function deleteAssessment( assessmentId ){
     } )
     .reduce( function( memo,
                        user ){
-      var needsSaving = _.reduce( constants.roles.list, function( dirty, role ){
+      var needsSaving = _.reduce( constants.roles.list, function( dirty,
+                                                                  role ){
         return removeAssessmentFromUser( assessmentId, user, role.value ) || dirty;
       }, false );
       if( needsSaving ){

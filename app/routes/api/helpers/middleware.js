@@ -238,7 +238,7 @@ module.exports.setType = ( name,
   return ( req,
            res,
            next ) =>{
-    _.set( res, 'locals.type', {
+    _.set( res, [ 'locals', 'type' ], {
       name: name,
       quantity: quantity
     } );
@@ -249,8 +249,8 @@ module.exports.setType = ( name,
 module.exports.sendData = ( req,
                             res,
                             next ) =>{
-  const type = _.get( res, 'locals.type', {} );
-  const results = _.get( res, 'locals.results' );
+  const type = _.get( res, [ 'locals', 'type' ], {} );
+  const results = _.get( res, [ 'locals', 'results' ] );
   let status = 200;
   let payload;
   if( !results ){
@@ -262,7 +262,7 @@ module.exports.sendData = ( req,
     let data = requestedResults;
     if( type.quantity === 'single' && requestedResults.length === 1 ){
       data = requestedResults[ 0 ];
-      if(data.isNew){
+      if( data.isNew ){
         status = 201;
       }
     }
@@ -272,5 +272,5 @@ module.exports.sendData = ( req,
     };
   }
 
-  res.apiResponse(status, payload);
+  res.apiResponse( status, payload );
 };

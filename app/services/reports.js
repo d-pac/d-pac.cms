@@ -91,7 +91,7 @@ function getTimelogsMap( comparisonIds,
                        timelog ){
       var comparisonId = timelog.comparison.toString();
       var phaseId = timelog.phase.toString();
-      _.set( memo, comparisonId + "." + phaseId, timelog.duration );
+      _.set( memo, [ comparisonId, phaseId ], timelog.duration );
       return memo;
     }, {} );
 }
@@ -108,10 +108,10 @@ function createComparisonsReportData( phasesMap,
       var output = {
         comparison: comparisonModel._rid,
         assessment: assessment.name,
-        assessor: _.get( comparisonModel, 'assessor.email', UNDEFINED ),
-        "representation A": getDocument( documentsMap, _.get( comparisonModel, 'representations.a' ) ),
-        "representation B": getDocument( documentsMap, _.get( comparisonModel, 'representations.b' ) ),
-        "selected representation": getDocument( documentsMap, _.get( comparisonModel, 'data.selection' ) ),
+        assessor: _.get( comparisonModel, [ 'assessor', 'email' ], UNDEFINED ),
+        "representation A": getDocument( documentsMap, _.get( comparisonModel, [ 'representations', 'a' ] ) ),
+        "representation B": getDocument( documentsMap, _.get( comparisonModel, [ 'representations', 'b' ] ) ),
+        "selected representation": getDocument( documentsMap, _.get( comparisonModel, [ 'data', 'selection' ] ) ),
         "selected at": (comparisonModel.selectionMadeAt)
           ? moment( comparisonModel.selectionMadeAt ).format( "YYYY/MM/DD HH:mm:ss" )
           : UNDEFINED,
@@ -187,10 +187,10 @@ module.exports.listRepresentations = function listRepresentations( assessmentIds
   return module.exports.listRepresentationsForAssessmentIds( assessmentIds )
     .map( function( representationModel ){
       return {
-        assessment: _.get( representationModel, 'assessment.name', '' ),
-        name: _.get( representationModel, 'document.name', '' ),
-        ability: _.get( representationModel, 'ability.value', UNDEFINED ),
-        se: _.get( representationModel, 'ability.se', UNDEFINED ),
+        assessment: _.get( representationModel, [ 'assessment', 'name' ], '' ),
+        name: _.get( representationModel, [ 'document', 'name' ], '' ),
+        ability: _.get( representationModel, [ 'ability', 'value' ], UNDEFINED ),
+        se: _.get( representationModel, [ 'ability', 'se' ], UNDEFINED ),
         rankType: representationModel.rankType || UNDEFINED
       };
     } );

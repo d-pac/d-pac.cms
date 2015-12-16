@@ -44,7 +44,7 @@ var utils = {
 
 var callUtil = function callUtil( obj,
                                   prop ){
-  var fn = _.get( utils, obj.host + '.' + prop );
+  var fn = _.get( utils, [ obj.host, prop ] );
   if( !fn ){
     return false;
   }

@@ -13,9 +13,9 @@ var representationsService = require( './representations' );
 var timelogsService = require( './timelogs' );
 var fns = require( 'd-pac.functions' );
 
-var getAbility = _.partialRight( _.get, 'ability.value' );
+var getAbility = _.partialRight( _.get, [ 'ability', 'value' ] );
 var getSE = function( item ){
-  var se = _.get( item, 'ability.se', 0 );
+  var se = _.get( item, [ 'ability', 'se' ], 0 );
   if( se > 3 ){
     return 3;
   }
