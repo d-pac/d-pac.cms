@@ -8,8 +8,8 @@ var base = new Controller( service );
 module.exports = base.mixin();
 
 module.exports.list = function list( req,
-                                       res,
-                                       next ){
+                                     res,
+                                     next ){
   debug( "#list" );
 
   base.handleResult( service.list( {
@@ -22,12 +22,13 @@ module.exports.retrieve = function retrieve( req,
                                              next ){
   debug( "#retrieve" );
   base.handleResult( service.retrieve( {
-    slug: req.params.slug,
-    expose: "api"
-  } ).then( function( result ){
-    if( !result ){
-      throw new errors.Http404Error();
-    }
-    return result;
-  } ), res, next );
+      slug: req.params.slug,
+      expose: "api"
+    } )
+    .then( function( result ){
+      if( !result ){
+        throw new errors.Http404Error();
+      }
+      return result;
+    } ), res, next );
 };

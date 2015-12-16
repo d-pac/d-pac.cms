@@ -5,6 +5,12 @@ var _ = require( "lodash" );
 var errors = require( "errors" );
 var utils = require( "./utils" );
 
+const methods = [ 'list', 'create', 'retrieve', 'update', 'remove' ];
+
+function isThenable( subject ){
+  return subject && subject.then && _.isFunction( subject.then );
+}
+
 function Controller( service ){
   this.service = service;
 }
@@ -12,68 +18,62 @@ function Controller( service ){
 _.extend( Controller.prototype, {
   mixin: function( receiver ){
     receiver = receiver || {};
-    var controller = this;
-    receiver.retrieve = function( req,
-                                  res,
-                                  next ){
-      debug( "#retrieve" );
-      controller.handleResult( controller.retrieve( {
-        _id: req.params._id
-      } ), res, next );
-    };
-    receiver.list = function( req,
-                              res,
-                              next ){
-      debug( "#list" );
-      controller.handleResult( controller.list( req ), res, next );
-    };
-    receiver.create = function( req,
-                                res,
-                                next ){
-      debug( "#create" );
-      controller.handleResult( controller.create( req ), res, next );
-    };
-    receiver.update = function( req,
-                                res,
-                                next ){
-      debug( "#update" );
-      controller.handleResult( controller.update( req ), res, next );
-    };
-    receiver.remove = function( req,
-                                res,
-                                next ){
-      debug( "#remove" );
-      controller.remove( req )
-        .then( function( result ){
-          res.apiResponse( 204 );
-        } ).catch( function( err ){
-        next( err );
-      } );
-    };
+    methods.forEach( ( method ) =>{
+      receiver[ method ] = ( req,
+                             res,
+                             next ) =>{
+        this.handleResult( this[ method ]( req ), res, next );
+      }
+    } );
     return receiver;
   },
 
-  handleResult: function( p,
+  getResultsByType( res,
+                    type ){
+    return _.get( res, 'locals.results', [] )
+      .filter( ( item ) =>{
+        return item.type === type;
+      } );
+  },
+
+  handleResult: function( mixed,
                           res,
                           next,
                           isWrapped ){
     debug( "#handleResult" );
-    p.then( function( result ){
-      if( !isWrapped ){
-        result = {
-          data: result
-        };
+    function handle( result ){
+      if( result ){
+        let results = _.get( res, 'locals.results', [] );
+        _.set( res, 'locals.results', results.concat( result ) );
+        return results;
       }
-      res.apiResponse( result );
-    } ).catch( function( err ){
-      next( err );
-    } );
+    }
+
+    if( typeof isWrapped !== 'undefined' ){
+      throw Error( 'isWrapped used!' );
+    }
+
+    if( isThenable( mixed ) ){
+      return mixed.then( handle )
+        .catch( function( err ){
+          next( err );
+        } );
+    }
+
+    if( mixed instanceof Error ){
+      return next( mixed );
+    }
+
+    //just a plain old simple value -or- null, undefined
+    return handle( mixed );
   },
 
-  retrieve: function( opts ){
+  retrieve: function( req ){
     debug( "#retrieve" );
     return this.service
-      .retrieve( opts )
+      .retrieve( {
+        _id: req.params._id
+      } )
       .then( function( result ){
         if( !result ){
           throw new errors.Http404Error();
@@ -82,15 +82,6 @@ _.extend( Controller.prototype, {
       } );
   },
 
-  /**
-   *
-   * @param opts
-   * @param opts.fields [Required] Array of field names that will be updated, all other values
-   *  will be ignored [!] for security reasons
-   * @param opts.values [Optional] Object containing key value pairs that correspond to schema fields,
-   *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
-   * @param req
-   */
   create: function( req ){
     debug( "#create" );
     var values = utils.parseValues( {
@@ -106,15 +97,6 @@ _.extend( Controller.prototype, {
       } );
   },
 
-  /**
-   *
-   * @param opts
-   * @param opts.fields [Required] Array of field names that will be updated, all other values
-   *  will be ignored [!] for security reasons
-   * @param opts.values [Optional] Object containing key value pairs that correspond to schema fields,
-   *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
-   * @param req
-   */
   update: function( req ){
     debug( "#update" );
     var opts = {
@@ -137,7 +119,7 @@ _.extend( Controller.prototype, {
   list: function( req ){
     var filter = {};
     var qFilter = _.get( req, 'query.filter', '' );
-    if(qFilter && _.isString(qFilter)){
+    if( qFilter && _.isString( qFilter ) ){
       try{
         qFilter = JSON.parse( qFilter );
       } catch( err ) {

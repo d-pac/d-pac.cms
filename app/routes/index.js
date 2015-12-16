@@ -87,7 +87,9 @@ exports = module.exports = function( app ){
   app.route( apiRoot + "/user/comparisons" )
     .all( apiMw.requireUser )
     .all( apiMw.setIdParamToUser )
-    .get( api.users.listIncompleteComparisons );
+    .get( api.users.listIncompleteComparisons,
+      api.comparisons.includeRepresentations,
+      api.users.includeNotes );
 
   app.route( apiRoot + "/user/notes" )
     .all( apiMw.requireUser )
@@ -116,46 +118,47 @@ exports = module.exports = function( app ){
 
   registerDefaultRoutes( apiRoot + "/assessments",
     app, {
-      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
       controller: api.assessments
     } );
 
   registerDefaultRoutes( apiRoot + "/documents",
     app, {
-      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
       controller: api.documents
     } );
 
   registerDefaultRoutes( apiRoot + "/users",
     app, {
-      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
       controller: api.users
     } );
 
   registerDefaultRoutes( apiRoot + "/comparisons",
     app, {
-      all: [ apiMw.requireUser ],
-      controller: api.comparisons
+      'pre:all': [ apiMw.requireUser ],
+      controller: api.comparisons,
+      'post:create': [ api.comparisons.includeRepresentations ]
     } );
 
   registerDefaultRoutes( apiRoot + "/notes",
     app, {
-      all: [ apiMw.requireUser ],
+      'pre:all': [ apiMw.requireUser ],
       controller: api.notes
     } );
 
   registerDefaultRoutes( apiRoot + "/timelogs",
     app, {
-      list: [ apiMw.requireUser ],
-      create: [ apiMw.requireUser ],
-      retrieve: [ apiMw.requireUser ],
-      remove: [ apiMw.requireUser ],
+      'pre:list': [ apiMw.requireUser ],
+      'pre:create': [ apiMw.requireUser ],
+      'pre:retrieve': [ apiMw.requireUser ],
+      'pre:remove': [ apiMw.requireUser ],
       controller: api.timelogs
     } );
 
   registerDefaultRoutes( apiRoot + "/organizations",
     app, {
-      all: [ apiMw.requireUser, apiMw.requireAdmin ],
+      'pre:all': [ apiMw.requireUser, apiMw.requireAdmin ],
       controller: api.organizations
     } );
 

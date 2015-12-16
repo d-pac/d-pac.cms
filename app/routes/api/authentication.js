@@ -1,49 +1,44 @@
 "use strict";
 var debug = require( "debug" )( "dpac:api.authentication" );
+var P = require( 'bluebird' );
 
 var errors = require( "errors" );
 var keystone = require( "keystone" );
+var Controller = require( "./helpers/Controller" );
+var base = new Controller( null );
 
-module.exports.status = function status( req,
-                                         res,
-                                         next ){
+module.exports.status = ( req,
+                          res,
+                          next ) =>{
   debug( "#status" );
-  if( req.user ){
-    return res.apiResponse( {
-      data : req.user
-    } );
-  }
-
-  return res.apiResponse( { data: false } );
+  return base.handleResult( req.user || false, res, next );
 };
 
-module.exports.signin = function( req,
-                                  res,
-                                  next ){
+module.exports.signin = ( req,
+                          res,
+                          next ) =>{
   debug( "signin" );
-  keystone.session.signin( req.body, req, res, function( user ){
-    debug( "signed in", user.id );
 
-    return res.apiResponse( {
-      data : req.user.toJSON()
+  keystone.session.signin( req.body, req, res,
+    ( user ) =>{
+      debug( "signed in", user.id );
+      return base.handleResult( req.user.toJSON(), res, next );
+    },
+    ( err ) =>{
+      return base.handleResult( err || new errors.Http401Error( {
+          message: "Authentication error",
+          explanation: "Bad credentials."
+        } ) , res, next );
     } );
-  }, function( err ){
-    if( err ){
-      return next( err );
-    } else {
-      return next( new errors.Http401Error( {
-        message     : "Authentication error",
-        explanation : "Bad credentials."
-      } ) );
-    }
-  } );
 };
 
-module.exports.signout = function( req,
-                                   res,
-                                   next ){
+module.exports.signout = ( req,
+                           res,
+                           next ) =>{
   debug( "signout" );
-  keystone.session.signout( req, res, function(){
-    return res.apiResponse( 204 );
+  keystone.session.signout( req, res, () =>{
+    //TODO: rewrite to??
+    //return res.apiResponse( 204 );
+    next();
   } );
 };

@@ -13,28 +13,12 @@ module.exports.create = function( req,
                                   res,
                                   next ){
   req.body.assessor = req.user;
-  var response = {};
-  base.handleResult( base.create( req ).then( function( mixed ){
-    if( "comparisons" !== mixed.type ){
-      return mixed;
-    }
-    response.data = mixed;
-    return service.listRepresentationsForComparisons( [ mixed ] ).then( function( representations ){
-      response.included = representations;
-      return response;
-    } );
-  } ), res, next, true );
+  base.handleResult( base.create( req ), res, next );
 };
 
-module.exports.list = function( req,
-                                res,
-                                next ){
-  var response = {};
-  base.handleResult( base.list( req ).then( function( comparisons ){
-    response.data = comparisons;
-    return service.listRepresentationsForComparisons( comparisons ).then( function( representations ){
-      response.included = representations;
-      return response;
-    } );
-  } ), res, next, true );
+module.exports.includeRepresentations = ( req,
+                                       res,
+                                       next )=>{
+  const comparisons = base.getResultsByType( res, 'comparisons' );
+  base.handleResult( service.listRepresentationsForComparisons( comparisons ), res, next );
 };

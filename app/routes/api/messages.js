@@ -1,5 +1,5 @@
 "use strict";
-
+var P = require( 'bluebird' );
 var debug = require( "debug" )( "dpac:api.messages" );
 var errors = require( 'errors' );
 
@@ -21,13 +21,14 @@ module.exports.create = function( req,
   req.body.createdBy = req.user.id;
   req.body.confirm = true;
   req.body.fromAPI = true;
+  let err;
   if( !req.body.assessment
     || ( !req.user.isAssessorFor( req.body.assessment )
     && !req.user.isAssesseeFor( req.body.assessment ) ) ){
-    return next( new errors.Http403Error( {
+    err = new errors.Http403Error( {
       message: "Not Allowed",
       explanation: "You're not registered to this assessment"
-    } ) );
+    } );
   }
-  base.handleResult( base.create( req ), res, next );
+  base.handleResult( err || base.create( req ), res, next );
 };

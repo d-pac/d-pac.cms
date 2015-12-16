@@ -28,32 +28,9 @@ module.exports.listIncompleteComparisons = function( req,
                                                      next ){
   debug( "#listComparisons" );
 
-  var userId = req.params._id;
-  var response = { included: [] };
-  base.handleResult( service.listIncompleteComparisons( {
-      _id: userId
-    } )
-    .then( function( comparisons ){
-      response.data = comparisons;
-      return comparisonsService.listRepresentationsForComparisons( comparisons );
-    } )
-    .then( function( representations ){
-      response.included = response.included.concat( representations );
-      return representations;
-    } )
-    .then( function( representations ){
-      var documentIds = _.chain( representations ).pluck( "document" ).pluck( "_id" ).value();
-      return notesService.listByDocuments( {
-        author: userId
-      }, documentIds );
-    } )
-    .then( function( notes ){
-      response.included = response.included.concat( notes );
-      return notes;
-    } )
-    .then( function(){
-      return response;
-    } ), res, next, true );
+  return base.handleResult( service.listIncompleteComparisons( {
+    _id: req.params._id
+  } ), res, next );
 };
 
 module.exports.listNotes = function( req,
@@ -65,21 +42,32 @@ module.exports.listNotes = function( req,
   } ), res, next );
 };
 
+module.exports.includeNotes = ( req,
+                                res,
+                                next ) =>{
+  debug( '#includeNotes' );
+  const documents = base.getResultsByType( res, 'representations' ).map( ( representation ) =>{
+    return _.get( representation, [ 'document', '_id' ] );
+  } );
+  base.handleResult( notesService.listByDocuments( {
+    author: req.params._id
+  }, documents ), res, next )
+};
+
 module.exports.update = function( req,
                                   res,
                                   next ){
+  let result;
   if( keystone.isDisabled( 'save_account' ) ){
-    return next( new errors.Http403Error( {
+    result = new errors.Http403Error( {
       message: "Not Allowed",
       explanation: 'account modification disabled'
-    } ) );
-  }
-  var p;
-  if( req.body.password !== req.body.password_confirm ){
-    p = P.reject( new errors.Http422Error( { explanation: 'passwords do not match' } ) );
+    } );
+  } else if( req.body.password !== req.body.password_confirm ){
+    result = new errors.Http422Error( { explanation: 'passwords do not match' } );
   } else {
-    p = base.update( req );
+    result = base.update( req );
   }
-  base.handleResult( p, res, next );
+  base.handleResult( result, res, next );
 
 };
