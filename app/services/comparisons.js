@@ -73,7 +73,7 @@ module.exports.create = function( opts ){
         } );
       } catch( error ) {
         console.log( error );
-        throw new Error( 'Assessment incorrectly configured, please contact: <a href="mailto:info@d-pac.be">info@d-pac.be</a>' );
+        throw new Error( 'assessment-incorrectly-configured' );
       }
 
       var p, hookData;
