@@ -118,6 +118,7 @@ require( './helpers/setupList' )( Document )
       type: Types.Html,
       required: false,
       initial: false,
+      wysiwyg: true,
       note: "The value of this field will be shown for all media types. " +
       "Leave the file and link fields empty to create text-only documents."
     },
