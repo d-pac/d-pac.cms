@@ -1,42 +1,47 @@
 'use strict';
-var P = require( 'bluebird' );
-var keystone = require( 'keystone' );
-var representationServices = require( '../services/representations' );
+
+const _ = require( 'lodash' );
+const P = require( 'bluebird' );
+const keystone = require( 'keystone' );
+const representationServices = require( '../services/representations' );
+const notesService = require( '../services/notes' );
 
 function comparisonRemovedHandler( next ){
-  var comparison = this;
-  P.join( representationServices.retrieve( {
-    _id: comparison.representations.a
-  } ), representationServices.retrieve( {
-    _id: comparison.representations.b
-  } ), function( repA,
-                 repB ){
-    if(repA && repB){
-      return repA.uncompareWith( repB );
-    }
-  } ).then( function(){
-    next();
-  } ).catch( function( err ){
-    next( err );
-  } );
+  let comparison = this;
+  P.props( {
+      a: representationServices.retrieve( {
+        _id: comparison.representations.a
+      } ),
+      b: representationServices.retrieve( {
+        _id: comparison.representations.b
+      } )
+    } )
+    .then( ( representations )=>{
+      if( representations.a && representations.b ){
+        return representations.a.uncompareWith( representations.b );
+      }
+    } )
+    .then( ()=>next() )
+    .catch( ( err )=> next( err ) );
 }
 
-function comparisonSavedHandler(done){
-  var comparison = this;
-  if(comparison.isNew){
-    P.join( representationServices.retrieve( {
-      _id: comparison.representations.a
-    } ), representationServices.retrieve( {
-      _id: comparison.representations.b
-    } ), function( repA,
-                   repB ){
-      return repA.compareWith( repB );
-    } ).then( function(){
-      done();
-    } ).catch( function( err ){
-      done( err );
-    } )
-  }else{
+function comparisonSavedHandler( done ){
+  let comparison = this;
+  if( comparison.isNew ){
+    P.props( {
+        a: representationServices.retrieve( {
+          _id: comparison.representations.a
+        } ),
+        b: representationServices.retrieve( {
+          _id: comparison.representations.b
+        } )
+      } )
+      .then( ( representations )=>{
+        return representations.a.compareWith( representations.b );
+      } )
+      .then( ()=> done() )
+      .catch( ( err )=> done( err ) )
+  } else {
     done();
   }
 }
