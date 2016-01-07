@@ -29,11 +29,6 @@ var fields = {
   },
   body: {
     type: Types.Textarea
-  },
-
-  feedback: {
-    positive: { type: Types.Textarea },
-    negative: { type: Types.Textarea }
   }
 };
 
