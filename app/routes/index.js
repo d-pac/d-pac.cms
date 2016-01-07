@@ -97,7 +97,9 @@ exports = module.exports = function( app ){
     .all( apiMw.setIdParamToUser )
     .get( api.users.listIncompleteComparisons,
       api.comparisons.includeRepresentations,
-      api.users.includeNotes );
+      api.users.includeNotes,
+      api.feedback.includeFeedback
+    );
 
   app.route( apiRoot + "/user/notes" )
     .all( apiMw.setType( 'notes', 'multiple' ) )
@@ -173,6 +175,14 @@ exports = module.exports = function( app ){
         apiMw.requireUser
       ],
       controller: api.notes
+    } );
+
+  registerDefaultRoutes( apiRoot + "/feedback",
+    app, {
+      'pre:all': [
+        apiMw.requireUser
+      ],
+      controller: api.feedback
     } );
 
   registerDefaultRoutes( apiRoot + "/timelogs",

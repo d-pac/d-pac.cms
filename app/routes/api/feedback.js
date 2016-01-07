@@ -1,0 +1,23 @@
+"use strict";
+
+const debug = require( "debug" )( "dpac:api.feedback" );
+const errors = require( 'errors' );
+const service = require( "../../services/feedback" );
+const Controller = require( "./helpers/Controller" );
+const base = new Controller( service );
+module.exports = base.mixin();
+
+module.exports.includeFeedback = ( req,
+                                   res,
+                                   next )=>{
+
+  debug( '#includeFeedback' );
+  const documents = base.getResultsByType( res, 'representations' )
+    .map( ( representation ) =>{
+      return _.get( representation, [ 'document', '_id' ] );
+    } );
+
+  base.handleResult( service.listByDocuments( {
+    author: req.params._id
+  }, documents ), res, next )
+};

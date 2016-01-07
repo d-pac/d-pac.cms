@@ -48,6 +48,7 @@ module.exports.listNotes = function( req,
   } ), res, next );
 };
 
+//TODO: this really has no place here, should be moved to representations.js?
 module.exports.includeNotes = ( req,
                                 res,
                                 next ) =>{
