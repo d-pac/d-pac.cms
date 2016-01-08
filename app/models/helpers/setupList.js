@@ -126,11 +126,11 @@ module.exports = function( list ){
     register: function(){
       builder.virtualize( {
         type: function(){
-          return list.options.schema.collection;
+          return list.plural.toLocaleLowerCase();
         },
         "links.self": function(){
           var a = keystone.get( "api root" ) || "/";
-          var b = list.options.schema.collection;
+          var b = list.plural.toLocaleLowerCase();
           var c = this[ builder.get( 'idField' ) ].toString();
           return path.join( a, b, c );
         }

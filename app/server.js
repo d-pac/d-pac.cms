@@ -121,7 +121,7 @@ keystone.set( "nav", {
     "organizations",
     "users",
     "notes",
-    "feedbacks", // yeah...
+    "feedback",
     "timelogs"
   ],
   "misc": [

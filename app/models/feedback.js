@@ -7,6 +7,7 @@ const Feedback = new keystone.List( 'Feedback', {
   map: {
     name: "_rid"
   },
+  path: "feedback",
   label: "Feedback",
   singular: "Feedback",
   plural: "Feedback"
@@ -32,10 +33,12 @@ var fields = {
   },
   proscons: {
     positive: {
-      type: Types.Textarea
+      type: Types.Textarea,
+      label: "Positive"
     },
     negative: {
-      type: Types.Textarea
+      type: Types.Textarea,
+      label: "Negative"
     }
   }
 };
