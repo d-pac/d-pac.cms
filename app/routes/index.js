@@ -166,7 +166,12 @@ exports = module.exports = function( app ){
         apiMw.requireUser
       ],
       controller: api.comparisons,
-      'post:create': [ api.comparisons.includeRepresentations ]
+      'post:create': [
+        apiMw.setIdParamToUser,
+        api.comparisons.includeRepresentations,
+        api.users.includeNotes,
+        api.feedback.includeFeedback
+      ]
     } );
 
   registerDefaultRoutes( apiRoot + "/notes",
