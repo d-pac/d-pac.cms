@@ -20,9 +20,7 @@ module.exports.listByRepresentation = ( opts ) =>{
   return representationsService.retrieve( { _id: opts.representation } )
     .then( ( representation ) =>{
       if( representation ){
-        return base.list( { document: representation.document } )
-          .populate( "author", "anonymized" )
-          .execAsync()
+        return module.exports.list( { document: representation.document } );
       }
     } );
 };

@@ -27,10 +27,5 @@ module.exports.listByRepresentation = ( req,
                                         next ) =>{
   base.handleResult( service.listByRepresentation( {
       representation: req.params.representation
-    } )
-    .map( ( feedbackItem ) =>{
-      feedbackItem = feedbackItem.toJSON();
-      feedbackItem.author = feedbackItem.author.anonymized;
-      return feedbackItem;
     } ), res, next );
 };
