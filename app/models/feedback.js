@@ -13,7 +13,7 @@ const Feedback = new keystone.List( 'Feedback', {
   plural: "Feedback"
 } );
 
-Feedback.defaultColumns = 'name, author';
+Feedback.defaultColumns = 'name, author, document';
 var fields = {
   author: {
     type: Types.Relationship,
@@ -31,15 +31,11 @@ var fields = {
     many: false,
     index: true
   },
-  proscons: {
-    positive: {
-      type: Types.Textarea,
-      label: "Positive"
-    },
-    negative: {
-      type: Types.Textarea,
-      label: "Negative"
-    }
+  positive: {
+    type: Types.Textarea
+  },
+  negative: {
+    type: Types.Textarea
   }
 };
 
