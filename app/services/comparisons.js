@@ -12,6 +12,12 @@ var representationsService = require( './representations' );
 var base = new Service( schema );
 module.exports = base.mixin();
 
+module.exports.listPopulated = ( opts ) =>{
+  return base.list( opts )
+    .populate( 'representations.a representations.b' )
+    .execAsync();
+};
+
 module.exports.completedCount = function completedCount( opts ){
   debug( "#completedCount" );
   opts = _.defaults( opts, {
