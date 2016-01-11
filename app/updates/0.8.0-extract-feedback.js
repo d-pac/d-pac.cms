@@ -38,14 +38,14 @@ module.exports = ( done ) =>{
               .then( ( single )=>single[ 0 ] )
           } )
           .then( ( feedback ) =>{
-            if( (!feedback.a) && (proscons.aPositive || proscons.aNegative) ){
+            if( !feedback.a){
               created++;
               feedback.a = new Feedback.model( {
                 document: comparison.representations.a.document,
                 author: comparison.assessor
               } );
             }
-            if( (!feedback.b) && (proscons.aPositive || proscons.aNegative) ){
+            if( !feedback.b ){
               created++;
               feedback.b = new Feedback.model( {
                 document: comparison.representations.b.document,
@@ -79,6 +79,9 @@ module.exports = ( done ) =>{
             }
             return P.all( save );
           } )
+          .catch( ( err )=>{
+            console.log( err )
+          } );
       }
 
     } )
