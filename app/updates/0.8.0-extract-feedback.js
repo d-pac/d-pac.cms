@@ -1,4 +1,5 @@
 'use strict';
+const debug = require( "debug" )( "dpac:updates/0.8.0-extract-feedback" );
 
 const lodash = require( 'lodash' );
 const moment = require( 'moment' );
@@ -18,6 +19,7 @@ module.exports = ( done ) =>{
       ["data." + constants.PROSCONS]: { $exists: true }
     } )
     .each( ( comparison ) =>{
+      debug( 'Processing:', comparison._id, comparison._rid );
       const proscons = comparison.data[ constants.PROSCONS ];
       if( proscons ){
         const aId = comparison.representations.a.document;
