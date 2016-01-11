@@ -127,6 +127,10 @@ exports = module.exports = function( app ){
     .all( apiMw.setType( 'representations', 'single' ) )
     .all( apiMw.requireUser )
     .get( api.representations.retrieve );
+  app.route( apiRoot + "/representations/:representation/feedback" )
+    .all( apiMw.setType( 'feedback', 'multiple' ) )
+    .all( apiMw.requireUser )
+    .get( api.feedback.listByRepresentation );
 
   app.route( apiRoot + "/messages" )
     .all( apiMw.setType( 'messages', 'multiple' ) )

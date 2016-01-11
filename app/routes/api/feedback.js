@@ -21,3 +21,16 @@ module.exports.includeFeedback = ( req,
     author: req.params._id
   }, documents ), res, next )
 };
+
+module.exports.listByRepresentation = ( req,
+                                        res,
+                                        next ) =>{
+  base.handleResult( service.listByRepresentation( {
+      representation: req.params.representation
+    } )
+    .map( ( feedbackItem ) =>{
+      feedbackItem = feedbackItem.toJSON();
+      feedbackItem.author = feedbackItem.author.anonymized;
+      return feedbackItem;
+    } ), res, next );
+};
