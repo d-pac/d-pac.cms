@@ -40,7 +40,7 @@ _.extend( Controller.prototype, {
     function handle( result ){
       if( result ){
         if( result.toJSON ){
-          result = result.toJSON();
+          result = result.toJSON( { depopulate: true } );
         }
 
         let results = _.get( res, [ 'locals', 'results' ], [] );

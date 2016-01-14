@@ -41,7 +41,7 @@ module.exports.listAssessments = function listAssessments( role,
       }, [] );
       return assessmentsService.listById( ids, { state: { $in: [ 'calculated', 'published' ] } } );
     } ).map( function( assessment ){
-      assessment = assessment.toJSON();// necessary, otherwise the added `completedNum` won't stick
+      assessment = assessment.toJSON( { depopulate: true } );// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {
         assessment: assessment._id,
         assessor: opts._id
