@@ -20,7 +20,7 @@
     "fast-csv": "^0.6.0",
     "grappling-hook": "^3.0.0",
     "jade": "^1.8.0",
-    "keystone": "^0.3.15",
+    "keystone": "^0.3.16",
     "konfy": "^0.2.1",
     "lodash": "^3.9.3",
     "microtime": "^2.0.0",
