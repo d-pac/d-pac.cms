@@ -33,7 +33,7 @@
     "node-schedule": "^0.6.0",
     "rimraf": "^2.4.3",
     "semver": "^5.0.3",
-    "underscore.string": "^3.0.0",
+    "underscore.string": "^3.2.3",
     "uuid": "^2.0.1"
   },
   "devDependencies": {
