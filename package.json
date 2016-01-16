@@ -13,7 +13,7 @@
     "d-pac.plugins-spec": "^0.4.1",
     "debug": "^2.1.1",
     "deep-diff": "^0.3.2",
-    "deep-extend": "^0.4.0",
+    "deep-extend": "^0.4.1",
     "errors": "^0.3.0",
     "estimating-rasch-model": "^2.0.0",
     "extract-zip": "^1.0.3",
