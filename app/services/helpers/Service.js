@@ -61,7 +61,7 @@ _.assignIn( Service.prototype, {
     debug( "#retrieve" );
     return P.promisifyAll(
       this.schema.model
-        .findById( opts._id, opts.fields, opts )
+        .findById( opts._id, opts.fields, _.omit( opts, [ 'fields', '_id' ] ) )
     );
   },
 
