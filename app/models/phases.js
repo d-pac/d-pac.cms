@@ -2,7 +2,6 @@
 
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
-var _s = require( "underscore.string" );
 
 var Phase = new keystone.List( "Phase", {
   map      : {

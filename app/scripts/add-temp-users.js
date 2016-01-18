@@ -2,7 +2,6 @@
 
 var keystone = require( "keystone" );
 var _ = require( "underscore" );
-var _s = require( "underscore.string" );
 var Bluebird = require( "bluebird" );
 var objectId = require( "mongoose" ).Types.ObjectId;
 var constants = require( "../models/helpers/constants" );
@@ -27,7 +26,7 @@ function createPersona( data ){
 
 function createUserAndPersona( i ){
   var counter = i + begin;
-  var iPad = _s.lpad( counter.toString(), 2, "0" ); //sorry, couldn't resist
+  var iPad = _.padStart( counter.toString(), 2, "0" ); //sorry, couldn't resist
   return createUser( {
     "name.full" : [prefix, iPad].join( " " ),
     email       : [prefix.toLowerCase(), iPad, "@d-pac.org"].join( "" ),
