@@ -132,7 +132,7 @@ keystone.set( "nav", {
   ]
 } );
 
-_.each( keystone.import( 'hooks' ), function( handler ){
+_.forEach( keystone.import( 'hooks' ), function( handler ){
   handler.init();
 } );
 module.exports = keystone;

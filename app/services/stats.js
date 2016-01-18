@@ -65,14 +65,14 @@ module.exports = {
 
       var saveQueue = [];
 
-      _.each( toRanks, function( representationObj ){
+      _.forEach( toRanks, function( representationObj ){
         var doc = _.find( representationDocs, function( representationDoc ){
           return representationDoc.id.toString() === representationObj._id;
         } );
         var diffObj = diff( JSON.parse( JSON.stringify( doc.ability ) ), representationObj.ability );
         if( diffObj ){
           console.log( "Differences for", representationObj.name, ":", diffObj );
-          _.each( representationObj.ability, function( value,
+          _.forEach( representationObj.ability, function( value,
                                                        key ){
             doc.ability[ key ] = representationObj.ability[ key ];
           } );
@@ -119,7 +119,7 @@ module.exports = {
         } )
       } )
       .then( function( docs ){
-        docs.timelogs = timelogsService.listForComparisonIds( _.pluck( docs.comparisons, '_id' ) );
+        docs.timelogs = timelogsService.listForComparisonIds( _.map( docs.comparisons, '_id' ) );
         return P.props( docs );
       } )
       .then( function( docs ){

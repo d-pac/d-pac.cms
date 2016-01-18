@@ -84,7 +84,7 @@ var config = {
   }
 };
 
-_.each( constants.phases, function( phase ){
+_.forEach( constants.phases, function( phase ){
   config.data[ phase.slug ] = phase.field;
 } );
 

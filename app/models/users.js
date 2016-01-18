@@ -11,7 +11,7 @@ User.defaultColumns = "name, anonymized, email, isAdmin";
 
 function hasAssessmentId( arr,
                           needleId ){
-  return _.any( arr, function( assessmentId ){
+  return _.some( arr, function( assessmentId ){
     return assessmentId.equals( needleId );
   } );
 }
@@ -109,7 +109,7 @@ require( './helpers/setupList' )( User )
     },
     anonymized: {
       get: function(){
-        return 'user-' + _.padLeft( this._rid, 5, "0" );
+        return 'user-' + _.padStart( this._rid, 5, "0" );
       },
       depends: [ "_rid" ]
     }

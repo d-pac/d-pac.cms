@@ -8,7 +8,7 @@ var constants = require( '../models/helpers/constants' );
 
 function createDirectories( done ){
   var dirs = [ 'app/uploads' ].concat( _.values(constants.directories) );
-  _.each( dirs, function( dir ){
+  _.forEach( dirs, function( dir ){
     try{
       fs.mkdirSync( dir );
     } catch( e ) {

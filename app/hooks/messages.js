@@ -60,7 +60,7 @@ function sendMessage( message ){
     } ),
     function( recipients,
               user ){
-      //var to = _.pluck( recipients, 'namedEmail' );
+      //var to = _.map( recipients, 'namedEmail' );
       return mailsService.sendMessage( {
         to: recipients,
         from: user,
@@ -70,7 +70,7 @@ function sendMessage( message ){
     } )
     .then( function( result ){
       message.state = 'handled';
-      _.each( result, function( item ){
+      _.forEach( result, function( item ){
         if( item.status === 'rejected' ){
           addToLog( message, 'E-mail rejected: ' + item.reject_reason );
         } else {

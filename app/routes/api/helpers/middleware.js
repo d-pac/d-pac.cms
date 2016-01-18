@@ -99,7 +99,7 @@ exports.requireAdmin = function( req,
 };
 
 function parseValidationErrors( err ){
-  var messages = _.pluck( err.errors, "message" );
+  var messages = _.map( err.errors, "message" );
 
   return new errors.Http422Error( {
     message: err.message,
@@ -206,7 +206,7 @@ exports.requireParams = function(){
                    next ){
     debug( "#verifyRequiredParam" );
     var missing = [];
-    _.each( args, function( paramName ){
+    _.forEach( args, function( paramName ){
       if( "undefined" === typeof req.params[ paramName ] ){
         missing.push( paramName );
       }

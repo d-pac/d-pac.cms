@@ -56,7 +56,7 @@ module.exports.parseValues = function( opts,
     throw new Error( "`opts.fields` is required!" );
   }
   var temp = {};
-  _.each( opts.fields, function( field ){
+  _.forEach( opts.fields, function( field ){
     var value = req.body[ field ];
 
     if( value ){

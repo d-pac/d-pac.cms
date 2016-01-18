@@ -10,12 +10,12 @@ function Service( schema ){
   this.schema = schema;
 }
 
-_.extend( Service.prototype, {
+_.assignIn( Service.prototype, {
   mixin: function( receiver ){
     var methods = _.omit( _.keys( Service.prototype ), "mixin" );
     var service = this;
     receiver = receiver || {};
-    _.each( methods, function( methodName ){
+    _.forEach( methods, function( methodName ){
       receiver[ methodName ] = function(){
         var args = _.toArray( arguments );
         var result = service[ methodName ].apply( service, args );

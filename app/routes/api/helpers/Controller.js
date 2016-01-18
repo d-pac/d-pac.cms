@@ -15,7 +15,7 @@ function Controller( service ){
   this.service = service;
 }
 
-_.extend( Controller.prototype, {
+_.assignIn( Controller.prototype, {
   mixin: function( receiver ){
     receiver = receiver || {};
     methods.forEach( ( method ) =>{

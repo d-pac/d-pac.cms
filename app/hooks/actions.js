@@ -34,7 +34,7 @@ function deleteAssessmentAssociates( assessmentId ){
       return P.promisify( comparison.remove, comparison )();
     } )
     .then( function( comparisonsList ){
-      return _.pluck( comparisonsList, "id" );
+      return _.map( comparisonsList, "id" );
     } )
     .then( function( comparisonIds ){
       return P.promisify( Timelog.model.remove, Timelog.model )( {
@@ -141,7 +141,7 @@ function archiveAssessment( assessmentId ){
           assessment: assessmentId.toString()
         } )
         .then( function( comparisonsList ){
-          return _.pluck( comparisonsList, "id" );
+          return _.map( comparisonsList, "id" );
         } );
     } )
     .map( function( id ){

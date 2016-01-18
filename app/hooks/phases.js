@@ -13,7 +13,7 @@ function createPhase( phase,
     var doc, action;
     if( existing && existing.length ){
       doc = existing[ 0 ];
-      _.each( phase, function( val,
+      _.forEach( phase, function( val,
                                key ){
         doc[ key ] = val;
       } );

@@ -230,7 +230,7 @@ function processFiles( bulkupload,
     } )
     .then( function( mapByFilename ){
       if( jsonData ){
-        _.each( jsonData, function( item ){
+        _.forEach( jsonData, function( item ){
           var representation = mapByFilename.representations[ item.fileName ];
           if( item.closeTo ){
             representation.closeTo = mapByFilename.representations[ item.closeTo ].id;

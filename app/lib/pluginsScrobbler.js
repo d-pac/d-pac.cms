@@ -23,7 +23,7 @@ function init( manifest ){
   if( _.size( plugins ) < 0 ){
     debug( chalk.yellow( "No plugins found, have they been added as a dependency to", manifest.name, "?" ) );
   } else {
-    debug( chalk.green( "Plugin(s) found:" ), _.pluck( plugins, "name" ) );
+    debug( chalk.green( "Plugin(s) found:" ), _.map( plugins, "name" ) );
   }
 
   var list = _.chain( plugins )

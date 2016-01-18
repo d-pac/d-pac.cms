@@ -48,7 +48,7 @@ db.once( "open", function callback(){
     .lean()
     .exec()
     .then( function( users ){
-      userIds = _.pluck( users, "_id" );
+      userIds = _.map( users, "_id" );
       return userIds;
     } )
     .then( function(){

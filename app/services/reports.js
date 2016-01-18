@@ -119,7 +119,7 @@ function createComparisonsReportData( phasesMap,
           ? TRUE
           : FALSE
       };
-      _.each( assessment.phases, function( phaseId ){
+      _.forEach( assessment.phases, function( phaseId ){
         var phase = phasesMap[ phaseId.toString() ];
         switch( phase.slug ){
           case constants.SEQ_COMPARATIVE:
@@ -177,7 +177,7 @@ module.exports.listComparisons = function listComparisons( assessmentIds ){
               documentsMap,
               assessmentsMap,
               comparisonsList ){
-      return getTimelogsMap( _.pluck( comparisonsList, "_id" ), phasesMap )
+      return getTimelogsMap( _.map( comparisonsList, "_id" ), phasesMap )
         .then( createComparisonsReportData( phasesMap, documentsMap, assessmentsMap, comparisonsList ) );
     }
   );

@@ -11,7 +11,7 @@ function removingDocumentHandler( done ){
     } )
     .then( function( representations ){
       if( representations.length ){
-        var names = _.pluck( representations, 'name' );
+        var names = _.map( representations, 'name' );
         return done( new Error( 'NOT ALLOWED: it\'s referenced to in representation(s): ' + names.join( ', ' ) ) );
       }
       done();

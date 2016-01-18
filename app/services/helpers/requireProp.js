@@ -12,7 +12,7 @@ module.exports = function requireProp( obj,
   obj = ( obj )
     ? args.shift() // drop `obj`
     : {};
-  _.each( args, function( prop ){
+  _.forEach( args, function( prop ){
     if( !obj.hasOwnProperty( prop ) ){
       throw new Error( '`' + prop + '` is a required property' );
     }

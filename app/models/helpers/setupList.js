@@ -26,9 +26,9 @@ module.exports = function( list ){
       return builder;
     },
     virtualize: function( virtuals ){
-      var args = _.flatten( _.toArray( arguments ), true );
-      _.each( args, function( arg ){
-        _.each( arg, function( virtualizer,
+      var args = _.flattenDeep( _.toArray( arguments ) );
+      _.forEach( args, function( arg ){
+        _.forEach( arg, function( virtualizer,
                                field ){
           if( _.isFunction( virtualizer ) ){
             list.schema.virtual( field ).get( virtualizer );
@@ -40,7 +40,7 @@ module.exports = function( list ){
       return builder.expose( _.keys( virtuals ) );
     },
     retain: function( fields ){
-      var args = _.flatten( _.toArray( arguments ), true );
+      var args = _.flattenDeep( _.toArray( arguments ) );
       args = _.reduce( args, function( memo,
                                        arg ){
         if( "track" === arg ){
@@ -57,7 +57,7 @@ module.exports = function( list ){
       return builder;
     },
     expose: function( fields ){
-      var args = _.flatten( _.toArray( arguments ), true );
+      var args = _.flattenDeep( _.toArray( arguments ) );
       fields = _.reduce( args, function( memo,
                                          arg ){
         if( _.isObject( arg ) ){
@@ -78,7 +78,7 @@ module.exports = function( list ){
         list.schema.options.toJSON.transform = function( doc,
                                                          ret,
                                                          options ){
-          _.each( builder._exposed, function( exposed ){
+          _.forEach( builder._exposed, function( exposed ){
             var parts = exposed.split( "." );
             if( 1 < parts.length ){
               var dr = doc;
@@ -95,7 +95,7 @@ module.exports = function( list ){
               ret[ exposed ] = doc[ exposed ];
             }
           } );
-          _.each( builder._guarded, function( guarded ){
+          _.forEach( builder._guarded, function( guarded ){
             delete ret[ guarded ];
           } );
           return ret;
@@ -106,14 +106,14 @@ module.exports = function( list ){
       return builder;
     },
     relate: function( relationships ){
-      relationships = _.flatten( _.toArray( arguments ), true );
-      _.each( relationships, function( relConfig ){
+      relationships = _.flattenDeep( _.toArray( arguments ) );
+      _.forEach( relationships, function( relConfig ){
         list.relationship( relConfig );
       } );
       return builder;
     },
     validate: function( map ){
-      _.each( map, function( mixed,
+      _.forEach( map, function( mixed,
                              field ){
         if( _.isFunction( mixed ) ){
           mixed = [ mixed ];

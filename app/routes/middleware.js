@@ -56,7 +56,7 @@ exports.flashMessages = function( req,
     error   : req.flash( "error" )
   };
 
-  res.locals.messages = _.any( flashMessages, function( msgs ){
+  res.locals.messages = _.some( flashMessages, function( msgs ){
     return msgs.length;
   } )
     ? flashMessages

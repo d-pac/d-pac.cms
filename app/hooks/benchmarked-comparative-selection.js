@@ -10,7 +10,7 @@ var assessmentsService = require( '../services/assessments' );
 
 var handlers = {
   messages: function( data ){
-    _.each( data.messages, function( message ){
+    _.forEach( data.messages, function( message ){
       switch( message ){
         case algorithm.constants.messages.ASSESSOR_STAGE_COMPLETED:
           mailsService.sendAssessorStageCompleted( data.assessor, data.assessment );

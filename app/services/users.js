@@ -65,7 +65,7 @@ module.exports.listIncompleteComparisons = function listIncompleteComparisons( o
       return comparisonsService.listForAssessments( {
         assessor: opts._id,
         completed: false
-      }, _.pluck( assessments, '_id' ) );
+      }, _.map( assessments, '_id' ) );
     } );
 };
 
