@@ -13,8 +13,8 @@ var Comparison = new keystone.List( "Comparison", {
     name: "_rid"
   },
   track: true,
-  nocreate: !keystone.get('dev env'),
-  noedit: !keystone.get('dev env')
+  nocreate: !keystone.get( 'dev env' ),
+  noedit: !keystone.get( 'dev env' )
 } );
 
 Comparison.api = {
@@ -76,7 +76,7 @@ var config = {
   selectionMadeAt: {
     type: Types.Datetime,
     format: format,
-    noedit: !keystone.get("dev env"),
+    noedit: !keystone.get( "dev env" ),
     watch: "data.selection",
     value: function(){
       return Date.now();
