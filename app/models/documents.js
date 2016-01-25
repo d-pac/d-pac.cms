@@ -1,17 +1,43 @@
 "use strict";
 
-var _ = require( "lodash" );
-var keystone = require( "keystone" );
-var Types = keystone.Field.Types;
-var mime = require( "mime" );
-var path = require( "path" );
-var constants = require( "./helpers/constants" );
+const _ = require( "lodash" );
+const keystone = require( "keystone" );
+const Types = keystone.Field.Types;
+const mime = require( "mime" );
+const path = require( "path" );
+const constants = require( "./helpers/constants" );
+const allowedTypes = [
+  {
+    title: 'png',
+    mime: 'image/png'
+  },
+  {
+    title: 'jpg',
+    mime: 'image/jpeg'
+  },
+  {
+    title: 'pdf',
+    mime: 'application/pdf'
+  },
+  {
+    title: 'svg',
+    mime: 'image/svg+xml'
+  },
+  {
+    title: 'mp4 (video)',
+    mime: 'video/mp4'
+  },
+  {
+    title: 'mp4 (audio)',
+    mime: 'audio/mp4'
+  },
+  {
+    title: 'mp3',
+    mime: 'audio/mp3'
+  },
+];
 
-var allowedTypes = [ 'png', 'jpg', 'pdf', 'html', 'svg' ].map( function( ext ){
-  return mime.lookup( ext );
-} );
-
-var utils = {
+const utils = {
   local: {
     href: function(){
       return keystone.get( "root url" ) + (this.file.href || '/images/nodocument.png');
@@ -42,16 +68,16 @@ var utils = {
   }
 };
 
-var callUtil = function callUtil( obj,
-                                  prop ){
-  var fn = _.get( utils, [ obj.host, prop ] );
+function callUtil( obj,
+                   prop ){
+  const fn = _.get( utils, [ obj.host, prop ] );
   if( !fn ){
     return false;
   }
   return fn.call( obj );
-};
+}
 
-var Document = new keystone.List( "Document", {
+const Document = new keystone.List( "Document", {
   track: true
 } );
 
@@ -130,7 +156,8 @@ require( './helpers/setupList' )( Document )
       prefix: "/media",
       required: false,
       initial: false,
-      allowedTypes: allowedTypes
+      allowedTypes: _.map(allowedTypes, 'mime'),
+      note: `Allowed file types: ${_.map(allowedTypes, 'title' ).join(', ')}`
     },
 
     link: {
