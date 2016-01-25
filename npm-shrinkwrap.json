@@ -1,6 +1,6 @@
 {
   "name": "d-pac.cms",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "dependencies": {
     "async": {
       "version": "1.5.2",
