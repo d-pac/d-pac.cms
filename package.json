@@ -42,8 +42,8 @@
     "require-directory": "2.1.1"
   },
   "engines": {
-    "node": ">=0.4.0",
-    "npm": ">=3.3.10"
+    "node": "4.2.1",
+    "npm": "3.5.3"
   },
   "scripts": {
     "start": "pm2 start process.$NODE_ENV.json",
