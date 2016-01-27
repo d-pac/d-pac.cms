@@ -36,7 +36,7 @@
     "uuid": "2.0.1"
   },
   "devDependencies": {
-    "mocha": "2.4.2",
+    "mocha": "2.4.3",
     "must": "0.13.1",
     "properties": "1.2.1",
     "require-directory": "2.1.1"
