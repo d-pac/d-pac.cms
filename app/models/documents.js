@@ -121,7 +121,7 @@ require( './helpers/setupList' )( Document )
       ref: "User",
       index: true,
       required: false,
-      many: false, // R01
+      many: true,
       initial: true
     },
 

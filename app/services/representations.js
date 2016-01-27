@@ -22,8 +22,8 @@ module.exports.listWithoutUser = function( userId,
     .populate( "document" )
     .execAsync()
     .filter( function( representation ){
-      var owner = _.get( representation, [ 'document', 'owner' ] ) || '';
-      return owner.toString() !== userId.toString();
+      var owner = _.get( representation, [ 'document', 'owner' ] ) || [];
+      return owner.indexOf( userId ) < 0;
     } );
 };
 
