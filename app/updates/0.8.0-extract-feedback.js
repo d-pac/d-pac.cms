@@ -72,16 +72,14 @@ module.exports = ( done ) =>{
             }
             const save = [];
             if( saveA ){
-              save.push( P.promisify( feedback.a.save, feedback.a )() );
+              save.push( feedback.a.save() );
             }
             if( saveB ){
-              save.push( P.promisify( feedback.b.save, feedback.b )() );
+              save.push( feedback.b.save() );
             }
             return P.all( save );
           } )
-          .catch( ( err )=>{
-            console.log( err )
-          } );
+          .catch( ( err )=>console.log( err ) );
       }
 
     } )

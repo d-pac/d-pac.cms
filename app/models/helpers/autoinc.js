@@ -1,22 +1,16 @@
 "use strict";
 
-var mongoose = require( "mongoose" );
-var autoIncrement = require( "mongoose-auto-increment" );
+const mongoose = require( "mongoose" );
+const autoIncrement = require( "mongoose-auto-increment" );
 
-var connection = mongoose.createConnection( process.env.MONGO_URI );
+const connection = mongoose.createConnection( process.env.MONGO_URI );
 
 autoIncrement.initialize( connection );
 module.exports.plugin = autoIncrement.plugin;
-module.exports.setCount = function(opts, next){
-  var IdentityCounter = connection.model('IdentityCounter');
-  IdentityCounter.findOneAndUpdate(
+module.exports.setCount = function(opts){
+  const IdentityCounter = connection.model('IdentityCounter');
+  return IdentityCounter.findOneAndUpdate(
     { model: opts.model, field: opts.field},
-    { count: opts.count },
-    function (err) {
-      if (err) return next(err);
-      // Continue with default document save functionality.
-      next();
-    }
+    { count: opts.count }
   );
-
 };

@@ -46,10 +46,6 @@ exports = module.exports = function( done ){
       done();
       return saveQueue;
     } )
-    .each( function( doc ){
-      return P.promisify( doc.save, doc )();
-    } )
-    .then( function( comparisons ){
-      log( 'Updated', comparisons.length, "comparisons" );
-    } );
+    .each( ( doc ) => doc.save() )
+    .then( ( comparisons ) => log( 'Updated', comparisons.length, "comparisons" ) );
 };

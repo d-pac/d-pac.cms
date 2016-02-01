@@ -31,17 +31,16 @@ var pages = [
 ];
 
 function createPage( pageData ){
-  var q = Page.model.findOne( {
-    slug: pageData.slug
-  } );
-  return P.promisify( q.exec, q )()
+  return Page.model.findOne( {
+      slug: pageData.slug
+    } )
     .then( function( page ){
       if( page ){
         console.log( 'Page', page.name, 'already exists in the database.' );
         return page;
       }
 
-      return P.promisify( Page.model.create, Page.model )( pageData )
+      return Page.model.create( pageData )
         .then( function( page ){
           console.log( 'Added page', page.name, 'to database.' );
           return page;
