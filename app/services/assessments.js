@@ -15,7 +15,7 @@ module.exports.list = function list( opts ){
     state : constants.assessmentStates.PUBLISHED
   } );
   return base.list( opts )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listById = function listById( ids,
@@ -25,5 +25,5 @@ module.exports.listById = function listById( ids,
     state : constants.assessmentStates.PUBLISHED
   } );
   return base.listById( ids, opts )
-    .execAsync();
+    .exec();
 };

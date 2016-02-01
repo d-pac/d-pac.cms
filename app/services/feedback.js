@@ -12,7 +12,7 @@ module.exports.listByDocuments = ( opts,
   debug( "#listByDocuments", opts, documentIds );
   return base.list( opts )
     .where( "document" ).in( documentIds )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listByRepresentation = ( opts ) =>{

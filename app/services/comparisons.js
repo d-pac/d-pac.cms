@@ -15,7 +15,7 @@ module.exports = base.mixin();
 module.exports.listPopulated = ( opts ) =>{
   return base.list( opts )
     .populate( 'representations.a representations.b' )
-    .execAsync();
+    .exec();
 };
 
 module.exports.completedCount = function completedCount( opts ){
@@ -24,7 +24,7 @@ module.exports.completedCount = function completedCount( opts ){
     completed: true
   } );
 
-  return base.count( opts ).execAsync();
+  return base.count( opts ).exec();
 };
 
 module.exports.listForAssessments = function listForAssessments( opts,
@@ -33,20 +33,20 @@ module.exports.listForAssessments = function listForAssessments( opts,
   var self = this;
   return base.list( opts )
     .where( "assessment" ).in( assessmentIds )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listForRepresentation = function listForRepresentation( representation ){
   //return base.list({})
   //  .where( { "representations.a": representation.id } )
   //  //.or( [ { "representations.b": representation.id } ] )
-  //  .execAsync();
+  //  .exec();
   return base.list( {
     $or: [
       { "representations.a": representation.id },
       { "representations.b": representation.id }
     ]
-  } ).execAsync();
+  } ).exec();
 };
 
 module.exports.create = function( opts ){

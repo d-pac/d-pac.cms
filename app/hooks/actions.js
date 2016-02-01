@@ -31,13 +31,13 @@ function deleteAssessmentAssociates( assessmentId ){
       assessment: assessmentId.toString()
     } )
     .each( function( comparison ){
-      return P.promisify( comparison.remove, comparison )();
+      return comparison.remove();
     } )
     .then( function( comparisonsList ){
       return _.map( comparisonsList, "id" );
     } )
     .then( function( comparisonIds ){
-      return P.promisify( Timelog.model.remove, Timelog.model )( {
+      return Timelog.model.remove( {
         comparison: {
           $in: comparisonIds
         }
@@ -54,7 +54,7 @@ function resetAssessment( assessmentId ){
     } )
     .each( function( representation ){
       representation.compared = [];
-      return P.promisify( representation.save, representation )();
+      return representation.save();
     } )
     .then( function(){
       return assessmentsService.retrieve( {
@@ -71,7 +71,7 @@ function clearAssessment( assessmentId ){
       } );
     } )
     .each( function( representation ){
-      return P.promisify( representation.remove, representation )();
+      return representation.remove();
     } )
     .then( function(){
       return assessmentsService.retrieve( {
@@ -94,7 +94,7 @@ function removeAssessmentFromUser( assessmentId,
 function deleteAssessment( assessmentId ){
   return deleteAssessmentAssociates( assessmentId )
     .then( function(){
-      return P.promisify( Representation.model.remove, Representation.model )( {
+      return Representation.model.remove( {
         assessment: assessmentId
       } );
     } )
@@ -113,7 +113,7 @@ function deleteAssessment( assessmentId ){
       return memo;
     }, [] )
     .each( function( user ){
-      return P.promisify( user.save, user )();
+      return user.save();
     } )
     .then( function(){
       return assessmentsService.remove( {

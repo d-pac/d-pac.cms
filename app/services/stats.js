@@ -73,7 +73,7 @@ module.exports = {
         if( diffObj ){
           console.log( "Differences for", representationObj.name, ":", diffObj );
           _.forEach( representationObj.ability, function( value,
-                                                       key ){
+                                                          key ){
             doc.ability[ key ] = representationObj.ability[ key ];
           } );
           saveQueue.push( doc );
@@ -98,12 +98,12 @@ module.exports = {
 
   estimateForAssessment: function( assessmentId ){
     debug( "#estimateForAssessment" );
-    var getComparisons = P.promisifyAll( keystone.list( "Comparison" ).model.find( { assessment: assessmentId } ) );
-    var getRepresentations = P.promisifyAll( keystone.list( "Representation" ).model.find( { assessment: assessmentId } ) );
+    var getComparisons = keystone.list( "Comparison" ).model.find( { assessment: assessmentId } );
+    var getRepresentations = keystone.list( "Representation" ).model.find( { assessment: assessmentId } );
 
     var self = this;
-    return P.join( getComparisons.execAsync(), getRepresentations.execAsync(), function( comparisonDocs,
-                                                                                         representationDocs ){
+    return P.join( getComparisons.exec(), getRepresentations.exec(), function( comparisonDocs,
+                                                                               representationDocs ){
       return self.estimate( representationDocs, comparisonDocs );
     } );
   },

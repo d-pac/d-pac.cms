@@ -10,7 +10,7 @@ function representationRemovedHandler( done ){
   var representation = this;
   comparisonsService.listForRepresentation( representation )
     .each( function( comparison ){
-      return P.promisify( comparison.remove, comparison )();
+      return comparison.remove();
     } )
     .then(function(){
       done();

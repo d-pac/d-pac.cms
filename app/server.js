@@ -1,6 +1,9 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 
+var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+
 var _ = require( 'lodash' );
 var grappling = require( 'grappling-hook' );
 
@@ -53,7 +56,7 @@ keystone.init( {
   "user model": "User",
   "cookie secret": env.COOKIE_SECRET,
   "api root": "/api",
-  mongoose: require( 'mongoose' ),
+  "mongoose": mongoose,
   'emails': 'templates/emails',
   "mail admin": {
     name: "d-pac administrator",

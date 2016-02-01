@@ -243,7 +243,7 @@ function processFiles( bulkupload,
       return _.values( mapByFilename.documents ).concat( _.values( mapByFilename.representations ) );
     } )
     .each( function( doc ){
-      return P.promisify( doc.save, doc )();
+      return doc.save();
     } );
 }
 

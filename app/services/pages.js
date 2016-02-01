@@ -13,13 +13,13 @@ module.exports.list = function list( opts ){
     state: "published"
   } );
   return base.list( opts )
-    .execAsync();
+    .exec();
 };
 
 module.exports.retrieve = function retrieve( opts ){
   debug("#retrieve");
   return base.list( opts )
-    .execAsync().then( function( results ){
+    .exec().then( function( results ){
       if( results && results.length ){
         return results[ 0 ];
       }

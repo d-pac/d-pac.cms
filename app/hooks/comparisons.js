@@ -36,9 +36,7 @@ function comparisonSavedHandler( done ){
           _id: comparison.representations.b
         } )
       } )
-      .then( ( representations )=>{
-        return representations.a.compareWith( representations.b );
-      } )
+      .then( ( representations )=> representations.a.compareWith( representations.b ) )
       .then( ()=> done() )
       .catch( ( err )=> done( err ) )
   } else {

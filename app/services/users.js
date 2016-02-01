@@ -22,7 +22,7 @@ module.exports.list = function list( opts ){
   debug( "#list", opts );
 
   return base.list( opts )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listAssessments = function listAssessments( role,
@@ -78,13 +78,13 @@ module.exports.listNotes = function listNotes( opts ){
 module.exports.update = function update( opts ){
   debug( "#update" );
   return base.update( this.retrieve( opts ), opts )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listForAssessments = function listForAssessments( role,
                                                                  assessmentIds ){
   return base.list()
-    .execAsync()
+    .exec()
     .filter( function( user ){
       return !!_.find( assessmentIds, function( assessmentId ){
         var found = false;

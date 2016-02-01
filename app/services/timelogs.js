@@ -13,7 +13,7 @@ module.exports.list = function list( opts ){
   debug( "list" );
   return base.list( opts )
     .sort( "comparison begin" )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listForComparisonIds = function listForComparisonIds( comparisonIds,
@@ -23,7 +23,7 @@ module.exports.listForComparisonIds = function listForComparisonIds( comparisonI
   }
   return base.list( opts )
     .where( "comparison" ).in( comparisonIds )
-    .execAsync();
+    .exec();
 };
 
 module.exports.retrieveFinalForComparisons = function( phaseId, comparisonIds){
@@ -32,7 +32,7 @@ module.exports.retrieveFinalForComparisons = function( phaseId, comparisonIds){
     } )
     .where("comparison").in(comparisonIds)
     .sort( "-end" )
-    .execAsync()
+    .exec()
     .then( function( timelogs ){
       if( timelogs && timelogs.length ){
         return _.chain(timelogs)

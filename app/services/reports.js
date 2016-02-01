@@ -30,7 +30,7 @@ module.exports.listRepresentationsForAssessmentIds = function listRepresentation
     }
     q = q.where( "assessment" ).in( assessmentIds );
   }
-  return P.promisifyAll( q ).execAsync().then( function( result ){
+  return q.exec().then( function( result ){
     return result;
   } );
 };
@@ -48,7 +48,7 @@ function getComparisonsList( assessmentIds ){
       : assessmentIds;
     p = p.where( "assessment" ).in( assessmentIds );
   }
-  return P.promisify( p.exec, p )();
+  return p.exec();
 }
 
 function getDocument( map,

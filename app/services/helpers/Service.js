@@ -19,8 +19,8 @@ _.assignIn( Service.prototype, {
       receiver[ methodName ] = function(){
         var args = _.toArray( arguments );
         var result = service[ methodName ].apply( service, args );
-        if( result && result.hasOwnProperty( "execAsync" ) ){
-          result = result.execAsync();
+        if( result && _.isFunction( result.exec ) ){
+          result = result.exec();
         }
         return result;
       }.bind( receiver );
@@ -30,14 +30,12 @@ _.assignIn( Service.prototype, {
 
   count: function count( opts ){
     debug( '#count', opts );
-    return P.promisifyAll( this.schema.model.count( opts ) );
+    return this.schema.model.count( opts );
   },
   list: function list( opts ){
     debug( "#list", opts );
-    return P.promisifyAll(
-      this.schema.model
-        .find( opts )
-    );
+    return this.schema.model
+      .find( opts );
   },
 
   /**
@@ -53,21 +51,19 @@ _.assignIn( Service.prototype, {
       ids = [ ids ];
     }
 
-    return P.promisifyAll( this.schema.model.find( opts )
-      .where( "_id" ).in( ids ) );
+    return this.schema.model.find( opts )
+      .where( "_id" ).in( ids );
   },
 
   retrieve: function( opts ){
     debug( "#retrieve" );
-    return P.promisifyAll(
-      this.schema.model
-        .findById( opts._id, opts.fields, _.omit( opts, [ 'fields', '_id' ] ) )
-    );
+    return this.schema.model
+      .findById( opts._id, opts.fields, _.omit( opts, [ 'fields', '_id' ] ) );
   },
 
   create: function( opts ){
     debug( "#create", opts );
-    return P.promisify( this.schema.model.create, this.schema.model )( opts );
+    return this.schema.model.create( opts );
   },
 
   update: function( promise,
@@ -75,40 +71,30 @@ _.assignIn( Service.prototype, {
     debug( "#update" );
     if( 2 > arguments.length ){
       opts = promise;
-      promise = this.retrieve( opts )
-        .execAsync();
+      promise = this.retrieve( opts ).exec();
     }
-    promise.execAsync = _.bind( function(){
-      return this.then( function( doc ){
-        if( !doc ){
-          return P.resolve( [] );
-        }
-        deepExtend( doc, opts );
-        //todo: use/pass getUpdateHandler
-        return P.promisify( doc.save, doc )();
-      } ).spread( function( mixed ){
-        return mixed;
-      } );
-    }, promise );
 
+    promise.exec = function(){
+      return this.then( ( doc )=>{
+        if( doc ){
+          deepExtend( doc, opts );
+          return doc.save();
+        }
+      } );
+    }.bind( promise );
     return promise;
   },
 
   remove: function( opts ){
     debug( "#remove" );
-    var promise = this.retrieve( opts )
-      .execAsync();
-    promise.execAsync = _.bind( function(){
-      return this.then( function( doc ){
-        if( !doc ){
-          return P.resolve( undefined );
+    var promise = this.retrieve( opts ).exec();
+    promise.exec = function(){
+      return this.then( ( doc )=>{
+        if( doc ){
+          return doc.remove().then( ()=>doc );
         }
-        return P.promisify( doc.remove, doc )()
-          .then( function(){
-            return doc;
-          } );
       } );
-    }, promise );
+    }.bind( promise );
 
     return promise;
   },

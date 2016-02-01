@@ -93,7 +93,7 @@ function sendScheduledMessages(){
       message.strategy = 'send';
       message.confirm = true;
       addToLog( message, 'Scheduled time matched' );
-      return P.promisify( message.save, message )();
+      return message.save();
     } );
 
 }

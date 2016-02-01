@@ -12,7 +12,7 @@ module.exports.list = function list( opts ){
   debug( "list" );
   return base.list( opts )
     .populate( "document" )
-    .execAsync();
+    .exec();
 };
 
 module.exports.listWithoutUser = function( userId,
@@ -20,7 +20,7 @@ module.exports.listWithoutUser = function( userId,
   debug( "listWithoutUser" );
   return base.list( opts )
     .populate( "document" )
-    .execAsync()
+    .exec()
     .filter( function( representation ){
       var owner = _.get( representation, [ 'document', 'owner' ] ) || [];
       return owner.indexOf( userId ) < 0;
@@ -31,14 +31,14 @@ module.exports.listById = function listById( opts ){
   debug( "listById" );
   return base.listById( opts )
     .populate( "document" )
-    .execAsync();
+    .exec();
 };
 
 module.exports.retrieve = function list( opts ){
   debug( "list" );
   return base.retrieve( opts )
     .populate( "document" )
-    .execAsync();
+    .exec();
 };
 //
 //module.exports.select = function select( opts ){

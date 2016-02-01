@@ -11,5 +11,5 @@ module.exports.listByDocuments = function listByDocuments(opts, documentIds){
   var self = this;
   return base.list( opts )
     .where( "document" ).in( documentIds )
-    .execAsync();
+    .exec();
 };
