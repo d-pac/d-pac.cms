@@ -66,7 +66,7 @@ function destroyDatabase(){
 function resetDatabase(){
   debug( 'database - reset requested' );
   return P.map( _.values( module.exports.app.lists ), function( list ){
-      return P.promisify( list.model.remove, list.model )( {} );
+      return list.model.remove( {} );
     }, { concurrency: 1 } )
     .then( function( lists ){
       debug( 'database - reset completed' );
