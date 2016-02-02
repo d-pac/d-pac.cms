@@ -15,12 +15,11 @@ exports.initAPI = function initAPI( req,
   res.apiResponse = function( status,
                               data ){
     var rid = req.get( "Request-UUID" );
-    res.header( "Request-UUID", rid );
+    if( rid ){
+      res.header( "Request-UUID", rid );
+    }
 
-    //if( !data && !_.isNumber( status ) ){
-    //  data = status;
-    //  status = 200;
-    //}
+    res.header( 'x-powered-by', keystone.get( 'name' ) );
 
     debug( "<<<<<<<<<<<<<<<<<<<< RESPONSE: " );
     debug( "\n", {
