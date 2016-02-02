@@ -77,3 +77,9 @@ exports.reflectReq = function( req,
   } );
   next();
 };
+
+exports.disableCache = (req, res, next) =>{
+  res.header("Expires", "-1");
+  res.header("Cache-Control", "no-cache, no-store, private");
+  next();
+};

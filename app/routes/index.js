@@ -57,7 +57,9 @@ exports = module.exports = function( app ){
   // -- API setup --
   app.route( apiRoot + "*" )
     .all( appMw.reflectReq )
-    .all( apiMw.initAPI );
+    .all( appMw.disableCache )
+    .all( apiMw.initAPI )
+  ;
 
   app.route( apiRoot + "/system/:action" )
     .all( apiMw.setType( 'actions', 'single' ) )
