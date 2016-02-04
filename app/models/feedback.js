@@ -14,30 +14,6 @@ const Feedback = new keystone.List( 'Feedback', {
 } );
 
 Feedback.defaultColumns = 'name, author, document';
-var fields = {
-  author: {
-    type: Types.Relationship,
-    ref: "User",
-    many: false,
-    index: true,
-    required: false,
-    initial: true
-  },
-  document: {
-    type: Types.Relationship,
-    ref: "Document",
-    initial: true,
-    required: false,
-    many: false,
-    index: true
-  },
-  positive: {
-    type: Types.Textarea
-  },
-  negative: {
-    type: Types.Textarea
-  }
-};
 
 Feedback.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Feedback",
@@ -46,5 +22,29 @@ Feedback.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 } );
 
 require( './helpers/setupList' )( Feedback )
-  .add( fields )
+  .add( "Connections", {
+    author: {
+      type: Types.Relationship,
+      ref: "User",
+      many: false,
+      index: true,
+      required: false,
+      initial: true
+    },
+    document: {
+      type: Types.Relationship,
+      ref: "Document",
+      initial: true,
+      required: false,
+      many: false,
+      index: true
+    },
+  }, "Content", {
+    positive: {
+      type: Types.Textarea
+    },
+    negative: {
+      type: Types.Textarea
+    }
+  } )
   .register();

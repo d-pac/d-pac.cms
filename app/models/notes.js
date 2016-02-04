@@ -10,27 +10,6 @@ var Note = new keystone.List( 'Note', {
 } );
 
 Note.defaultColumns = 'name, author';
-var fields = {
-  author: {
-    type: Types.Relationship,
-    ref: "User",
-    many: false, // C02
-    index: true,
-    required: false, // C02
-    initial: true
-  },
-  document: {
-    type: Types.Relationship,
-    ref: "Document",
-    initial: true,
-    required: false,
-    many: false,
-    index: true
-  },
-  body: {
-    type: Types.Textarea
-  }
-};
 
 Note.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Note",
@@ -39,5 +18,26 @@ Note.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 } );
 
 require( './helpers/setupList' )( Note )
-  .add( fields )
+  .add( "Connections", {
+    author: {
+      type: Types.Relationship,
+      ref: "User",
+      many: false, // C02
+      index: true,
+      required: false, // C02
+      initial: true
+    },
+    document: {
+      type: Types.Relationship,
+      ref: "Document",
+      initial: true,
+      required: false,
+      many: false,
+      index: true
+    },
+  }, "Content",{
+    body: {
+      type: Types.Textarea
+    }
+  } )
   .register();
