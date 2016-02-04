@@ -64,6 +64,7 @@ require( './helpers/setupList' )( User )
       initial: true,
       required: false
     },
+  }, "Assessments", {
     assessments: {
       assessor: {
         type: Types.Relationship,
@@ -72,7 +73,7 @@ require( './helpers/setupList' )( User )
         initial: false,
         required: false,
         many: true,
-        label: "Assessor assessments",
+        label: "Assessor",
         default: []
       },
       assessee: {
@@ -82,7 +83,7 @@ require( './helpers/setupList' )( User )
         initial: false,
         required: false,
         many: true,
-        label: "Assessee assessments",
+        label: "Assessee",
         default: []
       },
       pam: {
@@ -92,7 +93,7 @@ require( './helpers/setupList' )( User )
         initial: false,
         required: false,
         many: true,
-        label: "PAM assessments",
+        label: "PAM",
         default: []
       }
     }
