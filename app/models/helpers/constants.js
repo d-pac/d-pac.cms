@@ -115,8 +115,7 @@ module.exports.phases = [
     label: "Provide comparative Feedback",
     field: {
       label: "Comparative feedback",
-      type: Types.Textarea,
-      default: ""
+      type: Types.Textarea
     }
   },
   {
