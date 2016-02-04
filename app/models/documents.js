@@ -99,92 +99,98 @@ Document.schema.pre( "save", function( callback ){
 Document.defaultColumns = [ "name", "owner", "href|40%", "mimeType" ];
 
 require( './helpers/setupList' )( Document )
-  .add( {
-    name: {
-      type: String,
-      default: "Document name",
-      noedit: true,
-      required: true,
-      note: "Not shown in tool. Purely for administrative purposes. " +
-      "Uses the value of title, or is automatically generated"
-    },
+  .add(
+    {
+      name: {
+        type: String,
+        default: "Document name",
+        noedit: true,
+        required: true,
+        note: "Not shown in tool. Purely for administrative purposes. " +
+        "Uses the value of title, or is automatically generated"
+      },
 
-    title: {
-      type: Types.Text,
-      required: false,
-      initial: true,
-      note: "Leave blank for automatic title generation"
-    },
+      title: {
+        type: Types.Text,
+        required: false,
+        initial: true,
+        note: "Leave blank for automatic title generation"
+      },
 
-    owner: {
-      type: Types.Relationship,
-      ref: "User",
-      index: true,
-      required: false,
-      many: true,
-      initial: true
-    },
+      owner: {
+        type: Types.Relationship,
+        ref: "User",
+        index: true,
+        required: false,
+        many: true,
+        initial: true
+      },
 
-    host: {
-      noedit: true,
-      type: String,
-      watch: "link file text",
-      note: "Value automatically generated based on the choice of document type below.",
-      value: function(){
-        if( 0 < this.file.size ){
-          return "local";
-        } else if( this.link ){
-          return "remote";
+      host: {
+        hidden: true,
+        type: String,
+        watch: "link file text",
+        note: "Value automatically generated based on the choice of document type below.",
+        value: function(){
+          if( this.file.size > 0){
+            return "local";
+          } else if( this.link ){
+            return "remote";
+          }
+          return "none";
         }
-        return "none";
       }
-    }
-  }, "Document", {
-    text: {
-      type: Types.Html,
-      required: false,
-      initial: false,
-      wysiwyg: true,
-      note: "The value of this field will be shown for all media types. " +
-      "Leave the file and link fields empty to create text-only documents."
     },
+    "Content",
+    {
+      text: {
+        type: Types.Html,
+        required: false,
+        initial: false,
+        wysiwyg: true,
+        note: "The value of this field will be shown for all media types. " +
+        "Leave the file and link fields empty to create text-only documents."
+      },
 
-    file: {
-      type: Types.LocalFile,
-      label: "Local file",
-      dest: constants.directories.documents,
-      prefix: "/media",
-      required: false,
-      initial: false,
-      allowedTypes: _.map(allowedTypes, 'mime'),
-      note: `Allowed file types: ${_.map(allowedTypes, 'title' ).join(', ')}`
+      file: {
+        type: Types.LocalFile,
+        label: "Local file",
+        dest: constants.directories.documents,
+        prefix: "/media",
+        required: false,
+        initial: false,
+        allowedTypes: _.map( allowedTypes, 'mime' ),
+        note: `Allowed file types: ${_.map( allowedTypes, 'title' ).join( ', ' )}`,
+      },
+
+      link: {
+        type: Types.Url,
+        label: "External URL",
+        hidden: true
+      },
     },
+    "Actions",
+    {
+      representation: {
+        type: Types.Boolean,
+        default: false,
+        label: "Create representation"
+      },
 
-    link: {
-      type: Types.Url,
-      label: "External file"
-    },
+      assessment: {
+        type: Types.Relationship,
+        ref: "Assessment",
+        index: true,
+        required: false,
+        many: false,
+        initial: false,
+        dependsOn: { representation: true },
+        note: "When 'create representation' is checked a new representation will be created for this document. " +
+        "To avoid accidental creation of multiple, unnecessary representations, " +
+        "this field is unchecked automatically again after the representation is created."
+      },
 
-    representation: {
-      type: Types.Boolean,
-      default: false,
-      label: "Create representation"
-    },
-
-    assessment: {
-      type: Types.Relationship,
-      ref: "Assessment",
-      index: true,
-      required: false,
-      many: false,
-      initial: false,
-      dependsOn: { representation: true },
-      note: "When 'create representation' is checked a new representation will be created for this document. " +
-      "To avoid accidental creation of multiple, unnecessary representations, " +
-      "this field is unchecked automatically again after the representation is created."
-    },
-
-  } )
+    } )
   .expose( "href", "mimeType", "ext" )
   .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links", "assessment", "representation" )
   .virtualize( {
