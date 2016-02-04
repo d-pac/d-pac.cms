@@ -22,70 +22,10 @@ Comparison.api = {
   editable: [ 'phase', 'data', 'completed' ]
 };
 
-var config = {
-
-  completed: {
-    type: Types.Boolean,
-    default: false,
-    initial: false
-  },
-
-  assessment: {
-    type: Types.Relationship,
-    ref: "Assessment",
-    many: false, // C01
-    initial: true,
-    required: false, // C01
-    index: true
-  },
-
-  // todo: filter on, dependsOn assessment
-  assessor: {
-    type: Types.Relationship,
-    ref: "User",
-    many: false, // C02
-    index: true,
-    required: false, // C02
-    initial: true
-  },
-
-  phase: {
-    type: Types.Relationship,
-    ref: "Phase",
-    index: true,
-    initial: true
-  },
-
-  representations: {
-    a: {
-      label: "Representation A",
-      type: Types.Relationship,
-      ref: "Representation",
-      initial: true
-    },
-    b: {
-      label: "Representation B",
-      type: Types.Relationship,
-      ref: "Representation",
-      initial: true
-    }
-  },
-
-  data: {},
-
-  selectionMadeAt: {
-    type: Types.Datetime,
-    format: format,
-    noedit: !keystone.get( "dev env" ),
-    watch: "data.selection",
-    value: function(){
-      return Date.now();
-    }
-  }
-};
+var data = {};
 
 _.forEach( constants.phases, function( phase ){
-  config.data[ phase.slug ] = phase.field;
+  data[ phase.slug ] = phase.field;
 } );
 
 Comparison.schema.plugin( require( "./helpers/autoinc" ).plugin, {
@@ -96,6 +36,67 @@ Comparison.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 
 Comparison.defaultColumns = "name, assessor, assessment, selected, phase, completed";
 require( './helpers/setupList' )( Comparison )
-  .add( config )
+  .add( "Connections", {
+
+    assessment: {
+      type: Types.Relationship,
+      ref: "Assessment",
+      many: false, // C01
+      initial: true,
+      required: false, // C01
+      index: true
+    },
+
+    // todo: filter on, dependsOn assessment
+    assessor: {
+      type: Types.Relationship,
+      ref: "User",
+      many: false, // C02
+      index: true,
+      required: false, // C02
+      initial: true
+    },
+
+    representations: {
+      a: {
+        label: "Representation A",
+        type: Types.Relationship,
+        ref: "Representation",
+        initial: true
+      },
+      b: {
+        label: "Representation B",
+        type: Types.Relationship,
+        ref: "Representation",
+        initial: true
+      }
+    },
+  }, "State", {
+    phase: {
+      type: Types.Relationship,
+      ref: "Phase",
+      index: true,
+      initial: true,
+      label: "Current phase"
+    },
+
+    selectionMadeAt: {
+      type: Types.Datetime,
+      format: format,
+      noedit: !keystone.get( "dev env" ),
+      watch: "data.selection",
+      value: function(){
+        return Date.now();
+      }
+    },
+    completed: {
+      type: Types.Boolean,
+      default: false,
+      initial: false
+    },
+
+  }, "Assessor data", {
+    data: data,
+  } )
   .retain( "track" )
   .register();
