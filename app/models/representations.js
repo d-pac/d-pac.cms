@@ -70,43 +70,6 @@ require( './helpers/setupList' )( Representation )
       note: 'Purely for administrative or testing purposes'
     },
 
-    assessment: {
-      type: Types.Relationship,
-      ref: "Assessment",
-      initial: true,
-      required: true, // R02
-      many: false, // R02
-      index: true
-    },
-
-    document: {
-      type: Types.Relationship,
-      ref: "Document",
-      initial: true,
-      required: true,
-      many: false,
-      index: true
-    },
-
-    compared: {
-      type: Types.Relationship,
-      ref: "Representation",
-      many: true,
-      noedit: true,
-      default: []
-    },
-
-    ability: {
-      value: {
-        type: Types.Number,
-        default: null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
-      },
-      se: {
-        type: Types.Number,
-        default: null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
-      }
-    },
-
     rankType: {
       type: Types.Select,
       options: constants.representationTypes.list.toString(),
@@ -122,8 +85,29 @@ require( './helpers/setupList' )( Representation )
       note: "Automatically set to '" + constants.RANKED + "' if a benchmark is chosen in 'close to'"
     },
 
+  }, "Connections", {
+
+    assessment: {
+      type: Types.Relationship,
+      ref: "Assessment",
+      initial: true,
+      required: true, // R02
+      many: false, // R02
+      index: true
+    },
+
+
+    document: {
+      type: Types.Relationship,
+      ref: "Document",
+      initial: true,
+      required: true,
+      many: false,
+      index: true
+    },
+
     closeTo: {
-      label: "Close to",
+      label: "Close to (becnhmark)",
       note: "Shows representations with rankType 'benchmark' only.",
       type: Types.Relationship,
       ref: "Representation",
@@ -131,7 +115,32 @@ require( './helpers/setupList' )( Representation )
       filters: {
         rankType: constants.BENCHMARK
       }
-    }
+    },
+
+    compared: {
+      type: Types.Relationship,
+      ref: "Representation",
+      many: true,
+      noedit: true,
+      default: [],
+      label: "Compared to"
+    },
+
+  }, "Stats", {
+
+    ability: {
+      value: {
+        type: Types.Number,
+        label: "Ability",
+        default: null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
+      },
+      se: {
+        type: Types.Number,
+        label: "Standard error",
+        default: null //yes, we _really_ do want `null` here, since this is a two-state field, either with or without a value
+      }
+    },
+
 
   } )
   .validate( {
