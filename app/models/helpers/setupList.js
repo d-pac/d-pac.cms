@@ -18,10 +18,7 @@ module.exports = function( list ){
       return this;
     },
     add: function( config ){
-      builder._config = _.filter( _.toArray( arguments ), function( arg ){
-        // filter labels out
-        return !_.isString( arg );
-      } );
+      builder._config = _.toArray( arguments );
       list.add.apply( list, builder._config );
       return builder;
     },
