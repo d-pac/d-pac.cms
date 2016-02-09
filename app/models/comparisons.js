@@ -14,7 +14,10 @@ var Comparison = new keystone.List( "Comparison", {
   },
   track: true,
   nocreate: !keystone.get( 'dev env' ),
-  noedit: !keystone.get( 'dev env' )
+  noedit: !keystone.get( 'dev env' ),
+  schema: {
+    minimize: false
+  }
 } );
 
 Comparison.api = {
