@@ -30,7 +30,7 @@
     "mongoose": "4.4.2",
     "mongoose-auto-increment": "5.0.1",
     "node-dir": "0.1.10",
-    "node-schedule": "0.6.0",
+    "node-schedule": "1.0.0",
     "rimraf": "2.5.1",
     "semver": "5.0.3",
     "uuid": "2.0.1"
