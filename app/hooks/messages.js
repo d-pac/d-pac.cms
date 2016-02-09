@@ -1,55 +1,44 @@
 'use strict';
-var scheduler = require( 'node-schedule' );
-var P = require( 'bluebird' );
-var _ = require( 'lodash' );
-var moment = require( 'moment' );
-var constants = require( '../models/helpers/constants' );
-var keystone = require( 'keystone' );
-var usersService = require( '../services/users' );
-var messagesService = require( '../services/messages' );
-var assessmentsService = require( '../services/assessments' );
-var mailsService = require( '../services/mails' );
+
+const scheduler = require( 'node-schedule' );
+const P = require( 'bluebird' );
+const _ = require( 'lodash' );
+const moment = require( 'moment' );
+const constants = require( '../models/helpers/constants' );
+const keystone = require( 'keystone' );
+const usersService = require( '../services/users' );
+const messagesService = require( '../services/messages' );
+const assessmentsService = require( '../services/assessments' );
+const mailsService = require( '../services/mails' );
+
+const commandsByRecipient = {
+  [constants.recipientTypes.ASSESSORS.value]: ( message )=>
+    usersService.listForAssessments( 'assessor', [ message.assessment ] ),
+  [constants.recipientTypes.ASSESSEES.value]: ( message ) =>
+    usersService.listForAssessments( 'assessee', [ message.assessment ] ),
+  [constants.recipientTypes.ASSESSMENT.value]: ( message )=>
+    usersService.listForAssessments( 'both', [ message.assessment ] ),
+  [constants.recipientTypes.PAM.value]: ( message )=>{
+    return assessmentsService.retrieve( { _id: message.assessment } )
+      .then( ( assessment )=> usersService.retrieve( { _id: assessment.createdBy } ) )
+      .then( ( user )=>[ user ] )
+      ;
+  },
+  [constants.recipientTypes.ANY.value]: ( message ) => usersService.listById( message.recipients ),
+  [constants.recipientTypes.ADMIN.value]: ( message ) => keystone.get( "mail admin" )
+};
 
 function addToLog( message,
                    text ){
-  var now = '[' + moment().format( 'DD/MM/YY HH:mm:ss' ) + '] ';
+  const now = '[' + moment().format( 'DD/MM/YY HH:mm:ss' ) + '] ';
   message.log = now + text + '<br/>' + ( message.log || '');
   return message;
 }
 
 function getRecipients( message ){
-  switch( message.recipientType ){
-    case constants.recipientTypes.ASSESSORS.value:
-      return usersService.listForAssessments( 'assessor', [ message.assessment ] );
-      break;
-    case constants.recipientTypes.ASSESSEES.value:
-      return usersService.listForAssessments( 'assessee', [ message.assessment ] );
-      break;
-    case constants.recipientTypes.ASSESSMENT.value:
-      return usersService.listForAssessments( 'both', [ message.assessment ] );
-      break;
-    case constants.recipientTypes.PAM.value:
-      return assessmentsService
-        .retrieve( {
-          _id: message.assessment
-        } )
-        .then( function( assessment ){
-          return usersService.retrieve( {
-            _id: assessment.createdBy
-          } );
-        } )
-        .then( function( user ){
-          return [ user ];
-        } );
-      break;
-    case constants.recipientTypes.ANY.value:
-      return usersService.listById( message.recipients );
-      break;
-    case constants.recipientTypes.ADMIN.value:
-    default:
-      return keystone.get("mail admin");
-      break;
-  }
+  const command = commandsByRecipient[ message.recipientType ]
+    || commandsByRecipient[ constants.recipientTypes.ADMIN.value ];
+  return command.call( null, message );
 }
 
 function sendMessage( message ){
@@ -60,7 +49,7 @@ function sendMessage( message ){
     } ),
     function( recipients,
               user ){
-      //var to = _.map( recipients, 'namedEmail' );
+      //const to = _.map( recipients, 'namedEmail' );
       return mailsService.sendMessage( {
         to: recipients,
         from: user,
@@ -99,11 +88,11 @@ function sendScheduledMessages(){
 }
 
 function messageSavedHandler( done ){
-  var message = this;
+  const message = this;
   if( message.isNew && !message.fromAPI ){
     addToLog( message, 'Draft created' );
   } else {
-    if( message.state === 'handled' && !keystone.get('dev env') ){
+    if( message.state === 'handled' && !keystone.get( 'dev env' ) ){
       return done( new Error( 'You cannot resend a message' ) );
     }
     switch( message.strategy ){
