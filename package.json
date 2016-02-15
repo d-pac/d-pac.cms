@@ -39,7 +39,8 @@
     "mocha": "2.4.5",
     "must": "0.13.1",
     "properties": "1.2.1",
-    "require-directory": "2.1.1"
+    "require-directory": "2.1.1",
+    "supertest": "1.1.0"
   },
   "engines": {
     "node": "4.2.1",

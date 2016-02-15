@@ -62,7 +62,7 @@ exports = module.exports = function( app ){
   ;
 
   app.route( apiRoot + "/system/:action" )
-    .all( apiMw.setType( 'actions', 'single' ) )
+    .all( apiMw.setType( 'ping', 'single' ) )
     .get( api.system.action );
 
   app.route( apiRoot + "/session" )
