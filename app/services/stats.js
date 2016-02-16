@@ -141,14 +141,18 @@ module.exports = {
           _.set( memo, [ bId, 'comparisonsNum' ], _.get( memo, [ bId, 'comparisonsNum' ], 0 ) + 1 );
           return memo;
         }, {} );
+        var averages = {};
+        if(totals.representationsNum > 0){
+          averages.comparisonsPerRepresentation= (totals.comparisonsNum / totals.representationsNum) * 2;
+          averages.durationPerRepresentation= totals.duration / totals.representationsNum;
+        }
+        if(totals.assessorsNum>0){
+          averages.comparisonsPerAssessor= totals.comparisonsNum / totals.assessorsNum;
+          averages.durationPerAssessor= totals.duration / totals.assessorsNum;
+        }
         return {
           totals: totals,
-          averages: {
-            comparisonsPerRepresentation: (totals.comparisonsNum / totals.representationsNum) * 2,
-            comparisonsPerAssessor: totals.comparisonsNum / totals.assessorsNum,
-            durationPerAssessor: totals.duration / totals.assessorsNum,
-            durationPerRepresentation: totals.duration / totals.representationsNum
-          },
+          averages: averages,
           byRepresentation: byRepresentation
         }
       } );
