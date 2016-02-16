@@ -215,6 +215,12 @@ require( './helpers/setupList' )( Assessment )
             noedit: true,
             label: "Reliability"
           },
+        },
+        lastRun: {
+          type: Types.Datetime,
+          noedit: true,
+          label: "Last calculation ran at:",
+          format: 'DD/MM/YYYY, HH:mm:ss'
         }
       }
     }, "Actions", {

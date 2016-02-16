@@ -54,6 +54,7 @@ function assessmentSavedHandler( done ){
       .then( function( stats ){
         assessment.actions.calculate = false;
         assessment.stats = stats;
+        assessment.stats.lastRun = Date.now();
         return assessment;
       } )
       .then( function( doc ){

@@ -7,7 +7,10 @@ const log = _.partial( console.log, require( 'path' ).basename( __filename ) + '
 
 module.exports = ( done ) =>{
   Assessment.model.update( { state: 'calculated' },
-    { state: constants.assessmentStates.PUBLISHED },
+    {
+      state: constants.assessmentStates.PUBLISHED,
+      "stats.lastRun": Date.now()
+    },
     { multi: true },
     ( err,
       raw )=>{
