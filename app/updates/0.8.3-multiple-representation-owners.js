@@ -11,11 +11,17 @@ module.exports = ( done ) =>{
       }
     } )
     .map( ( document ) =>{
-      n++;
-      if(document.owner === null){
+      let needsSave = false;
+      if( document.owner === null ){
         document.owner = [];
+        needsSave = true;
+      } else if( !_.isArray( document.owner ) ){
+        needsSave = true; //converts automatically
       }
-      return document.save();
+      if( needsSave ){
+        n++;
+        return document.save();
+      }
     } )
     .then( ()=>{
       log( 'Updated', n, 'documents' );
