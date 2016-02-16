@@ -13,7 +13,7 @@ var Assessment = new keystone.List( "Assessment", {
 Assessment.defaultColumns = "name, title, algorithm, stage, state, parent";
 
 //we need to do this, since keystone doesn't allow Mixed types
-Assessment.schema.add( { stats: keystone.mongoose.Schema.Types.Mixed } );
+Assessment.schema.add( { stats: { byRepresentation: keystone.mongoose.Schema.Types.Mixed } } );
 
 require( './helpers/setupList' )( Assessment )
   .add( {
@@ -165,6 +165,58 @@ require( './helpers/setupList' )( Assessment )
         note: 'Must be valid json, please check with <a href="http://jsonlint.com/">jsonlint</a>',
         default: "{\r\n    \"phase_selection\": {\r\n        \"title\": \"Beoordeel\",\r\n        \"description\": \"Geef aan welke tekst beter geschreven is in functie van  de competentie 'argumentatief schrijven'\",\r\n        \"a_button\": {\r\n            \"label\" : \"Tekst A is beter\",\r\n            \"tooltip\": \"Klik om aan te duiden dat tekst A beter is dan B.\"\r\n        },\r\n        \"b_button\": {\r\n            \"label\": \"Tekst B is beter\",\r\n            \"tooltip\": \"Klik om aan te duiden dat tekst B beter is dan A.\"\r\n        }\r\n    },\r\n    \"phase_comparative\": {\r\n        \"title\": \"Vergelijk\",\r\n        \"description\": \"Licht kort je keuze toe\"\r\n    },\r\n    \"phase_pros-cons\": {\r\n        \"title\": \"Vergelijk\",\r\n        \"description\": \"Beschrijf hier wat je positief en negatief vond aan de teksten:\",\r\n        \"a_title\": \"Tekst A\",\r\n        \"b_title\": \"Tekst B\",\r\n        \"positive\": \"Positief\",\r\n        \"negative\": \"Negatief\"\r\n    },\r\n    \"phase_passfail\":{\r\n        \"title\":\"Geslaagd of niet?\",\r\n        \"description\" : \"Duid aan of deze teksten volgens jou geslaagd zijn voor de opdracht.\",\r\n        \"options\": {\r\n          \"passed\" : {\r\n              \"label\" : \"Geslaagd\",\r\n              \"icon\" : \"ok\"\r\n          },\r\n          \"failed\" : { \r\n              \"label\":\"Niet geslaagd\", \r\n              \"icon\":\"remove\"\r\n          },\r\n          \"undecided\" : { \r\n              \"label\" : \"Weet het niet\", \r\n              \"icon\": \"question-sign\"\r\n          }\r\n        }\r\n    },\r\n    \"phase_seq-selection\": {\r\n\t    \"title\": \"Hoe moeilijk vond je het om de keuze te maken?\"\r\n\t},\r\n  \t\"phase_seq-comparative\": {\r\n    \t\"title\": \"Hoe moeilijk vond je het om je keuze te beargumenteren?\"\r\n\t},\r\n    \"phase_seq-passfail\": {\r\n    \t\"title\": \"Hoe moeilijk vond je het om geslaagd/niet geslaagd te kiezen?\"\r\n\t},\r\n    \"representation_viewer\": {\r\n        \"pdf\":{\r\n            \"tooltip\": \"Gebruik de knoppen rechts bovenaan om de paper fullscreen te bekijken of te downloaden.\"\r\n        },\r\n        \"image\": {\r\n            \"tooltip\": \"Klik om deze tekst te selecteren\"\r\n        }\r\n    },\r\n    \"notes\" : {\r\n        \"label\" : \"Notities\",\r\n        \"tooltip\" : \"Noteer hier je opmerkingen bij deze tekst.\"\r\n    }\r\n}\r\n"
       },
+    }, "Stats", {
+      stats: {
+        averages: {
+          durationPerRepresentation: {
+            type: Types.Number,
+            noedit: true,
+            label: "Average duration per representation (in seconds)"
+          },
+          durationPerAssessor: {
+            type: Types.Number,
+            noedit: true,
+            label: "Average duration per assessor (in seconds)"
+          },
+          comparisonsPerAssessor: {
+            type: Types.Number,
+            noedit: true,
+            label: "Average number of comparisons per assessor"
+          },
+          comparisonsPerRepresentation: {
+            type: Types.Number,
+            noedit: true,
+            label: "Average number of comparisons per representation"
+          },
+        },
+        totals: {
+          duration: {
+            type: Types.Number,
+            noedit: true,
+            label: "Total duration of all comparisons (in seconds)"
+          },
+          representationsNum: {
+            type: Types.Number,
+            noedit: true,
+            label: "Total number of representations"
+          },
+          comparisonsNum: {
+            type: Types.Number,
+            noedit: true,
+            label: "Total number of comparisons"
+          },
+          assessorsNum: {
+            type: Types.Number,
+            noedit: true,
+            label: "Total number of assessors"
+          },
+          reliability: {
+            type: Types.Number,
+            noedit: true,
+            label: "Reliability"
+          },
+        }
+      }
     }, "Actions", {
       actions: {
         calculate: {
