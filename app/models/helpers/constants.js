@@ -46,7 +46,6 @@ module.exports.assessmentStates = {
   DRAFT: "draft",
   PUBLISHED: "published",
   COMPLETED: "completed",
-  CALCULATED: "calculated",
   ARCHIVED: "archived",
 };
 module.exports.assessmentStates.list = _.values(module.exports.assessmentStates);

@@ -1,4 +1,6 @@
 'use strict';
+
+const _ = require( 'lodash' );
 var P = require( 'bluebird' );
 var scheduler = require( 'node-schedule' );
 var keystone = require( 'keystone' );
@@ -44,16 +46,15 @@ function doAssessmentActions(){
 
 function assessmentSavedHandler( done ){
   var assessment = this;
-  if( assessment.state === constants.assessmentStates.COMPLETED ){
+  if( _.get( assessment, [ 'actions', 'calculate' ], false ) ){
     statsService.estimateForAssessment( assessment.id )
       .then( function(){
         return statsService.statsForAssessment( assessment );
       } )
       .then( function( stats ){
-        assessment.state = constants.assessmentStates.CALCULATED;
+        assessment.actions.calculate = false;
         assessment.stats = stats;
         return assessment;
-        //return P.promisify( assessment.save, assessment )();
       } )
       .then( function( doc ){
         done();
