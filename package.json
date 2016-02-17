@@ -22,7 +22,7 @@
     "jade": "1.11.0",
     "keystone": "0.3.16",
     "konfy": "0.2.1",
-    "lodash": "4.4.0",
+    "lodash": "4.5.0",
     "microtime": "2.0.0",
     "mime": "1.3.4",
     "moment": "2.11.2",
