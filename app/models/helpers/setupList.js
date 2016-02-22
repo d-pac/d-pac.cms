@@ -2,6 +2,8 @@
 var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var path = require( "path" );
+const grappling = require( 'grappling-hook' );
+const P = require( 'bluebird' );
 
 module.exports = function( list ){
   var builder = {
@@ -22,11 +24,53 @@ module.exports = function( list ){
       list.add.apply( list, builder._config );
       return builder;
     },
+    emit: function( hooks ){
+      if( !list.events ){
+        list.events = grappling.create( {
+          createThenable: function( fn ){
+            return new P( fn );
+          },
+          qualifiers: {
+            pre: 'change',
+            post: 'changed'
+          }
+        } );
+        list.events.on = list.events.hook;
+        list.schema.pre( 'save', function( done ){
+          const doc = this;
+          const obj = JSON.parse( JSON.stringify( doc ) );
+          const promises = [];
+          const modified = doc.modifiedPaths();
+          _.each( modified, ( path )=>{
+            if( list.events.hookable( 'change:' + path ) && list.events.hasMiddleware( 'change:' + path ) ){
+              promises.push( list.events.callThenableHook( doc, 'change:' + path, doc, {
+                updated: _.get( obj, path ),
+                original: _.get( doc.__original, path )
+              } ) );
+            }
+          } );
+          P.all( promises ).asCallback( done );
+        } );
+        list.schema.post( 'save', function( doc ){
+          const modified = doc.modifiedPaths();
+          _.each( modified, ( path )=>{
+            if( list.events.hookable( 'changed:' + path ) ){
+              list.events.callHook( doc, 'changed:' + path, doc, {
+                updated: _.get( obj, path ),
+                original: _.get( doc.__original, path )
+              } );
+            }
+          } );
+        } );
+      }
+      list.events.allowHooks( _.toArray( arguments ) );
+      return builder;
+    },
     virtualize: function( virtuals ){
       var args = _.flattenDeep( _.toArray( arguments ) );
       _.forEach( args, function( arg ){
         _.forEach( arg, function( virtualizer,
-                               field ){
+                                  field ){
           if( _.isFunction( virtualizer ) ){
             list.schema.virtual( field ).get( virtualizer );
           } else if( _.isObject( virtualizer ) ){
@@ -111,7 +155,7 @@ module.exports = function( list ){
     },
     validate: function( map ){
       _.forEach( map, function( mixed,
-                             field ){
+                                field ){
         if( _.isFunction( mixed ) ){
           mixed = [ mixed ];
         }
