@@ -35,12 +35,16 @@ _.assignIn( Controller.prototype, {
 
   handleResult: function( mixed,
                           res,
-                          next ){
+                          next,
+                          opts ){
     debug( "#handleResult" );
+    opts = _.defaults(opts, {
+      depopulate: true
+    })
     function handle( result ){
       if( result ){
         if( result.toJSON ){
-          result = result.toJSON( { depopulate: true } );
+          result = result.toJSON( { depopulate: opts.depopulate } );
         }
 
         let results = _.get( res, [ 'locals', 'results' ], [] );
