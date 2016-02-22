@@ -2,10 +2,11 @@
 var debug = require( "debug" )( "dpac:services.representations" );
 var keystone = require( "keystone" );
 var _ = require( "lodash" );
-var schema = keystone.list( "Representation" );
+var collection = keystone.list( "Representation" );
 var Service = require( "./helpers/Service" );
 var requireProp = require( './helpers/requireProp' );
-var base = new Service( schema );
+var base = new Service( collection );
+const constants = require( '../models/helpers/constants' );
 module.exports = base.mixin();
 
 module.exports.list = function list( opts ){
@@ -40,22 +41,10 @@ module.exports.retrieve = function list( opts ){
     .populate( "document" )
     .exec();
 };
-//
-//module.exports.select = function select( opts ){
-//  debug( "#select", opts );
-//  requireProp( opts, "assessment" );
-//
-//  opts = _.defaults( opts, {
-//    algorithm: "comparative-selection"
-//  } );
-//
-//  return this.list( _.omit( opts, 'algorithm' ) )
-//    .then( function( representations ){
-//      var data = require( opts.algorithm ).select( representations );
-//      if( data.result && data.result.length ){
-//        return data.result;
-//      } else {
-//        throw new Error( 'TODO: implement this' );
-//      }
-//    } );
-//};
+
+module.exports.countToRanks = function countToRanks( opts ){
+  debug( "countToRanks" );
+  return this.count( _.defaults( {}, opts, {
+    rankType: constants.TO_RANK
+  } ) );
+};

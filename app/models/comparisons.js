@@ -103,5 +103,6 @@ require( './helpers/setupList' )( Comparison )
   }, "Assessor data", {
     data: data,
   } )
+  .emit( 'assessment' )
   .retain( "track" )
   .register();

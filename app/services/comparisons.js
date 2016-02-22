@@ -4,12 +4,12 @@ var keystone = require( "keystone" );
 var _ = require( "lodash" );
 var P = require( "bluebird" );
 
-var schema = keystone.list( "Comparison" );
+var collection = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
 var assessmentsService = require( './assessments' );
 var representationsService = require( './representations' );
 
-var base = new Service( schema );
+var base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.listPopulated = ( opts ) =>{

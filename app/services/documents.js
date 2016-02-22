@@ -2,7 +2,7 @@
 var debug = require( "debug" )( "dpac:services.documents" );
 
 var keystone = require( "keystone" );
-var schema = keystone.list( "Document" );
+var collection = keystone.list( "Document" );
 var Service = require( "./helpers/Service" );
-var base = new Service( schema );
+var base = new Service( collection );
 module.exports = base.mixin();

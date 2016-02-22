@@ -70,7 +70,7 @@ require( './helpers/setupList' )( User )
         type: Types.Relationship,
         ref: "Assessment",
         index: true,
-        initial: false,
+        initial: true,
         required: false,
         many: true,
         label: "Assessor",
@@ -80,7 +80,7 @@ require( './helpers/setupList' )( User )
         type: Types.Relationship,
         ref: "Assessment",
         index: true,
-        initial: false,
+        initial: true,
         required: false,
         many: true,
         label: "Assessee",
@@ -90,7 +90,7 @@ require( './helpers/setupList' )( User )
         type: Types.Relationship,
         ref: "Assessment",
         index: true,
-        initial: false,
+        initial: true,
         required: false,
         many: true,
         label: "PAM",
@@ -115,6 +115,7 @@ require( './helpers/setupList' )( User )
       depends: [ "_rid" ]
     }
   } )
+  .emit( 'assessments.assessor' )
   .retain( "password" )
   .relate( {
     path: "documents",
