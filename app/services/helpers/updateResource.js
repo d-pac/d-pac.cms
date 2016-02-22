@@ -2,9 +2,9 @@
 var P = require( "bluebird" );
 var extend = require( "deep-extend" );
 
-module.exports = function updateResource(schema, opts){
+module.exports = function updateResource(collection, opts){
   return P.resolve(
-    schema.model
+    collection.model
       .findById( opts._id )
       .exec()
   ).then( function( doc ){

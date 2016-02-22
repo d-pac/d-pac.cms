@@ -3,26 +3,25 @@
 var keystone = require( "keystone" );
 var _ = require( "lodash" );
 var debug = require( "debug" )( "dpac:services.users" );
-var schema = keystone.list( "User" );
+var collection = keystone.list( "User" );
 var Service = require( "./helpers/Service" );
 var assessmentsService = require( "./assessments" );
 var comparisonsService = require( "./comparisons" );
 var notesService = require( './notes' );
 
-var base = new Service( schema );
+var base = new Service( collection );
 module.exports = base.mixin();
 
 /**
  *
  * @param opts
- * @param opts._id schema.id
+ * @param opts._id collection.id
  * @returns {Promise}
  */
 module.exports.list = function list( opts ){
   debug( "#list", opts );
 
-  return base.list( opts )
-    .exec();
+  return base.list( opts ).exec();
 };
 
 module.exports.listAssessments = function listAssessments( role,
@@ -39,23 +38,21 @@ module.exports.listAssessments = function listAssessments( role,
         //no need to filter: duplicate id's get automatically consolidated by mongoose
         return memo.concat( assessmentIds );
       }, [] );
-      return assessmentsService.listById( ids, { state: { $in: [ 'calculated', 'published' ] } } );
-    } ).map( function( assessment ){
+      return assessmentsService.listPublished( ids );
+    } )
+    .map( function( assessment ){
       assessment = assessment.toJSON( { depopulate: true } );// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {
-        assessment: assessment._id,
-        assessor: opts._id
-      } ).then( function( count ){
-        var total = _.reduce( assessment.comparisonsNum.perAssessor, function( total,
-                                                                               num ){
-          return total + num;
-        }, 0 );
-        assessment.progress = {
-          completedNum: count,
-          total: total
-        };
-        return assessment;
-      } );
+          assessment: assessment._id,
+          assessor: opts._id
+        } )
+        .then( function( count ){
+          assessment.progress = {
+            completedNum: count,
+            total: _.get( assessment, [ 'limits', 'comparisonsNum', 'perAssessor' ], -1 )
+          };
+          return assessment;
+        } );
     } );
 };
 

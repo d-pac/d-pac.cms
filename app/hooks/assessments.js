@@ -4,7 +4,10 @@ const _ = require( 'lodash' );
 var P = require( 'bluebird' );
 var scheduler = require( 'node-schedule' );
 var keystone = require( 'keystone' );
-var assessmentsService = require( '../services/assessments' );
+const assessmentsService = require( '../services/assessments' );
+const representationsService = require( '../services/representations' );
+const usersService = require( '../services/users' );
+const comparisonsService = require( '../services/comparisons' );
 var statsService = require( '../services/stats' );
 var constants = require( '../models/helpers/constants' );
 
@@ -44,25 +47,48 @@ function doAssessmentActions(){
     } );
 }
 
-function assessmentSavedHandler( done ){
-  var assessment = this;
-  if( _.get( assessment, [ 'actions', 'calculate' ], false ) ){
-    statsService.estimateForAssessment( assessment.id )
-      .then( function(){
-        return statsService.statsForAssessment( assessment );
+function calculateStats( assessment ){
+  return statsService.estimateForAssessment( assessment.id )
+    .then( function(){
+      return statsService.statsForAssessment( assessment );
+    } )
+    .then( function( stats ){
+      assessment.actions.calculate = false;
+      assessment.stats = stats;
+      assessment.stats.lastRun = Date.now();
+      return assessment;
+    } )
+}
+
+function updateComparisonsNum( assessmentIds ){
+  return P.each( assessmentIds, ( assessmentId )=>{
+    return comparisonsService.count( {
+        assessment: assessmentId
       } )
-      .then( function( stats ){
-        assessment.actions.calculate = false;
-        assessment.stats = stats;
-        assessment.stats.lastRun = Date.now();
-        return assessment;
-      } )
-      .then( function( doc ){
-        done();
+      .then( ( n )=>{
+        return assessmentsService.collection.model.update( { _id: assessmentId }, { 'cache.comparisonsNum': n } );
       } );
-  } else {
-    done();
-  }
+  } );
+}
+
+function updateRepresentationsNum( assessmentIds ){
+  return P.each( assessmentIds, ( assessmentId )=>{
+    return representationsService.countToRanks( {
+        assessment: assessmentId
+      } )
+      .then( ( n )=>{
+        return assessmentsService.collection.model.update( { _id: assessmentId }, { 'cache.representationsNum': n } );
+      } );
+  } );
+}
+
+function updateAssessorsNum( assessmentIds ){
+  return P.each( assessmentIds, ( assessmentId )=>{
+    return usersService.countInAssessment( 'assessor', assessmentId )
+      .then( ( n )=>{
+        return assessmentsService.collection.model.update( { _id: assessmentId }, { 'cache.assessorsNum': n } );
+      } );
+  } );
 }
 
 module.exports.init = function(){
@@ -77,6 +103,28 @@ module.exports.init = function(){
     done();//call immediately, we don't want to wait on this!
   } );
 
-  keystone.list( 'Assessment' ).schema.pre( 'save', assessmentSavedHandler );
+  assessmentsService.collection.events.on( 'change:actions', ( doc,
+                                                               diff,
+                                                               done ) =>{
+    if( _.get( doc, [ 'actions', 'calculate' ], false ) ){
+      calculateStats( doc ).asCallback( done );
+    } else {
+      done();
+    }
+  } );
 
+  comparisonsService.collection.events.on( 'changed:assessment', ( comparison )=>updateComparisonsNum( [ comparison.assessment ] ) );
+  comparisonsService.collection.schema.post( 'remove', ( comparison )=>updateComparisonsNum( [ comparison.assessment ] ) );
+
+  representationsService.collection.events.on( 'changed:assessment', ( representation )=>updateRepresentationsNum( [ representation.assessment ] ) );
+  representationsService.collection.events.on( 'changed:rankType', ( representation )=>updateRepresentationsNum( [ representation.assessment ] ) );
+  representationsService.collection.schema.post( 'remove', ( representation )=>updateRepresentationsNum( [ representation.assessment ] ) );
+
+  usersService.collection.events.on( 'changed:assessments.assessor', ( user,
+                                                                       diff )=>{
+    return updateAssessorsNum( _.xor( diff.original, diff.updated ) );
+  } );
+  usersService.collection.schema.post( 'remove', ( user )=>{
+    return updateAssessorsNum( user.assessments.assessor || [] );
+  } );
 };

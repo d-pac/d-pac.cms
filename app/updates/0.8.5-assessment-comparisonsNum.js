@@ -1,0 +1,57 @@
+'use strict';
+
+"use strict";
+const keystone = require( 'keystone' );
+const P = require( 'bluebird' );
+const _ = require( 'lodash' );
+const assessmentsService = require( '../services/assessments' );
+const comparisonsService = require( '../services/comparisons' );
+const representationsService = require( '../services/representations' );
+const usersService = require( '../services/users' );
+
+const log = _.partial( console.log, require( 'path' ).basename( __filename ) + ':' );
+
+module.exports = function( done ){
+  assessmentsService
+    .list( {} )
+    .map( function( doc ){
+      return JSON.parse( JSON.stringify( doc ) );
+    } )
+    .map( function( doc ){
+      const update = {
+        _id: doc._id,
+      };
+      if( doc.comparisonsNum.perRepresentation ){
+        update[ "comparisons.perRepresentation" ] = doc.comparisonsNum.perRepresentation;
+      }
+      if( doc.algorithm === 'benchmarked-comparative-selection' ){
+        update[ "assessorsNum.minimum" ] = 4;
+      }
+      if( !doc.comparisons.dimension ){
+        update[ "comparisons.dimension" ] = 'representation';
+      }
+
+      return P.props( {
+          comparisonsNum: comparisonsService.count( { assessment: update._id } ),
+          representationsNum: representationsService.countToRanks( { assessment: update._id } ),
+          assessorsNum: usersService.countInAssessment( 'assessor', update._id )
+        } )
+        .then( ( values )=>{
+          update[ "cache.representationsNum" ] = values.representationsNum;
+          update[ "cache.comparisonsNum" ] = values.comparisonsNum;
+          update[ "cache.assessorsNum" ] = values.assessorsNum;
+          return update;
+        } );
+    } )
+    .then( function( updates ){
+
+      return P.mapSeries( updates, ( update )=>{
+        return assessmentsService.collection.model.update( { _id: update._id }, update );
+      } );
+    } )
+    .then( function( results ){
+      log( "Updated", results.length, "assessments" );
+      done();
+    } )
+    .catch( ( err )=>done( err ) );
+};

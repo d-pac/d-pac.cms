@@ -18,7 +18,7 @@ Representation.defaultColumns = "name, comparedNum";
 Representation.schema.methods.compareWith = function( other ){
   this.compared.push( other._id );
   other.compared.push( this._id );
-  return P.all( [this.save(), other.save()] );
+  return P.all( [ this.save(), other.save() ] );
 };
 
 Representation.schema.methods.uncompareWith = function( other ){
@@ -27,7 +27,7 @@ Representation.schema.methods.uncompareWith = function( other ){
   var oi = other.compared.indexOf( this.id );
   other.compared.splice( oi, 1 );
 
-  return P.all( [this.save(), other.save()] );
+  return P.all( [ this.save(), other.save() ] );
 };
 
 Representation.api = {
@@ -96,7 +96,6 @@ require( './helpers/setupList' )( Representation )
       index: true
     },
 
-
     document: {
       type: Types.Relationship,
       ref: "Document",
@@ -141,8 +140,8 @@ require( './helpers/setupList' )( Representation )
       }
     },
 
-
   } )
+  .emit( "assessment", "rankType" )
   .validate( {
     "ability.value": [
       function(){

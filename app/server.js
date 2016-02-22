@@ -144,5 +144,8 @@ module.exports = keystone;
 
 if( !module.parent ){
   // Start Keystone to connect to your database and initialise the web server
-  keystone.start();
+  keystone.start(()=>{
+    const k = keystone;
+    console.log('---Started---');
+  });
 }

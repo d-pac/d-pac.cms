@@ -25,6 +25,7 @@ module.exports = function( list ){
       return builder;
     },
     emit: function( hooks ){
+      const docs = {};
       if( !list.events ){
         list.events = grappling.create( {
           createThenable: function( fn ){
@@ -48,20 +49,35 @@ module.exports = function( list ){
                 original: _.get( doc.__original, path )
               } ) );
             }
+            if( list.events.hookable( 'changed:' + path ) && list.events.hasMiddleware( 'changed:' + path ) ){
+
+              const id = JSON.parse( JSON.stringify( doc.id ) );
+              docs[ id ] = docs[ id ] || [];
+              docs[ id ].push( {
+                doc: doc,
+                diff: {
+                  updated: _.get( obj, path ),
+                  original: _.get( doc.__original, path )
+                },
+                event: 'changed:' + path
+              } );
+            }
           } );
           P.all( promises ).asCallback( done );
         } );
         list.schema.post( 'save', function( doc ){
-          const modified = doc.modifiedPaths();
-          _.each( modified, ( path )=>{
-            if( list.events.hookable( 'changed:' + path ) ){
-              list.events.callHook( doc, 'changed:' + path, doc, {
-                updated: _.get( obj, path ),
-                original: _.get( doc.__original, path )
-              } );
-            }
-          } );
+          const id = JSON.parse( JSON.stringify( doc.id ) );
+          const queue = docs[id];
+          if(queue){
+            const promises = [];
+            delete docs[id];
+            _.each(queue, (obj)=>{
+              promises.push( list.events.callThenableHook( obj.doc, obj.event, obj.doc, obj.diff) );
+            })
+            P.all( promises );
+          }
         } );
+
       }
       list.events.allowHooks( _.toArray( arguments ) );
       return builder;

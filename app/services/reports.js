@@ -76,10 +76,9 @@ function getDocumentsMap(){
 }
 
 function getAssessmentsMap( assessmentIds ){
-  var opts = { state: { $ne: null } };
   var p = (assessmentIds)
-    ? assessmentsService.listById( assessmentIds, opts )
-    : assessmentsService.list( opts );
+    ? assessmentsService.listById( assessmentIds )
+    : assessmentsService.list();
   return p.reduce( createMap, {} );
 }
 
