@@ -345,12 +345,13 @@ require( './helpers/setupList' )( Assessment )
           comparisonsNum: {
             perAssessor: pA,
             perRepresentation: pR
-          }
+          },
+          assessorsNum: _.get( assessment, [ 'assessors', 'minimum' ], 0 )
         }
       },
       depends: [
         'comparisons.perAssessor', 'comparisons.perRepresentation', 'comparisons.dimension', 'cache.representationsNum',
-        'cache.assessorNum'
+        'cache.assessorNum', 'assessors.minimum'
       ]
     }
   } )
@@ -368,7 +369,7 @@ require( './helpers/setupList' )( Assessment )
       }, '"UI texts" contains invalid JSON'
     ]
   } )
-  .retain( "track" )
+  .retain( "track", "assessors", "comparisons" )
   .relate( {
     path: "representations",
     ref: "Representation",
