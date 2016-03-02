@@ -12,20 +12,16 @@ module.exports.includeFeedback = ( req,
                                    next )=>{
 
   debug( '#includeFeedback' );
-  const documents = base.getResultsByType( res, 'representations' )
-    .map( ( representation ) =>{
-      return _.get( representation, [ 'document', '_id' ] );
-    } );
+  const representations = base.getResultsByType( res, 'representations' )
+    .map( ( representation ) =>representation._id );
 
-  base.handleResult( service.listByDocuments( {
+  base.handleResult( service.listByRepresentations( {
     author: req.params._id
-  }, documents ), res, next )
+  }, representations ), res, next )
 };
 
 module.exports.listByRepresentation = ( req,
                                         res,
                                         next ) =>{
-  base.handleResult( service.listByRepresentation( {
-      representation: req.params.representation
-    } ), res, next );
+  base.handleResult( service.listByRepresentations( {}, [ req.params.representation ] ), res, next );
 };

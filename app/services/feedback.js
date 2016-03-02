@@ -7,20 +7,9 @@ const representationsService = require( './representations' );
 const base = new Service( schema );
 module.exports = base.mixin();
 
-module.exports.listByDocuments = ( opts,
-                                   documentIds ) =>{
-  debug( "#listByDocuments", opts, documentIds );
+module.exports.listByRepresentations = ( opts, representationIds ) =>{
+  debug( '#listByRepresentations', opts );
   return base.list( opts )
-    .where( "document" ).in( documentIds )
-    .exec();
-};
-
-module.exports.listByRepresentation = ( opts ) =>{
-  debug( '#listByRepresentation', opts );
-  return representationsService.retrieve( { _id: opts.representation } )
-    .then( ( representation ) =>{
-      if( representation ){
-        return module.exports.list( { document: representation.document } );
-      }
-    } );
+      .where( "representation" ).in( representationIds )
+      .exec();
 };

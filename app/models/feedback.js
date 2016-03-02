@@ -13,7 +13,7 @@ const Feedback = new keystone.List( 'Feedback', {
   plural: "Feedback"
 } );
 
-Feedback.defaultColumns = 'name, author, document';
+Feedback.defaultColumns = 'name, author, representation';
 
 Feedback.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Feedback",
@@ -31,9 +31,9 @@ require( './helpers/setupList' )( Feedback )
       required: false,
       initial: true
     },
-    document: {
+    representation: {
       type: Types.Relationship,
-      ref: "Document",
+      ref: "Representation",
       initial: true,
       required: false,
       many: false,

@@ -1,7 +1,7 @@
 'use strict';
-const debug = require( "debug" )( "dpac:updates/0.8.0-extract-feedback" );
 
-const lodash = require( 'lodash' );
+const _ = require( 'lodash' );
+const log = _.partial( console.log, require( 'path' ).basename( __filename ) + ':' );
 const moment = require( 'moment' );
 const keystone = require( 'keystone' );
 const P = require( 'bluebird' );
@@ -12,44 +12,42 @@ const feedbackService = require( '../services/feedback' );
 const Feedback = keystone.list( 'Feedback' );
 
 module.exports = ( done ) =>{
-  let t0 = moment();
-  let created = 0;
-  let counter = 0;
-  comparisonsService.listPopulated( {
-      ["data." + constants.PROSCONS]: { $exists: true }
+  const t0 = moment();
+  Feedback.model.remove( {} )
+    .then( ()=>{
+      return comparisonsService.list( {
+        ["data." + constants.PROSCONS]: { $exists: true }
+      } );
     } )
     .each( ( comparison ) =>{
-      debug( 'Processing:', comparison._id, comparison._rid );
       const proscons = comparison.data[ constants.PROSCONS ];
       if( proscons ){
-        const aId = comparison.representations.a.document;
-        const bId = comparison.representations.b.document;
+        const aId = comparison.representations.a;
+        const bId = comparison.representations.b;
         const authorId = comparison.assessor;
         return P.props( {
             a: feedbackService.list( {
-                document: aId,
+                representation: aId,
                 author: authorId
               } )
               .then( ( single )=>single[ 0 ] ),
             b: feedbackService.list( {
-                document: bId,
+                representation: bId,
                 author: authorId
               } )
               .then( ( single )=>single[ 0 ] )
           } )
           .then( ( feedback ) =>{
-            if( !feedback.a){
-              created++;
+            if( !feedback.a ){
               feedback.a = new Feedback.model( {
-                document: comparison.representations.a.document,
-                author: comparison.assessor
+                representation: aId,
+                author: authorId
               } );
             }
             if( !feedback.b ){
-              created++;
               feedback.b = new Feedback.model( {
-                document: comparison.representations.b.document,
-                author: comparison.assessor
+                representation: bId,
+                author: authorId
               } );
             }
             let saveA = false;
@@ -83,9 +81,11 @@ module.exports = ( done ) =>{
       }
 
     } )
-    .then( () =>{
-      let t1 = moment();
-      console.log( `Created ${created} Feedback documents in ${t1.diff( t0, 'seconds', true )} seconds.` );
+    .then(()=>{
+      return feedbackService.count({});
+    })
+    .then( (n) =>{
+      log( `Finished creating ${n} feedback records in ${moment().diff( t0, 'seconds', true )} seconds.` );
       done();
     } )
     .catch( ( err ) => done( err ) );
