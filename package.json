@@ -20,7 +20,7 @@
     "fast-csv": "1.0.0",
     "grappling-hook": "3.0.0",
     "jade": "1.11.0",
-    "keystone": "0.3.16",
+    "keystone": "github:d-pac/keystone#d-pac",
     "konfy": "0.2.1",
     "lodash": "4.5.0",
     "microtime": "2.0.0",
