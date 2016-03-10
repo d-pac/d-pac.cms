@@ -1,21 +1,21 @@
 'use strict';
 
-var keystone = require( 'keystone' );
-var moment = require( "moment" );
-var _ = require( 'lodash' );
-var P = require( 'bluebird' );
-var fs = P.promisifyAll( require( "fs" ) );
-var path = require( 'path' );
+const keystone = require( 'keystone' );
+const moment = require( "moment" );
+const _ = require( 'lodash' );
+const P = require( 'bluebird' );
+const fs = P.promisifyAll( require( "fs" ) );
+const path = require( 'path' );
 
-var assessmentsService = require( '../services/assessments' );
-var reportsService = require( '../services/reports' );
-var convertersService = require( '../services/converters' );
-var constants = require( '../models/helpers/constants' );
+const assessmentsService = require( '../services/assessments' );
+const reportsService = require( '../services/reports' );
+const convertersService = require( '../services/converters' );
+const constants = require( '../models/helpers/constants' );
 
-var reportsDir = constants.directories.reports;
+const reportsDir = constants.directories.reports;
 
-var templateOpts = { interpolate: /{{([\s\S]+?)}}/g };
-var templates = {
+const templateOpts = { interpolate: /{{([\s\S]+?)}}/g };
+const templates = {
   success: _.template( 'Report successfully generated: ' +
     '<a href="{{ url }}" target="_blank">{{ filename }}</a>', templateOpts ),
   failure: _.template( 'An error occurred when generating the report: {{message}}', templateOpts )
@@ -23,15 +23,15 @@ var templates = {
 
 function updateDoc( report,
                     assessmentName ){
-  var compiled = _.template( report.filename, {
+  const compiled = _.template( report.filename, {
     interpolate: /{{([\s\S]+?)}}/g
   } );
-  var ext = report.format;
-  var filename = _.kebabCase(compiled( {
+  const ext = report.format;
+  const filename = _.kebabCase( compiled( {
     time: moment().format( 'YYYYMMDD-HHmmss' ),
     assessment: assessmentName,
     datatype: report.datatype
-  } ));
+  } ) );
   report.filename = filename + "." + ext;
   report.url = '/reports/' + report.filename;
   return P.resolve( report );
@@ -55,56 +55,63 @@ function removeFile( report ){
 }
 
 function reportCreatedHandler( next ){
-  if( this.isNew ){
-    var report = this;
-    var p, assessmentId;
+  const report = this;
+  if( report.isNew ){
+    let p, assessmentId;
     if( report.assessment ){
       assessmentId = report.assessment.toString();
       p = assessmentsService.retrieve( {
-        _id: assessmentId
-      } ).then( function( assessment ){
-        return updateDoc( report, assessment.name );
-      } );
+          _id: assessmentId
+        } )
+        .then( function( assessment ){
+          return updateDoc( report, assessment.name );
+        } );
     } else {
       p = updateDoc( report, 'All' );
     }
     p.then( function(){
-      switch( report.datatype ){
-        case "representations":
-          return reportsService.listRepresentations( assessmentId );
-        case "comparisons":
-          return reportsService.listComparisons( assessmentId );
-        default:
-          throw new Error( 'Invalid data type' );
-      }
-    } ).then( function( jsonData ){
-      switch( report.format ){
-        case 'csv':
-          return convertersService.jsonToCSV( jsonData );
+        switch( report.datatype ){
+          case "representations":
+            return reportsService.listRepresentations( assessmentId );
+          case "comparisons":
+            return reportsService.listComparisons( assessmentId );
+          default:
+            throw new Error( 'Invalid data type' );
+        }
+      } )
+      .then( function( jsonData ){
+        switch( report.format ){
+          case 'csv':
+            return convertersService.jsonToCSV( jsonData );
 
-        case 'json':
-        default:
-          return P.resolve( JSON.stringify( jsonData, 2 ) );
-      }
-    } ).then( function( reportData ){
-      return writeFile( report, reportData );
-    } ).then( function(){
-      report.result = templates.success( report );
-      next();
-    } ).catch( function( err ){
-      report.result = templates.failure( err );
-      next( err );
-    } );
+          case 'json':
+          default:
+            return P.resolve( JSON.stringify( jsonData, 2 ) );
+        }
+      } )
+      .then( function( reportData ){
+        return writeFile( report, reportData );
+      } )
+      .then( function(){
+        report.result = templates.success( report );
+        next();
+      } )
+      .catch( function( err ){
+        report.result = templates.failure( err );
+        next( err );
+      } );
   } else {
     next();
   }
 }
 
 function reportRemovedHandler( next ){
-  var report = this;
-  removeFile( report ).then( function(){
-    next();
-  } ).catch( next );
+  const report = this;
+  removeFile( report )
+    .then( function(){
+      next();
+    } )
+    .catch( next );
 }
 
 module.exports.init = function(){
