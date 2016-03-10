@@ -69,10 +69,10 @@ var list = require( './helpers/setupList' )( Report )
       type: String,
       required: true,
       initial: true,
-      default: '{{assessment}}-{{datatype}}-{{time}}.{{ext}}',
+      default: '{{assessment}}-{{datatype}}-{{time}}',
       note: 'Use tokens to generate a dynamic name, as by default, ' +
-      'or simply provide a string which will be used as the filename ' +
-      '(in that case, don\'t forget to provide an extension!)'
+      'or simply provide a string which will be used as the filename' +
+      '(the file extension is added automatically!)'
     },
 
     url: {

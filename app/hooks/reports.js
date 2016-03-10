@@ -26,12 +26,13 @@ function updateDoc( report,
   var compiled = _.template( report.filename, {
     interpolate: /{{([\s\S]+?)}}/g
   } );
-  report.filename = _.kebabCase( compiled( {
-    ext: report.format,
+  var ext = report.format;
+  var filename = _.kebabCase(compiled( {
     time: moment().format( 'YYYYMMDD-HHmmss' ),
     assessment: assessmentName,
     datatype: report.datatype
-  } ) );
+  } ));
+  report.filename = filename + "." + ext;
   report.url = '/reports/' + report.filename;
   return P.resolve( report );
 }
