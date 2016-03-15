@@ -13,7 +13,7 @@ var Report = new keystone.List( "Report", {
   noedit: !keystone.get('dev env')
 } );
 
-Report.defaultColumns = "name, assessment, url|50%, createdAt, createdBy";
+Report.defaultColumns = "name, url|50%, createdAt, createdBy";
 
 Report.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Report",
@@ -23,12 +23,21 @@ Report.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 
 var list = require( './helpers/setupList' )( Report )
   .add( {
-    assessment: {
+    title: {
+      type: String,
+      initial: true,
+      note: 'Will be used in the filename. If left blank the assessment name will be used or ' +
+      'in case you select multiple assessments "multiple" will be used'
+    },
+
+    assessments: {
       type: Types.Relationship,
       ref: "Assessment",
       required: false,
       initial: true,
-      note: "Leave blank to select all"
+      many: true,
+      note: "Leave blank to select all",
+      default: []
     },
 
     datatype: {
@@ -69,7 +78,7 @@ var list = require( './helpers/setupList' )( Report )
       type: String,
       required: true,
       initial: true,
-      default: '{{assessment}}-{{datatype}}-{{time}}',
+      default: '{{title}}-{{datatype}}-{{time}}',
       note: 'Use tokens to generate a dynamic name, as by default, ' +
       'or simply provide a string which will be used as the filename' +
       '(the file extension is added automatically!)'

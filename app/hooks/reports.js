@@ -21,19 +21,20 @@ const templates = {
   failure: _.template( 'An error occurred when generating the report: {{message}}', templateOpts )
 };
 
-function updateDoc( report,
-                    assessmentName ){
+function setMetadata( report,
+                      title ){
   const compiled = _.template( report.filename, {
     interpolate: /{{([\s\S]+?)}}/g
   } );
   const ext = report.format;
   const filename = _.kebabCase( compiled( {
     time: moment().format( 'YYYYMMDD-HHmmss' ),
-    assessment: assessmentName,
+    title: title,
     datatype: report.datatype
   } ) );
   report.filename = filename + "." + ext;
   report.url = '/reports/' + report.filename;
+  report.title = title;
   return P.resolve( report );
 }
 
@@ -57,24 +58,32 @@ function removeFile( report ){
 function reportCreatedHandler( next ){
   const report = this;
   if( report.isNew ){
-    let p, assessmentId;
-    if( report.assessment ){
-      assessmentId = report.assessment.toString();
-      p = assessmentsService.retrieve( {
-          _id: assessmentId
-        } )
-        .then( function( assessment ){
-          return updateDoc( report, assessment.name );
-        } );
+    let p;
+    if( report.title ){
+      p = P.resolve( report.title );
     } else {
-      p = updateDoc( report, 'All' );
+      switch( report.assessments.length ){
+        case 0:
+          p = P.resolve( 'All' );
+          break;
+        case 1:
+          p = assessmentsService.retrieve( { _id: report.assessments[ 0 ] } )
+            .then( ( assessment )=>assessment.name );
+          break;
+        default:
+          p = P.resolve( 'Multiple' );
+          break;
+      }
     }
-    p.then( function(){
+    p.then( ( title )=>{
+        setMetadata( report, title );
+      } )
+      .then( function(){
         switch( report.datatype ){
           case "representations":
-            return reportsService.listRepresentations( assessmentId );
+            return reportsService.listRepresentations( report.assessments );
           case "comparisons":
-            return reportsService.listComparisons( assessmentId );
+            return reportsService.listComparisons( report.assessments );
           default:
             throw new Error( 'Invalid data type' );
         }
