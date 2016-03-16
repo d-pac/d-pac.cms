@@ -72,6 +72,10 @@ keystone.init( {
     : ("development" === nodeEnv)
 } );
 
+if(process.env.DPAC_ADMIN_COLOR){
+  keystone.set('admin ui styles', `background-color: ${process.env.DPAC_ADMIN_COLOR};`)
+}
+
 if( keystone.get( 'dev env' ) ){
   errors.stacks( true );
 }
