@@ -41,7 +41,8 @@ function getComparisonsList( assessmentIds ){
     .populate( "assessor" )
     .populate( 'representations.a' )
     .populate( 'representations.b' )
-    .populate( 'data.selection' );
+    .populate( 'data.selection' )
+    .populate( 'data.select-other' );
   if( assessmentIds ){
     assessmentIds = (_.isString( assessmentIds ))
       ? [ assessmentIds ]
@@ -112,6 +113,9 @@ function createComparisonsReportData( phasesMap,
         "representation A": getDocument( documentsMap, _.get( comparisonModel, [ 'representations', 'a' ] ) ),
         "representation B": getDocument( documentsMap, _.get( comparisonModel, [ 'representations', 'b' ] ) ),
         "selected representation": getDocument( documentsMap, _.get( comparisonModel, [ 'data', 'selection' ] ) ),
+        "selected representation (other)": getDocument( documentsMap, _.get( comparisonModel, [
+          'data', 'select-other'
+        ] ) ),
         "selected at": (comparisonModel.selectionMadeAt)
           ? moment( comparisonModel.selectionMadeAt ).format( "YYYY/MM/DD HH:mm:ss" )
           : UNDEFINED,
