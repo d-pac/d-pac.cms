@@ -16,7 +16,8 @@ var constants = module.exports = {
   PASSFAIL: "passfail",
   SEQ_SELECTION: "seq-selection",
   SEQ_COMPARATIVE: "seq-comparative",
-  SEQ_PASSFAIL: "seq-passfail"
+  SEQ_PASSFAIL: "seq-passfail",
+  SELECT_OTHER: "select-other"
 };
 
 module.exports.directories = {
@@ -99,10 +100,23 @@ module.exports.phases = [
     slug: constants.SELECTION,
     label: "Select best",
     field: {
-      label: "Selected Representation",
+      label: "Selected representation",
       type: Types.Relationship,
       ref: "Representation",
       index: true,
+      initial: false,
+      required: false,
+      many: false,
+      default: null
+    }
+  },
+  {
+    slug: constants.SELECT_OTHER,
+    label: "Select best (other criterion)",
+    field: {
+      label: "Selected representation (other criterion)",
+      type: Types.Relationship,
+      ref: "Representation",
       initial: false,
       required: false,
       many: false,
