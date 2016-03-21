@@ -1,7 +1,11 @@
 "use strict";
-var _ = require('lodash');
+var _ = require( 'lodash' );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
+
+function formatBody( body ){
+  return body.replace( /(?:\r\n|\r|\n)/g, "\u21A9" ).replace( /"/g, "'" );
+}
 
 var constants = module.exports = {
   BENCHMARK: "benchmark",
@@ -49,8 +53,7 @@ module.exports.assessmentStates = {
   COMPLETED: "completed",
   ARCHIVED: "archived",
 };
-module.exports.assessmentStates.list = _.values(module.exports.assessmentStates);
-
+module.exports.assessmentStates.list = _.values( module.exports.assessmentStates );
 
 module.exports.representationTypes = {
   list: [ constants.TO_RANK, constants.RANKED, constants.BENCHMARK ]
@@ -108,6 +111,15 @@ module.exports.phases = [
       required: false,
       many: false,
       default: null
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "Selected representation": _.get( comparison, [
+            'data', constants.SELECTION, 'document', 'name'
+          ], "" )
+        };
+      }
     }
   },
   {
@@ -121,6 +133,15 @@ module.exports.phases = [
       required: false,
       many: false,
       default: null
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "Selected representation (other)": _.get( comparison, [
+            'data', constants.SELECT_OTHER, 'document', 'name'
+          ], "" )
+        };
+      }
     }
   },
   {
@@ -129,6 +150,15 @@ module.exports.phases = [
     field: {
       label: "Comparative feedback",
       type: Types.Textarea
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "Comparative feedback": formatBody( _.get( comparison, [
+            'data', constants.COMPARATIVE
+          ], '' ) )
+        };
+      }
     }
   },
   {
@@ -151,6 +181,16 @@ module.exports.phases = [
         label: "Negative in representation B",
         type: Types.Text
       }
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "A+": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'aPositive' ], '' ) ),
+          "A-": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'aNegative' ], '' ) ),
+          "B+": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'bPositive' ], '' ) ),
+          "B-": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'bNegative' ], '' ) ),
+        };
+      }
     }
   },
   {
@@ -165,6 +205,14 @@ module.exports.phases = [
         label: "Representation B Passed?",
         type: Types.Boolean
       }
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "A passed": _.get( comparison, [ 'data', constants.PASSFAIL, 'a' ], "N/A" ),
+          "B passed": _.get( comparison, [ 'data', constants.PASSFAIL, 'b' ], "N/A" ),
+        };
+      }
     }
   },
   {
@@ -173,6 +221,13 @@ module.exports.phases = [
     field: {
       type: Types.Number,
       label: "SEQ select best"
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "Select best SEQ": _.get( comparison, [ 'data', constants.SEQ_SELECTION ], -1 )
+        }
+      }
     }
   },
   {
@@ -181,6 +236,13 @@ module.exports.phases = [
     field: {
       type: Types.Number,
       label: "SEQ comparative feedback"
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "Comparative feedback SEQ": _.get( comparison, [ 'data', constants.SEQ_COMPARATIVE ], -1 )
+        }
+      }
     }
   },
   {
@@ -189,6 +251,13 @@ module.exports.phases = [
     field: {
       type: Types.Number,
       label: "SEQ pass fail"
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "Pass/fail SEQ": _.get( comparison, [ 'data', constants.SEQ_PASSFAIL ], -1 )
+        }
+      }
     }
   }
 ];
