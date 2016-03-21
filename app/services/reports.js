@@ -74,8 +74,8 @@ function getPhasesMap(){
 }
 
 function getAssessmentsMap( assessmentIds ){
-  var opts = { state: { $ne: null } };
-  var p = (assessmentIds)
+  var opts = { state: { $ne: constants.assessmentStates.ARCHIVED } };
+  var p = (assessmentIds.length)
     ? assessmentsService.listById( assessmentIds, opts )
     : assessmentsService.list( opts );
   return p.reduce( createMap, {} );

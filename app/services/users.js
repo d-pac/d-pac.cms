@@ -8,21 +8,10 @@ var Service = require( "./helpers/Service" );
 var assessmentsService = require( "./assessments" );
 var comparisonsService = require( "./comparisons" );
 var notesService = require( './notes' );
+var constants = require('../models/helpers/constants');
 
 var base = new Service( collection );
 module.exports = base.mixin();
-
-/**
- *
- * @param opts
- * @param opts._id collection.id
- * @returns {Promise}
- */
-module.exports.list = function list( opts ){
-  debug( "#list", opts );
-
-  return base.list( opts ).exec();
-};
 
 module.exports.listAssessments = function listAssessments( role,
                                                            opts ){
@@ -38,9 +27,8 @@ module.exports.listAssessments = function listAssessments( role,
         //no need to filter: duplicate id's get automatically consolidated by mongoose
         return memo.concat( assessmentIds );
       }, [] );
-      return assessmentsService.listPublished( ids );
-    } )
-    .map( function( assessment ){
+      return assessmentsService.listById( ids, { state: { $ne: constants.assessmentStates.ARCHIVED } } );
+    } ).map( function( assessment ){
       assessment = assessment.toJSON( { depopulate: true } );// necessary, otherwise the added `completedNum` won't stick
       return comparisonsService.completedCount( {
           assessment: assessment._id,

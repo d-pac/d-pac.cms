@@ -27,7 +27,7 @@ function activateScheduledAssessments(){
 
 function archiveScheduledAssessments(){
   return assessmentsService.list( {
-    state: constants.assessmentStates.PUBLISHED,
+    state: { $ne: constants.assessmentStates.ARCHIVED },
     'schedule.active': true,
     'schedule.end': {
       $lte: new Date()
