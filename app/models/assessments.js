@@ -141,6 +141,13 @@ require( './helpers/setupList' )( Assessment )
         note: "Allow assessors to take notes during a comparison",
         default: true
       },
+
+      enableSelectionIcon: {
+        type: Types.Boolean,
+        label: "Enable selection icon",
+        note: "Enables the ✔ sign next to the selected representation",
+        default: true
+      }
     }, "Texts", {
       assignments: {
         assessor: {
