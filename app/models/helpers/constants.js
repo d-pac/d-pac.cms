@@ -199,11 +199,11 @@ module.exports.phases = [
     field: {
       a: {
         label: "Representation A Passed?",
-        type: Types.Boolean
+        type: String
       },
       b: {
         label: "Representation B Passed?",
-        type: Types.Boolean
+        type: String
       }
     },
     format: {
