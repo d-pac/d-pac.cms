@@ -109,6 +109,12 @@ exports = module.exports = function( app ){
     .all( apiMw.setIdParamToUser )
     .get( api.users.listNotes );
 
+  app.route( apiRoot + "/user/representations" )
+    .all( apiMw.setType( 'representations', 'multiple' ) )
+    .all( apiMw.requireUser )
+    .all( apiMw.setIdParamToUser )
+    .get( api.users.listRepresentations );
+
   app.route( apiRoot + "/phases" )
     .all( apiMw.setType( 'phases', 'multiple' ) )
     .all( apiMw.requireUser )

@@ -9,6 +9,7 @@ var keystone = require( 'keystone' );
 var service = require( "../../services/users" );
 var comparisonsService = require( "../../services/comparisons" );
 var notesService = require( '../../services/notes' );
+var representationsService = require( '../../services/representations' );
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
@@ -78,3 +79,10 @@ module.exports.update = function( req,
   base.handleResult( result, res, next );
 
 };
+
+module.exports.listRepresentations = function( req,
+                                               res,
+                                               next ){
+  base.handleResult( representationsService.listForUser( req.params._id ), res, next );
+
+}

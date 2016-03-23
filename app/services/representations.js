@@ -28,6 +28,20 @@ module.exports.listWithoutUser = function( userId,
     } );
 };
 
+module.exports.listForUser = function(userId, opts){
+  debug( "listWithoutUser" );
+  return base.list( opts )
+    .populate( "document" )
+    .exec()
+    .filter( function( representation ){
+      var owner = _.get( representation, [ 'document', 'owner' ] ) || [];
+      return owner.indexOf( userId ) >= 0;
+    } )
+    .then((representations)=>{
+      return representations;
+    })
+}
+
 module.exports.listById = function listById( opts ){
   debug( "listById" );
   return base.listById( opts )
