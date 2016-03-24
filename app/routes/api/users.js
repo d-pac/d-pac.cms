@@ -10,6 +10,7 @@ var service = require( "../../services/users" );
 var comparisonsService = require( "../../services/comparisons" );
 var notesService = require( '../../services/notes' );
 var representationsService = require( '../../services/representations' );
+var documentsService = require( '../../services/documents' );
 
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );
@@ -83,6 +84,15 @@ module.exports.update = function( req,
 module.exports.listRepresentations = function( req,
                                                res,
                                                next ){
-  base.handleResult( representationsService.listForUser( req.params._id ), res, next );
+
+  base.handleResult( documentsService.list( { owner: req.params._id } )
+    .map( ( document )=>{
+      return document.id;
+    } )
+    .then( ( ids )=>{
+      return representationsService.list( {
+        document: { $in: ids }
+      } )
+    } ), res, next );
 
 }
