@@ -2,6 +2,7 @@
 var debug = require( "debug" )( "dpac:services.representations" );
 var keystone = require( "keystone" );
 var _ = require( "lodash" );
+var documentsService = require( './documents' );
 var collection = keystone.list( "Representation" );
 var Service = require( "./helpers/Service" );
 var requireProp = require( './helpers/requireProp' );
@@ -16,31 +17,29 @@ module.exports.list = function list( opts ){
     .exec();
 };
 
+module.exports.listByDocuments = function( documents,
+                                           opts ){
+  var ids = documents.map( ( document )=>{
+    return document.id;
+  } );
+  return module.exports.list( _.defaults( {
+    document: { $in: ids }
+  }, opts ) );
+}
+
 module.exports.listWithoutUser = function( userId,
                                            opts ){
   debug( "listWithoutUser" );
-  return base.list( opts )
-    .populate( "document" )
-    .exec()
-    .filter( function( representation ){
-      var owner = _.get( representation, [ 'document', 'owner' ] ) || [];
-      return owner.indexOf( userId ) < 0;
-    } );
+  return documentsService.list( { owner: { $ne: userId } } )
+    .then( ( documents )=> module.exports.listByDocuments( documents, opts ) );
 };
 
-module.exports.listForUser = function(userId, opts){
-  debug( "listWithoutUser" );
-  return base.list( opts )
-    .populate( "document" )
-    .exec()
-    .filter( function( representation ){
-      var owner = _.get( representation, [ 'document', 'owner' ] ) || [];
-      return owner.indexOf( userId ) >= 0;
-    } )
-    .then((representations)=>{
-      return representations;
-    })
-}
+module.exports.listForUser = function( userId,
+                                       opts ){
+  debug( "listForUser" );
+  return documentsService.list( { owner: userId } )
+    .then( ( documents )=> module.exports.listByDocuments( documents, opts ) );
+};
 
 module.exports.listById = function listById( opts ){
   debug( "listById" );

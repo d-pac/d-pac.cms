@@ -7,6 +7,7 @@ var P = require( "bluebird" );
 var collection = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
 var assessmentsService = require( './assessments' );
+var documentsService = require('./documents');
 var representationsService = require( './representations' );
 
 var base = new Service( collection );
