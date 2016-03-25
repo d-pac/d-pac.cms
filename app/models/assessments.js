@@ -25,10 +25,7 @@ Assessment.schema.methods.reset = function(){
   this.stats.averages.durationPerAssessor = null;
   this.stats.averages.durationPerRepresentation = null;
   this.stats.totals.duration = null;
-  this.stats.totals.assessorsNum = null;
-  this.stats.totals.comparisonsNum = null;
   this.stats.totals.reliability = null;
-  this.stats.totals.representationsNum = null;
   this.stats.lastRun = null;
   return this;
 };
