@@ -60,6 +60,10 @@ function resetAssessment( assessmentId ){
       return assessmentsService.retrieve( {
         _id: assessmentId.toString()
       } );
+    } )
+    .then( function( assessment ){
+      assessment.reset();
+      return assessment.save();
     } );
 }
 
@@ -77,7 +81,12 @@ function clearAssessment( assessmentId ){
       return assessmentsService.retrieve( {
         _id: assessmentId.toString()
       } );
+    } )
+    .then( function( assessment ){
+      assessment.reset();
+      return assessment.save();
     } );
+
 }
 
 function removeAssessmentFromUser( assessmentId,
