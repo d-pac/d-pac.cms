@@ -88,11 +88,20 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 } );
 
 Document.schema.pre( "save", function( callback ){
+  if( this.file.size > 0 ){
+    this.host = "local";
+  } else if( this.link ){
+    this.host = "remote";
+  } else {
+    this.host = "none";
+  }
+
   if( this.title ){
     this.name = this.title;
-  } else if( this.host ){
+  } else if( this.host !== "none" ){
     this.name = utils[ this.host ].name.call( this );
   }
+
   callback();
 } );
 
@@ -129,16 +138,7 @@ require( './helpers/setupList' )( Document )
       host: {
         hidden: true,
         type: String,
-        watch: "link file text",
-        note: "Value automatically generated based on the choice of document type below.",
-        value: function(){
-          if( this.file.size > 0){
-            return "local";
-          } else if( this.link ){
-            return "remote";
-          }
-          return "none";
-        }
+        note: "Value automatically generated based on the choice of document type below."
       }
     },
     "Content",
@@ -192,7 +192,7 @@ require( './helpers/setupList' )( Document )
 
     } )
   .expose( "href", "mimeType", "ext" )
-  .retain( "track", "link", "host", "title", "name", "file", "_rid", "owner", "type", "links", "assessment", "representation" )
+  .retain( "track", "link", "host", "name", "file", "_rid", "owner", "type", "links", "assessment", "representation" )
   .virtualize( {
     href: {
       get: function(){
