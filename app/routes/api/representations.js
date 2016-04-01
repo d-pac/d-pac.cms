@@ -1,12 +1,86 @@
 "use strict";
 
-var debug = require( "debug" )( "dpac:api.representations" );
+const debug = require( "debug" )( "dpac:api.representations" );
 
-var service = require( "../../services/representations" );
-var Controller = require( "./helpers/Controller" );
-var base = new Controller( service );
+const service = require( "../../services/representations" );
+const Controller = require( "./helpers/Controller" );
+const base = new Controller( service );
+
+const documentsService = require( '../../services/documents' );
+
 module.exports = base.mixin();
 
-module.exports.retrieve = (req, res, next) => {
-  base.handleResult(base.retrieve(req), res, next, {depopulate: false});
+module.exports.retrieve = ( req,
+                            res,
+                            next ) =>{
+  base.handleResult( base.retrieve( req ), res, next, { depopulate: false } );
+};
+
+module.exports.create = ( req,
+                          res,
+                          next )=>{
+  debug( '#create' );
+  /*
+   req.files.file: {
+   buffer,
+   encoding,
+   extension,
+   fieldname,
+   mimetype,
+   name:
+   originalname,
+   path
+   }
+   */
+  const file = req.files.file;
+  let created;
+
+  base.handleResult( documentsService.create( {
+      owner: req.user.id,
+      file: {
+        filetype: file.mimetype,
+        filename: file.name,
+        originalname: file.originalname,
+        size: file.size,
+        path: file.path
+      }
+    } )
+    .then( ( document )=>{
+      created = document;
+      return service.create( {
+        assessment: req.body.assessment,
+        document: document.id
+      } );
+    } )
+    .then( ( representation )=>{
+      representation.document = created;
+      return representation;
+    } )
+    , res, next, { depopulate: false } );
+};
+
+module.exports.update = function( req,
+                                  res,
+                                  next ){
+  const file = req.files.file;
+  base.handleResult( documentsService.update( {
+      _id: req.body.document,
+      file: {
+        filetype: file.mimetype,
+        filename: file.name,
+        originalname: file.originalname,
+        size: file.size,
+        path: file.path
+      }
+    } )
+    .then( ( document )=>{
+      return service.retrieve( {
+        _id: req.params._id
+      } )
+    } )
+    .then( ( representation )=>{
+      representation.markModified( 'document' )
+      return representation.save();
+    } )
+    , res, next, { depopulate: false } );
 };

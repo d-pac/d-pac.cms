@@ -1,8 +1,34 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.documents" );
+const debug = require( "debug" )( "dpac:services.documents" );
+const P = require( 'bluebird' );
+const fs = require( 'fs' );
+P.promisify( fs.rename );
+const path = require( 'path' );
 
-var keystone = require( "keystone" );
-var collection = keystone.list( "Document" );
-var Service = require( "./helpers/Service" );
-var base = new Service( collection );
+const keystone = require( "keystone" );
+const constants = require( "../models/helpers/constants" );
+const collection = keystone.list( "Document" );
+const Service = require( "./helpers/Service" );
+const base = new Service( collection );
 module.exports = base.mixin();
+
+module.exports.create = function( opts ){
+  debug('#create');
+  const source = opts.file.path;
+  opts.file.path = path.join( constants.directories.documents, opts.file.filename );
+  return fs.renameAsync( source, opts.file.path )
+    .catch( ( err )=>P.reject( err ) )
+    .then( ()=>base.create( opts ) );
+};
+
+module.exports.update = function(opts){
+  debug('#update');
+  const source = opts.file.path;
+  opts.file.path = path.join( constants.directories.documents, opts.file.filename );
+  opts.title = '';
+  return fs.renameAsync( source, opts.file.path )
+    .catch( ( err )=>P.reject( err ) )
+    .then( ()=>{
+      return base.update( opts ).exec();
+    } );
+};

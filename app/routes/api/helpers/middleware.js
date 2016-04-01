@@ -234,6 +234,7 @@ module.exports.parseUserId = function parseUserId( req,
 
 module.exports.setType = ( name,
                            quantity ) =>{
+  debug( '#setType', name, quantity );
   return ( req,
            res,
            next ) =>{

@@ -128,13 +128,16 @@ exports = module.exports = function( app ){
     .get( api.pages.retrieve );
 
   app.route( apiRoot + "/representations" )
-    .all( apiMw.setType( 'representations', 'multiple' ) )
     .all( apiMw.requireUser )
-    .get( api.representations.list );
+    .get( apiMw.setType( 'representations', 'multiple' ) )
+    .get( api.representations.list )
+    .post( apiMw.setType( 'representations', 'single' ) )
+    .post( api.representations.create );
   app.route( apiRoot + "/representations/:_id" )
     .all( apiMw.setType( 'representations', 'single' ) )
     .all( apiMw.requireUser )
-    .get( api.representations.retrieve );
+    .get( api.representations.retrieve )
+    .patch( api.representations.update );
   app.route( apiRoot + "/representations/:representation/feedback" )
     .all( apiMw.setType( 'feedback', 'multiple' ) )
     .all( apiMw.requireUser )

@@ -46,7 +46,7 @@ const utils = {
       return this.file.filetype;
     },
     ext: function(){
-      return "." + mime.extension( this.file.filetype );
+      return "." + mime.extension( this.file.filetype || "" );
     },
     name: function(){
       return this.file.originalname;
@@ -100,6 +100,7 @@ Document.schema.pre( "save", function( callback ){
     this.name = this.title;
   } else if( this.host !== "none" ){
     this.name = utils[ this.host ].name.call( this );
+    this.title = this.name;
   }
 
   callback();
