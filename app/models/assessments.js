@@ -211,6 +211,13 @@ require( './helpers/setupList' )( Assessment )
         label: "Enable selection icon",
         note: "Enables the ✔ sign next to the selected representation",
         default: true
+      },
+
+      enableResults: {
+        type: Types.Boolean,
+        label: "Enable viewing of results",
+        note: "Results will only be viewable when available <strong>and</strong> this is checked.",
+        default: true
       }
     }, "Texts", {
       assignments: {
