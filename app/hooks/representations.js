@@ -39,8 +39,18 @@ function compareRepresentationsForComparison( comparison ){
     .then( ( representations )=> representations.a.compareWith( representations.b ) );
 }
 
+function removeRepresentationsForDocument(document){
+  return representationsService.list( {
+      document: document.id
+    } )
+    .mapSeries( function( representation ){
+      return representation.remove();
+    } )
+}
+
 module.exports.init = function(){
   keystone.list( 'Comparison' ).schema.pre( 'remove', handleHook( uncompareRepresentationsForComparison ) );
   keystone.list( 'Comparison' ).schema.pre( 'save', handleHook( compareRepresentationsForComparison ) );
 
+  keystone.list( 'Document' ).schema.post( 'remove', handleHook( removeRepresentationsForDocument ) );
 };
