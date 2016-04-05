@@ -1,8 +1,8 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 
-var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
+var mongoose = require( 'mongoose' );
+mongoose.Promise = require( 'bluebird' );
 
 var _ = require( 'lodash' );
 var grappling = require( 'grappling-hook' );
@@ -72,8 +72,8 @@ keystone.init( {
     : ("development" === nodeEnv)
 } );
 
-if(process.env.DPAC_ADMIN_COLOR){
-  keystone.set('admin ui styles', `background-color: ${process.env.DPAC_ADMIN_COLOR};`)
+if( process.env.DPAC_ADMIN_COLOR ){
+  keystone.set( 'admin ui styles', `background-color: ${process.env.DPAC_ADMIN_COLOR};` )
 }
 
 if( keystone.get( 'dev env' ) ){
@@ -142,14 +142,15 @@ keystone.set( "nav", {
 } );
 
 _.forEach( keystone.import( 'hooks' ), function( handler ){
-  handler.init();
+  handler.init && handler.init();
 } );
+
 module.exports = keystone;
 
 if( !module.parent ){
   // Start Keystone to connect to your database and initialise the web server
-  keystone.start(()=>{
+  keystone.start( ()=>{
     const k = keystone;
-    console.log('---Started---');
-  });
+    console.log( '---Started---' );
+  } );
 }
