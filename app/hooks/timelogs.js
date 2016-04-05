@@ -12,5 +12,5 @@ function removeTimelogsForComparison( comparison ){
 }
 
 module.exports.init = function(){
-  keystone.list( 'Comparison' ).schema.post( 'remove', handleHook( removeTimelogsForComparison ) );
+  keystone.list( 'Comparison' ).schema.pre( 'remove', handleHook( removeTimelogsForComparison ) );
 };

@@ -10,6 +10,7 @@ const usersService = require( '../services/users' );
 const messagesService = require( '../services/messages' );
 const assessmentsService = require( '../services/assessments' );
 const mailsService = require( '../services/mails' );
+const handleHook = require( './helpers/handleHook' );
 
 const commandsByRecipient = {
   [constants.recipientTypes.ASSESSORS.value]: ( message )=>
@@ -87,27 +88,19 @@ function sendScheduledMessages(){
 
 }
 
-function messageSavedHandler( done ){
-  const message = this;
+function handleMessageStrategy( message ){
   if( message.isNew && !message.fromAPI ){
     addToLog( message, 'Draft created' );
   } else {
     if( message.state === 'handled' && !keystone.get( 'dev env' ) ){
-      return done( new Error( 'You cannot resend a message' ) );
+      return P.reject( new Error( 'You cannot resend a message' ) );
     }
     switch( message.strategy ){
       case 'send':
         if( !message.confirm ){
-          return done( new Error( 'You must confirm immediate sending' ) );
+          return P.reject( new Error( 'You must confirm immediate sending' ) );
         }
-        return sendMessage( message )
-          .then( function(){
-            done();
-          } )
-          .catch( function( err ){
-            done( new Error( err.message ) );
-          } );
-        break;
+        return sendMessage( message );
       case 'scheduled':
         addToLog( message, 'E-mail scheduled for ' + moment( message.schedule ).format( 'DD/MM/YY HH:mm:ss' ) );
         message.state = 'scheduled';
@@ -120,11 +113,11 @@ function messageSavedHandler( done ){
         break;
     }
   }
-  done();
+  return P.resolve();
 }
 
 module.exports.init = function(){
-  keystone.list( 'Message' ).schema.pre( 'save', messageSavedHandler );
+  keystone.list( 'Message' ).schema.pre( 'save', handleHook( handleMessageStrategy ) );
   keystone.post( 'updates', function( done ){
     //every 15 minutes
     scheduler.scheduleJob( '*/15 * * * *', sendScheduledMessages );

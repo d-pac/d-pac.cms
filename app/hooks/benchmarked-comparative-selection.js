@@ -1,4 +1,6 @@
 'use strict';
+
+const P = require( 'bluebird' );
 var _ = require( 'lodash' );
 var keystone = require( 'keystone' );
 var algorithm = require( 'benchmarked-comparative-selection' );
@@ -7,6 +9,8 @@ var mailsService = require( '../services/mails' );
 var statsService = require( '../services/stats' );
 var representationsService = require( '../services/representations' );
 var assessmentsService = require( '../services/assessments' );
+
+const handleHook = require( './helpers/handleHook' );
 
 var handlers = {
   messages: function( data ){
@@ -24,7 +28,7 @@ var handlers = {
           data.assessment.save();
           break;
         default:
-         console.error( '[dpac:hooks.benchmarked-comparative-selection]', 'ERROR: Handler for message "' + message
+          console.error( '[dpac:hooks.benchmarked-comparative-selection]', 'ERROR: Handler for message "' + message
             + '" in hook "benchmarked-comparative-selection" not implemented' );
       }
     } );
@@ -38,20 +42,21 @@ function representationsSelectedHandler( result ){
   }
 }
 
-function comparisonSavedHandler(){
-  var comparison = this;
+function updateAssessmentStats( comparison ){
   if( comparison.__original && !comparison.__original.completed && comparison.completed ){
-    assessmentsService.retrieve( {
-      _id: comparison.assessment
-    } ).then( function( assessment ){
-      if( assessment.algorithm === 'benchmarked-comparative-selection' && assessment.stage === 1 ){
-        statsService.estimateForAssessment( assessment.id );
-      }
-    } );
+    return assessmentsService.retrieve( {
+        _id: comparison.assessment
+      } )
+      .then( function( assessment ){
+        if( assessment.algorithm === 'benchmarked-comparative-selection' && assessment.stage === 1 ){
+          statsService.estimateForAssessment( assessment.id ); //no return, let it run in background
+        }
+      } );
   }
+  return P.resolve();
 }
 
 module.exports.init = function(){
   keystone.hooks.post( 'benchmarked-comparative-selection.select', representationsSelectedHandler );
-  keystone.list( 'Comparison' ).schema.post( 'save', comparisonSavedHandler );
+  keystone.list( 'Comparison' ).schema.post( 'save', handleHook( updateAssessmentStats ) );
 };

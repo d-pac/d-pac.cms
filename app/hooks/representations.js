@@ -43,14 +43,12 @@ function removeRepresentationsForDocument(document){
   return representationsService.list( {
       document: document.id
     } )
-    .mapSeries( function( representation ){
-      return representation.remove();
-    } )
+    .mapSeries( ( representation )=>representation.remove() );
 }
 
 module.exports.init = function(){
   keystone.list( 'Comparison' ).schema.pre( 'remove', handleHook( uncompareRepresentationsForComparison ) );
   keystone.list( 'Comparison' ).schema.pre( 'save', handleHook( compareRepresentationsForComparison ) );
 
-  keystone.list( 'Document' ).schema.post( 'remove', handleHook( removeRepresentationsForDocument ) );
+  keystone.list( 'Document' ).schema.pre( 'remove', handleHook( removeRepresentationsForDocument ) );
 };

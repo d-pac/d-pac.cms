@@ -4,14 +4,12 @@ const _ = require( 'lodash' );
 const P = require( 'bluebird' );
 const keystone = require( 'keystone' );
 const representationServices = require( '../services/representations' );
-const notesService = require( '../services/notes' );
+const comparisonsService = require( '../services/comparisons' );
 const handleHook = require('./helpers/handleHook');
 
 function removeComparisonsForRepresentation( representation ){
   return comparisonsService.listForRepresentation( representation )
-    .mapSeries( function( comparison ){
-      return comparison.remove();
-    } );
+    .mapSeries( ( comparison )=>comparison.remove() );
 }
 
 

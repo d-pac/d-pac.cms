@@ -16,15 +16,17 @@ var documentsService = require( '../services/documents' );
 var Document = keystone.list( 'Document' );
 var Representation = keystone.list( 'Representation' );
 var constants = require( '../models/helpers/constants' );
+const handleHook = require( './helpers/handleHook' );
 
 var ignored = [ '.DS_Store' ];
 
 function extractZipfile( opts ){
   return unzip( opts.file, {
     dir: opts.temp
-  } ).catch( function( err ){
-    console.error( 'ERROR:', err );
   } )
+    .catch( function( err ){
+      console.error( 'ERROR:', err );
+    } )
 }
 
 function retrieveJSONData( opts ){
@@ -61,10 +63,6 @@ function readDirectoryContents( opts ){
         return ignored.indexOf( file ) < 0;
       } );
     } );
-  //return fs.readdirAsync( opts.temp )
-  //  .then( function( files ){
-  //    return _.without.apply( _, [ files ].concat( ignored ) );
-  //  } );
 }
 
 function createFileData( filepath,
@@ -257,23 +255,23 @@ function cleanup( bulkupload,
     } )
     .then( function(){
       return rimraf( opts.temp );
-    } ).then( function(){
+    } )
+    .then( function(){
       bulkupload.completed = true;
     } );
 }
 
-function bulkuploadSavedHandler( next ){
-  var bulkupload = this;
+function bulkuploadSavedHandler( bulkupload ){
   if( bulkupload.completed ){
-    return next( new Error( 'You cannot reuse bulk uploads. (Seriously that would mean a world of pain)' ) );
+    return P.reject( new Error( 'You cannot reuse bulk uploads. (Seriously that would mean a world of pain)' ) );
   }
 
   if( bulkupload.isNew ){
-    return next();
+    return P.resolve();
   }
 
   if( !bulkupload.zipfile || !bulkupload.zipfile.filename ){
-    return next( new Error( 'Zipfile is required!' ) );
+    return P.reject( new Error( 'Zipfile is required!' ) );
   }
 
   var opts = {
@@ -288,7 +286,7 @@ function bulkuploadSavedHandler( next ){
     opts.json = path.resolve( path.join( constants.directories.bulk, jsonfile ) );
   }
 
-  P.join(
+  return P.join(
     extractZipfile( opts ),
     retrieveJSONData( opts ),
     assessmentsService.retrieve( {
@@ -304,14 +302,12 @@ function bulkuploadSavedHandler( next ){
     } )
     .then( function(){
       bulkupload.result = "Bulk upload successfully completed.";
-      next();
     } )
     .catch( function( err ){
       bulkupload.result = "Bulk upload failed: " + err.message;
-      next( err );
     } );
 }
 
 module.exports.init = function(){
-  keystone.list( 'Bulkupload' ).schema.pre( 'save', bulkuploadSavedHandler );
+  keystone.list( 'Bulkupload' ).schema.pre( 'save', handleHook( bulkuploadSavedHandler ) );
 };

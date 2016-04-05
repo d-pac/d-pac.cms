@@ -12,6 +12,8 @@ const reportsService = require( '../services/reports' );
 const convertersService = require( '../services/converters' );
 const constants = require( '../models/helpers/constants' );
 
+const handleHook = require( './helpers/handleHook' );
+
 const reportsDir = constants.directories.reports;
 
 const templateOpts = { interpolate: /{{([\s\S]+?)}}/g };
@@ -55,75 +57,64 @@ function removeFile( report ){
     } )
 }
 
-function reportCreatedHandler( next ){
-  const report = this;
-  if( report.isNew ){
-    let p;
-    if( report.title ){
-      p = P.resolve( report.title );
-    } else {
-      switch( report.assessments.length ){
-        case 0:
-          p = P.resolve( 'All' );
-          break;
-        case 1:
-          p = assessmentsService.retrieve( { _id: report.assessments[ 0 ] } )
-            .then( ( assessment )=>assessment.name );
-          break;
-        default:
-          p = P.resolve( 'Multiple' );
-          break;
-      }
-    }
-    p.then( ( title )=>{
-        setMetadata( report, title );
-      } )
-      .then( function(){
-        switch( report.datatype ){
-          case "representations":
-            return reportsService.listRepresentations( report.assessments );
-          case "comparisons":
-            return reportsService.listComparisons( report.assessments );
-          default:
-            throw new Error( 'Invalid data type' );
-        }
-      } )
-      .then( function( jsonData ){
-        switch( report.format ){
-          case 'csv':
-            return convertersService.jsonToCSV( jsonData );
-
-          case 'json':
-          default:
-            return P.resolve( JSON.stringify( jsonData, 2 ) );
-        }
-      } )
-      .then( function( reportData ){
-        return writeFile( report, reportData );
-      } )
-      .then( function(){
-        report.result = templates.success( report );
-        next();
-      } )
-      .catch( function( err ){
-        report.result = templates.failure( err );
-        next( err );
-      } );
-  } else {
-    next();
+function generateReportFile( report ){
+  if( !report.isNew ){
+    return P.resolve();
   }
+  let p;
+  if( report.title ){
+    p = P.resolve( report.title );
+  } else {
+    switch( report.assessments.length ){
+      case 0:
+        p = P.resolve( 'All' );
+        break;
+      case 1:
+        p = assessmentsService.retrieve( { _id: report.assessments[ 0 ] } )
+          .then( ( assessment )=>assessment.name );
+        break;
+      default:
+        p = P.resolve( 'Multiple' );
+        break;
+    }
+  }
+  p.then( ( title )=>{
+      setMetadata( report, title );
+    } )
+    .then( function(){
+      switch( report.datatype ){
+        case "representations":
+          return reportsService.listRepresentations( report.assessments );
+        case "comparisons":
+          return reportsService.listComparisons( report.assessments );
+        default:
+          return P.reject( new Error( 'Invalid data type' ) );
+      }
+    } )
+    .then( function( jsonData ){
+      switch( report.format ){
+        case 'csv':
+          return convertersService.jsonToCSV( jsonData );
+
+        case 'json':
+        default:
+          return P.resolve( JSON.stringify( jsonData, 2 ) );
+      }
+    } )
+    .then( function( reportData ){
+      return writeFile( report, reportData );
+    } )
+    .then( function(){
+      report.result = templates.success( report );
+    } );
+  return p;
 }
 
-function reportRemovedHandler( next ){
-  const report = this;
-  removeFile( report )
-    .then( function(){
-      next();
-    } )
-    .catch( next );
+function removeReportFile( report ){
+  return removeFile( report );
 }
 
 module.exports.init = function(){
-  keystone.list( 'Report' ).schema.pre( 'save', reportCreatedHandler );
-  keystone.list( 'Report' ).schema.pre( 'remove', reportRemovedHandler );
+  keystone.list( 'Report' ).schema.pre( 'save', handleHook( generateReportFile ) );
+  keystone.list( 'Report' ).schema.pre( 'remove', handleHook( removeReportFile ) );
 };
