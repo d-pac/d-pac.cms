@@ -19,14 +19,20 @@ module.exports = function( done ){
       const update = {
         _id: doc._id,
       };
-      if( typeof _.get(doc, ['comparisonsNum','perRepresentation'], undefined) !== 'undefined' ){
+      let dim = 'representation';
+      if( _.get(doc, ['comparisonsNum','perRepresentation'], 0) !== 0 ){
         update[ "comparisons.perRepresentation" ] = doc.comparisonsNum.perRepresentation;
+      }
+      const pA = _.get(doc, ['comparisonsNum','perAssessor'], []);
+      if( pA.length !== 0 && pA[0] !== 0){
+        update[ "comparisons.perAssessor" ] = pA[0];
+        dim = 'assessor';
       }
       if( doc.algorithm === 'benchmarked-comparative-selection' ){
         update[ "assessorsNum.minimum" ] = 4;
       }
-      if( typeof _.get(doc, ['comparisons','dimension'], undefined) !== 'undefined' ){
-        update[ "comparisons.dimension" ] = 'representation';
+      if( typeof _.get(doc, ['comparisons','dimension'], undefined) === 'undefined' ){
+        update[ "comparisons.dimension" ] = dim;
       }
 
       return P.props( {

@@ -105,4 +105,10 @@ require( './helpers/setupList' )( Comparison )
   } )
   .emit( 'assessment' )
   .retain( "track" )
+  .relate( {
+    path: "timelogs",
+    ref: "Timelog",
+    refPath: "comparison",
+    label: "Timelogs"
+  } )
   .register();
