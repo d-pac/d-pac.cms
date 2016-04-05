@@ -6,20 +6,41 @@ var keystone = require( 'keystone' );
 var representationsService = require( '../services/representations' );
 var comparisonsService = require( '../services/comparisons' );
 
-function representationRemovedHandler( done ){
-  var representation = this;
-  comparisonsService.listForRepresentation( representation )
-    .each( function( comparison ){
-      return comparison.remove();
+const handleHook = require( './helpers/handleHook' );
+
+function uncompareRepresentationsForComparison( comparison ){
+  return P.props( {
+      a: representationsService.retrieve( {
+        _id: comparison.representations.a
+      } ),
+      b: representationsService.retrieve( {
+        _id: comparison.representations.b
+      } )
     } )
-    .then(function(){
-      done();
-    })
-    .catch(function(err){
-      done(err);
-    });
+    .then( ( representations )=>{
+      if( representations.a && representations.b ){
+        return representations.a.uncompareWith( representations.b );
+      }
+    } );
+}
+
+function compareRepresentationsForComparison( comparison ){
+  if( !comparison.isNew ){
+    return P.resolve();
+  }
+  return P.props( {
+      a: representationsService.retrieve( {
+        _id: comparison.representations.a
+      } ),
+      b: representationsService.retrieve( {
+        _id: comparison.representations.b
+      } )
+    } )
+    .then( ( representations )=> representations.a.compareWith( representations.b ) );
 }
 
 module.exports.init = function(){
-  keystone.list( 'Representation' ).schema.pre( 'remove', representationRemovedHandler );
+  keystone.list( 'Comparison' ).schema.pre( 'remove', handleHook( uncompareRepresentationsForComparison ) );
+  keystone.list( 'Comparison' ).schema.pre( 'save', handleHook( compareRepresentationsForComparison ) );
+
 };
