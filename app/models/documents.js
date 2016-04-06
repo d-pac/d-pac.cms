@@ -226,7 +226,13 @@ require( './helpers/setupList' )( Document )
           isValid( true );
         }
       }, "You need to supply a local file, an external link or a text."
-    ]
+    ],
+    "file.filetype": [function(value, isValid){
+      const found = _.find(allowedTypes, (item)=>{
+        return item.mime === value;
+      });
+      isValid(!!found);
+    }, "Incorrect file type"]
   } )
   .relate( {
     path: "representations",
