@@ -213,12 +213,27 @@ require( './helpers/setupList' )( Assessment )
         default: true
       },
 
-      enableResults: {
-        type: Types.Boolean,
-        label: "Enable viewing of results",
-        note: "Results will only be viewable when available <strong>and</strong> this is checked.",
-        default: true
+      results: {
+        enable: {
+          type: Types.Boolean,
+          label: "Results: enable viewing",
+          note: "Results will only be viewable when available <strong>and</strong> this is checked.",
+          default: true
+        },
+        assessees: {
+          viewRepresentations: {
+            type: Types.Boolean,
+            label: "Results: allow assessees to view other representations",
+            default: true
+          },
+          viewRanking: {
+            type: Types.Boolean,
+            label: "Results: allow assessees to view the ranking",
+            default: true
+          }
+        }
       }
+
     }, "Texts", {
       assignments: {
         assessor: {
