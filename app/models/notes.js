@@ -9,7 +9,7 @@ var Note = new keystone.List( 'Note', {
   }
 } );
 
-Note.defaultColumns = 'name, author';
+Note.defaultColumns = 'name, author, document';
 
 Note.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Note",
