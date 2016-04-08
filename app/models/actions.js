@@ -10,8 +10,8 @@ var Action = new keystone.List( "Action", {
   },
   track: true,
   defaultSort: '-_rid',
-  noedit: !keystone.get('dev env'),
-  nodelete: !keystone.get('dev env')
+  noedit: !keystone.get( 'dev env' ),
+  nodelete: !keystone.get( 'dev env' )
 } );
 
 Action.defaultColumns = "name, line, actionType, success, createdAt";
@@ -21,6 +21,15 @@ Action.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   field: "_rid",
   startAt: 1
 } );
+
+const confirmationNecessary = {
+  "clone": false,
+  "clone representations": false,
+  "reset": true,
+  "delete": true,
+  "clear": true,
+  "archive": true
+};
 
 var list = require( './helpers/setupList' )( Action )
   .add( {
@@ -34,6 +43,14 @@ var list = require( './helpers/setupList' )( Action )
     actionType: {
       type: Types.Select,
       options: [
+        {
+          label: "Clone",
+          value: "clone"
+        },
+        {
+          label: "Clone representations",
+          value: "clone representations"
+        },
         {
           label: "Reset",
           value: "reset"
@@ -54,17 +71,35 @@ var list = require( './helpers/setupList' )( Action )
       label: "Action Type",
       initial: true,
       required: true,
-      note: "<strong>Reset</strong>: comparisons removed, representations <em>not</em>.<br/>" +
-      "<strong>Clear</strong>: comparisons removed, representations removed.<br/>" +
-      "<strong>Delete</strong>: comparisons removed, representations removed, assessment removed<br/>" +
-      "<strong>Archive</strong>: assessment archived, assessment DELETE"
+      note: "<ul>" +
+      "<li><strong>Clone</strong>: assessment cloned, representations cloned</li>" +
+      "<li><strong>Clone representations</strong>: <em>only</em> representations cloned</li>" +
+      "<li><strong>Reset</strong>: comparisons removed, representations <em>not</em>.</li>" +
+      "<li><strong>Clear</strong>: comparisons removed, representations removed.</li>" +
+      "<li><strong>Delete</strong>: comparisons removed, representations removed, assessment removed</li>" +
+      "<li><strong>Archive</strong>: assessment archived, assessment DELETE</li>" +
+      "</ul>"
+    },
+
+    targetAssessment: {
+      type: Types.Relationship,
+      label: "Receiving assessment",
+      ref: "Assessment",
+      required: false,
+      initial: true,
+      dependsOn: {
+        actionType: 'clone representations'
+      }
     },
 
     confirm: {
       type: Types.Boolean,
       default: false,
       initial: true,
-      label: "Yes, I realize this will delete data in the database."
+      label: "Yes, I realize this will delete data in the database.",
+      dependsOn: {
+        actionType: [ 'reset', 'clear', 'delete', 'archive' ]
+      }
     },
 
     line: {
@@ -85,12 +120,16 @@ var list = require( './helpers/setupList' )( Action )
       default: false
     }
   } )
-  .validate({
+  .validate( {
     confirm: [
-      function(value){
-        return value;
+      function( value ){
+        if( confirmationNecessary[ this.actionType ] ){
+          return value;
+        }
+
+        return true;
       },
       "You must confirm!"
     ]
-  })
+  } )
   .register();

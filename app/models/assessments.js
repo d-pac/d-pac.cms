@@ -388,7 +388,7 @@ require( './helpers/setupList' )( Assessment )
       }, '"UI texts" contains invalid JSON'
     ]
   } )
-  .retain( "track", "assessors", "comparisons" )
+  .retain( "track" )
   .relate( {
     path: "representations",
     ref: "Representation",
