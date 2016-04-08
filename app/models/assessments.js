@@ -133,7 +133,8 @@ require( './helpers/setupList' )( Assessment )
             }
           ],
           initial: true,
-          required: true
+          required: true,
+          default: "assessor"
         },
         perRepresentation: {
           type: Types.Number,
