@@ -14,15 +14,15 @@ module.exports.create = function( env,
     documentsNum: DOCUMENTS_NUM_DEFAULT
   } );
   return env.services.assessments.create( {
-      name: opts.name,
-      title: opts.name,
-      algorithm: opts.algorithm,
-      state: 'published',
-      comparisonsNum: {
-        perRepresentation: 10,
-        perAssessor: [ 5, 17 ]
-      }
-    } )
+    name: opts.name,
+    title: opts.name,
+    algorithm: opts.algorithm,
+    state: 'published',
+    comparisons: {
+      dimension: 'representation',
+      perRepresentation: 10
+    }
+  } )
     .then( function( doc ){
       data.assessment = doc;
     } )
@@ -44,12 +44,16 @@ module.exports.create = function( env,
       data.assessors = assessors;
     } )
     .then( function createDocument(){
-      return env.services.documents.create( _.times( opts.documentsNum, function( i ){
+      const docs = _.times( opts.documentsNum, function( i ){
         return {
           name: 'dummy document ' + i,
           link: 'http://example.com/dummy-' + i + '.pdf'
         };
-      } ) );
+      } );
+      return env.services.documents.create(docs);
+    } )
+    .catch( ( err )=>{
+      throw err;
     } )
     .then( function( docs ){
       if( !_.isArray( docs ) ){ //single doc
@@ -65,5 +69,6 @@ module.exports.create = function( env,
       assert.equal( data.assessors.length, opts.assessorsNum, 'Assessors not/incorrectly created' );
 
       return data;
-    } );
+    } )
+
 };
