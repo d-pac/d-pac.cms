@@ -33,6 +33,7 @@ User.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   field: "_rid",
   startAt: 1
 } );
+User.schema.methods.sendResetPassword = keystone.user.sendResetPassword;
 
 require( './helpers/setupList' )( User )
   .add( {

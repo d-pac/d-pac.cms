@@ -39,6 +39,8 @@ keystone.init( {
   "less": "public",
   "static": "public",
   "favicon": "public/favicon.ico",
+  "signin logo": "/images/d-pac-logo_colour.png",
+  "changepassword redirect": "/tool",
 
   "logger": env.LOGGER || "dev",
 
