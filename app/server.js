@@ -41,6 +41,13 @@ keystone.init( {
   "favicon": "public/favicon.ico",
   "signin logo": "/images/d-pac-logo_colour.png",
   "changepassword redirect": "/tool",
+  "signin redirect": function( user,
+                               req,
+                               res ){
+    res.redirect( (user.canAccessKeystone)
+      ? "/keystone"
+      : "/tool" );
+  },
 
   "logger": env.LOGGER || "dev",
 
