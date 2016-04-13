@@ -222,11 +222,11 @@ require( './helpers/setupList' )( Assessment )
           default: true
         },
         assessees: {
-          // viewRepresentations: {
-          //   type: Types.Boolean,
-          //   label: "Results: allow assessees to view other representations",
-          //   default: true
-          // },
+          viewRepresentations: {
+            type: Types.Boolean,
+            label: "Results: allow assessees to view other representations",
+            default: true
+          },
           viewRanking: {
             type: Types.Boolean,
             label: "Results: allow assessees to view the ranking",
