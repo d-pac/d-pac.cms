@@ -11,7 +11,7 @@ var Bulkupload = new keystone.List( "Bulkupload", {
   },
   track: true,
   defaultSort: '-_rid',
-  nodelete: !keystone.get('dev env')
+  nodelete: !keystone.get( 'dev env' )
 } );
 
 Bulkupload.defaultColumns = "name, comment, createdAt, createdBy";
@@ -24,18 +24,58 @@ Bulkupload.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 
 var list = require( './helpers/setupList' )( Bulkupload )
   .add( {
-    assessment: {
-      type: Types.Relationship,
-      ref: "Assessment",
-      required: true,
-      initial: true
-    },
     comment: {
       type: Types.Text,
       required: false,
       initial: true,
       label: "Note",
       note: "Short description of this bulkupload"
+    },
+    uploadType: {
+      type: Types.Select,
+      options: [
+        {
+          value: "representations",
+          label: "Representations"
+        },
+        {
+          value: "users",
+          label: "Users"
+        }
+      ],
+      default: "representations",
+      initial: true
+    },
+
+    assessment: {
+      type: Types.Relationship,
+      ref: "Assessment",
+      required: true,
+      initial: true,
+      many: true
+    },
+    roles: {
+      asAssessee: {
+        type: Types.Boolean,
+        label: "As assessee",
+        default: false,
+        initial: true,
+        dependsOn: { uploadType: "users" }
+      },
+      asAssessor: {
+        type: Types.Boolean,
+        label: "As assessor",
+        default: false,
+        initial: true,
+        dependsOn: { uploadType: "users" }
+      },
+      asPAM: {
+        type: Types.Boolean,
+        label: "As PAM",
+        default: false,
+        initial: true,
+        dependsOn: { uploadType: "users" }
+      },
     },
     zipfile: {
       type: Types.LocalFile,
@@ -46,7 +86,8 @@ var list = require( './helpers/setupList' )( Bulkupload )
         "application/zip", "application/x-zip-compressed", "application/zip-compressed", "multipart/x-zip",
         "application/octet-stream"
       ],
-      note: "Zipfiles can be really large, i.e. this could take a LOOOOOOONG time!"
+      note: "Zipfiles can be really large, i.e. this could take a LOOOOOOONG time!",
+      dependsOn: { uploadType: "representations" }
     },
     conflicts: {
       type: Types.Select,
@@ -65,7 +106,8 @@ var list = require( './helpers/setupList' )( Bulkupload )
       default: constants.REUSE,
       required: true,
       note: "What needs to be done in case files with the same name already exist.",
-      label: "Conflict resolution"
+      label: "Conflict resolution",
+      dependsOn: { uploadType: "representations" }
     },
     jsonfile: {
       type: Types.LocalFile,
@@ -73,7 +115,18 @@ var list = require( './helpers/setupList' )( Bulkupload )
       required: false,
       initial: false,
       allowedTypes: [ "application/json" ],
-      note: "Optional. JSON file with representation data."
+      note: "Optional. JSON file with representation data.",
+      dependsOn: { uploadType: "representations" }
+    },
+    csvfile: {
+      type: Types.LocalFile,
+      dest: constants.directories.bulk,
+      label: "CSV File",
+      required: false,
+      initial: false,
+      allowedTypes: [ "text/csv" ],
+      note: "Format: &lt;first name&gt;;&lt;surname&gt;;&lt;e-mail&gt;[;&lt;password&gt;]</br>Password is optional",
+      dependsOn: { uploadType: "users" }
     },
     completed: {
       type: Boolean,

@@ -10,9 +10,12 @@ var dirops = P.promisifyAll( require( 'node-dir' ) );
 var path = require( 'path' );
 var mime = require( 'mime' );
 var uuid = require( 'uuid' );
+const crypto = require( 'crypto' );
 
+const convertersService = require( '../services/converters' );
 var assessmentsService = require( '../services/assessments' );
 var documentsService = require( '../services/documents' );
+const usersService = require( '../services/users' );
 var Document = keystone.list( 'Document' );
 var Representation = keystone.list( 'Representation' );
 var constants = require( '../models/helpers/constants' );
@@ -261,15 +264,7 @@ function cleanup( bulkupload,
     } );
 }
 
-function bulkuploadSavedHandler( bulkupload ){
-  if( bulkupload.completed ){
-    return P.reject( new Error( 'You cannot reuse bulk uploads. (Seriously that would mean a world of pain)' ) );
-  }
-
-  if( bulkupload.isNew ){
-    return P.resolve();
-  }
-
+function handleRepresentations( bulkupload ){
   if( !bulkupload.zipfile || !bulkupload.zipfile.filename ){
     return P.reject( new Error( 'Zipfile is required!' ) );
   }
@@ -286,6 +281,8 @@ function bulkuploadSavedHandler( bulkupload ){
     opts.json = path.resolve( path.join( constants.directories.bulk, jsonfile ) );
   }
 
+  //TODO: handle multiple assessments
+
   return P.join(
     extractZipfile( opts ),
     retrieveJSONData( opts ),
@@ -296,13 +293,84 @@ function bulkuploadSavedHandler( bulkupload ){
                    assessment ){
       return processFiles( bulkupload, jsonData, assessment, opts );
     }
-    )
+  )
     .then( function(){
       return cleanup( bulkupload, opts );
     } )
-    .then( function(){
-      bulkupload.result = "Bulk upload successfully completed.";
+}
+
+function parseUserData( opts ){
+  return convertersService.userCSVtoJson( opts );
+}
+
+function handleUsers( bulkupload ){
+  if( !bulkupload.csvfile || !bulkupload.csvfile.filename ){
+    return P.reject( new Error( 'CSV file is required!' ) );
+  }
+
+  const opts = {
+    path: path.resolve( path.join( constants.directories.bulk, bulkupload.csvfile.filename ) )
+  };
+
+  return parseUserData( opts )
+    .map( ( raw )=>{
+      return usersService.list( { email: raw.email } )
+        .then( ( users )=>{
+          let user;
+          if( users.length ){
+            user = users[ 0 ];
+          } else {
+            if( !raw.password ){
+              raw.password = crypto.randomBytes( 16 ).toString( 'base64' );
+            }
+            raw.actions = { sendInviteMail : true };
+            user = new usersService.collection.model( raw );
+          }
+          bulkupload.assessment.forEach((assessmentId)=>{
+            if( bulkupload.roles.asAssessee && user.assessments.assessee.indexOf(assessmentId)<0){
+              user.assessments.assessee.push(assessmentId);
+            }
+            if( bulkupload.roles.asAssessor && user.assessments.assessor.indexOf(assessmentId)<0){
+              user.assessments.assessor.push(assessmentId);
+            }
+            if( bulkupload.roles.asPAM && user.assessments.pam.indexOf(assessmentId)<0){
+              user.assessments.pam.push(assessmentId);
+            }
+          });
+          return user.save();
+        } )
+        .catch( ( err )=>P.reject( err ) );
     } )
+    .then(function(){
+      removeFile( { resolved: opts.path } )
+    })
+    .then( function(){
+      bulkupload.completed = true;
+    } );
+}
+
+function bulkuploadSavedHandler( bulkupload ){
+  if( bulkupload.completed ){
+    return P.reject( new Error( 'You cannot reuse bulk uploads. (Seriously that would mean a world of pain)' ) );
+  }
+
+  if( bulkupload.isNew ){
+    return P.resolve();
+  }
+
+  let p;
+  switch( bulkupload.uploadType ){
+    case "representations":
+      p = handleRepresentations( bulkupload );
+      break;
+    case "users":
+      p = handleUsers( bulkupload );
+      break;
+  }
+
+  return p.then( function(){
+    bulkupload.result = "Bulk upload successfully completed.";
+  } )
     .catch( function( err ){
       bulkupload.result = "Bulk upload failed: " + err.message;
     } );
