@@ -38,6 +38,8 @@ if(!process.env.FEATURE_DISABLE_PASSWORDRESETS){
   User.schema.methods.sendResetPassword = keystone.auth.sendResetPassword;
 }
 
+User.schema.methods.sendInvite = keystone.auth.sendInvite;
+
 require( './helpers/setupList' )( User )
   .add( {
     _rid: {
@@ -107,7 +109,15 @@ require( './helpers/setupList' )( User )
       label: "Can access Keystone",
       default: false
     }
-  } )
+  }, "Actions", {
+    actions: {
+      sendInviteMail: {
+        type: Boolean,
+        label: "(Re-)send invite",
+        default: false
+      }
+    }
+  }  )
   .virtualize( {
     canAccessKeystone: function(){
       return this.isAdmin;

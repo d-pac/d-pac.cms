@@ -15,8 +15,8 @@ function removeAssessmentFromUsers( assessment ){
     } );
   } );
   return usersService.list( {
-      $or: query
-    } )
+    $or: query
+  } )
     .reduce( ( toBeSaved,
                user )=>{
       let changed = false;
@@ -28,16 +28,32 @@ function removeAssessmentFromUsers( assessment ){
           changed = true;
         }
       } );
-      if(changed){
-        toBeSaved.push(user);
+      if( changed ){
+        toBeSaved.push( user );
       }
       return toBeSaved;
     }, [] )
-    .mapSeries((modified)=>{
+    .mapSeries( ( modified )=>{
       return modified.save();
-    })
+    } )
+}
+
+function sendInvite( user ){
+  if( user.actions.sendInviteMail ){
+    user.actions.sendInviteMail = false;
+    usersService.retrieve( { _id: user.createdBy } )
+      .then( ( from )=>{
+        return P.promisify( user.sendInvite, { context: user } )( from );
+      } )
+      .catch( ( err )=>{
+        console.log( err );
+      } )
+  }
+  return P.resolve(); //won't wait on mail
 }
 
 module.exports.init = function(){
-  keystone.list( 'Assessment' ).schema.pre( 'remove', handleHook( removeAssessmentFromUsers ) )
+  keystone.list( 'Assessment' ).schema.pre( 'remove', handleHook( removeAssessmentFromUsers ) );
+
+  keystone.list( 'User' ).schema.pre( 'save', handleHook( sendInvite ) );
 };

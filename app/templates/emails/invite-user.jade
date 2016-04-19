@@ -1,0 +1,13 @@
+extends /layouts/default
+
+block body-contents
+	h1 Hi #{user.name.first},
+	p You were invited by #{from.name} to participate in #{brand}.
+	p.text-larger Click the button below to join
+	p &nbsp;
+	+button({
+		url: host + invite.url,
+		label: 'Join ' + brand
+	})
+	p &nbsp;
+	p.text-muted This invitation expires at #{invite.expires.format( 'HH:mm, Do of MMMM YYYY' )}
