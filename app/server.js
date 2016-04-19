@@ -28,6 +28,9 @@ var pkg = require( "../package.json" );
 var appversion = (process.env.APP_VERSION_LABEL)
   ? pkg.version + "-" + process.env.APP_VERSION_LABEL
   : pkg.version;
+
+keystone.auth = require( './lib/auth' );
+
 keystone.init( {
 
   "name": "d-pac",
@@ -40,7 +43,7 @@ keystone.init( {
   "static": "public",
   "favicon": "public/favicon.ico",
   "signin logo": "/images/d-pac-logo_colour.png",
-  "changepassword redirect": "/tool",
+  "signin url": "/auth/signin",
   "signin redirect": function( user,
                                req,
                                res ){
@@ -48,6 +51,10 @@ keystone.init( {
       ? "/keystone"
       : "/tool" );
   },
+  "signout url": "/auth/signout",
+  "resetpassword url" : "/auth/resetpassword",
+  "changepassword url": "/auth/changepassword",
+  "changepassword redirect": "/tool",
 
   "logger": env.LOGGER || "dev",
 
@@ -79,6 +86,12 @@ keystone.init( {
   "dev env": ( typeof env.DEV_ENV !== "undefined" )
     ? ( env.DEV_ENV === "true" )
     : ("development" === nodeEnv)
+} );
+
+keystone.set( 'email locals', {
+  utils: keystone.utils,
+  host: keystone.get( 'root url' ),
+  logo_src: keystone.get( 'root url' ) + keystone.get( "signin logo" )
 } );
 
 if( process.env.DPAC_ADMIN_COLOR ){
@@ -158,8 +171,13 @@ module.exports = keystone;
 
 if( !module.parent ){
   // Start Keystone to connect to your database and initialise the web server
-  keystone.start( ()=>{
-    const k = keystone;
-    console.log( '---Started---' );
+  keystone.start( {
+    onMount: ()=>{
+      keystone.auth.init();
+    },
+    onStart: ()=>{
+      const k = keystone;
+      console.log( '---Started---' );
+    }
   } );
 }

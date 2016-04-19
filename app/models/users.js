@@ -33,7 +33,10 @@ User.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   field: "_rid",
   startAt: 1
 } );
-User.schema.methods.sendResetPassword = keystone.user.sendResetPassword;
+
+if(!process.env.FEATURE_DISABLE_PASSWORDRESETS){
+  User.schema.methods.sendResetPassword = keystone.auth.sendResetPassword;
+}
 
 require( './helpers/setupList' )( User )
   .add( {
