@@ -25,16 +25,16 @@ function activateScheduledAssessments(){
   } );
 }
 
-function archiveScheduledAssessments(){
+function completeScheduledAssessments(){
   return assessmentsService.list( {
-    state: { $ne: constants.assessmentStates.ARCHIVED },
+    state: { $ne: constants.assessmentStates.COMPLETED },
     'schedule.active': true,
     'schedule.end': {
       $lte: new Date()
     }
   } ).each( function( assessment ){
-    console.log( 'Scheduler: auto-archiving assessment', assessment.name );
-    assessment.state = constants.assessmentStates.ARCHIVED;
+    console.log( 'Scheduler: auto-completing assessment', assessment.name );
+    assessment.state = constants.assessmentStates.COMPLETED;
     assessment.schedule.active = false;
     assessment.save();
   } );
@@ -43,7 +43,7 @@ function archiveScheduledAssessments(){
 function doAssessmentActions(){
   return activateScheduledAssessments()
     .then( function(){
-      return archiveScheduledAssessments();
+      return completeScheduledAssessments();
     } );
 }
 
