@@ -93,12 +93,16 @@ function moveFile( src,
   return fs.renameAsync( src.resolved, dest.resolved );
 }
 
-function createRepresentation( document,
-                               assessment ){
-  return new Representation.model( {
-    document: document.id.toString(),
-    assessment: assessment.id.toString()
-  } );
+function createRepresentations( document,
+                                assessments ){
+  return assessments.reduce( ( memo,
+                               assessment )=>{
+    memo[ assessment.id ] = new Representation.model( {
+      document: document.id,
+      assessment: assessment.id
+    } );
+    return memo;
+  }, {} );
 }
 
 function findDocuments( fileData ){
@@ -112,7 +116,7 @@ function removeFile( fileData ){
 }
 
 function reuseStrategy( files,
-                        assessment,
+                        assessments,
                         opts ){
   files.src.originalname = files.src.filename;
   return findDocuments( files.dest )
@@ -123,13 +127,13 @@ function reuseStrategy( files,
       document = updateDocument( document, files.src, opts );
       return {
         document: document,
-        representation: createRepresentation( document, assessment )
+        representations: createRepresentations( document, assessments )
       };
     } );
 }
 
 function overwriteStrategy( files,
-                            assessment,
+                            assessments,
                             opts ){
   files.dest.stats = files.src.stats;
   files.dest.originalname = files.src.filename;
@@ -146,14 +150,14 @@ function overwriteStrategy( files,
       document = updateDocument( document, files.dest, opts );
       return {
         document: document,
-        representation: createRepresentation( document, assessment )
+        representations: createRepresentations( document, assessments )
       };
     }
   );
 }
 
 function createStrategy( files,
-                         assessment,
+                         assessments,
                          opts ){
   files.src.originalname = files.src.filename;
   return moveFile( files.src, files.dest )
@@ -161,14 +165,13 @@ function createStrategy( files,
       var document = updateDocument( new Document.model(), files.src, opts );
       return {
         document: document,
-        representation: createRepresentation( document, assessment )
+        representations: createRepresentations( document, assessments )
       };
     } );
 }
 
 function renameStrategy( files,
-                         jsonData,
-                         assessment,
+                         assessments,
                          opts ){
   files.dest = createFileData( uuid.v4() + path.extname( files.src.filename ), constants.directories.documents );
   files.dest.originalname = files.src.filename;
@@ -178,7 +181,7 @@ function renameStrategy( files,
       var document = updateDocument( new Document.model(), files.dest, opts );
       return {
         document: document,
-        representation: createRepresentation( document, assessment, jsonData[ files.dest.originalname ] )
+        representations: createRepresentations( document, assessments )
       };
     } );
 }
@@ -199,12 +202,12 @@ strategies[ constants.OVERWRITE ] = overwriteStrategy;
 
 function processFiles( bulkupload,
                        jsonData,
-                       assessment,
+                       assessments,
                        opts ){
   return readDirectoryContents( opts )
     .reduce( function( memo,
                        filepath ){
-      var files = {
+      const files = {
         src: createFileData( filepath )
       };
       if( !files.src.stats.isFile() ){
@@ -215,16 +218,13 @@ function processFiles( bulkupload,
         ? strategies[ bulkupload.conflicts ]
         : strategies.create;
 
-      return new P( function( resolve,
-                              reject ){
-        strategy( files, assessment, opts )
-          .then( function( result ){
-            var id = result.document.file.originalname;
-            memo.documents[ id ] = result.document;
-            memo.representations[ id ] = result.representation;
-            resolve( memo );
-          } );
-      } );
+      return strategy( files, assessments, opts )
+        .then( function( result ){
+          var filename = result.document.file.originalname;
+          memo.documents[ filename ] = result.document;
+          memo.representations[ filename ] = result.representations;
+          return memo;
+        } );
     }, {
       documents: {},
       representations: {}
@@ -232,16 +232,21 @@ function processFiles( bulkupload,
     .then( function( mapByFilename ){
       if( jsonData ){
         _.forEach( jsonData, function( item ){
-          var representation = mapByFilename.representations[ item.fileName ];
-          if( item.closeTo ){
-            representation.closeTo = mapByFilename.representations[ item.closeTo ].id;
-          }
-          representation.ability.value = Number( item.ability.value );
-          representation.ability.se = Number( item.ability.se );
-          representation.rankType = item.rankType;
+          const representationsByAssessment = mapByFilename.representations[ item.fileName ];
+          _.each(representationsByAssessment,(representation, assessmentId)=>{
+            if( item.closeTo ){
+              representation.closeTo = mapByFilename.representations[ item.closeTo ][assessmentId].id;
+            }
+            representation.ability.value = Number( item.ability.value );
+            representation.ability.se = Number( item.ability.se );
+            representation.rankType = item.rankType;
+          });
         } );
       }
-      return _.values( mapByFilename.documents ).concat( _.values( mapByFilename.representations ) );
+      const representationList = _.reduce(mapByFilename.representations, (memo, representationsByAssessment)=>{
+        return memo.concat(_.values(representationsByAssessment));
+      }, []);
+      return _.values( mapByFilename.documents ).concat( representationList );
     } )
     .each( function( doc ){
       return doc.save();
@@ -286,12 +291,11 @@ function handleRepresentations( bulkupload ){
   return P.join(
     extractZipfile( opts ),
     retrieveJSONData( opts ),
-    assessmentsService.retrieve( {
-      _id: bulkupload.assessment.toString()
-    } ), function( nothingreturned,
-                   jsonData,
-                   assessment ){
-      return processFiles( bulkupload, jsonData, assessment, opts );
+    assessmentsService.listById( bulkupload.assessment ),
+    function( nothingreturned,
+              jsonData,
+              assessments ){
+      return processFiles( bulkupload, jsonData, assessments, opts );
     }
   )
     .then( function(){
@@ -323,27 +327,27 @@ function handleUsers( bulkupload ){
             if( !raw.password ){
               raw.password = crypto.randomBytes( 16 ).toString( 'base64' );
             }
-            raw.actions = { sendInviteMail : true };
+            raw.actions = { sendInviteMail: true };
             user = new usersService.collection.model( raw );
           }
-          bulkupload.assessment.forEach((assessmentId)=>{
-            if( bulkupload.roles.asAssessee && user.assessments.assessee.indexOf(assessmentId)<0){
-              user.assessments.assessee.push(assessmentId);
+          bulkupload.assessment.forEach( ( assessmentId )=>{
+            if( bulkupload.roles.asAssessee && user.assessments.assessee.indexOf( assessmentId ) < 0 ){
+              user.assessments.assessee.push( assessmentId );
             }
-            if( bulkupload.roles.asAssessor && user.assessments.assessor.indexOf(assessmentId)<0){
-              user.assessments.assessor.push(assessmentId);
+            if( bulkupload.roles.asAssessor && user.assessments.assessor.indexOf( assessmentId ) < 0 ){
+              user.assessments.assessor.push( assessmentId );
             }
-            if( bulkupload.roles.asPAM && user.assessments.pam.indexOf(assessmentId)<0){
-              user.assessments.pam.push(assessmentId);
+            if( bulkupload.roles.asPAM && user.assessments.pam.indexOf( assessmentId ) < 0 ){
+              user.assessments.pam.push( assessmentId );
             }
-          });
+          } );
           return user.save();
         } )
         .catch( ( err )=>P.reject( err ) );
     } )
-    .then(function(){
+    .then( function(){
       removeFile( { resolved: opts.path } )
-    })
+    } )
     .then( function(){
       bulkupload.completed = true;
     } );
