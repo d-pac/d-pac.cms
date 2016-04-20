@@ -114,6 +114,7 @@ require( './helpers/setupList' )( User )
       sendInviteMail: {
         type: Boolean,
         label: "(Re-)send invite",
+        initial: true,
         default: false
       }
     }
