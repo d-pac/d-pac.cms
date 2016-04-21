@@ -1,6 +1,6 @@
 {
   "name": "d-pac.cms",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "dependencies": {
     "async": "1.5.2",
     "benchmarked-comparative-selection": "3.0.0",
