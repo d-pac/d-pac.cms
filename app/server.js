@@ -52,7 +52,7 @@ keystone.init( {
       : "/tool" );
   },
   "signout url": "/auth/signout",
-  "resetpassword url" : "/auth/resetpassword",
+  "resetpassword url": "/auth/resetpassword",
   "changepassword url": "/auth/changepassword",
   "changepassword redirect": "/tool",
 
@@ -87,6 +87,12 @@ keystone.init( {
     ? ( env.DEV_ENV === "true" )
     : ("development" === nodeEnv)
 } );
+
+if( keystone.get( 'dev env' ) ){
+  process.on( 'unhandledRejection', ( reason ) =>{
+    console.log( 'Unhandle Promise Rejection: ' + reason );
+  } );
+}
 
 keystone.set( 'email locals', {
   utils: keystone.utils,
