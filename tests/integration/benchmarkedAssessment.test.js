@@ -1,5 +1,5 @@
 'use strict';
-var debug = require( "debug" )( "dpac:tests:functional:benchmarkedAssessment" );
+var debug = require( "debug" )( "dpac:tests:integration:benchmarkedAssessment" );
 
 var _ = require( 'lodash' );
 var expect = require( 'must' );

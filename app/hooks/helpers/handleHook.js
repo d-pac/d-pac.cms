@@ -2,30 +2,20 @@
 
 var _ = require( 'lodash' );
 
-function throwErr( err ){
-  if( err ){
-    throw err;
-  }
-}
-
 module.exports = function handleHook( handler ){
+  if( typeof handler !== 'function' ){
+    throw new TypeError( 'Handler of type "Function" expected.' );
+  }
   return function( mixed ){
     let done, arg;
     if( mixed ){
-      if( _.isFunction( mixed ) ){
+      if( typeof mixed === 'function' ){
         done = mixed;
         arg = this;
       } else {
-        done = throwErr;
         arg = mixed;
       }
     }
-    handler( arg )
-      .then( function(){
-        done();
-      } )
-      .catch( function( err ){
-        done( err );
-      } );
+    handler( arg ).asCallback( done );
   }
 };

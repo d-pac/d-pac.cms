@@ -1,5 +1,5 @@
 'use strict';
-var debug = require( "debug" )( "dpac:tests:functional:peerAssessment" );
+var debug = require( "debug" )( "dpac:tests:integration:peerAssessment" );
 var util = require( 'util' );
 var _ = require( 'lodash' );
 var expect = require( 'must' );

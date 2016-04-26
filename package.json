@@ -41,6 +41,7 @@
     "must": "0.13.1",
     "properties": "1.2.1",
     "require-directory": "2.1.1",
+    "sinon": "^1.17.3",
     "supertest": "1.1.0"
   },
   "engines": {
@@ -48,10 +49,13 @@
     "npm": "3.5.3"
   },
   "scripts": {
+    "test:units": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/units/**/*.spec.js -R spec --bail --timeout 60000",
+    "test:e2e": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/e2e/*.test.js -R spec --delay --bail --timeout 60000",
+    "test:integration": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/integration/*.test.js -R spec --delay --bail --timeout 60000",
     "start": "pm2 start process.$NODE_ENV.json",
     "monitor": "nodemon app/server.js",
     "stop": "pm2 stop $NODE_ENV",
-    "test": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/**/*.test.js -R spec --delay --bail --timeout 60000"
+    "test": "npm run test:units && npm run test:integration && npm run test:e2e"
   },
   "d-pac": {
     "api": "0.2.0",
