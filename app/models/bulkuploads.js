@@ -124,7 +124,7 @@ var list = require( './helpers/setupList' )( Bulkupload )
       label: "CSV File",
       required: false,
       initial: false,
-      allowedTypes: [ "text/csv" ],
+      allowedTypes: [ "text/csv", "application/vnd.ms-excel" ],
       note: "Format: &lt;first name&gt;;&lt;surname&gt;;&lt;e-mail&gt;[;&lt;password&gt;]</br>Password is optional",
       dependsOn: { uploadType: "users" }
     },
