@@ -10,6 +10,8 @@ var dirops = P.promisifyAll( require( 'node-dir' ) );
 var path = require( 'path' );
 var mime = require( 'mime' );
 var uuid = require( 'uuid' );
+var utils = require('keystone-utils');
+
 const crypto = require( 'crypto' );
 
 const convertersService = require( '../services/converters' );
@@ -233,19 +235,21 @@ function processFiles( bulkupload,
       if( jsonData ){
         _.forEach( jsonData, function( item ){
           const representationsByAssessment = mapByFilename.representations[ item.fileName ];
-          _.each(representationsByAssessment,(representation, assessmentId)=>{
+          _.each( representationsByAssessment, ( representation,
+                                                 assessmentId )=>{
             if( item.closeTo ){
-              representation.closeTo = mapByFilename.representations[ item.closeTo ][assessmentId].id;
+              representation.closeTo = mapByFilename.representations[ item.closeTo ][ assessmentId ].id;
             }
             representation.ability.value = Number( item.ability.value );
             representation.ability.se = Number( item.ability.se );
             representation.rankType = item.rankType;
-          });
+          } );
         } );
       }
-      const representationList = _.reduce(mapByFilename.representations, (memo, representationsByAssessment)=>{
-        return memo.concat(_.values(representationsByAssessment));
-      }, []);
+      const representationList = _.reduce( mapByFilename.representations, ( memo,
+                                                                            representationsByAssessment )=>{
+        return memo.concat( _.values( representationsByAssessment ) );
+      }, [] );
       return _.values( mapByFilename.documents ).concat( representationList );
     } )
     .each( function( doc ){
@@ -318,7 +322,8 @@ function handleUsers( bulkupload ){
 
   return parseUserData( opts )
     .map( ( raw )=>{
-      return usersService.list( { email: raw.email } )
+      var emailRegExp = new RegExp( '^' + utils.escapeRegExp( raw.email ) + '$', 'i' );
+      return usersService.list( { email: emailRegExp } )
         .then( ( users )=>{
           let user;
           if( users.length ){
@@ -346,9 +351,16 @@ function handleUsers( bulkupload ){
         .catch( ( err )=>P.reject( err ) );
     } )
     .then( function(){
-      removeFile( { resolved: opts.path } )
+      return removeFile( { resolved: opts.path } )
     } )
     .then( function(){
+      bulkupload.csvfile = {
+          "filename": "",
+          "originalname": "",
+          "path": "",
+          "size": 0,
+          "filetype": "0"
+      };
       bulkupload.completed = true;
     } );
 }

@@ -4,7 +4,7 @@
   "dependencies": {
     "async": "1.5.2",
     "benchmarked-comparative-selection": "3.0.0",
-    "bluebird": "3.3.3",
+    "bluebird": "3.4.0",
     "chalk": "1.1.1",
     "comparative-selection": "3.0.1",
     "connect-mongo": "1.1.0",
@@ -21,6 +21,7 @@
     "grappling-hook": "3.0.0",
     "jade": "1.11.0",
     "keystone": "github:d-pac/keystone#v0.3.17-dpac.2",
+    "keystone-utils": "0.4.0",
     "konfy": "0.2.1",
     "lodash": "4.5.0",
     "microtime": "2.0.0",

@@ -128,16 +128,16 @@ var list = require( './helpers/setupList' )( Bulkupload )
       note: "Format: &lt;first name&gt;;&lt;surname&gt;;&lt;e-mail&gt;[;&lt;password&gt;]</br>Password is optional",
       dependsOn: { uploadType: "users" }
     },
-    completed: {
-      type: Boolean,
-      default: false,
-      hidden: true
-    },
-
     result: {
       type: Types.Text,
       noedit: true,
       default: ''
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+      noedit: true,
+      hidden: true
     }
   } )
   .register();
