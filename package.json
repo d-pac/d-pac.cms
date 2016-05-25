@@ -55,7 +55,8 @@
     "start": "pm2 start process.$NODE_ENV.json",
     "monitor": "nodemon app/server.js",
     "stop": "pm2 stop $NODE_ENV",
-    "test": "npm run test:units && npm run test:integration && npm run test:e2e"
+    "test": "npm run test:units && npm run test:integration && npm run test:e2e",
+    "serve:test": "NODE_ENV=test node $NODE_DEBUG_OPTION app/server.js"
   },
   "d-pac": {
     "api": "0.2.0",
