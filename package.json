@@ -30,7 +30,7 @@
     "mongoose": "4.4.4",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
-    "node-dir": "0.1.11",
+    "node-dir": "0.1.12",
     "node-schedule": "1.0.0",
     "rimraf": "2.5.2",
     "semver": "5.1.0",
