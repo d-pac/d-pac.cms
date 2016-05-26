@@ -41,7 +41,7 @@
     "must": "0.13.1",
     "properties": "1.2.1",
     "require-directory": "2.1.1",
-    "sinon": "^1.17.3",
+    "sinon": "^1.17.4",
     "supertest": "1.1.0"
   },
   "engines": {
