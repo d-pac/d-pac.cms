@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * This file is where you define your application routes and controllers.
  *
@@ -52,8 +54,8 @@ exports = module.exports = function( app ){
   app.get( '/content/:page', routes.views.page );
   app.all( "/contact", routes.views.contact );
 
-  app.all(keystone.get( 'signin url' ), routes.views.signin);
-  app.all(keystone.get( 'signout url' ), routes.views.signout);
+  app.all( keystone.get( 'signin url' ), routes.views.signin );
+  app.all( keystone.get( 'signout url' ), routes.views.signout );
   app.all( keystone.get( 'resetpassword url' ), routes.views.resetpassword );
   app.all( keystone.get( 'changepassword url' ) + '/:token', routes.views.changepassword );
 

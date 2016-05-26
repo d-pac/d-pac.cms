@@ -2,12 +2,10 @@
 
 var debug = require( "debug" )( "dpac:api.users" );
 var _ = require( 'lodash' );
-var P = require( 'bluebird' );
 var errors = require( 'errors' );
 var keystone = require( 'keystone' );
 
 var service = require( "../../services/users" );
-var comparisonsService = require( "../../services/comparisons" );
 var notesService = require( '../../services/notes' );
 var representationsService = require( '../../services/representations' );
 

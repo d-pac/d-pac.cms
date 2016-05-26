@@ -1,5 +1,5 @@
 "use strict";
-const keystone = require( 'keystone' );
+
 const P = require( 'bluebird' );
 const _ = require( 'lodash' );
 const assessmentsService = require( '../services/assessments' );
@@ -32,7 +32,7 @@ module.exports = function( done ){
       if( doc.algorithm === 'benchmarked-comparative-selection' ){
         update[ "assessorsNum.minimum" ] = 4;
       }
-      if( typeof _.get( doc, [ 'comparisons', 'dimension' ], undefined ) === 'undefined' ){
+      if( typeof _.get( doc, [ 'comparisons', 'dimension' ] ) === 'undefined' ){
         update[ "comparisons.dimension" ] = dim;
       }
 

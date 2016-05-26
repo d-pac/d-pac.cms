@@ -1,7 +1,6 @@
 "use strict";
 
-var debug = require( "debug" )( "dpac:api.comparisons" );
-var representationsService = require( "../../services/representations" );
+// var debug = require( "debug" )( "dpac:api.comparisons" );
 var service = require( "../../services/comparisons" );
 
 var Controller = require( "./helpers/Controller" );

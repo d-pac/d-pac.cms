@@ -1,14 +1,12 @@
 "use strict";
 var keystone = require( "keystone" );
 var _ = require( "lodash" );
-var fs = require( "fs" );
 var P = require( 'bluebird' );
 var moment = require( 'moment' );
 
 var Comparison = keystone.list( "Comparison" );
 var Representation = keystone.list( "Representation" );
 var assessmentsService = require( './assessments' );
-var documentsService = require( './documents' );
 var timelogsService = require( './timelogs' );
 var phasesService = require( './phases' );
 var constants = require( '../models/helpers/constants' );
@@ -19,11 +17,9 @@ const phaseConfigsMap = _.reduce( constants.phases, function( memo,
   return memo;
 }, {} );
 
-var LEFT_EMPTY = "empty";
 var UNDEFINED = "N/A";
 var TRUE = 1;
 var FALSE = 0;
-var NIL = -1;
 
 module.exports.listRepresentationsForAssessmentIds = function listRepresentationsForAssessmentIds( assessmentIds ){
   var q = Representation.model
@@ -55,11 +51,6 @@ function getComparisonsList( assessmentIds ){
   return p.exec();
 }
 
-function getDocument( map,
-                      representationModel ){
-  return _.get( map, [ _.get( representationModel, 'document', '' ).toString(), 'name' ], UNDEFINED );
-}
-
 function createMap( memo,
                     item ){
   var id = item.id.toString();
@@ -81,8 +72,8 @@ function getAssessmentsMap( assessmentIds ){
   return p.reduce( createMap, {} );
 }
 
-function getTimelogsMap( comparisonIds,
-                         phasesMap ){
+function getTimelogsMap( comparisonIds/*,
+                         phasesMap*/ ){
   return timelogsService
     .listForComparisonIds( comparisonIds )
     .reduce( function( memo,

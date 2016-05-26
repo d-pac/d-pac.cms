@@ -2,8 +2,6 @@
 var debug = require( "debug" )( "dpac:services.helpers.Service" );
 
 var _ = require( "lodash" );
-var errors = require( "errors" );
-var P = require( "bluebird" );
 var deepExtend = require( "deep-extend" );
 
 function Service( collection ){
@@ -23,7 +21,7 @@ _.assignIn( Service.prototype, {
           result = result.exec();
         }
         return result;
-      }.bind( receiver );
+      };
     } );
     receiver.collection = this.collection;
     return receiver;
@@ -39,12 +37,6 @@ _.assignIn( Service.prototype, {
       .find( opts );
   },
 
-  /**
-   *
-   * @param {(string|string[])} ids
-   * @param {object} [opts] Mongoose options
-   * @returns {*}
-   */
   listById: function listById( ids,
                                opts ){
     debug( "#listById" );

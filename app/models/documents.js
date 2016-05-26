@@ -1,5 +1,8 @@
 "use strict";
 
+/* too many functions stealthily bound to mongoose documents: */
+/* eslint no-invalid-this: "off" */
+
 const _ = require( "lodash" );
 const keystone = require( "keystone" );
 const Types = keystone.Field.Types;
@@ -218,7 +221,7 @@ require( './helpers/setupList' )( Document )
     link: [
       function( value,
                 isValid ){
-        if( !!value ){
+        if( value ){
           isValid( !this.file.size );
         } else if( !this.text ){
           isValid( !!this.file.size );

@@ -1,7 +1,6 @@
 'use strict';
 var _ = require( 'lodash' );
 var usersService = require( '../services/users' );
-var P = require( 'bluebird' );
 var autoinc = require( '../models/helpers/autoinc' );
 
 var log = _.partial(console.log, require('path').basename(__filename) + ':');

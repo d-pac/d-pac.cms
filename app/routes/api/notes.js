@@ -1,7 +1,6 @@
 "use strict";
 
-var debug = require( "debug" )( "dpac:api.notes" );
-var errors = require( 'errors' );
+// var debug = require( "debug" )( "dpac:api.notes" );
 var service = require( "../../services/notes" );
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );

@@ -11,11 +11,9 @@ var url = require( 'url' );
 var comparisonsService = require( '../services/comparisons' );
 var representationsService = require( '../services/representations' );
 var assessmentsService = require( '../services/assessments' );
-var usersService = require( '../services/users' );
 var constants = require( '../models/helpers/constants' );
 
 var Representation = keystone.list( 'Representation' );
-var Timelog = keystone.list( 'Timelog' );
 
 var dumpCommandTpl = _.template( 'mongodump ' +
   '--host {{host}} ' +
@@ -116,8 +114,8 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } ) );
 
       result += command + '<br/>';
-      return exec( command ).spread( function( stdout,
-                                               stderr ){
+      return exec( command ).spread( function( stdout/*,
+                                               stderr*/ ){
         result += stdout;
       } );
     } )
@@ -130,8 +128,8 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } ) );
 
       result += command + '<br/>';
-      return exec( command ).spread( function( stdout,
-                                               stderr ){
+      return exec( command ).spread( function( stdout/*,
+                                               stderr*/ ){
         result += stdout;
       } );
     } )
@@ -144,8 +142,8 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } ) );
 
       result += command + '<br/>';
-      return exec( command ).spread( function( stdout,
-                                               stderr ){
+      return exec( command ).spread( function( stdout/*,
+                                               stderr*/ ){
         result += stdout;
       } );
     } )
@@ -158,8 +156,8 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } ) );
 
       result += command + '<br/>';
-      return exec( command ).spread( function( stdout,
-                                               stderr ){
+      return exec( command ).spread( function( stdout/*,
+                                               stderr*/ ){
         result += stdout;
       } );
     } )

@@ -2,8 +2,6 @@
 
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
-var mime = require( "mime" );
-var path = require( "path" );
 var constants = require( "./helpers/constants" );
 var P = require( "bluebird" );
 
@@ -145,12 +143,12 @@ require( './helpers/setupList' )( Representation )
   .validate( {
     "ability.value": [
       function(){
-        return !(this.rankType === constants.BENCHMARK && this.ability.value === null);
+        return !(this.rankType === constants.BENCHMARK && this.ability.value === null); //eslint-disable-line no-invalid-this
       }, "Representations of `rankType` 'benchmark' aren't allowed to have ability values of `null`"
     ],
     "ability.se": [
       function(){
-        return !(this.rankType === constants.BENCHMARK && this.ability.se === null);
+        return !(this.rankType === constants.BENCHMARK && this.ability.se === null); //eslint-disable-line no-invalid-this
       }, "Representations of `rankType` 'benchmark' aren't allowed to have ability SE's of `null`"
     ]
   } )

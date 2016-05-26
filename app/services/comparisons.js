@@ -7,7 +7,6 @@ var P = require( "bluebird" );
 var collection = keystone.list( "Comparison" );
 var Service = require( "./helpers/Service" );
 var assessmentsService = require( './assessments' );
-var documentsService = require('./documents');
 var representationsService = require( './representations' );
 
 var base = new Service( collection );
@@ -31,7 +30,6 @@ module.exports.completedCount = function completedCount( opts ){
 module.exports.listForAssessments = function listForAssessments( opts,
                                                                  assessmentIds ){
   debug( "#listForAssessments", opts, assessmentIds );
-  var self = this;
   return base.list( opts )
     .where( "assessment" ).in( assessmentIds )
     .exec();
@@ -91,10 +89,10 @@ module.exports.create = function( opts ){
           : _.shuffle( data.result );
 
         var repA = _.find( representations, function( rep ){
-          return rep.id == selectedPair[ 0 ]._id;
+          return rep.id == selectedPair[ 0 ]._id;  // eslint-disable-line eqeqeq
         } );
         var repB = _.find( representations, function( rep ){
-          return rep.id == selectedPair[ 1 ]._id;
+          return rep.id == selectedPair[ 1 ]._id; // eslint-disable-line eqeqeq
         } );
         hookData = selectedPair;
         p = base.create( {

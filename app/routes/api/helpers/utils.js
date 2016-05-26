@@ -1,8 +1,7 @@
 "use strict";
 var _ = require( "lodash" );
 var errors = require( "errors" );
-var debug = require( "debug" )( "dpac:api.utils" );
-var keystone = require( "keystone" );
+// var debug = require( "debug" )( "dpac:api.utils" );
 
 // taken from 'errors' module
 module.exports.isHttpError = function isHttpError( err ){
@@ -15,7 +14,7 @@ function diff( original,
   _.map( modified, function( item,
                              key ){
     /* jshint eqeqeq:false */
-    if( original[ key ] != item ){ // yeah, we _really_ want non-strict equality comparison here
+    if( original[ key ] != item ){ // eslint-disable-line eqeqeq
       /* jshint eqeqeq:true */
       results.push( key );
     }
@@ -42,13 +41,13 @@ module.exports.verifyChangesAllowed = function verifyChangesAllowed( modified,
 
 /**
  *
- * @param opts
- * @param opts.fields [Required] Array of field names that will be updated, all other values
+ * @param {{}} opts - options
+ * @param {[]} opts.fields - Array of field names that will be updated, all other values
  *  will be ignored [!] for security reasons
- * @param opts.values [Optional] Object containing key value pairs that correspond to schema fields,
+ * @param {[]} [opts.values] - Object containing key value pairs that correspond to schema fields,
  *  if none supplied req.param will be used on `opts.fields` to populate the `values` object
- * @param req
- * @returns {*}
+ * @param {{}} req - request
+ * @returns {{}} - values
  */
 module.exports.parseValues = function( opts,
                                        req ){

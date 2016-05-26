@@ -1,5 +1,6 @@
+'use strict';
+
 var keystone = require( 'keystone' );
-var session = keystone.session;
 var url = require( 'url' );
 var User = keystone.list( keystone.get( 'user model' ) );
 
@@ -50,7 +51,6 @@ exports = module.exports = function( req,
 
     var onFail = function(){
       req.flash( 'error', 'Sorry, that email and password combo are not valid.' );
-      renderView();
     };
 
     keystone.session.signin( req.body, req, res, onSuccess, onFail );

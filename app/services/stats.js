@@ -45,11 +45,10 @@ module.exports = {
       comparisonObjs = comparisons.objects;
     }
 
-    var succeed, fail;
-    var promise = new P( function( resolve,
-                                   reject ){
+    var succeed;
+    var promise = new P( function( resolve/*,
+                                   reject*/ ){
       succeed = resolve;
-      fail = reject;
     } );
 
     setTimeout( function(){

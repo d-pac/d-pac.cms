@@ -38,7 +38,7 @@ module.exports = function( list ){
         } );
         list.events.on = list.events.hook;
         list.schema.pre( 'save', function( done ){
-          const doc = this;
+          const doc = this; //eslint-disable-line no-invalid-this
           const obj = JSON.parse( JSON.stringify( doc ) );
           const promises = [];
           const modified = doc.modifiedPaths();
@@ -196,7 +196,7 @@ module.exports = function( list ){
         builder.expose( _.keys( list.options.toJSON.transformations ) );
       }
       list.schema.post( 'init', function(){
-        this.__original = JSON.parse( JSON.stringify( this ) );
+        this.__original = JSON.parse( JSON.stringify( this ) ); //eslint-disable-line no-invalid-this
       } );
       list.register();
     },

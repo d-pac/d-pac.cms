@@ -22,6 +22,8 @@ module.exports = ( done ) =>{
         n++;
         return document.save();
       }
+
+      return null;
     } )
     .then( ()=>{
       log( 'Updated', n, 'documents' );

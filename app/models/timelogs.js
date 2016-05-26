@@ -23,7 +23,7 @@ Timelog.api = {
 
 Timelog.defaultColumns = "name, comparison, phase, begin, end, duration";
 
-var list = require( './helpers/setupList' )( Timelog )
+require( './helpers/setupList' )( Timelog )
   .add( {
 
     phase: {

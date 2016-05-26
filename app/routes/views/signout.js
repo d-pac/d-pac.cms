@@ -1,20 +1,19 @@
-var keystone = require('keystone');
+'use strict';
 
-exports = module.exports = function(req, res) {
+var keystone = require( 'keystone' );
 
-	keystone.session.signout(req, res, function() {
+exports = module.exports = function( req,
+                                     res ){
 
-		if ('string' === typeof keystone.get('signout redirect')) {
-			return res.redirect(keystone.get('signout redirect'));
-		} else if ('function' === typeof keystone.get('signout redirect')) {
-			return keystone.get('signout redirect')(req, res);
-		} else {
-			return res.redirect('/keystone');
-		}
+  keystone.session.signout( req, res, function(){
 
-		keystone.render(req, res, 'signout', {
-			logo: keystone.get('signin logo')
-		});
-	});
+    if( 'string' === typeof keystone.get( 'signout redirect' ) ){
+      return res.redirect( keystone.get( 'signout redirect' ) );
+    } else if( 'function' === typeof keystone.get( 'signout redirect' ) ){
+      return keystone.get( 'signout redirect' )( req, res );
+    }
+
+    return res.redirect( '/keystone' );
+  } );
 
 };

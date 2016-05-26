@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require( "debug" )( "dpac:services.messages" );
+// var debug = require( "debug" )( "dpac:services.messages" );
 
 var keystone = require( "keystone" );
 var collection = keystone.list( "Message" );

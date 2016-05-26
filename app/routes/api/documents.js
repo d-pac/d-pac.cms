@@ -1,6 +1,6 @@
 "use strict";
 
-var debug = require( "debug" )( "dpac:api.documents" );
+// var debug = require( "debug" )( "dpac:api.documents" );
 
 var service = require( "../../services/documents" );
 var Controller = require( "./helpers/Controller" );

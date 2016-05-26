@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 var constants = require( './helpers/constants' );
@@ -22,7 +21,7 @@ Bulkupload.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt: 1
 } );
 
-var list = require( './helpers/setupList' )( Bulkupload )
+require( './helpers/setupList' )( Bulkupload )
   .add( {
     comment: {
       type: Types.Text,

@@ -1,5 +1,6 @@
+'use strict';
+
 var keystone = require( "keystone" );
-var Types = keystone.Field.Types;
 
 var Organization = new keystone.List( "Organization", {
   track : true

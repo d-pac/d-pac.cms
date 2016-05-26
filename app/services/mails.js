@@ -1,6 +1,5 @@
 'use strict';
 var keystone = require( "keystone" );
-var _ = require( 'lodash' );
 var P = require( 'bluebird' );
 
 module.exports = {

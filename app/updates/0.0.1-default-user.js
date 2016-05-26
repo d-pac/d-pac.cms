@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require('keystone');
 var User = keystone.list('User');
 

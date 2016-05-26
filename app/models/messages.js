@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 var constants = require( './helpers/constants' );
@@ -21,7 +20,7 @@ Message.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt: 1
 } );
 
-var list = require( './helpers/setupList' )( Message )
+require( './helpers/setupList' )( Message )
   .add( {
     recipientType: {
       type: Types.Select,

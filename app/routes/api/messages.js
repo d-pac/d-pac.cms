@@ -1,10 +1,8 @@
 "use strict";
-var P = require( 'bluebird' );
-var debug = require( "debug" )( "dpac:api.messages" );
+// var debug = require( "debug" )( "dpac:api.messages" );
 var errors = require( 'errors' );
 
 var constants = require( '../../models/helpers/constants' );
-var usersService = require( '../../services/users' );
 var service = require( "../../services/messages" );
 var Controller = require( "./helpers/Controller" );
 var base = new Controller( service );

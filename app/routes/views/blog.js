@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require( "keystone" );
 var async = require( "async" );
 
@@ -9,11 +11,11 @@ exports = module.exports = function( req,
   // Init locals
   locals.section = "blog";
   locals.filters = {
-    category : req.params.category
+    category: req.params.category
   };
   locals.data = {
-    posts      : [],
-    categories : []
+    posts: [],
+    categories: []
   };
 
   // Load all categories
@@ -55,12 +57,12 @@ exports = module.exports = function( req,
       keystone.list( "PostCategory" )
         .model
         .findOne( {
-          key : locals.filters.category
+          key: locals.filters.category
         } ).exec( function( err,
                             result ){
-          locals.data.category = result;
-          next( err );
-        } );
+        locals.data.category = result;
+        next( err );
+      } );
     } else {
       next();
     }
@@ -70,9 +72,9 @@ exports = module.exports = function( req,
   view.on( "init", function( next ){
     var q = keystone.list( "Post" )
       .paginate( {
-        page     : req.query.page || 1,
-        perPage  : 10,
-        maxPages : 10
+        page: req.query.page || 1,
+        perPage: 10,
+        maxPages: 10
       } )
       .where( "state", "published" )
       .sort( "-publishedDate" )

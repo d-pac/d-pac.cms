@@ -35,11 +35,6 @@ exports.initAPI = function initAPI( req,
     }
   };
 
-  /**
-   *
-   * @param {Number} [status]
-   * @param {{}|{}[]} errors
-   */
   res.apiError = function( status,
                            errors ){
     if( arguments.length === 1 ){
@@ -147,9 +142,9 @@ exports.requireSelf = function( req,
 
   if( req.user && ( req.user.isAdmin || ( id && id === req.user.id ) ) ){
     return next();
-  } else {
-    return next( new errors.Http401Error() );
   }
+
+  return next( new errors.Http401Error() );
 };
 
 exports.verifyCSRF = function( req,
@@ -225,7 +220,7 @@ module.exports.parseUserId = function parseUserId( req,
                                                    res,
                                                    next ){
   debug( "#parseUserId" );
-  var idParam = req.params[ "_id" ];
+  var idParam = req.params._id;
   if( ( !idParam || "me" === idParam ) && req.user ){
     req.params._id = req.user.id;
   }

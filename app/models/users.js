@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require( 'lodash' );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
@@ -118,7 +120,7 @@ require( './helpers/setupList' )( User )
         default: false
       }
     }
-  }  )
+  } )
   .virtualize( {
     canAccessKeystone: function(){
       return this.isAdmin;

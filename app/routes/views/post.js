@@ -1,5 +1,6 @@
+'use strict';
+
 var keystone = require( "keystone" );
-var async = require( "async" );
 
 exports = module.exports = function( req,
                                      res ){
@@ -9,17 +10,17 @@ exports = module.exports = function( req,
   // Set locals
   locals.section = "blog";
   locals.filters = {
-    post : req.params.post
+    post: req.params.post
   };
   locals.data = {
-    posts : []
+    posts: []
   };
 
   // Load the current post
   view.on( "init", function( next ){
     var q = keystone.list( "Post" ).model.findOne( {
-      state : "published",
-      slug  : locals.filters.post
+      state: "published",
+      slug: locals.filters.post
     } ).populate( "author categories" );
 
     q.exec( function( err,

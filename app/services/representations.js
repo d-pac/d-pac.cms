@@ -5,7 +5,6 @@ var _ = require( "lodash" );
 var documentsService = require( './documents' );
 var collection = keystone.list( "Representation" );
 var Service = require( "./helpers/Service" );
-var requireProp = require( './helpers/requireProp' );
 var base = new Service( collection );
 const constants = require( '../models/helpers/constants' );
 module.exports = base.mixin();

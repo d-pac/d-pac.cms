@@ -1,5 +1,4 @@
 'use strict';
-var P = require( 'bluebird' );
 var debug = require( "debug" )( "dpac:api.system" );
 var errors = require( 'errors' );
 var Controller = require( "./helpers/Controller" );

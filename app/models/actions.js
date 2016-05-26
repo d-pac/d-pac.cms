@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
@@ -31,7 +30,7 @@ const confirmationNecessary = {
   "archive": true
 };
 
-var list = require( './helpers/setupList' )( Action )
+require( './helpers/setupList' )( Action )
   .add( {
     assessment: {
       type: Types.Relationship,
@@ -123,7 +122,7 @@ var list = require( './helpers/setupList' )( Action )
   .validate( {
     confirm: [
       function( value ){
-        if( confirmationNecessary[ this.actionType ] ){
+        if( confirmationNecessary[ this.actionType ] ){ //eslint-disable-line no-invalid-this
           return value;
         }
 

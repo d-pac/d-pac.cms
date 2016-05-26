@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require( "keystone" );
 var Enquiry = keystone.list( "Enquiry" );
 
@@ -15,15 +17,15 @@ exports = module.exports = function( req,
 
   // On POST requests, add the Enquiry item to the database
   view.on( "post", {
-    action : "contact"
+    action: "contact"
   }, function( next ){
     var application = new Enquiry.model();
     var updater = application.getUpdateHandler( req );
 
     updater.process( req.body, {
-      flashErrors  : true,
-      fields       : "name, email, phone, enquiryType, message",
-      errorMessage : "There was a problem submitting your enquiry:"
+      flashErrors: true,
+      fields: "name, email, phone, enquiryType, message",
+      errorMessage: "There was a problem submitting your enquiry:"
     }, function( err ){
       if( err ){
         locals.validationErrors = err.errors;

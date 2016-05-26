@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * This file contains the common middleware used by your routes.
  *
@@ -9,7 +11,6 @@
  */
 
 var _ = require( "lodash" );
-var keystone = require( "keystone" );
 var debug = require( "debug" )( "dpac:middleware" );
 /**
  Initialises the standard view locals

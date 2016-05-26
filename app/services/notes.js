@@ -8,7 +8,6 @@ module.exports = base.mixin();
 
 module.exports.listByDocuments = function listByDocuments(opts, documentIds){
   debug( "#listByDocuments", opts, documentIds );
-  var self = this;
   return base.list( opts )
     .where( "document" ).in( documentIds )
     .exec();

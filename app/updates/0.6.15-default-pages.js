@@ -52,7 +52,7 @@ module.exports = function( done ){
 
   P.resolve( pages )
     .each( createPage )
-    .then( function( models ){
+    .then( function( /* models */ ){
       done();
     } )
     .catch( done );

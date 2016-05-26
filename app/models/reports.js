@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require( "lodash" );
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
@@ -21,7 +20,7 @@ Report.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt: 1
 } );
 
-var list = require( './helpers/setupList' )( Report )
+require( './helpers/setupList' )( Report )
   .add( {
     title: {
       type: String,

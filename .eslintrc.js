@@ -1,0 +1,111 @@
+const OFF = "off";
+const WARN = "warn";
+const ERR = "error";
+
+module.exports = {
+  "parserOptions": {
+    "ecmaVersion": 6,
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true
+  },
+  "rules": {
+    //--( possible errors )--//
+    "no-cond-assign": WARN,
+    "no-constant-condition": ERR,
+    "no-dupe-args": ERR,
+    "no-dupe-keys": ERR,
+    "no-duplicate-case": WARN,
+    "no-ex-assign": ERR,
+    "no-extra-boolean-cast": WARN,
+    "no-extra-semi": ERR,
+    "no-func-assign": ERR,
+    "no-inner-declarations": [ ERR, "functions" ],
+    "no-invalid-regexp": ERR,
+    "no-irregular-whitespace": ERR,
+    "no-negated-in-lhs": ERR,
+    "no-obj-calls": ERR,
+    "no-regex-spaces": ERR,
+    "no-sparse-arrays": WARN,
+    "no-unexpected-multiline": ERR,
+    "no-unreachable": ERR,
+    "no-unsafe-finally": ERR,
+    "use-isnan": ERR,
+    "valid-jsdoc": WARN,
+    "valid-typeof": ERR,
+    //--( best practices )--//
+    "array-callback-return": ERR,
+    "block-scoped-var": ERR,
+    "curly": ERR,
+    "default-case": WARN,
+    "dot-location": [ ERR, "property" ],
+    "dot-notation": WARN,
+    "eqeqeq": ERR,
+    "guard-for-in": WARN,
+    "no-alert": WARN,
+    "no-caller": ERR,
+    "no-case-declarations": ERR,
+    "no-div-regex": ERR,
+    "no-else-return": ERR,
+    "no-empty-function": WARN,
+    "no-empty-pattern": ERR,
+    "no-eq-null": WARN,
+    "no-eval": ERR,
+    "no-extend-native": ERR,
+    "no-extra-bind": WARN,
+    "no-fallthrough": ERR,
+    "no-implicit-coercion": [ WARN, { "boolean": false } ],
+    "no-implicit-globals": ERR,
+    "no-implied-eval": ERR,
+    "no-invalid-this": ERR,
+    "no-iterator": ERR,
+    "no-lone-blocks": ERR,
+    "no-loop-func": ERR,
+    "no-multi-spaces": WARN,
+    "no-multi-str": ERR,
+    "no-native-reassign": ERR,
+    "no-new": ERR,
+    "no-new-func": ERR,
+    "no-new-wrappers": ERR,
+    "no-octal": ERR,
+    "no-octal-escape": ERR,
+    "no-return-assign": ERR,
+    "no-script-url": ERR,
+    "no-self-assign": ERR,
+    "no-self-compare": ERR,
+    "no-sequences": WARN,
+    "no-throw-literal": ERR,
+    "no-unmodified-loop-condition": ERR,
+    "no-unused-expressions": ERR,
+    "no-useless-call": ERR,
+    "no-useless-concat": WARN,
+    "no-useless-escape": ERR,
+    "no-void": ERR,
+    "no-with": ERR,
+    "radix": ERR,
+    "wrap-iife": [ ERR, "inside" ],
+    "strict": ERR,
+    //--( variables )--//
+    "no-catch-shadow": ERR,
+    "no-delete-var": ERR,
+    "no-label-var": ERR,
+    "no-shadow-restricted-names": ERR,
+    "no-undef": ERR,
+    "no-unused-vars": [ WARN, { "args": "none" } ],
+    "no-use-before-define": ERR,
+    //--( stylistic )--//
+    /*
+     "array-bracket-spacing": [ WARN, "always" ],
+     "block-spacing": WARN,
+     "brace-style": [ WARN, "1tbs" ],
+     "comma-spacing": [
+     WARN, {
+     "before": false,
+     "after": true
+     }
+     ],
+     */
+  }
+};

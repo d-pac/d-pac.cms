@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
@@ -58,7 +60,7 @@ Post.add( {
 } );
 
 Post.schema.virtual( "content.full" ).get( function(){
-  return this.content.extended || this.content.brief;
+  return this.content.extended || this.content.brief; //eslint-disable-line no-invalid-this
 } );
 
 Post.defaultColumns = "title, state|20%, author|20%, publishedDate|20%";

@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require( "keystone" );
 
 exports = module.exports = function( req,
@@ -13,7 +15,7 @@ exports = module.exports = function( req,
   view.on( 'init', function( next ){
 
     var q = keystone.list( 'Page' ).model.findOne( {
-      slug : 'homepage'
+      slug: 'homepage'
     } );
 
     q.exec( function( err,

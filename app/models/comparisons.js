@@ -4,7 +4,6 @@ var keystone = require( "keystone" );
 var Types = keystone.Field.Types;
 
 var constants = require( "./helpers/constants" );
-var Assessment = keystone.list( "Assessment" );
 
 var format = "DD/MM/YYYY HH:mm:ss";
 

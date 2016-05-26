@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require( 'keystone' );
 
 exports = module.exports = function( req,
@@ -8,11 +10,11 @@ exports = module.exports = function( req,
   var locals = res.locals;
   locals.section = 'auth';
   locals.submitted = req.body || {};
-  locals.brand = keystone.get('brand');
-  locals.title = locals.brand+ ': reset password';
-  locals.logo = keystone.get('signin logo');
+  locals.brand = keystone.get( 'brand' );
+  locals.title = locals.brand + ': reset password';
+  locals.logo = keystone.get( 'signin logo' );
   locals.csrf_token_key = keystone.security.csrf.TOKEN_KEY;
-  locals.csrf_token_value= keystone.security.csrf.getToken(req, res);
+  locals.csrf_token_value = keystone.security.csrf.getToken( req, res );
 
   view.on( 'post', function( next ){
     if( !keystone.security.csrf.validate( req ) ){

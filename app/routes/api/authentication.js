@@ -1,6 +1,5 @@
 "use strict";
 var debug = require( "debug" )( "dpac:api.authentication" );
-var P = require( 'bluebird' );
 
 var errors = require( "errors" );
 var keystone = require( "keystone" );

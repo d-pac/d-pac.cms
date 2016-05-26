@@ -73,7 +73,7 @@ module.exports.update = function( req,
         path: file.path
       }
     } )
-    .then( ( document )=>{
+    .then( ( /*document*/ )=>{
       return service.retrieve( {
         _id: req.params._id
       } )

@@ -1,4 +1,5 @@
 'use strict';
+
 var keystone = require( 'keystone' );
 
 module.exports = function( req,
@@ -46,12 +47,11 @@ module.exports = function( req,
             req.flash( 'error', 'Could not update password' );
           }
           return res.redirect( keystone.get( 'signin url' ) );
-        } else {
-          keystone.session.signinWithUser( user, req, res, function( user ){
-            req.flash( 'success', 'Password changed successfully' );
-            res.redirect( keystone.get( 'changepassword redirect' ) || '/keystone' );
-          } );
         }
+        keystone.session.signinWithUser( user, req, res, function( /*user*/ ){
+          req.flash( 'success', 'Password changed successfully' );
+          res.redirect( keystone.get( 'changepassword redirect' ) || '/keystone' );
+        } );
       } );
     } );
   } );
@@ -60,7 +60,7 @@ module.exports = function( req,
     keystone.auth.verifyResetToken( req.params.token, null, req, res, function( err,
                                                                                 data ){
       if( err ){
-        console.log(err);
+        console.log( err );
         req.flash( 'error', 'Password reset not allowed, maybe the link has expired?' );
         return res.redirect( keystone.get( 'resetpassword url' ) );
       }

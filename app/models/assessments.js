@@ -354,6 +354,7 @@ require( './helpers/setupList' )( Assessment )
             }
             break;
           case 'assessor':
+          default:
             pR = pA * 2 * aN / rN;
             if( !_.isFinite( pR ) ){
               pR = 0;
