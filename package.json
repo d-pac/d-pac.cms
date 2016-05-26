@@ -16,7 +16,7 @@
     "deep-extend": "0.4.1",
     "errors": "0.3.0",
     "estimating-rasch-model": "2.0.2",
-    "extract-zip": "1.4.1",
+    "extract-zip": "1.5.0",
     "fast-csv": "1.0.0",
     "grappling-hook": "3.0.0",
     "jade": "1.11.0",
