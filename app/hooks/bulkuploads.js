@@ -330,9 +330,8 @@ function handleUsers( bulkupload ){
             user = users[ 0 ];
           } else {
             if( !raw.password ){
-              raw.password = crypto.randomBytes( 16 ).toString( 'base64' );
+              raw.password = "changeme";
             }
-            raw.actions = { sendInviteMail: true };
             user = new usersService.collection.model( raw );
           }
           bulkupload.assessment.forEach( ( assessmentId )=>{
