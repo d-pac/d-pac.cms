@@ -39,7 +39,7 @@ exports = module.exports = function( done ){
             saveQueue.push( comparison );
             return saveQueue;
           }, [] );
-        } )
+        } );
     } )
     .then( function( saveQueue ){
       //we're going to yield here, to allow keystone bootstrapping to continue

@@ -238,7 +238,7 @@ module.exports.setType = ( name,
       quantity: quantity
     } );
     next();
-  }
+  };
 };
 
 module.exports.sendData = ( req,

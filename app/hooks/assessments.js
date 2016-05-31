@@ -57,7 +57,7 @@ function calculateStats( assessment ){
       assessment.stats = stats;
       assessment.stats.lastRun = Date.now();
       return assessment;
-    } )
+    } );
 }
 
 function updateComparisonsNum( assessmentIds ){

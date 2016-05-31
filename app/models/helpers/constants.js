@@ -226,7 +226,7 @@ module.exports.phases = [
       reports: function( comparison ){
         return {
           "Select best SEQ": _.get( comparison, [ 'data', constants.SEQ_SELECTION ], -1 )
-        }
+        };
       }
     }
   },
@@ -241,7 +241,7 @@ module.exports.phases = [
       reports: function( comparison ){
         return {
           "Comparative feedback SEQ": _.get( comparison, [ 'data', constants.SEQ_COMPARATIVE ], -1 )
-        }
+        };
       }
     }
   },
@@ -256,7 +256,7 @@ module.exports.phases = [
       reports: function( comparison ){
         return {
           "Pass/fail SEQ": _.get( comparison, [ 'data', constants.SEQ_PASSFAIL ], -1 )
-        }
+        };
       }
     }
   }

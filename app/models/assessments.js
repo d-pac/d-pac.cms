@@ -368,7 +368,7 @@ require( './helpers/setupList' )( Assessment )
             perRepresentation: pR
           },
           assessorsNum: _.get( assessment, [ 'assessors', 'minimum' ], 0 )
-        }
+        };
       },
       depends: [
         'comparisons.perAssessor', 'comparisons.perRepresentation', 'comparisons.dimension', 'cache.representationsNum',

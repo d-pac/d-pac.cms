@@ -1,3 +1,5 @@
+'use strict';
+
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 
@@ -101,7 +103,7 @@ keystone.set( 'email locals', {
 } );
 
 if( process.env.DPAC_ADMIN_COLOR ){
-  keystone.set( 'admin ui styles', `background-color: ${process.env.DPAC_ADMIN_COLOR};` )
+  keystone.set( 'admin ui styles', `background-color: ${process.env.DPAC_ADMIN_COLOR};` );
 }
 
 if( keystone.get( 'dev env' ) ){
@@ -170,7 +172,9 @@ keystone.set( "nav", {
 } );
 
 _.forEach( keystone.import( 'hooks' ), function( handler ){
-  handler.init && handler.init();
+  if( handler.init ){
+    handler.init();
+  }
 } );
 
 module.exports = keystone;
@@ -182,7 +186,6 @@ if( !module.parent ){
       keystone.auth.init();
     },
     onStart: ()=>{
-      const k = keystone;
       console.log( '---Started---' );
     }
   } );

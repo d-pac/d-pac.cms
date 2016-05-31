@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require( 'lodash' );
 const P = require( 'bluebird' );
 var keystone = require( "keystone" );
 var representationsService = require( '../services/representations' );

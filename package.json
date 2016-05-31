@@ -38,7 +38,7 @@
     "uuid": "2.0.1"
   },
   "devDependencies": {
-    "eslint-config-prototypers": "0.1.0",
+    "eslint-config-prototypers": "0.2.0",
     "mocha": "2.4.5",
     "must": "0.13.1",
     "properties": "1.2.1",
@@ -59,7 +59,8 @@
     "stop": "pm2 stop $NODE_ENV",
     "test": "npm run test:units && npm run test:integration && npm run test:e2e",
     "serve:test": "NODE_ENV=test node $NODE_DEBUG_OPTION app/server.js",
-    "lint": "eslint app"
+    "lint": "eslint app && eslint tests && echo 'Linting finished!'",
+    "lint:fix": "eslint app --fix && eslint tests --fix && echo 'Lint fixing finished!'"
   },
   "d-pac": {
     "api": "0.2.0",

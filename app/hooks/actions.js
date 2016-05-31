@@ -113,7 +113,7 @@ function executeAction( action ){
         .catch( failureHandler );
     case "reset":
       return p.then( function( assessment ){
-        return service.resetAssessment( assessment )
+        return service.resetAssessment( assessment );
       } )
         .then( function( assessment ){
           action.line = "Assessment: " + assessment.name;
@@ -124,7 +124,7 @@ function executeAction( action ){
 
     case "clear":
       return p.then( function( assessment ){
-        return service.clearAssessment( assessment )
+        return service.clearAssessment( assessment );
       } )
         .then( function( assessment ){
           action.line = "Assessment: " + assessment.name;
@@ -135,7 +135,7 @@ function executeAction( action ){
 
     case "delete":
       return p.then( function( assessment ){
-        return service.deleteAssessment( assessment )
+        return service.deleteAssessment( assessment );
       } )
         .then( function( assessment ){
           action.line = "Assessment: " + assessment.name;
@@ -146,7 +146,7 @@ function executeAction( action ){
 
     case "archive" :
       return p.then( function( assessment ){
-        return service.archiveAssessment( assessment )
+        return service.archiveAssessment( assessment );
       } )
         .then( function( result ){
           action.line = "Assessment: " + result.assessment.name;

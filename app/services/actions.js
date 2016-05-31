@@ -73,7 +73,7 @@ module.exports.prepAssessmentForDeletion= function prepAssessmentForDeletion(ass
       return Representation.model.remove( {
         assessment: assessment.id
       } );
-    } )
+    } );
 };
 
 module.exports.deleteAssessment = function deleteAssessment( assessment ){

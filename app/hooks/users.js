@@ -35,7 +35,7 @@ function removeAssessmentFromUsers( assessment ){
     }, [] )
     .mapSeries( ( modified )=>{
       return modified.save();
-    } )
+    } );
 }
 
 function sendInvite( user ){
@@ -47,7 +47,7 @@ function sendInvite( user ){
       } )
       .catch( ( err )=>{
         console.log( err );
-      } )
+      } );
   }
   return P.resolve(); //won't wait on mail
 }

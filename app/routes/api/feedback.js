@@ -15,7 +15,7 @@ module.exports.includeFeedback = ( req,
 
   base.handleResult( service.listByRepresentations( {
     author: req.params._id
-  }, representations ), res, next )
+  }, representations ), res, next );
 };
 
 module.exports.listByRepresentation = ( req,

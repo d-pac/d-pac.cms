@@ -57,7 +57,7 @@ module.exports.includeNotes = ( req,
   } );
   base.handleResult( notesService.listByDocuments( {
     author: req.params._id
-  }, documents ), res, next )
+  }, documents ), res, next );
 };
 
 module.exports.update = function( req,
@@ -84,4 +84,4 @@ module.exports.listRepresentations = function( req,
 
   base.handleResult( representationsService.listForUser(req.params._id), res, next );
 
-}
+};

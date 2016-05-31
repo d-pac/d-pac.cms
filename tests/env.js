@@ -1,3 +1,5 @@
+/* global run:false */
+
 'use strict';
 var debug = require( "debug" )( "dpac:tests:env" );
 var TEST_ENV = 'test';

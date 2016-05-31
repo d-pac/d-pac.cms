@@ -67,13 +67,13 @@ module.exports = function( list ){
         } );
         list.schema.post( 'save', function( doc ){
           const id = JSON.parse( JSON.stringify( doc.id ) );
-          const queue = docs[id];
-          if(queue){
+          const queue = docs[ id ];
+          if( queue ){
             const promises = [];
-            delete docs[id];
-            _.each(queue, (obj)=>{
-              promises.push( list.events.callThenableHook( obj.doc, obj.event, obj.doc, obj.diff) );
-            })
+            delete docs[ id ];
+            _.each( queue, ( obj )=>{
+              promises.push( list.events.callThenableHook( obj.doc, obj.event, obj.doc, obj.diff ) );
+            } );
             P.all( promises );
           }
         } );

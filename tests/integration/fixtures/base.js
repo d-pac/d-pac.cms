@@ -1,6 +1,5 @@
 'use strict';
 
-var P = require( 'bluebird' );
 var _ = require( 'lodash' );
 var assert = require( 'assert' );
 
@@ -69,6 +68,6 @@ module.exports.create = function( env,
       assert.equal( data.assessors.length, opts.assessorsNum, 'Assessors not/incorrectly created' );
 
       return data;
-    } )
+    } );
 
 };

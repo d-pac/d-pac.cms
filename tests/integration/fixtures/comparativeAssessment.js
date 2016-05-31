@@ -1,6 +1,5 @@
 'use strict';
 
-var P = require( 'bluebird' );
 var _ = require( 'lodash' );
 var base = require( './base' );
 var assert = require( 'assert' );
@@ -41,5 +40,5 @@ module.exports.create = function( env,
     } )
     .catch( function( err ){
       console.log( err );
-    } )
+    } );
 };

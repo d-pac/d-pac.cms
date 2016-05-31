@@ -24,7 +24,7 @@ module.exports.listByDocuments = function( documents,
   return module.exports.list( _.defaults( {
     document: { $in: ids }
   }, opts ) );
-}
+};
 
 module.exports.listWithoutUser = function( userId,
                                            opts ){

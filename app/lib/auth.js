@@ -1,3 +1,5 @@
+'use strict';
+
 var keystone = require( 'keystone' );
 var crypto = require( 'crypto' );
 var async = require( 'async' );

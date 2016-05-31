@@ -27,5 +27,5 @@ module.exports = function( model ){
         return itemId.equals( docId );
       } );
     }
-  }
+  };
 };

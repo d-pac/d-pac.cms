@@ -6,7 +6,6 @@ var debug = require( "debug" )( "dpac:lib.pluginsScrobbler" );
 var chalk = require( 'chalk' );
 var spec = require( 'd-pac.plugins-spec' );
 var path = require( 'path' );
-var semver = require( 'semver' );
 
 function init( manifest ){
 
@@ -39,11 +38,6 @@ function init( manifest ){
   keystone.set( "d-pac", {
     plugins: list
   } );
-}
-
-function getByType( collection,
-                    type ){
-  return collection[ type ] || [];
 }
 
 function list( type ){

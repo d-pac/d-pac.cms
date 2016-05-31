@@ -15,7 +15,7 @@ describe.skip( 'peer assessment', function(){
     env.setup()
       .then( function(){
         debug( 'mocks - creation requested' );
-        return fixtures.peerAssessment.create( env )
+        return fixtures.peerAssessment.create( env );
       } )
       .then( function( data ){
         debug( 'mocks - creation completed' );
@@ -80,7 +80,7 @@ describe.skip( 'peer assessment', function(){
         candidates = grouped[ values[ 0 ] ];
         if( candidates.length <= 2 ){
           required = candidates;
-          candidates = grouped[ values[ 1 ] ]
+          candidates = grouped[ values[ 1 ] ];
         } else {
           required = [];
         }
@@ -142,7 +142,7 @@ describe.skip( 'peer assessment', function(){
             return {
               a: representationCounts[ aId ],
               b: representationCounts[ bId ]
-            }
+            };
           } )
           .then( function( compared ){
             debug( 'Comparison finalized:', util.inspect( compared ) );

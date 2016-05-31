@@ -50,5 +50,5 @@ module.exports.create = function( env,
     } )
     .catch( function( err ){
       console.log( err );
-    } )
+    } );
 };

@@ -32,5 +32,5 @@ module.exports = ( done ) =>{
     .catch( ( err )=>{
       console.log( 'err', err );
       done( err );
-    } )
+    } );
 };

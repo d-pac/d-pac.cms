@@ -44,7 +44,7 @@ module.exports.create = function( env ){
       } );
       return P.map( representations, function( doc ){
         return P.promisify( doc.save, doc )();
-      } )
+      } );
     } )
     .then( function( representations ){
       data.representations = representations;

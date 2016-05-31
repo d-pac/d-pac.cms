@@ -10,9 +10,7 @@ var dirops = P.promisifyAll( require( 'node-dir' ) );
 var path = require( 'path' );
 var mime = require( 'mime' );
 var uuid = require( 'uuid' );
-var utils = require('keystone-utils');
-
-const crypto = require( 'crypto' );
+var utils = require( 'keystone-utils' );
 
 const convertersService = require( '../services/converters' );
 var assessmentsService = require( '../services/assessments' );
@@ -31,7 +29,7 @@ function extractZipfile( opts ){
   } )
     .catch( function( err ){
       console.error( 'ERROR:', err );
-    } )
+    } );
 }
 
 function retrieveJSONData( opts ){
@@ -304,7 +302,7 @@ function handleRepresentations( bulkupload ){
   )
     .then( function(){
       return cleanup( bulkupload, opts );
-    } )
+    } );
 }
 
 function parseUserData( opts ){
@@ -350,15 +348,15 @@ function handleUsers( bulkupload ){
         .catch( ( err )=>P.reject( err ) );
     } )
     .then( function(){
-      return removeFile( { resolved: opts.path } )
+      return removeFile( { resolved: opts.path } );
     } )
     .then( function(){
       bulkupload.csvfile = {
-          "filename": "",
-          "originalname": "",
-          "path": "",
-          "size": 0,
-          "filetype": "0"
+        "filename": "",
+        "originalname": "",
+        "path": "",
+        "size": 0,
+        "filetype": "0"
       };
       bulkupload.completed = true;
     } );
@@ -381,6 +379,8 @@ function bulkuploadSavedHandler( bulkupload ){
     case "users":
       p = handleUsers( bulkupload );
       break;
+    default:
+      return P.reject( new Error( 'Unknown bulk upload type' ) );
   }
 
   return p.then( function(){

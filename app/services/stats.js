@@ -153,7 +153,7 @@ module.exports = {
           totals: totals,
           averages: averages,
           byRepresentation: byRepresentation
-        }
+        };
       } );
   },
 };

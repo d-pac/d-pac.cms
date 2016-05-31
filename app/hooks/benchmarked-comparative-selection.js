@@ -7,7 +7,6 @@ var algorithm = require( 'benchmarked-comparative-selection' );
 
 var mailsService = require( '../services/mails' );
 var statsService = require( '../services/stats' );
-var representationsService = require( '../services/representations' );
 var assessmentsService = require( '../services/assessments' );
 
 const handleHook = require( './helpers/handleHook' );
@@ -38,7 +37,7 @@ var handlers = {
 function representationsSelectedHandler( result ){
   var handler = handlers[ result.type ];
   if( handler ){
-    handler.call( this, result );
+    handler.call( this, result ); //eslint-disable-line no-invalid-this
   }
 }
 

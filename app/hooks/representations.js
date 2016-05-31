@@ -1,10 +1,9 @@
 'use strict';
-var _ = require( 'lodash' );
+
 var P = require( 'bluebird' );
 var keystone = require( 'keystone' );
 
 var representationsService = require( '../services/representations' );
-var comparisonsService = require( '../services/comparisons' );
 
 const handleHook = require( './helpers/handleHook' );
 

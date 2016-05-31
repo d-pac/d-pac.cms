@@ -1,10 +1,11 @@
+'use strict';
+
 var keystone = require( 'keystone' );
 var async = require( 'async' );
 var _ = require( 'lodash' );
 
 var constants = require( "../models/helpers/constants" );
 var Phase = keystone.list( 'Phase' );
-var Comparison = keystone.list( 'Comparison' );
 
 function createPhase( phase,
                       done ){

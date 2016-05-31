@@ -16,5 +16,5 @@ module.exports = ( done ) =>{
       raw )=>{
       log( 'Updated', raw.n, 'assessments' );
       done( err );
-    } )
+    } );
 };

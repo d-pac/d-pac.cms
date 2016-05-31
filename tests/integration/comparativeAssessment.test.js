@@ -16,7 +16,7 @@ describe( 'comparative assessment', function(){
     env.setup()
       .then( function(){
         debug( 'mocks - creation requested' );
-        return fixtures.comparativeAssessment.create( env )
+        return fixtures.comparativeAssessment.create( env );
       } )
       .then( function( data ){
         debug( 'mocks - creation completed' );
@@ -65,7 +65,7 @@ describe( 'comparative assessment', function(){
       candidates = grouped[ values[ 0 ] ];
       if( candidates.length <= 2 ){
         required = candidates;
-        candidates = grouped[ values[ 1 ] ]
+        candidates = grouped[ values[ 1 ] ];
       } else {
         required = [];
       }

@@ -18,7 +18,7 @@ function createDirectories( done ){
     }
   } );
   done();
-};
+}
 
 
 

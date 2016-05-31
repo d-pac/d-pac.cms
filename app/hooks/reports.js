@@ -54,7 +54,7 @@ function removeFile( report ){
     .unlinkAsync( path.join( reportsDir, report.filename ) )
     .catch( function( err ){
       console.log( err );
-    } )
+    } );
 }
 
 function generateReportFile( report ){

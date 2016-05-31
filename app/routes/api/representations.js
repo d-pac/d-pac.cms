@@ -76,10 +76,10 @@ module.exports.update = function( req,
     .then( ( /*document*/ )=>{
       return service.retrieve( {
         _id: req.params._id
-      } )
+      } );
     } )
     .then( ( representation )=>{
-      representation.markModified( 'document' )
+      representation.markModified( 'document' );
       return representation.save();
     } )
     , res, next, { depopulate: false } );

@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require( 'lodash' );
-
 module.exports = function handleHook( handler ){
   if( typeof handler !== 'function' ){
     throw new TypeError( 'Handler of type "Function" expected.' );
@@ -11,11 +9,11 @@ module.exports = function handleHook( handler ){
     if( mixed ){
       if( typeof mixed === 'function' ){
         done = mixed;
-        arg = this;
+        arg = this; //eslint-disable-line no-invalid-this
       } else {
         arg = mixed;
       }
     }
     handler( arg ).asCallback( done );
-  }
+  };
 };

@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require( 'lodash' );
 var expect = require( 'must' );
 var request = require( 'supertest' );
 
@@ -28,5 +27,5 @@ describe( 'REST API: system', function(){
           .expect( 200, done );
       } );
     } );
-  } )
+  } );
 } );

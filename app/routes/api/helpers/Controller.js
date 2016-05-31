@@ -23,7 +23,7 @@ _.assignIn( Controller.prototype, {
                              res,
                              next ) =>{
         this.handleResult( this[ method ]( req ), res, next );
-      }
+      };
     } );
     return receiver;
   },
@@ -40,7 +40,7 @@ _.assignIn( Controller.prototype, {
     debug( "#handleResult" );
     opts = _.defaults(opts, {
       depopulate: true
-    })
+    });
     function handle( result ){
       if( result ){
         if( result.toJSON ){

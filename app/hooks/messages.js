@@ -39,7 +39,7 @@ function addToLog( message,
 function getRecipients( message ){
   const command = commandsByRecipient[ message.recipientType ]
     || commandsByRecipient[ constants.recipientTypes.ADMIN.value ];
-  return command.call( null, message );
+  return command( message );
 }
 
 function sendMessage( message ){
