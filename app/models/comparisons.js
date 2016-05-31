@@ -13,7 +13,7 @@ var Comparison = new keystone.List( "Comparison", {
   },
   track: true,
   nocreate: !keystone.get( 'dev env' ),
-  noedit: !keystone.get( 'dev env' ),
+  noedit: false,
   schema: {
     minimize: false
   }
