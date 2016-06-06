@@ -19,7 +19,7 @@ indent_size = 2
 
 [*.jade]
 trim_trailing_whitespace = false
-indent_style = space
+indent_style = tab
 indent_size = 4
 
 [*rc]
