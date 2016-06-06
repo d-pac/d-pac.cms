@@ -330,6 +330,9 @@ function handleUsers( bulkupload ){
             if( !raw.password ){
               raw.password = "changeme";
             }
+            if( bulkupload.sendInvites ){
+              raw.actions = { sendInviteMail: true };
+            }
             user = new usersService.collection.model( raw );
           }
           bulkupload.assessment.forEach( ( assessmentId )=>{

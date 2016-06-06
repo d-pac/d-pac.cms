@@ -127,6 +127,12 @@ require( './helpers/setupList' )( Bulkupload )
       note: "Format: &lt;first name&gt;;&lt;surname&gt;;&lt;e-mail&gt;[;&lt;password&gt;]</br>Password is optional",
       dependsOn: { uploadType: "users" }
     },
+    sendInvites: {
+      type: Boolean,
+      default: false,
+      label: "Send invites (immediately)",
+      dependsOn: { uploadType: "users" }
+    },
     result: {
       type: Types.Text,
       noedit: true,
