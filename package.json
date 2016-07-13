@@ -2,7 +2,7 @@
   "name": "d-pac.cms",
   "version": "0.9.7",
   "dependencies": {
-    "async": "1.5.2",
+    "async": "2.0.0",
     "benchmarked-comparative-selection": "3.0.0",
     "bluebird": "3.4.0",
     "chalk": "1.1.1",
