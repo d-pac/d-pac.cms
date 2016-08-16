@@ -1,12 +1,14 @@
 "use strict";
 
 const _ = require( 'lodash' );
-var keystone = require( "keystone" );
-var Types = keystone.Field.Types;
-var constants = require( "./helpers/constants" );
-var plugins = require( "../lib/pluginsScrobbler" );
+const keystone = require( "keystone" );
+const Types = keystone.Field.Types;
+const constants = require( "./helpers/constants" );
+const plugins = require( "../lib/pluginsScrobbler" );
+const fs = require( 'fs' );
+const path = require( 'path' );
 
-var Assessment = new keystone.List( "Assessment", {
+const Assessment = new keystone.List( "Assessment", {
   track: true,
   defaultSort: "order"
 } );
@@ -257,7 +259,8 @@ require( './helpers/setupList' )( Assessment )
         lang: 'json',
         label: 'UI texts',
         note: 'Must be valid json, please check with <a href="http://jsonlint.com/">jsonlint</a>',
-        default: "{\r\n    \"phase_selection\": {\r\n        \"title\": \"Beoordeel\",\r\n        \"description\": \"Geef aan welke tekst beter geschreven is in functie van  de competentie 'argumentatief schrijven'\",\r\n        \"a_button\": {\r\n            \"label\" : \"Tekst A is beter\",\r\n            \"tooltip\": \"Klik om aan te duiden dat tekst A beter is dan B.\"\r\n        },\r\n        \"b_button\": {\r\n            \"label\": \"Tekst B is beter\",\r\n            \"tooltip\": \"Klik om aan te duiden dat tekst B beter is dan A.\"\r\n        }\r\n    },\r\n    \"phase_select-other\": {\r\n      \"title\": \"Beoordeel\",\r\n      \"description\": \"Welke tekst voelt intuitief beter aan?\",\r\n      \"a_button\": {\r\n        \"label\": \"Tekst A is beter\",\r\n        \"tooltip\": \"Klik om aan te duiden dat tekst A beter is dan B.\"\r\n      },\r\n      \"b_button\": {\r\n        \"label\": \"Tekst B is beter\",\r\n        \"tooltip\": \"Klik om aan te duiden dat tekst B beter is dan A.\"\r\n      },\r\n      \"sending\": \"Even geduld...\"\r\n  \t},\r\n    \"phase_comparative\": {\r\n        \"title\": \"Vergelijk\",\r\n        \"description\": \"Licht kort je keuze toe\"\r\n    },\r\n    \"phase_pros-cons\": {\r\n        \"title\": \"Vergelijk\",\r\n        \"description\": \"Beschrijf hier wat je positief en negatief vond aan de teksten:\",\r\n        \"a_title\": \"Tekst A\",\r\n        \"b_title\": \"Tekst B\",\r\n        \"positive\": \"Positief\",\r\n        \"negative\": \"Negatief\"\r\n    },\r\n    \"phase_passfail\":{\r\n        \"title\":\"Hor ot not?\",\r\n        \"description\" : \"Duid aan of deze goed genoeg zijn.\",\r\n        \"options\": {\r\n          \"passed\" : {\r\n              \"label\" : \"Goed\",\r\n              \"icon\" : \"ok\"\r\n          },\r\n          \"failed\" : { \r\n              \"label\":\"Niet goed\", \r\n              \"icon\":\"remove\"\r\n          }\r\n        }\r\n    },\r\n    \"phase_seq-selection\": {\r\n\t    \"title\": \"Hoe moeilijk vond je het om de keuze te maken?\"\r\n\t},\r\n  \t\"phase_seq-comparative\": {\r\n    \t\"title\": \"Hoe moeilijk vond je het om je keuze te beargumenteren?\"\r\n\t},\r\n    \"phase_seq-passfail\": {\r\n    \t\"title\": \"Hoe moeilijk vond je het om geslaagd/niet geslaagd te kiezen?\"\r\n\t},\r\n    \"representation_viewer\": {\r\n        \"pdf\":{\r\n            \"tooltip\": \"Gebruik de knoppen rechts bovenaan om de paper fullscreen te bekijken of te downloaden.\"\r\n        },\r\n        \"image\": {\r\n            \"tooltip\": \"Klik om deze tekst te selecteren\"\r\n        }\r\n    },\r\n    \"notes\" : {\r\n        \"label\" : \"Notities\",\r\n        \"tooltip\" : \"Noteer hier je opmerkingen bij deze tekst.\"\r\n    },\r\n    \"uploads\":{\r\n        \"description\": \"Laad hier je bestand op\"\r\n    }\r\n}\r\n",
+        default: fs.readFileSync( path.join( __dirname, 'json', 'uiTextDefaults.json' ) )
+        // default: JSON.stringify( require( './json/uiTextDefaults.json' ), null, 2 )
       },
     }, "Stats (dynamic)", {
       cache: {

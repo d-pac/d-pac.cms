@@ -1,0 +1,77 @@
+{
+  "phase_selection": {
+    "title": "Beoordeel",
+    "description": "Geef aan welke tekst beter geschreven is in functie van  de competentie 'argumentatief schrijven'",
+    "a_button": {
+      "label": "Tekst A is beter",
+      "tooltip": "Klik om aan te duiden dat tekst A beter is dan B."
+    },
+    "b_button": {
+      "label": "Tekst B is beter",
+      "tooltip": "Klik om aan te duiden dat tekst B beter is dan A."
+    }
+  },
+  "phase_select-other": {
+    "title": "Beoordeel",
+    "description": "Welke tekst voelt intuitief beter aan?",
+    "a_button": {
+      "label": "Tekst A is beter",
+      "tooltip": "Klik om aan te duiden dat tekst A beter is dan B."
+    },
+    "b_button": {
+      "label": "Tekst B is beter",
+      "tooltip": "Klik om aan te duiden dat tekst B beter is dan A."
+    },
+    "sending": "Even geduld..."
+  },
+  "phase_comparative": {
+    "title": "Vergelijk",
+    "description": "Licht kort je keuze toe"
+  },
+  "phase_pros-cons": {
+    "title": "Vergelijk",
+    "description": "Beschrijf hier wat je positief en negatief vond aan de teksten:",
+    "a_title": "Tekst A",
+    "b_title": "Tekst B",
+    "positive": "Positief",
+    "negative": "Negatief"
+  },
+  "phase_passfail": {
+    "title": "Hor ot not?",
+    "description": "Duid aan of deze goed genoeg zijn.",
+    "options": {
+      "passed": {
+        "label": "Goed",
+        "icon": "ok"
+      },
+      "failed": {
+        "label": "Niet goed",
+        "icon": "remove"
+      }
+    }
+  },
+  "phase_seq-selection": {
+    "title": "Hoe moeilijk vond je het om de keuze te maken?"
+  },
+  "phase_seq-comparative": {
+    "title": "Hoe moeilijk vond je het om je keuze te beargumenteren?"
+  },
+  "phase_seq-passfail": {
+    "title": "Hoe moeilijk vond je het om geslaagd/niet geslaagd te kiezen?"
+  },
+  "representation_viewer": {
+    "pdf": {
+      "tooltip": "Gebruik de knoppen rechts bovenaan om de paper fullscreen te bekijken of te downloaden."
+    },
+    "image": {
+      "tooltip": "Klik om deze tekst te selecteren"
+    }
+  },
+  "notes": {
+    "label": "Notities",
+    "tooltip": "Noteer hier je opmerkingen bij deze tekst."
+  },
+  "uploads": {
+    "description": "Laad hier je bestand op"
+  }
+}
