@@ -59,7 +59,7 @@
     "monitor": "nodemon app/server.js",
     "stop": "pm2 stop $NODE_ENV",
     "test": "npm run test:units && npm run test:integration && npm run test:e2e",
-    "serve:test": "NODE_ENV=test node $NODE_DEBUG_OPTION app/server.js",
+    "serve:test": "NODE_ENV=test DEBUG=dpac:* node $NODE_DEBUG_OPTION app/server.js",
     "lint": "eslint app && eslint tests && echo 'Linting finished!'",
     "lint:fix": "eslint app --fix && eslint tests --fix && echo 'Lint fixing finished!'"
   },
