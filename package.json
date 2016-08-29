@@ -66,5 +66,8 @@
   "d-pac": {
     "api": "0.2.0",
     "plugins": "0.4.0"
+  },
+  "optionalDependencies": {
+    "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#5b6400d"
   }
 }
