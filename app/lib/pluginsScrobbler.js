@@ -9,7 +9,8 @@ var path = require( 'path' );
 
 function init( manifest ){
 
-  var plugins = _.reduce( manifest.dependencies, function( result,
+  const deps = _.assign({}, manifest.dependencies, manifest.optionalDependencies);
+  var plugins = _.reduce( deps, function( result,
                                                            version,
                                                            name ){
     var pkgPath = path.resolve( path.join( "node_modules", name, "package.json" ) );
