@@ -33,15 +33,18 @@ function extractZipfile( opts ){
 }
 
 function retrieveJSONData( opts ){
-  if( opts.json ){
-    return _.reduce( require( opts.json ), function( memo,
-                                                     item ){
+  if( !opts.json ){
+    return P.resolve(false);
+  }
+  return fs.readFileAsync(opts.json, 'utf8')
+    .then(function(jsonStr){
+      return JSON.parse(jsonStr);
+    })
+    .reduce(function(memo, item){
       memo[ item.fileName ] = item;
       return memo;
-    }, {} );
-  }
-
-  return false;
+    }, {})
+  ;
 }
 
 function updateDocument( document,
@@ -238,8 +241,10 @@ function processFiles( bulkupload,
             if( item.closeTo ){
               representation.closeTo = mapByFilename.representations[ item.closeTo ][ assessmentId ].id;
             }
-            representation.ability.value = Number( item.ability.value );
-            representation.ability.se = Number( item.ability.se );
+            const value = Number( item.ability.value );
+            const se = Number( item.ability.se );
+            representation.ability.value = _.isNaN(value) ? null: value;
+            representation.ability.se = _.isNaN(se) ? null: se;
             representation.rankType = item.rankType;
           } );
         } );
@@ -302,7 +307,10 @@ function handleRepresentations( bulkupload ){
   )
     .then( function(){
       return cleanup( bulkupload, opts );
-    } );
+    } )
+    .catch(function(err){
+      return P.reject(err);
+    });
 }
 
 function parseUserData( opts ){

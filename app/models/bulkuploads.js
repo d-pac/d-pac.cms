@@ -113,7 +113,7 @@ require( './helpers/setupList' )( Bulkupload )
       dest: constants.directories.bulk,
       required: false,
       initial: false,
-      allowedTypes: [ "application/json" ],
+      allowedTypes: [ "application/json", "application/octet-stream" ],
       note: "Optional. JSON file with representation data.",
       dependsOn: { uploadType: "representations" }
     },
