@@ -195,6 +195,26 @@ require( './helpers/setupList' )( Assessment )
         }
       },
 
+      middleBoxSize: {
+        type: Types.Number,
+        label: "Middle box size",
+        note: "expressed as a percentage [!]",
+        default: 30,
+        dependsOn:{
+          algorithm: 'positioned-comparative-selection'
+        },
+      },
+
+      minimumReliability:{
+        type: Types.Number,
+        label: "Required minimum reliability",
+        note: "[0;1]",
+        default: .7,
+        dependsOn:{
+          algorithm: 'positioned-comparative-selection'
+        },
+      },
+
       enableTimeLogging: {
         type: Types.Boolean,
         label: "Enable time logging",
@@ -370,12 +390,13 @@ require( './helpers/setupList' )( Assessment )
             perAssessor: pA,
             perRepresentation: pR
           },
-          assessorsNum: _.get( assessment, [ 'assessors', 'minimum' ], 0 )
+          assessorsNum: _.get( assessment, [ 'assessors', 'minimum' ], 0 ),
+          minimumReliability: assessment.minimumReliability || 0
         };
       },
       depends: [
         'comparisons.perAssessor', 'comparisons.perRepresentation', 'comparisons.dimension', 'cache.representationsNum',
-        'cache.assessorNum', 'assessors.minimum'
+        'cache.assessorNum', 'assessors.minimum', 'minimumReliability'
       ]
     }
   } )
@@ -391,6 +412,11 @@ require( './helpers/setupList' )( Assessment )
         }
         return isValid;
       }, '"UI texts" contains invalid JSON'
+    ],
+    middleBoxSize: [
+      function(value){
+        return value >= 0 && value <= 100;
+      }, "Middle box size must be expressed as a percentage [0;100]"
     ]
   } )
   .retain( "track" )
