@@ -123,6 +123,13 @@ require( './helpers/setupList' )( Representation )
       label: "Compared to"
     },
 
+    middleBox: {
+      type: Types.Boolean,
+      noedit: true,
+      default: false,
+      label: "Middlebox"
+    }
+
   }, "Stats", {
 
     ability: {

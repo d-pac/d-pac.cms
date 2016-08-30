@@ -7,8 +7,9 @@ var algorithm = require( 'positioned-comparative-selection' );
 
 var mailsService = require( '../services/mails' );
 var statsService = require( '../services/stats' );
-var assessmentsService = require( '../services/assessments' );
+var representationsService = require( '../services/representations' );
 
+const extractMiddleBox = require( './helpers/extractMiddleBox' );
 const handleHook = require( './helpers/handleHook' );
 
 //TODO: this must be run regardless of the algorithm -> refactor, see also hooks/benchmarked-comparative-selection
@@ -43,6 +44,26 @@ function representationsSelectedHandler( result ){
 }
 
 function recalculateMiddleBox( assessment ){
+  if( assessment.algorithm !== 'positioned-comparative-selection' || assessment.state !== 'published' ){
+    return P.resolve();
+  }
+
+  representationsService.list( {
+    rankType: "ranked"
+  } )
+    .then( function sortByAbility( rankedRepresentations ){
+      return _.sortBy( rankedRepresentations, ( representation )=>{
+        return representation.ability.value;
+      } );
+    } )
+    .then( function( sortedRankedRepresentations ){
+      return extractMiddleBox( sortedRankedRepresentations, assessment.middleBoxSize );
+    } )
+    .mapSeries(function(representation){
+      representation.middleBox = true;
+      return representation.save();
+    })
+  ;
 }
 
 module.exports.init = function(){
