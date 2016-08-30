@@ -68,6 +68,7 @@
     "plugins": "0.4.0"
   },
   "optionalDependencies": {
-    "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#5b6400d"
+    "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#5b6400d",
+    "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#b4d35bb"
   }
 }

@@ -48,7 +48,7 @@ function recalculateMiddleBox( assessment ){
     return P.resolve();
   }
 
-  representationsService.list( {
+  return representationsService.list( {
     rankType: "ranked"
   } )
     .then( function sortByAbility( rankedRepresentations ){
