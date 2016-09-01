@@ -35,6 +35,10 @@ const allowedTypes = [
     mime: 'audio/mp4'
   },
   {
+    title: 'mpeg (audio)',
+    mime: 'audio/mpeg'
+  },
+  {
     title: 'mp3',
     mime: 'audio/mp3'
   },
