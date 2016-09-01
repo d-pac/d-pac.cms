@@ -34,17 +34,18 @@ function extractZipfile( opts ){
 
 function retrieveJSONData( opts ){
   if( !opts.json ){
-    return P.resolve(false);
+    return P.resolve( false );
   }
-  return fs.readFileAsync(opts.json, 'utf8')
-    .then(function(jsonStr){
-      return JSON.parse(jsonStr);
-    })
-    .reduce(function(memo, item){
+  return fs.readFileAsync( opts.json, 'utf8' )
+    .then( function( jsonStr ){
+      return JSON.parse( jsonStr );
+    } )
+    .reduce( function( memo,
+                       item ){
       memo[ item.fileName ] = item;
       return memo;
-    }, {})
-  ;
+    }, {} )
+    ;
 }
 
 function updateDocument( document,
@@ -97,13 +98,14 @@ function moveFile( src,
 }
 
 function createRepresentations( document,
-                                assessments ){
+                                assessments,
+                                base ){
   return assessments.reduce( ( memo,
                                assessment )=>{
-    memo[ assessment.id ] = new Representation.model( {
+    memo[ assessment.id ] = new Representation.model( _.assign( {}, {
       document: document.id,
       assessment: assessment.id
-    } );
+    }, base ) );
     return memo;
   }, {} );
 }
@@ -203,10 +205,38 @@ strategies[ constants.OVERWRITE ] = overwriteStrategy;
  rename: create a new document and rename the file
  */
 
-function processFiles( bulkupload,
-                       jsonData,
-                       assessments,
-                       opts ){
+function parseJSON( jsonData,
+                    mapByFilename ){
+  _.forEach( jsonData, function( item ){
+    const representationsByAssessment = mapByFilename.representations[ item.fileName ];
+    _.each( representationsByAssessment, ( representation,
+                                           assessmentId )=>{
+      if( item.closeTo ){
+        representation.closeTo = mapByFilename.representations[ item.closeTo ][ assessmentId ].id;
+      }
+      const value = Number( item.ability.value );
+      const se = Number( item.ability.se );
+      representation.ability.value = _.isNaN( value )
+        ? null
+        : value;
+      representation.ability.se = _.isNaN( se )
+        ? null
+        : se;
+      representation.rankType = item.rankType;
+    } );
+  } );
+}
+function mapToArray( mapByFilename ){
+  const representationList = _.reduce( mapByFilename.representations, ( memo,
+                                                                        representationsByAssessment )=>{
+    return memo.concat( _.values( representationsByAssessment ) );
+  }, [] );
+  return _.values( mapByFilename.documents ).concat( representationList );
+}
+function createRepresentationsFromFiles( bulkupload,
+                                         jsonData,
+                                         assessments,
+                                         opts ){
   return readDirectoryContents( opts )
     .reduce( function( memo,
                        filepath ){
@@ -234,27 +264,40 @@ function processFiles( bulkupload,
     } )
     .then( function( mapByFilename ){
       if( jsonData ){
-        _.forEach( jsonData, function( item ){
-          const representationsByAssessment = mapByFilename.representations[ item.fileName ];
-          _.each( representationsByAssessment, ( representation,
-                                                 assessmentId )=>{
-            if( item.closeTo ){
-              representation.closeTo = mapByFilename.representations[ item.closeTo ][ assessmentId ].id;
-            }
-            const value = Number( item.ability.value );
-            const se = Number( item.ability.se );
-            representation.ability.value = _.isNaN(value) ? null: value;
-            representation.ability.se = _.isNaN(se) ? null: se;
-            representation.rankType = item.rankType;
-          } );
-        } );
+        parseJSON( jsonData, mapByFilename );
       }
-      const representationList = _.reduce( mapByFilename.representations, ( memo,
-                                                                            representationsByAssessment )=>{
-        return memo.concat( _.values( representationsByAssessment ) );
-      }, [] );
-      return _.values( mapByFilename.documents ).concat( representationList );
+      return mapByFilename;
     } )
+    .then( mapToArray )
+    .each( function( doc ){
+      return doc.save();
+    } );
+}
+
+function createRepresentationsFromJSON( bulkupload,
+                                        jsonData,
+                                        assessments,
+                                        opts ){
+  return documentsService.list( {
+    file: {
+      originalname: { $in: _.keys( jsonData ) }
+    }
+  } )
+    .reduce( function( memo,
+                       document ){
+      const name = document.file.originalname;
+      memo.documents[ name ] = document;
+      memo.representations[ name ] = createRepresentations( document, assessments );
+      return memo;
+    }, {
+      documents: {},
+      representations: {}
+    } )
+    .then( function( mapByFilename ){
+      parseJSON( jsonData, mapByFilename );
+      return mapByFilename;
+    } )
+    .then( mapToArray )
     .each( function( doc ){
       return doc.save();
     } );
@@ -277,40 +320,44 @@ function cleanup( bulkupload,
 }
 
 function handleRepresentations( bulkupload ){
-  if( !bulkupload.zipfile || !bulkupload.zipfile.filename ){
-    return P.reject( new Error( 'Zipfile is required!' ) );
+  const zipfile = _.get( bulkupload, [ 'zipfile', 'filename' ], false );
+  const jsonfile = _.get( bulkupload, [ 'jsonfile', 'filename' ], false );
+
+  if( !zipfile && !jsonfile ){
+    return P.reject( new Error( 'Zipfile -or- jsonfile is required!' ) );
   }
+  let opts = {};
 
-  var opts = {
-    dest: constants.directories.documents,
-    temp: path.join( constants.directories.bulk, bulkupload._rid.toString() ),
-    file: path.join( constants.directories.bulk, _.get( bulkupload, [ 'zipfile', 'filename' ] ) ),
-    json: false
-  };
-
-  var jsonfile = _.get( bulkupload, [ 'jsonfile', 'filename' ], false );
   if( jsonfile ){
-    opts.json = path.resolve( path.join( constants.directories.bulk, jsonfile ) );
+    opts.json = path.resolve( constants.directories.bulk, jsonfile );
   }
 
-  //TODO: handle multiple assessments
+  let p = P.props( {
+    json: retrieveJSONData( opts ),
+    assessments: assessmentsService.listById( bulkupload.assessment )
+  } );
+  if( zipfile ){
+    opts.dest = constants.directories.documents;
+    opts.temp = path.resolve( constants.directories.bulk, bulkupload._rid.toString() );
+    opts.file = path.resolve( constants.directories.bulk, zipfile );
+    p = p.then( function( data ){
+      return extractZipfile( opts )
+        .then( function( unused ){
+          return createRepresentationsFromFiles( bulkupload, data.json, data.assessments, opts );
+        } )
+        .catch( function( err ){
+          return P.reject( err );
+        } );
+    } );
+  } else {
+    p = p.then( function( data ){
+      return createRepresentationsFromJSON( bulkupload, data.json, data.assessments, opts );
+    } );
+  }
 
-  return P.join(
-    extractZipfile( opts ),
-    retrieveJSONData( opts ),
-    assessmentsService.listById( bulkupload.assessment ),
-    function( nothingreturned,
-              jsonData,
-              assessments ){
-      return processFiles( bulkupload, jsonData, assessments, opts );
-    }
-  )
-    .then( function(){
-      return cleanup( bulkupload, opts );
-    } )
-    .catch(function(err){
-      return P.reject(err);
-    });
+  return p.then( function(){
+    return cleanup( bulkupload, opts );
+  } );
 }
 
 function parseUserData( opts ){
