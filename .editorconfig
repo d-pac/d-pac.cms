@@ -25,3 +25,7 @@ indent_size = 4
 [*rc]
 indent_style = space
 indent_size = 2
+
+[docker-compose*]
+indent_style = space
+indent_size = 2

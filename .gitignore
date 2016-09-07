@@ -17,11 +17,11 @@ node_modules*
 
 .DS_Store
 
-.env*
+*env*
+!EXAMPLE.env
 *-mocks.js
 .grunt
 public/assessors
-*.sh
 reports
 
 shipping/*
@@ -30,7 +30,6 @@ batch/*
 !batch/*.js
 
 archive
-process.*
 
 shipitfile.js
 google*.html
