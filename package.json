@@ -8,7 +8,7 @@
     "chalk": "1.1.1",
     "comparative-selection": "3.0.1",
     "connect-mongo": "1.1.0",
-    "cors": "2.7.1",
+    "cors": "2.8.1",
     "d-pac.functions": "1.2.0",
     "d-pac.plugins-spec": "0.5.0",
     "debug": "2.2.0",
