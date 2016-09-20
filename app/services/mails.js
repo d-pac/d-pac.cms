@@ -39,12 +39,7 @@ module.exports = {
       var mail = new keystone.Email( {
         templateName: 'message'
       } );
-      return mail.send( {
-        to: message.to,
-        from: message.from,
-        subject: message.subject,
-        body: message.body
-      }, function( err,
+      return mail.send( message, function( err,
                    result ){
         if( err ){
           return reject( err );

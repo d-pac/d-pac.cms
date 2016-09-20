@@ -1,4 +1,5 @@
 extends /layouts/default
 
 block body-contents
-	!=body
+	!=message.body
+	p.text-larger #{message.loginLinkLabel} #{linkUrl}

@@ -33,6 +33,8 @@ var appversion = (process.env.APP_VERSION_LABEL)
 
 keystone.auth = require( './lib/auth' );
 
+const clientUrl = env.CLIENT_URL || env.ROOT_URL + '/tool';
+
 keystone.init( {
 
   "name": "d-pac",
@@ -41,6 +43,7 @@ keystone.init( {
 
   "root url": env.ROOT_URL,
   "mongo uri": env.MONGO_URI,
+  "client url": clientUrl,
   "less": "public",
   "static": "public",
   "favicon": "public/favicon.ico",
@@ -51,12 +54,12 @@ keystone.init( {
                                res ){
     res.redirect( (user.canAccessKeystone)
       ? "/keystone"
-      : "/tool" );
+      : clientUrl );
   },
   "signout url": "/auth/signout",
   "resetpassword url": "/auth/resetpassword",
   "changepassword url": "/auth/changepassword",
-  "changepassword redirect": "/tool",
+  "changepassword redirect": clientUrl,
 
   "logger": env.LOGGER || "dev",
 

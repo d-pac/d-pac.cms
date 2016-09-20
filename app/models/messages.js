@@ -91,6 +91,12 @@ require( './helpers/setupList' )( Message )
       default: ''
     },
 
+    loginLinkLabel: {
+      type: Types.Text,
+      default: 'Klik hier om in te loggen:',
+      note: 'This text will be followed by a clickable URL to this d-pac instance. E.g.:<br/>Klik hier om in te loggen: http://tool.d-pac.be'
+    },
+
     state: {
       type: Types.Select,
       options: [

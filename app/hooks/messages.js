@@ -55,7 +55,8 @@ function sendMessage( message ){
         to: recipients,
         from: user,
         subject: message.subject,
-        body: message.body
+        message: message.toObject(),
+        linkUrl: keystone.get('client url')
       } );
     } )
     .then( function( result ){
