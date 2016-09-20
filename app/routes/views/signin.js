@@ -8,6 +8,7 @@ exports = module.exports = function( req,
                                      res ){
 
   var locals = res.locals;
+  locals.from = req.query.from
   locals.section = 'auth';
   locals.submitted = req.body || {};
   locals.brand = keystone.get( 'brand' );
@@ -20,11 +21,7 @@ exports = module.exports = function( req,
     : false;
 
   function renderView() {
-  		keystone.render(req, res, 'signin', {
-  			submitted: req.body,
-  			from: req.query.from,
-  			logo: keystone.get('signin logo')
-  		});
+  		keystone.render(req, res, 'signin', locals);
   	}
 
   	// If a form was submitted, process the login attempt
