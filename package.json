@@ -41,7 +41,7 @@
     "eslint": "2.11.1",
     "eslint-config-prototypers": "0.2.0",
     "mocha": "2.4.5",
-    "must": "0.13.1",
+    "must": "0.13.2",
     "properties": "1.2.1",
     "require-directory": "2.1.1",
     "sinon": "^1.17.3",
