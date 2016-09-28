@@ -23,7 +23,7 @@
     "keystone": "github:d-pac/keystone#v0.3.17-dpac.2",
     "keystone-utils": "0.4.0",
     "konfy": "0.2.1",
-    "lodash": "4.5.0",
+    "lodash": "4.5.1",
     "microtime": "2.0.0",
     "mime": "1.3.4",
     "moment": "2.11.2",
