@@ -24,7 +24,7 @@
     "keystone-utils": "0.4.0",
     "konfy": "0.2.1",
     "lodash": "4.5.0",
-    "microtime": "2.0.0",
+    "microtime": "2.1.1",
     "mime": "1.3.4",
     "moment": "2.11.2",
     "moment-range": "2.1.0",
@@ -42,6 +42,7 @@
     "eslint-config-prototypers": "0.2.0",
     "mocha": "2.4.5",
     "must": "0.13.1",
+    "nodemon": "1.10.2",
     "properties": "1.2.1",
     "require-directory": "2.1.1",
     "sinon": "^1.17.3",
@@ -68,7 +69,7 @@
     "plugins": "0.4.0"
   },
   "optionalDependencies": {
-    "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#5b6400d",
+    "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#f31d38f",
     "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#b4d35bb"
   }
 }
