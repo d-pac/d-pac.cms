@@ -45,7 +45,7 @@
     "properties": "1.2.1",
     "require-directory": "2.1.1",
     "sinon": "^1.17.3",
-    "supertest": "1.1.0"
+    "supertest": "2.0.0"
   },
   "engines": {
     "node": "4.2.1",
