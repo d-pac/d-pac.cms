@@ -12,7 +12,7 @@ var documentsService = require("../services/documents");
 var Representation = new keystone.List("Representation", {
   track: true
 });
-Representation.defaultColumns = "name, rankType, ability.value, middleBox";
+Representation.defaultColumns = "name, rankType|120, ability.value|200, middleBox|40";
 
 Representation.schema.methods.compareWith = function (other) {
   this.compared.push(other._id);

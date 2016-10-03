@@ -274,11 +274,14 @@ function createRepresentationsFromJSON(bulkupload,
                                        jsonData,
                                        assessments,
                                        opts) {
-  return documentsService.list({
-    file: {
-      originalname: {$in: _.keys(jsonData)}
-    }
-  })
+  const filenames = _.keys(jsonData);
+  const q = {
+    "file.originalname": {$in: filenames}
+  };
+  return documentsService.list(q)
+    // .then(function (documents) {
+    //   return documents;
+    // })
     .reduce(function (memo,
                       document) {
       const name = document.file.originalname;
@@ -314,7 +317,7 @@ function cleanup(bulkupload,
       return null;
     })
     .then(function () {
-      if(opts.temp){
+      if (opts.temp) {
         return rimraf(opts.temp);
       }
       return null;
@@ -350,9 +353,6 @@ function handleRepresentations(bulkupload) {
       return extractZipfile(opts)
         .then(function (unused) {
           return createRepresentationsFromFiles(bulkupload, data.json, data.assessments, opts);
-        })
-        .catch(function (err) {
-          return P.reject(err);
         });
     });
   } else {
@@ -361,9 +361,12 @@ function handleRepresentations(bulkupload) {
     });
   }
 
-  return p.then(function () {
-    return cleanup(bulkupload, opts);
-  });
+  return p.catch(function (err) {
+    return P.reject(err);
+  })
+    .then(function () {
+      return cleanup(bulkupload, opts);
+    });
 }
 
 function parseUserData(opts) {
