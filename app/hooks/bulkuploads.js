@@ -67,7 +67,9 @@ function readDirectoryContents(opts) {
   return dirops.filesAsync(opts.temp)
     .then(function (files) {
       return files.filter(function (file) {
-        return ignored.indexOf(file) < 0;
+        const filename = path.basename(file);
+        const index = ignored.indexOf(filename);
+        return index < 0;
       });
     });
 }
@@ -214,14 +216,8 @@ function parseJSON(jsonData,
       if (item.closeTo) {
         representation.closeTo = mapByFilename.representations[item.closeTo][assessmentId].id;
       }
-      const value = Number(item.ability.value);
-      const se = Number(item.ability.se);
-      representation.ability.value = _.isNaN(value)
-        ? null
-        : value;
-      representation.ability.se = _.isNaN(se)
-        ? null
-        : se;
+      representation.ability.value = _.get(item, "ability.value", null);
+      representation.ability.se = _.get(item, "ability.se", null);
       representation.rankType = item.rankType;
     });
   });
