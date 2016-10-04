@@ -24,7 +24,7 @@ var dumpCommandTpl = _.template( 'mongodump ' +
   interpolate: /{{([\s\S]+?)}}/g
 } );
 
-module.exports.deleteAssessmentAssociates = function deleteAssessmentAssociates( assessment ){
+module.exports.deleteComparisons = function deleteComparisons(assessment ){
   return comparisonsService.list( {
       assessment: assessment.id
     } )
@@ -34,14 +34,14 @@ module.exports.deleteAssessmentAssociates = function deleteAssessmentAssociates(
 };
 
 module.exports.resetAssessment = function resetAssessment( assessment ){
-  return module.exports.deleteAssessmentAssociates( assessment )
+  return module.exports.deleteComparisons( assessment )
     .then( function(){
       return representationsService.list( {
         assessment: assessment.id
       } );
     } )
     .mapSeries( function( representation ){
-      representation.compared = [];
+      representation.reset();
       return representation.save();
     } )
     .then( function(){
@@ -51,7 +51,7 @@ module.exports.resetAssessment = function resetAssessment( assessment ){
 };
 
 module.exports.clearAssessment = function clearAssessment( assessment ){
-  return module.exports.deleteAssessmentAssociates( assessment.id )
+  return module.exports.deleteComparisons( assessment.id )
     .then( function(){
       return representationsService.list( {
         assessment: assessment.id
@@ -68,7 +68,7 @@ module.exports.clearAssessment = function clearAssessment( assessment ){
 };
 
 module.exports.prepAssessmentForDeletion= function prepAssessmentForDeletion(assessment){
-  return module.exports.deleteAssessmentAssociates( assessment )
+  return module.exports.deleteComparisons( assessment )
     .then( function(){
       return Representation.model.remove( {
         assessment: assessment.id
