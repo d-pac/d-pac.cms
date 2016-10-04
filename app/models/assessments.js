@@ -355,6 +355,15 @@ require( './helpers/setupList' )( Assessment )
           label: 'Calculate (manual stats)',
           note: 'Triggers calculation of assessment stats.',
           default: false
+        },
+        calculateMiddleBox:{
+          type: Types.Boolean,
+          label: '(Re-)calculate middle box',
+          note: 'Triggers (re-)calculation of middle box representations',
+          default: false,
+          dependsOn:{
+            algorithm: 'positioned-comparative-selection'
+          },
         }
       }
     } )

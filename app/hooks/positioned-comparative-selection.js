@@ -5,7 +5,6 @@ var _ = require('lodash');
 var keystone = require('keystone');
 var algorithm = require('positioned-comparative-selection');
 
-var mailsService = require('../services/mails');
 var statsService = require('../services/stats');
 var representationsService = require('../services/representations');
 const assessmentsService = require('../services/assessments');
@@ -13,42 +12,7 @@ const assessmentsService = require('../services/assessments');
 const extractMiddleBox = require('./helpers/extractMiddleBox');
 const handleHook = require('./helpers/handleHook');
 
-//TODO: this must be run regardless of the algorithm -> refactor, see also hooks/benchmarked-comparative-selection
-var handlers = {
-  messages: function (data) {
-    _.forEach(data.messages, function (message) {
-      switch (message) {
-        case algorithm.constants.messages.ASSESSOR_STAGE_COMPLETED:
-          mailsService.sendAssessorStageCompleted(data.assessor, data.assessment);
-          break;
-        case algorithm.constants.messages.STAGE_COMPLETED:
-          mailsService.sendStageCompleted(data.assessment);
-          statsService.estimate(data.representations, data.comparisons);
-          break;
-        case algorithm.constants.messages.ASSESSMENT_COMPLETED:
-          data.assessment.state = 'completed';
-          data.assessment.save();
-          break;
-        default:
-          console.error('[dpac:hooks.positioned-comparative-selection]', 'ERROR: Handler for message "' + message
-            + '" in hook "positioned-comparative-selection" not implemented');
-      }
-    });
-  }
-};
-
-function representationsSelectedHandler(result) {
-  var handler = handlers[result.type];
-  if (handler) {
-    handler.call(this, result); //eslint-disable-line no-invalid-this
-  }
-}
-
 function recalculateMiddleBox(assessment) {
-  if (assessment.algorithm !== 'positioned-comparative-selection') {
-    return P.resolve();
-  }
-
   return representationsService.list({
     rankType: "ranked"
   })
@@ -67,18 +31,31 @@ function recalculateMiddleBox(assessment) {
     ;
 }
 
+function assessmentSaved(assessment){
+  if(! assessment.actions.calculateMiddleBox){
+    return P.resolve();
+  }
+  return recalculateMiddleBox(assessment)
+    .then(function(){
+      assessment.actions.calculateMiddleBox=false;
+      return assessment;
+    });
+}
+
+function comparisonSelectionChanged( comparison, diff, done ) {
+  return assessmentsService.retrieve({
+    _id: comparison.assessment
+  })
+    .then(function (assessment) {
+      //TODO: we need to extract this out here, and move it to the positioned algorithm, with a hook or something
+      if (assessment.algorithm === 'positioned-comparative-selection') {
+        return statsService.estimateForAssessment( assessment.id );
+      }
+    })
+    .asCallback(done);
+}
+
 module.exports.init = function () {
-  keystone.hooks.post('positioned-comparative-selection.select', representationsSelectedHandler);
-  keystone.list('Assessment').schema.post('save', handleHook(function(assessment){
-    if(assessment.state !== 'published'){
-      return P.resolve();
-    }
-    return recalculateMiddleBox(assessment);
-  }));
-  /*
-  keystone.list('Representation').schema.post('save', handleHook(function (representation) {
-    return assessmentsService.retrieve({_id: representation.assessment})
-      .then(recalculateMiddleBox);
-  }));
-  */
+  keystone.list('Assessment').schema.pre('save', handleHook(assessmentSaved));
+  keystone.list( 'Comparison' ).events.on( 'change:data.selection', comparisonSelectionChanged );
 };

@@ -126,7 +126,7 @@ module.exports.create = function( opts ){
         p = P.resolve( data );
       }
       return p.then( function( output ){
-        keystone.hooks.callHook( 'post:' + assessment.algorithm + '.select', hookData );
+        keystone.hooks.callHook( 'post:plugin.select', hookData );
         return output;
       } );
     }

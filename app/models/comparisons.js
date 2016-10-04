@@ -102,7 +102,7 @@ require( './helpers/setupList' )( Comparison )
   }, "Assessor data", {
     data: data,
   } )
-  .emit( 'assessment' )
+  .emit( 'assessment', 'data.selection' )
   .retain( "track" )
   .relate( {
     path: "timelogs",
