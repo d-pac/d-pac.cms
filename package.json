@@ -70,6 +70,6 @@
   },
   "optionalDependencies": {
     "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#f31d38f",
-    "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#e9076a3"
+    "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#011f3db"
   }
 }
