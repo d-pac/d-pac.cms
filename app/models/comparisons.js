@@ -38,7 +38,7 @@ Comparison.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 
 Comparison.schema.plugin( require( "mongoose-deep-populate" )( keystone.mongoose ) );
 
-Comparison.defaultColumns = "name, assessor, assessment, representations.a, representations.b, phase, completed";
+Comparison.defaultColumns = "name, assessor, representations.a, representations.b, createdAt, selectionMadeAt";
 require( './helpers/setupList' )( Comparison )
   .add( "Connections", {
 
