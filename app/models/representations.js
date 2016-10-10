@@ -31,7 +31,7 @@ Representation.schema.methods.uncompareWith = function (other) {
 
 Representation.schema.methods.reset = function(){
   this.compared = [];
-  this.middleBox = false;
+  // this.middleBox = false;
   if(this.rankType===constants.TO_RANK){
     this.ability.value = null;
     this.ability.se = null;

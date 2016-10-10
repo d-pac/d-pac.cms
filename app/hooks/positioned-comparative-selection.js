@@ -49,7 +49,20 @@ function comparisonSelectionChanged( comparison, diff, done ) {
     .then(function (assessment) {
       //TODO: we need to extract this out here, and move it to the positioned algorithm, with a hook or something
       if (assessment.algorithm === 'positioned-comparative-selection') {
-        return statsService.estimateForAssessment( assessment.id );
+        const getComparisons = keystone.list( "Comparison" ).model.find( { assessment: assessment.id } );
+        const getRepresentations = keystone.list( "Representation" ).model.find( { assessment: assessment.id } );
+
+        return P.join( getComparisons.exec(), getRepresentations.exec(), function( comparisonDocs,
+                                                                                   representationDocs ){
+
+          // we need to swap the (stale) comparison from the database with the (updated) comparison we received
+          // otherwise the estimation will produce incorrect data
+          const index = comparisonDocs.findIndex(function (item, i, list) {
+            return item._id.equals(comparison._id);
+          });
+          comparisonDocs.splice(index, 1, comparison);
+          return statsService.estimate( representationDocs, comparisonDocs );
+        } );
       }
     })
     .asCallback(done);
