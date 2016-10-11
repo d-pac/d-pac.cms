@@ -56,7 +56,8 @@ module.exports.parseValues = function( opts,
   }
   var temp = {};
   _.forEach( opts.fields, function( field ){
-    var value = req.body[ field ];
+    // we need to use _.get since field might be "foo.bar"
+    var value = _.get(req.body, field );
 
     if( value ){
       temp[ field ] = value;
