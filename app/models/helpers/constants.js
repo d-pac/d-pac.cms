@@ -21,7 +21,8 @@ var constants = module.exports = {
   SEQ_SELECTION: "seq-selection",
   SEQ_COMPARATIVE: "seq-comparative",
   SEQ_PASSFAIL: "seq-passfail",
-  SELECT_OTHER: "select-other"
+  SELECT_OTHER: "select-other",
+  PROSCONS_OTHER: "pros-cons-other"
 };
 
 module.exports.directories = {
@@ -166,19 +167,19 @@ module.exports.phases = [
     label: "Pros & cons",
     field: {
       aPositive: {
-        label: "Positive in representation A",
+        label: "Pros in A",
         type: Types.Text
       },
       aNegative: {
-        label: "Negative in representation A",
+        label: "Cons in A",
         type: Types.Text
       },
       bPositive: {
-        label: "Positive in representation B",
+        label: "Pros in B",
         type: Types.Text
       },
       bNegative: {
-        label: "Negative in representation B",
+        label: "Cons in B",
         type: Types.Text
       }
     },
@@ -189,6 +190,38 @@ module.exports.phases = [
           "A-": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'aNegative' ], '' ) ),
           "B+": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'bPositive' ], '' ) ),
           "B-": formatBody( _.get( comparison, [ 'data', constants.PROSCONS, 'bNegative' ], '' ) ),
+        };
+      }
+    }
+  },
+  {
+    slug: constants.PROSCONS_OTHER,
+    label: "Pros & cons (other)",
+    field: {
+      aPositive: {
+        label: "(Other) Pros in A",
+        type: Types.Text
+      },
+      aNegative: {
+        label: "(Other) Cons in A",
+        type: Types.Text
+      },
+      bPositive: {
+        label: "(Other) Pros in B",
+        type: Types.Text
+      },
+      bNegative: {
+        label: "(Other) Cons in B",
+        type: Types.Text
+      }
+    },
+    format: {
+      reports: function( comparison ){
+        return {
+          "(other) A+": formatBody( _.get( comparison, [ 'data', constants.PROSCONS_OTHER, 'aPositive' ], '' ) ),
+          "(other) A-": formatBody( _.get( comparison, [ 'data', constants.PROSCONS_OTHER, 'aNegative' ], '' ) ),
+          "(other) B+": formatBody( _.get( comparison, [ 'data', constants.PROSCONS_OTHER, 'bPositive' ], '' ) ),
+          "(other) B-": formatBody( _.get( comparison, [ 'data', constants.PROSCONS_OTHER, 'bNegative' ], '' ) ),
         };
       }
     }

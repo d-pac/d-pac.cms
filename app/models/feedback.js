@@ -1,7 +1,15 @@
 'use strict';
 
+const _ = require('lodash');
 const keystone = require( 'keystone' );
 const Types = keystone.Field.Types;
+const constants = require('./helpers/constants');
+const phases  = _.map(constants.phases, function (p) {
+  return {
+    label: p.label,
+    value: p.slug
+  }
+});
 
 const Feedback = new keystone.List( 'Feedback', {
   map: {
@@ -13,7 +21,7 @@ const Feedback = new keystone.List( 'Feedback', {
   plural: "Feedback"
 } );
 
-Feedback.defaultColumns = 'name, author, representation';
+Feedback.defaultColumns = 'name, author, representation, phase';
 
 Feedback.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   model: "Feedback",
@@ -39,6 +47,13 @@ require( './helpers/setupList' )( Feedback )
       many: false,
       index: true
     },
+    phase: {
+      type: Types.Select,
+      initial: true,
+      required: true,
+      options: phases,
+      default: constants.PROSCONS
+    }
   }, "Content", {
     positive: {
       type: Types.Textarea

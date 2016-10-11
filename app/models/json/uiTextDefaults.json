@@ -36,6 +36,14 @@
     "positive": "Positief",
     "negative": "Negatief"
   },
+  "phase_pros-cons-other":{
+    "title": "Vergelijk",
+    "description": "Beschrijf hier wat je positief en negatief vond aan de teksten:",
+    "a_title": "Tekst A",
+    "b_title": "Tekst B",
+    "positive": "Positief",
+    "negative": "Negatief"
+  },
   "phase_passfail": {
     "title": "Hor ot not?",
     "description": "Duid aan of deze goed genoeg zijn.",
