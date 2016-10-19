@@ -51,6 +51,9 @@ _.assignIn( Controller.prototype, {
         _.set( res, [ 'locals', 'results' ], results.concat( result ) );
       }
       next();
+      // since this function might be used as a promise handler,
+      // it needs to return explicitly
+      return null;
     }
 
     if( isThenable( mixed ) ){
