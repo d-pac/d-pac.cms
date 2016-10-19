@@ -389,7 +389,7 @@ function handleUsers( bulkupload ){
         return new RegExp( '^' + utils.escapeRegExp( cleanEmail ) + '$', 'i' );
       } )
         .then( function( emailRegExp ){
-          usersService.list( { email: emailRegExp } );
+          return usersService.list( { email: emailRegExp } );
         } )
         .then( ( users )=>{
           let user;
