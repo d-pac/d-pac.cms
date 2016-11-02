@@ -3,20 +3,21 @@
  */
 'use strict';
 
-const keystone = require('keystone');
-const handleHook = require('./helpers/handleHook');
-const mailsService = require('../services/mails');
+const _ = require( 'lodash' );
+const keystone = require( 'keystone' );
+const handleHook = require( './helpers/handleHook' );
+const mailsService = require( '../services/mails' );
 
 const messageHandlers = {
-  'assessor-stage-completed': function (data) {
-    mailsService.sendAssessorStageCompleted(data.assessor, data.assessment);
+  'assessor-stage-completed': function( data ){
+    mailsService.sendAssessorStageCompleted( data.assessor, data.assessment );
   },
 
-  'stage-completed': function (data) {
-    mailsService.sendStageCompleted(data.assessment);
+  'stage-completed': function( data ){
+    mailsService.sendStageCompleted( data.assessment );
   },
 
-  'assessment-completed': function (data) {
+  'assessment-completed': function( data ){
     data.assessment.state = 'completed';
     data.assessment.save();
   },
@@ -33,19 +34,19 @@ const messageHandlers = {
  * @param {String} result.phase - phase id
  * @param {String} result.type - type description
  */
-function pluginMessage(data) {
+function pluginMessage( data ){
 
-  _.forEach(data.messages, function (messageType) {
-    const handler = messageHandlers[messageType];
-    if (!handler) {
-      console.error('[dpac:hooks.algorithms]', `ERROR: Handler for message "${messageType}
-         in hook "${data.assessment.algorithm}" not implemented`);
+  _.forEach( data.messages, function( messageType ){
+    const handler = messageHandlers[ messageType ];
+    if( !handler ){
+      console.error( '[dpac:hooks.algorithms]', `ERROR: Handler for message "${messageType}
+         in hook "${data.assessment.algorithm}" not implemented` );
       return;
     }
-    handler(data);
-  });
+    handler( data );
+  } );
 
 }
-module.exports.init = function () {
-  keystone.hooks.post('plugin.message', pluginMessage);
+module.exports.init = function(){
+  keystone.hooks.post( 'plugin.message', pluginMessage );
 };
