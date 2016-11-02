@@ -134,7 +134,8 @@ require( './helpers/setupList' )( Bulkupload )
       dependsOn: { uploadType: "users" }
     },
     result: {
-      type: Types.Text,
+      type: Types.Html,
+      wysiwyg: true,
       noedit: true,
       default: ''
     },
