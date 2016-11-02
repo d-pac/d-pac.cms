@@ -5,6 +5,8 @@ var crypto = require( 'crypto' );
 var async = require( 'async' );
 var moment = require( 'moment' );
 
+const utils = require( 'keystone-utils' );
+
 exports.init = function(){
   var mongoose = keystone.mongoose;
   var Reset = new mongoose.Schema( {
@@ -38,7 +40,8 @@ exports.attemptResetMail = function( lookup,
   var User = keystone.list( keystone.get( 'user model' ) );
   if( 'string' === typeof lookup.email ){
     // match email address
-    User.model.findOne( { email: lookup.email } ).exec( function( err,
+    const emailRegExp = new RegExp('^' + utils.escapeRegExp(lookup.email) + '$', 'i');
+    User.model.findOne( { email: emailRegExp } ).exec( function( err,
                                                                   user ){
       if( err ){
         return next( err );
