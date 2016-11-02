@@ -415,7 +415,11 @@ function handleUsers( bulkupload ){
               user.assessments.pam.push( assessmentId );
             }
           } );
-          return user.save();
+          return user.save()
+            .catch((err)=>{
+              //we just want to log these
+              bulkupload.result += `[LOG] Could not create user for data ${JSON.stringify(raw)}<br/>`;
+            });
         } )
         .catch( ( err )=>P.reject( err ) );
     } )
@@ -456,10 +460,10 @@ function bulkuploadSavedHandler( bulkupload ){
   }
 
   return p.then( function(){
-    bulkupload.result = "Bulk upload successfully completed.";
+    bulkupload.result += "Bulk upload successfully completed.";
   } )
     .catch( function( err ){
-      bulkupload.result = "Bulk upload failed: " + err.message;
+      bulkupload.result += "Bulk upload failed: " + err.message;
     } );
 }
 

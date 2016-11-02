@@ -25,14 +25,16 @@ module.exports.userCSVtoJson = function CSVToJson( opts ){
       } )
       .on( "data", function( obj ){
         // console.log(data);
-        output.push( {
-          name: {
-            first: obj.firstName,
-            last: obj.lastName
-          },
-          email: obj.email,
-          password: obj.password
-        } );
+        if(obj.email || obj.firstName || obj.lastName){
+          output.push( {
+            name: {
+              first: obj.firstName,
+              last: obj.lastName
+            },
+            email: obj.email,
+            password: obj.password
+          } );
+        }
       } )
       .on( "end", function(){
         resolve( output );
