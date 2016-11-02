@@ -20,52 +20,56 @@ exports = module.exports = function( req,
     ? keystone.get( 'resetpassword url' )
     : false;
 
-  function renderView() {
-  		keystone.render(req, res, 'signin', locals);
-  	}
+  const view = new keystone.View( req, res );
 
-  	// If a form was submitted, process the login attempt
-  	if (req.method === 'POST') {
+  function renderView(){
+    view.render( 'signin' );
+  }
 
-  		if (!keystone.security.csrf.validate(req)) {
-  			req.flash('error', 'There was an error with your request, please try again.');
-  			return renderView();
-  		}
+  // If a form was submitted, process the login attempt
+  if( req.method === 'POST' ){
 
-  		if (!req.body.email || !req.body.password) {
-  			req.flash('error', 'Please enter your email address and password.');
-  			return renderView();
-  		}
+    if( !keystone.security.csrf.validate( req ) ){
+      req.flash( 'error', 'There was an error with your request, please try again.' );
+      return renderView();
+    }
 
-  		var onSuccess = function (user) {
+    if( !req.body.email || !req.body.password ){
+      req.flash( 'error', 'Please enter your email address and password.' );
+      return renderView();
+    }
 
-  			if (req.query.from && req.query.from.match(/^(?!http|\/\/|javascript).+/)) {
-  				var parsed = url.parse(req.query.from);
-  				if(parsed.host || parsed.protocol || parsed.auth){
-  					res.redirect('/keystone');
-  				}else{
-  					res.redirect(parsed.path);
-  				}
-  			} else if ('string' === typeof keystone.get('signin redirect')) {
-  				res.redirect(keystone.get('signin redirect'));
-  			} else if ('function' === typeof keystone.get('signin redirect')) {
-  				keystone.get('signin redirect')(user, req, res);
-  			} else {
-  				res.redirect('/keystone');
-  			}
+    var onSuccess = function( user ){
 
-  		};
+      if( req.query.from && req.query.from.match( /^(?!http|\/\/|javascript).+/ ) ){
+        var parsed = url.parse( req.query.from );
+        if( parsed.host || parsed.protocol || parsed.auth ){
+          res.redirect( '/keystone' );
+        } else {
+          res.redirect( parsed.path );
+        }
+      } else if( 'string' === typeof keystone.get( 'signin redirect' ) ){
+        res.redirect( keystone.get( 'signin redirect' ) );
+      } else if( 'function' === typeof keystone.get( 'signin redirect' ) ){
+        keystone.get( 'signin redirect' )( user, req, res );
+      } else {
+        res.redirect( '/keystone' );
+      }
 
-  		var onFail = function (err) {
-  			var message = (err && err.message) ? err.message : 'Sorry, that email and password combo are not valid.';
-  			req.flash('error', message );
-  			renderView();
-  		};
+    };
 
-  		keystone.session.signin(req.body, req, res, onSuccess, onFail);
+    var onFail = function( err ){
+      var message = (err && err.message)
+        ? err.message
+        : 'Sorry, that email and password combo are not valid.';
+      req.flash( 'error', message );
+      renderView();
+    };
 
-  	} else {
-  		renderView();
-  	}
+    keystone.session.signin( req.body, req, res, onSuccess, onFail );
+
+  } else {
+    renderView();
+  }
 
 };
