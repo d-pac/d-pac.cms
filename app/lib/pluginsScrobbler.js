@@ -14,7 +14,16 @@ function init( manifest ){
                                                            version,
                                                            name ){
     var pkgPath = path.resolve( path.join( "node_modules", name, "package.json" ) );
-    var moduleManifest = require( pkgPath );
+    let moduleManifest
+    try{
+      moduleManifest = require( pkgPath );
+    }catch(err){
+      if (err.code !== 'MODULE_NOT_FOUND') {
+          throw err;
+      }
+      debug('Declared dependency not installed:', name);
+      return result;
+    }
     debug( "Parsed dependency:", name );
     result = result.concat( spec.getPlugins( moduleManifest, { allowIndependents: true } ) );
     return result;

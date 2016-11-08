@@ -1,9 +1,19 @@
 'use strict';
 
+let algorithm;
+try{
+  algorithm = require('positioned-comparative-selection');
+}catch(err){
+  if (err.code !== 'MODULE_NOT_FOUND') {
+      throw err;
+  }
+  return;
+}
+
+
 const P = require('bluebird');
 var _ = require('lodash');
 var keystone = require('keystone');
-var algorithm = require('positioned-comparative-selection');
 
 var statsService = require('../services/stats');
 var representationsService = require('../services/representations');
