@@ -236,6 +236,13 @@ require( './helpers/setupList' )( Assessment )
         default: true
       },
 
+      enableUploads: {
+        type: Types.Boolean,
+        label: "Enable assessee uploads",
+        note: "Allows assessees to upload a representation for this assessment",
+        default: true
+      },
+
       results: {
         enable: {
           type: Types.Boolean,
