@@ -4,6 +4,7 @@ const debug = require( "debug" )( "dpac:api.representations" );
 
 const service = require( "../../services/representations" );
 const Controller = require( "./helpers/Controller" );
+const path = require('path');
 const base = new Controller( service );
 
 const documentsService = require( '../../services/documents' );
@@ -38,11 +39,11 @@ module.exports.create = ( req,
   base.handleResult( documentsService.create( {
       owner: req.user.id,
       file: {
+        source: file.path,
         filetype: file.mimetype,
         filename: file.name,
         originalname: file.originalname,
-        size: file.size,
-        path: file.path
+        size: file.size
       }
     } )
     .then( ( document )=>{
@@ -66,11 +67,11 @@ module.exports.update = function( req,
   base.handleResult( documentsService.update( {
       _id: req.body.document,
       file: {
+        source: file.path,
         filetype: file.mimetype,
         filename: file.name,
         originalname: file.originalname,
-        size: file.size,
-        path: file.path
+        size: file.size
       }
     } )
     .then( ( /*document*/ )=>{

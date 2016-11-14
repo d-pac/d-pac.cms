@@ -16,9 +16,12 @@ module.exports.create = function( opts ){
   debug( '#create' );
   let p;
   if( opts.file ){
-    const source = opts.file.path;
-    opts.file.path = path.join( constants.directories.documents, opts.file.filename );
-    p = fs.renameAsync( source, opts.file.path )
+    p = P.try( function(){
+      const source = opts.file.source;
+      const filename = path.basename( source );
+      opts.file.path = constants.directories.documents;
+      return fs.renameAsync( source, path.resolve( opts.file.path, filename ) );
+    } )
       .catch( ( err )=>P.reject( err ) );
 
   } else {
@@ -29,11 +32,18 @@ module.exports.create = function( opts ){
 
 module.exports.update = function( opts ){
   debug( '#update' );
-  const source = opts.file.path;
-  opts.file.path = path.join( constants.directories.documents, opts.file.filename );
-  return fs.renameAsync( source, opts.file.path )
-    .catch( ( err )=>P.reject( err ) )
-    .then( ()=>{
-      return base.update( opts ).exec();
-    } );
+  let p;
+  if( opts.file ){
+    p = P.try( function(){
+      const source = opts.file.source;
+      const filename = path.basename( source );
+      opts.file.path = constants.directories.documents;
+      return fs.renameAsync( source, path.resolve( opts.file.path, filename ) );
+    } )
+      .catch( ( err )=>P.reject( err ) );
+
+  } else {
+    p = P.resolve();
+  }
+  return p.then( ()=>base.update( opts ).exec() );
 };
