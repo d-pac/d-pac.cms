@@ -52,25 +52,8 @@ require('./helpers/setupList')(Representation)
       type: String,
       default: "Representation name",
       noedit: true,
-      watch: "assessment document",
-      value: function (callback) {
-        if (this.assessment && this.document) {
-          P.join(assessmentsService.retrieve({
-            _id: this.assessment
-          }), documentsService.retrieve({
-            _id: this.document
-          }), function (assessment,
-                        document) {
-            callback(null, assessmentsService.getName(assessment) + " - " + documentsService.getName(document));
-          }).catch(function (err) {
-            callback(err);
-          });
-        } else {
-          callback(null, "Empty representation");
-        }
-      },
       required: false,
-      note: "is automatically generated"
+      note: "automatically generated"
     },
 
     title: {
