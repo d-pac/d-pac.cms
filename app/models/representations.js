@@ -53,11 +53,6 @@ require('./helpers/setupList')(Representation)
       note: "automatically generated"
     },
 
-    title: {
-      type: String,
-      note: 'Purely for administrative or testing purposes'
-    },
-
     rankType: {
       type: Types.Select,
       options: constants.representationTypes.list.toString(),

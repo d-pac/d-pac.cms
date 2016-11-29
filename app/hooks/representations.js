@@ -48,7 +48,8 @@ function removeRepresentationsForDocument( document ){
 }
 
 function renameRepresentation(representation){
-  if(representation.assessment.equals(representation.__original.assessment)
+  if(representation.__original
+    && representation.assessment.equals(representation.__original.assessment)
     && representation.document.equals(representation.__original.document)){
     return P.resolve(representation);
   }

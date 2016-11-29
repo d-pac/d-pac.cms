@@ -19,9 +19,10 @@ function createRepresentation( document ){
     .then( function( representation ){
       document.representation = false;
       document.assessment = null;
+      return document.save();
     } );
 }
 
 module.exports.init = function(){
-  keystone.list( 'Document' ).schema.pre( 'save', handleHook( createRepresentation ) );
+  keystone.list( 'Document' ).schema.post( 'save', handleHook( createRepresentation ) );
 };
