@@ -403,8 +403,8 @@ require( './helpers/setupList' )( Assessment )
 
         return {
           comparisonsNum: {
-            perAssessor: pA,
-            perRepresentation: pR
+            perAssessor: Math.ceil(pA),
+            perRepresentation: Math.ceil(pR)
           },
           assessorsNum: _.get( assessment, [ 'assessors', 'minimum' ], 0 ),
           minimumReliability: assessment.minimumReliability || 0
