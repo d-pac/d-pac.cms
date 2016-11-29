@@ -1,15 +1,12 @@
 "use strict";
 
 const _ = require('lodash');
-var keystone = require("keystone");
-var Types = keystone.Field.Types;
-var constants = require("./helpers/constants");
-var P = require("bluebird");
+const keystone = require("keystone");
+const Types = keystone.Field.Types;
+const constants = require("./helpers/constants");
+const P = require("bluebird");
 
-var assessmentsService = require("../services/assessments");
-var documentsService = require("../services/documents");
-
-var Representation = new keystone.List("Representation", {
+const Representation = new keystone.List("Representation", {
   track: true
 });
 Representation.defaultColumns = "name, rankType|120, ability.value|200, ability.se|200, middleBox|40";
@@ -21,9 +18,9 @@ Representation.schema.methods.compareWith = function (other) {
 };
 
 Representation.schema.methods.uncompareWith = function (other) {
-  var ti = this.compared.indexOf(other.id);
+  const ti = this.compared.indexOf(other.id);
   this.compared.splice(ti, 1);
-  var oi = other.compared.indexOf(this.id);
+  const oi = other.compared.indexOf(this.id);
   other.compared.splice(oi, 1);
 
   return P.all([this.save(), other.save()]);

@@ -48,6 +48,11 @@ function removeRepresentationsForDocument( document ){
 }
 
 function renameRepresentation(representation){
+  if(representation.assessment.equals(representation.__original.assessment)
+    && representation.document.equals(representation.__original.document)){
+    return P.resolve(representation);
+  }
+
   return P.props({
     assessment: assessmentsService.retrieve({_id: representation.assessment}),
     document: documentsService.retrieve({_id: representation.document})
