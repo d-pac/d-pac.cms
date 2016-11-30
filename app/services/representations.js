@@ -29,8 +29,12 @@ module.exports.listByDocuments = function( documents,
 module.exports.listWithoutUser = function( userId,
                                            opts ){
   debug( "listWithoutUser" );
-  return documentsService.list( { owner: { $ne: userId } } )
-    .then( ( documents )=> module.exports.listByDocuments( documents, opts ) );
+
+  return base.list( _.defaults( {}, {
+    "document.owner": { $ne: userId }
+  }, opts ) )
+    .lean()
+    .exec();
 };
 
 module.exports.listForUser = function( userId,
