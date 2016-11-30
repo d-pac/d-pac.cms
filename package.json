@@ -6,7 +6,7 @@
     "benchmarked-comparative-selection": "3.0.0",
     "bluebird": "3.4.0",
     "chalk": "1.1.1",
-    "comparative-selection": "3.0.1",
+    "comparative-selection": "3.0.2",
     "connect-mongo": "1.1.0",
     "cors": "2.7.1",
     "d-pac.functions": "1.2.0",
