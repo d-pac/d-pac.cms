@@ -43,7 +43,6 @@ exports = module.exports = function( app ){
   var apiRoot = keystone.get( "api root" );
 
   app.use( initCORS );
-  app.use( keystone.express.static( __dirname + '/../uploads' ) );
 
   app.use( '/reports', apiMw.requireUser, apiMw.requireAdmin, keystone.express.static( __dirname + '/../reports' ) );
 
@@ -60,6 +59,10 @@ exports = module.exports = function( app ){
   app.all( keystone.get( 'changepassword url' ) + '/:token', routes.views.changepassword );
 
   // # REST API
+  app.route("/media/R:rid.:ext")
+    .get(apiMw.initAPI,
+      api.documents.retrieveMedia);
+
 
   // -- API setup --
   app.route( apiRoot + "*" )
