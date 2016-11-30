@@ -86,11 +86,9 @@ module.exports.create = function( opts ){
       return cache;
     } )
     .then( function( results ){
-        const {
-          representations,
-          comparisons,
-          assessment
-        } = results;
+        const representations = results.representations;
+        const comparisons = results.comparisons;
+        const assessment = results.assessment;
         var data;
         var plainComparisons = JSON.parse( JSON.stringify( comparisons ) );
         var plainRepresentations = JSON.parse( JSON.stringify( representations ) );
