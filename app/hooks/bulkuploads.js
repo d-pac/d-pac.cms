@@ -385,7 +385,7 @@ function handleUsers( bulkupload ){
   return parseUserData( opts )
     .map( ( raw )=>{
       return P.try( function(){
-        const cleanEmail = _.trim( raw.email.toLowerCase() );
+        const cleanEmail = raw.email =_.trim( raw.email.toLowerCase() );
         return new RegExp( '^' + utils.escapeRegExp( cleanEmail ) + '$', 'i' );
       } )
         .then( function( emailRegExp ){
