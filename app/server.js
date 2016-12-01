@@ -27,9 +27,7 @@ keystone.hooks = grappling.create( { strict: false } );
 // and documentation.
 var env = process.env;
 var pkg = require( "../package.json" );
-var appversion = (process.env.APP_VERSION_LABEL)
-  ? pkg.version + "-" + process.env.APP_VERSION_LABEL
-  : pkg.version;
+var appversion = process.env.APP_VERSION_LABEL || pkg.version;
 
 keystone.auth = require( './lib/auth' );
 
