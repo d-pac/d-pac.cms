@@ -29,12 +29,16 @@ module.exports.retrieveMedia = function( req,
         return P.reject( new Error( 'Incorrrect extension' ) );
       }
       return P.fromCallback( function( callback ){
-        res.sendFile( path.resolve( document.file.path, document.file.filename ), callback );
+        const filePath = document.file.path.indexOf( document.file.filename ) < 0
+            ? path.join( document.file.path, document.file.filename )
+            : document.file.path
+          ;
+        res.sendFile( path.resolve( filePath ), callback );
       } )
         .catch( ( err )=>P.reject( new Error( 'Could not read file' ) ) );
     } )
     .catch( ( err )=>{
-      console.error(err);
+      console.error( err );
       return next( new errors.Http404Error() );
     } );
 };

@@ -31,7 +31,6 @@ module.exports.update = function( opts ){
   debug( '#update' );
   const source = opts.file.path;
   opts.file.path = path.join( constants.directories.documents, opts.file.filename );
-  opts.title = '';
   return fs.renameAsync( source, opts.file.path )
     .catch( ( err )=>P.reject( err ) )
     .then( ()=>{
