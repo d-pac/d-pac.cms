@@ -9,45 +9,7 @@ const Types = keystone.Field.Types;
 const path = require( "path" );
 const constants = require( "./helpers/constants" );
 
-
-const allowedTypes = [
-  {
-    title: 'png',
-    mime: 'image/png'
-  },
-  {
-    title: 'jpg',
-    mime: 'image/jpeg'
-  },
-  {
-    title: 'gif',
-    mime: 'image/gif'
-  },
-  {
-    title: 'pdf',
-    mime: 'application/pdf'
-  },
-  {
-    title: 'svg',
-    mime: 'image/svg+xml'
-  },
-  {
-    title: 'mp4 (video)',
-    mime: 'video/mp4'
-  },
-  {
-    title: 'mp4 (audio)',
-    mime: 'audio/mp4'
-  },
-  {
-    title: 'mpeg (audio)',
-    mime: 'audio/mpeg'
-  },
-  {
-    title: 'mp3',
-    mime: 'audio/mp3'
-  },
-];
+const allowedTypes = [ '.png', '.jpg', '.jpeg', '.gif', '.pdf', '.svg', '.mp4', '.mpeg', '.mp3' ];
 
 function getAnon( item ){
   return "R" + item._rid;
@@ -71,6 +33,9 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 Document.schema.pre( "save", function( callback ){
   if( this.file.size > 0 ){
     this.name = path.basename( this.file.originalname, this.ext );
+    if( allowedTypes.indexOf( this.ext ) < 0 ){
+      callback( new Error( 'Incorrect file type' ) );
+    }
   } else {
     //text-only document
     this.name = this.title;
@@ -114,8 +79,7 @@ require( './helpers/setupList' )( Document )
         label: "Local file",
         dest: constants.directories.documents,
         prefix: "/media",
-        allowedTypes: _.map( allowedTypes, 'mime' ),
-        note: `Allowed file types: ${_.map( allowedTypes, 'title' ).join( ', ' )}`
+        note: `Allowed file types: ${allowedTypes.join( ', ' )}`
       }
     },
     "Actions",
@@ -143,13 +107,15 @@ require( './helpers/setupList' )( Document )
   .virtualize( {
     ext: {
       get: function(){
-        return ( this.file.size > 0 ) ? path.extname( this.file.originalname ) : ".html";
+        return ( this.file.size > 0 )
+          ? path.extname( this.file.originalname ).toLowerCase()
+          : ".html";
       },
-      depends: ['file']
+      depends: [ 'file' ]
     },
     href: {
       get: function(){
-        return `${keystone.get( "root url" )}/media/${getAnon(this)}${this.ext}`;
+        return `${keystone.get( "root url" )}/media/${getAnon( this )}${this.ext}`;
       },
       depends: [ "file", "_rid" ]
     },
@@ -161,23 +127,9 @@ require( './helpers/setupList' )( Document )
     },
     title: {
       get: function(){
-        return getAnon(this);
+        return getAnon( this );
       }
     }
-  } )
-  .validate( {
-    "file.filetype": [
-      function( value,
-                isValid ){
-        let found = true;
-        if( value ){
-          found = _.find( allowedTypes, ( item )=>{
-            return item.mime === value;
-          } );
-        }
-        isValid( !!found );
-      }, "Incorrect file type"
-    ]
   } )
   .relate( {
     path: "representations",
