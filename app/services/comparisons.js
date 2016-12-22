@@ -68,6 +68,9 @@ module.exports.create = function( opts ){
   } )
     .then( ( representations )=>{
       b.snap( 'retrieved representations' );
+      if(representations.length < 2){
+        throw new Error( 'assessment-incorrectly-configured' );
+      }
       cache.representations = representations;
       return this.listLean( {
         assessment: opts.assessment

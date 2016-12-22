@@ -1,11 +1,11 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.representations" );
-var keystone = require( "keystone" );
-var _ = require( "lodash" );
-var documentsService = require( './documents' );
-var collection = keystone.list( "Representation" );
-var Service = require( "./helpers/Service" );
-var base = new Service( collection );
+const debug = require( "debug" )( "dpac:services.representations" );
+const keystone = require( "keystone" );
+const _ = require( "lodash" );
+const documentsService = require( './documents' );
+const collection = keystone.list( "Representation" );
+const Service = require( "./helpers/Service" );
+const base = new Service( collection );
 const constants = require( '../models/helpers/constants' );
 module.exports = base.mixin();
 
@@ -18,7 +18,7 @@ module.exports.list = function list( opts ){
 
 module.exports.listByDocuments = function( documents,
                                            opts ){
-  var ids = documents.map( ( document )=>{
+  const ids = documents.map( ( document ) =>{
     return document.id;
   } );
   return module.exports.list( _.defaults( {
@@ -30,18 +30,25 @@ module.exports.listWithoutUser = function( userId,
                                            opts ){
   debug( "listWithoutUser" );
 
-  return base.list( _.defaults( {}, {
-    "document.owner": { $ne: userId }
-  }, opts ) )
+  const q = _.defaults( {}, {
+    document: { $ne: null }
+  }, opts );
+  return base.list( q )
+    .populate( {
+      path: "document",
+      match: { "owner": { $ne: userId } }
+    } )
     .lean()
-    .exec();
+    .exec()
+    .filter( ( representation ) => !!representation.document )
+    ;
 };
 
 module.exports.listForUser = function( userId,
                                        opts ){
   debug( "listForUser" );
   return documentsService.list( { owner: userId } )
-    .then( ( documents )=> module.exports.listByDocuments( documents, opts ) );
+    .then( ( documents ) => module.exports.listByDocuments( documents, opts ) );
 };
 
 module.exports.listById = function listById( opts ){
