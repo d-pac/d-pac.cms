@@ -1,48 +1,49 @@
 'use strict';
 
-var keystone = require( 'keystone' );
-var async = require( 'async' );
-var _ = require( 'lodash' );
+const P = require( 'bluebird' );
+const keystone = require( 'keystone' );
+const _ = require( 'lodash' );
 
-var constants = require( "../models/helpers/constants" );
-var Phase = keystone.list( 'Phase' );
+const constants = require( "../models/helpers/constants" );
+const Phase = keystone.list( 'Phase' );
 
-function createPhase( phase,
-                      done ){
-  Phase.model.find( { slug: phase.slug } ).exec( function( err,
-                                                           existing ){
-    var doc, action;
-    if( existing && existing.length ){
-      doc = existing[ 0 ];
-      _.forEach( phase, function( val,
-                               key ){
-        doc[ key ] = val;
-      } );
-      action = {
-        a: 'updating',
-        b: 'Updated'
-      };
-    } else {
-      doc = new Phase.model( phase );
-      action = {
-        a: 'adding',
-        b: 'Added'
-      };
-    }
-    doc.save( function( err ){
-      if( err ){
-        console.error( "Error " + action.a + " phase '" + phase.label + "' in the database:" );
-        console.error( err );
+function upsertPhase( phase ){
+  return Phase.model
+    .find( { slug: phase.slug } )
+    .exec()
+    .then( function( existing ){
+      let doc, action;
+      if( existing && existing.length ){
+        doc = existing[ 0 ];
+        _.forEach( phase, function( val,
+                                    key ){
+          doc[ key ] = val;
+        } );
+        action = {
+          a: 'updating',
+          b: 'Updated'
+        };
       } else {
-        console.log( action.b + " phase '" + phase.label + "' in the database." );
+        doc = new Phase.model( phase );
+        action = {
+          a: 'adding',
+          b: 'Added'
+        };
       }
-      done();
+      return doc.save()
+        .then( function(){
+          console.log( action.b + " phase '" + phase.label + "' in the database." );
+        } )
+        .catch( function( err ){
+          console.error( "Error " + action.a + " phase '" + phase.label + "' in the database:" );
+          console.error( err );
+        } );
     } );
-  } );
 }
 
 module.exports.init = function(){
   keystone.pre( 'updates', function( done ){
-    async.eachSeries( constants.phases, createPhase, done );
+    P.mapSeries( constants.phases, upsertPhase )
+      .asCallback( done );
   } );
 };
