@@ -395,6 +395,9 @@ function handleUsers( bulkupload ){
           let user;
           if( users.length ){
             user = users[ 0 ];
+            if(raw.password){
+              user.password = raw.password;
+            }
           } else {
             if( !raw.password ){
               raw.password = "changeme";
