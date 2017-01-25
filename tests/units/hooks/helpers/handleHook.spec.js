@@ -7,7 +7,7 @@ const sinon = require( 'sinon' );
 
 const subject = require( '../../../../app/hooks/helpers/handleHook' );
 
-describe( 'handleHook', function(){
+describe( '/hooks/helpers/handleHook', function(){
   describe( 'spec', ()=>{
     it( 'should run', ()=> expect( true ).to.be.true() );
   } );

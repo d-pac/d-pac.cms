@@ -7,7 +7,7 @@ const sinon = require( 'sinon' );
 
 const subject = require( '../../../../app/hooks/helpers/extractMiddleBox' );
 
-describe( 'extractMiddleBox', function(){
+describe( '/hooks/helpers/extractMiddleBox', function(){
   describe( 'spec', ()=>{
     it( 'should run', ()=> expect( true ).to.be.true() );
   } );
