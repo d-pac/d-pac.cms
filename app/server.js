@@ -146,29 +146,29 @@ keystone.set( "routes", require( "./routes" ) );
 // Configure the navigation bar in Keystone's Admin UI
 
 keystone.set( "nav", {
-  "content": [
+  "setup":[
+    "assessments",
+    "users",
+    "documents",
+    "representations",
+    "bulkuploads",
+    "actions",
+    "messages",
+  ],
+  "data": [
+    "reports",
+    "comparisons",
+    "notes",
+    "feedback",
+    "timelogs",
+    "phases",
+    "organizations",
+  ],
+  "misc": [
     "pages",
     "posts",
     "post-categories",
     "enquiries"
-  ],
-  "data": [
-    "phases",
-    "assessments",
-    "representations",
-    "documents",
-    "comparisons",
-    "organizations",
-    "users",
-    "notes",
-    "feedback",
-    "timelogs"
-  ],
-  "misc": [
-    "reports",
-    "bulkuploads",
-    "actions",
-    "messages"
   ]
 } );
 
