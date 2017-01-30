@@ -149,9 +149,10 @@ keystone.set( "nav", {
   "setup":[
     "assessments",
     "users",
+    "bulkusers",
     "documents",
     "representations",
-    "bulkuploads",
+    "bulkrepresentations",
     "actions",
     "messages",
   ],
