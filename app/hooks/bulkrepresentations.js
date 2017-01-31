@@ -3,50 +3,17 @@
 const keystone = require( 'keystone' );
 const _ = require( 'lodash' );
 const P = require( 'bluebird' );
-const unzip = P.promisify( require( 'extract-zip' ) );
-const rimraf = P.promisify( require( 'rimraf' ) );
-const fs = P.promisifyAll( require( 'fs' ) );
-const dirops = P.promisifyAll( require( 'node-dir' ) );
 const path = require( 'path' );
 const mime = require( 'mime' );
 const uuid = require( 'uuid' );
-const utils = require( 'keystone-utils' );
 
-const convertersService = require( '../services/converters' );
 const assessmentsService = require( '../services/assessments' );
 const documentsService = require( '../services/documents' );
-const usersService = require( '../services/users' );
 const Document = keystone.list( 'Document' );
 const Representation = keystone.list( 'Representation' );
 const constants = require( '../models/helpers/constants' );
 const handleHook = require( './helpers/handleHook' );
-
-const ignored = [ '.DS_Store' ];
-
-function extractZipfile( opts ){
-  return unzip( opts.file, {
-    dir: opts.temp
-  } )
-    .catch( function( err ){
-      console.error( 'ERROR:', err );
-    } );
-}
-
-function retrieveJSONData( opts ){
-  if( !opts.json ){
-    return P.resolve( false );
-  }
-  return fs.readFileAsync( opts.json, 'utf8' )
-    .then( function( jsonStr ){
-      return JSON.parse( jsonStr );
-    } )
-    .reduce( function( memo,
-                       item ){
-      memo[ item.fileName ] = item;
-      return memo;
-    }, {} )
-    ;
-}
+const fsutils = require( './helpers/filesystem' );
 
 function updateDocument( document,
                          fileData,
@@ -63,47 +30,11 @@ function updateDocument( document,
   return document;
 }
 
-function readDirectoryContents( opts ){
-  return dirops.filesAsync( opts.temp )
-    .then( function( files ){
-      return files.filter( function( file ){
-        const filename = path.basename( file );
-        const index = ignored.indexOf( filename );
-        return index < 0;
-      } );
-    } );
-}
-
-function createFileData( filepath,
-                         dir ){
-  const fileData = {};
-  fileData.filename = path.basename( filepath );
-  fileData.resolved = (dir)
-    ? path.join( dir, fileData.filename )
-    : filepath;
-  try{
-    fileData.stats = fs.statSync( fileData.resolved );
-  } catch( err ) {
-    //file doesn't exist
-    fileData.stats = {
-      isFile: function(){
-        return false;
-      }
-    };
-  }
-  return fileData;
-}
-
-function moveFile( src,
-                   dest ){
-  return fs.renameAsync( src.resolved, dest.resolved );
-}
-
 function createRepresentations( document,
                                 assessments,
                                 base ){
   return assessments.reduce( ( memo,
-                               assessment )=>{
+                               assessment ) =>{
     memo[ assessment.id ] = new Representation.model( _.assign( {}, {
       document: document.id,
       assessment: assessment.id
@@ -116,10 +47,6 @@ function findDocuments( fileData ){
   return documentsService.list( {
     'file.filename': fileData.filename
   } );
-}
-
-function removeFile( fileData ){
-  return fs.unlinkAsync( fileData.resolved );
 }
 
 function reuseStrategy( files,
@@ -146,9 +73,9 @@ function overwriteStrategy( files,
   files.dest.originalname = files.src.filename;
   return P.join(
     findDocuments( files.dest ),
-    removeFile( files.dest )
+    fsutils.removeFile( files.dest )
       .then( function(){
-        return moveFile( files.src, files.dest );
+        return fsutils.moveFile( files.src, files.dest );
       } ),
     function( documents ){
       let document = (documents && documents.length)
@@ -167,7 +94,7 @@ function createStrategy( files,
                          assessments,
                          opts ){
   files.src.originalname = files.src.filename;
-  return moveFile( files.src, files.dest )
+  return fsutils.moveFile( files.src, files.dest )
     .then( function(){
       const document = updateDocument( new Document.model(), files.src, opts );
       return {
@@ -180,10 +107,10 @@ function createStrategy( files,
 function renameStrategy( files,
                          assessments,
                          opts ){
-  files.dest = createFileData( uuid.v4() + path.extname( files.src.filename ), constants.directories.documents );
+  files.dest = fsutils.createFileData( uuid.v4() + path.extname( files.src.filename ), constants.directories.documents );
   files.dest.originalname = files.src.filename;
   files.dest.stats = files.src.stats;
-  return moveFile( files.src, files.dest )
+  return fsutils.moveFile( files.src, files.dest )
     .then( function(){
       const document = updateDocument( new Document.model(), files.dest, opts );
       return {
@@ -212,7 +139,7 @@ function parseJSON( jsonData,
   _.forEach( jsonData, function( item ){
     const representationsByAssessment = mapByFilename.representations[ item.fileName ];
     _.each( representationsByAssessment, ( representation,
-                                           assessmentId )=>{
+                                           assessmentId ) =>{
       if( item.closeTo ){
         representation.closeTo = mapByFilename.representations[ item.closeTo ][ assessmentId ].id;
       }
@@ -224,7 +151,7 @@ function parseJSON( jsonData,
 }
 function mapToArray( mapByFilename ){
   const representationList = _.reduce( mapByFilename.representations, ( memo,
-                                                                        representationsByAssessment )=>{
+                                                                        representationsByAssessment ) =>{
     return memo.concat( _.values( representationsByAssessment ) );
   }, [] );
   return _.values( mapByFilename.documents ).concat( representationList );
@@ -233,16 +160,16 @@ function createRepresentationsFromFiles( bulkupload,
                                          jsonData,
                                          assessments,
                                          opts ){
-  return readDirectoryContents( opts )
+  return fsutils.readDirectoryContents( opts )
     .reduce( function( memo,
                        filepath ){
       const files = {
-        src: createFileData( filepath )
+        src: fsutils.createFileData( filepath )
       };
       if( !files.src.stats.isFile() ){
         return memo;
       }
-      files.dest = createFileData( filepath, opts.dest );
+      files.dest = fsutils.createFileData( filepath, opts.dest );
       const strategy = ( files.dest.stats.isFile() )
         ? strategies[ bulkupload.conflicts ]
         : strategies.create;
@@ -302,33 +229,7 @@ function createRepresentationsFromJSON( bulkupload,
     } );
 }
 
-function cleanup( bulkupload,
-                  opts ){
-  return P.try( function(){
-    if( opts.file ){
-      return removeFile( { resolved: opts.file } );
-    }
-    return null;
-  } )
-    .then( function(){
-      if( opts.json ){
-        return removeFile( { resolved: opts.json } );
-      }
-      return null;
-    } )
-    .then( function(){
-      if( opts.temp ){
-        return rimraf( opts.temp );
-      }
-      return null;
-    } )
-    .then( function(){
-      bulkupload.completed = true;
-    } )
-    ;
-}
-
-function handleRepresentations( bulkupload ){
+function handleFiles( bulkupload ){
   const zipfile = _.get( bulkupload, [ 'zipfile', 'filename' ], false );
   const jsonfile = _.get( bulkupload, [ 'jsonfile', 'filename' ], false );
 
@@ -342,7 +243,7 @@ function handleRepresentations( bulkupload ){
   }
 
   let p = P.props( {
-    json: retrieveJSONData( opts ),
+    json: fsutils.retrieveJSONData( opts ),
     assessments: assessmentsService.listById( bulkupload.assessment )
   } );
   if( zipfile ){
@@ -350,7 +251,7 @@ function handleRepresentations( bulkupload ){
     opts.temp = path.resolve( constants.directories.bulk, bulkupload._rid.toString() );
     opts.file = path.resolve( constants.directories.bulk, zipfile );
     p = p.then( function( data ){
-      return extractZipfile( opts )
+      return fsutils.extractZipfile( opts )
         .then( function( unused ){
           return createRepresentationsFromFiles( bulkupload, data.json, data.assessments, opts );
         } );
@@ -365,83 +266,37 @@ function handleRepresentations( bulkupload ){
     return P.reject( err );
   } )
     .then( function(){
-      return cleanup( bulkupload, opts );
-    } );
-}
-
-function parseUserData( opts ){
-  return convertersService.userCSVtoJson( opts );
-}
-
-function handleUsers( bulkupload ){
-  if( !bulkupload.csvfile || !bulkupload.csvfile.filename ){
-    return P.reject( new Error( 'CSV file is required!' ) );
-  }
-
-  const opts = {
-    path: path.resolve( path.join( constants.directories.bulk, bulkupload.csvfile.filename ) )
-  };
-
-  return parseUserData( opts )
-    .map( ( raw )=>{
-      return P.try( function(){
-        const cleanEmail = raw.email =_.trim( raw.email.toLowerCase() );
-        return new RegExp( '^' + utils.escapeRegExp( cleanEmail ) + '$', 'i' );
-      } )
-        .then( function( emailRegExp ){
-          return usersService.list( { email: emailRegExp } );
-        } )
-        .then( ( users )=>{
-          let user;
-          if( users.length ){
-            user = users[ 0 ];
-            if(raw.password){
-              user.password = raw.password;
-            }
-          } else {
-            if( !raw.password ){
-              raw.password = "changeme";
-            }
-            if( bulkupload.sendInvites ){
-              raw.actions = { sendInviteMail: true };
-            }
-            user = new usersService.collection.model( raw );
-          }
-          bulkupload.assessment.forEach( ( assessmentId )=>{
-            if( bulkupload.roles.asAssessee && user.assessments.assessee.indexOf( assessmentId ) < 0 ){
-              user.assessments.assessee.push( assessmentId );
-            }
-            if( bulkupload.roles.asAssessor && user.assessments.assessor.indexOf( assessmentId ) < 0 ){
-              user.assessments.assessor.push( assessmentId );
-            }
-            if( bulkupload.roles.asPAM && user.assessments.pam.indexOf( assessmentId ) < 0 ){
-              user.assessments.pam.push( assessmentId );
-            }
-          } );
-          return user.save()
-            .catch((err)=>{
-              //we just want to log these
-              bulkupload.result += `[LOG] Could not create user for data ${JSON.stringify(raw)}<br/>`;
-            });
-        } )
-        .catch( ( err )=>P.reject( err ) );
+      return fsutils.cleanup( [ opts.file, opts.json ], [ opts.temp ] );
     } )
-    .then( function(){
-      return removeFile( { resolved: opts.path } );
-    } )
-    .then( function(){
-      bulkupload.csvfile = {
-        "filename": "",
-        "originalname": "",
-        "path": "",
-        "size": 0,
-        "filetype": "0"
-      };
+    .then( function( results ){
       bulkupload.completed = true;
+      return null;
     } );
 }
 
-function bulkuploadSavedHandler( bulkupload ){
+function handleTexts( bulkupload ){
+  const documents = bulkupload.assessment.reduce( function( memo,
+                                                            assessmentId ){
+    const documents = bulkupload.texts.map( function( text ){
+      return new Document.model( {
+        text: text,
+        representation: true,
+        assessment: assessmentId
+      } );
+    } );
+    memo.push( ...documents );
+    return memo;
+  }, [] );
+
+  return P.mapSeries( documents, ( doc ) => doc.save() )
+    .then( function( results ){
+      bulkupload.completed = true;
+      return null;
+    } )
+    .catch(err=>P.reject(err));
+}
+
+function bulkrepresentationSavedHandler( bulkupload ){
   if( bulkupload.completed && !keystone.get( 'dev env' ) ){
     return P.reject( new Error( 'You cannot reuse bulk uploads. (Seriously that would mean a world of pain)' ) );
   }
@@ -451,25 +306,25 @@ function bulkuploadSavedHandler( bulkupload ){
   }
 
   let p;
-  switch( bulkupload.uploadType ){
-    case "representations":
-      p = handleRepresentations( bulkupload );
+  switch( bulkupload.bulktype ){
+    case "files":
+      p = handleFiles( bulkupload );
       break;
-    case "users":
-      p = handleUsers( bulkupload );
+    case "texts":
+      p = handleTexts( bulkupload );
       break;
     default:
-      return P.reject( new Error( 'Unknown bulk upload type' ) );
+      return P.reject( new Error( 'Unknown bulk type' ) );
   }
 
   return p.then( function(){
-    bulkupload.result += "Bulk upload successfully completed.";
+    bulkupload.log += "Bulk representations successfully completed.";
   } )
     .catch( function( err ){
-      bulkupload.result += "Bulk upload failed: " + err.message;
+      bulkupload.log += "Bulk representations failed: " + err.message;
     } );
 }
 
 module.exports.init = function(){
-  keystone.list( 'Bulkupload' ).schema.pre( 'save', handleHook( bulkuploadSavedHandler ) );
+  keystone.list( 'Bulkrepresentation' ).schema.pre( 'save', handleHook( bulkrepresentationSavedHandler ) );
 };
