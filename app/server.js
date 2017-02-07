@@ -10,9 +10,7 @@ var _ = require( 'lodash' );
 var grappling = require( 'grappling-hook' );
 
 var konfy = require( "konfy" );
-konfy.loadEnv( {
-  dotenvFile: "env/.env"
-} );
+konfy.load();
 
 // Require keystone
 var keystone = require( "keystone" );
