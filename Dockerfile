@@ -23,5 +23,6 @@ RUN mkdir -p /home/dpac && mv /tmp/node_modules /home/dpac/
 RUN mv /tmp/package.json /home/dpac/package.json
 
 ADD app /home/dpac/app/
+ADD .env /home/dpac/.env
 WORKDIR /home/dpac
 
