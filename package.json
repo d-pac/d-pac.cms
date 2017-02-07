@@ -56,7 +56,7 @@
   },
   "scripts": {
     "prestart": "dockerize -wait tcp://mongo:27017 ",
-    "start": "forever start -l logs/forever.log -o logs/out.log -e logs/err.log app/server.js",
+    "start": "forever start app/server.js",
     "stop": "forever stop app/server.js",
     "test": "npm run test:units && npm run test:integration",
     "test:units": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/units/**/*.spec.js -R spec --bail --timeout 60000",
