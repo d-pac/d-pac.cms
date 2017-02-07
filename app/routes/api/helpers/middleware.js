@@ -105,7 +105,7 @@ exports.handleError = function( err,
                                 req,
                                 res,
                                 next ){
-  console.error( "dpac:api.middleware#handleError", err, err.stack );
+  console.error( "dpac:api.middleware#handleError", err );
 
   if( utils.isHttpError( err ) ){
     return res.apiError( err );
