@@ -1,10 +1,10 @@
 "use strict";
-var _ = require( "lodash" );
-var keystone = require( "keystone" );
-var errors = require( "errors" );
-var debug = require( "debug" )( "dpac:api.middleware" );
-var cors = require( "cors" );
-var utils = require( "./utils" );
+const _ = require( "lodash" );
+const keystone = require( "keystone" );
+const errors = require( "errors" );
+const debug = require( "debug" )( "dpac:api.middleware" );
+const cors = require( "cors" );
+const utils = require( "./utils" );
 
 exports.factories = {};
 
@@ -14,7 +14,7 @@ exports.initAPI = function initAPI( req,
   debug( "#initAPI" );
   res.apiResponse = function( status,
                               data ){
-    var rid = req.get( "Request-UUID" );
+    const rid = req.get( "Request-UUID" );
     if( rid ){
       res.header( "Request-UUID", rid );
     }
@@ -68,7 +68,7 @@ exports.requireUser = function( req,
                                 res,
                                 next ){
   debug( "#requireUser" );
-  var output;
+  let output;
 
   if( !req.user ){
     output = new errors.Http401Error( {
@@ -83,7 +83,7 @@ exports.requireAdmin = function( req,
                                  res,
                                  next ){
   debug( "#requireAdmin" );
-  var output;
+  let output;
 
   if( !req.user.isAdmin ){
     output = new errors.Http401Error();
@@ -93,7 +93,7 @@ exports.requireAdmin = function( req,
 };
 
 function parseValidationErrors( err ){
-  var messages = _.map( err.errors, "message" );
+  const messages = _.map( err.errors, "message" );
 
   return new errors.Http422Error( {
     message: err.message,
@@ -137,7 +137,7 @@ exports.notFound = function notFound( req,
 exports.requireSelf = function( req,
                                 res,
                                 next ){
-  var id = req.params._id;
+  const id = req.params._id;
   debug( "#requireSelf", id );
 
   if( req.user && ( req.user.isAdmin || ( id && id === req.user.id ) ) ){
@@ -171,8 +171,8 @@ exports.methodNotAllowed = function methodNotAllowed( req,
 };
 
 exports.createCors = function(){
-  var allowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
-  var corsOpts = {
+  const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS || [];
+  const corsOpts = {
     origin: function( url,
                       callback ){
       callback( null, -1 < allowedOrigins.indexOf( url ) );
@@ -187,7 +187,7 @@ exports.createCors = function(){
 };
 
 exports.requireParams = function(){
-  var args;
+  let args;
 
   if( 1 === arguments.length && _.isArray( arguments[ 0 ] ) ){
     args = arguments[ 0 ];
@@ -199,7 +199,7 @@ exports.requireParams = function(){
                    res,
                    next ){
     debug( "#verifyRequiredParam" );
-    var missing = [];
+    const missing = [];
     _.forEach( args, function( paramName ){
       if( "undefined" === typeof req.params[ paramName ] ){
         missing.push( paramName );
@@ -220,7 +220,7 @@ module.exports.parseUserId = function parseUserId( req,
                                                    res,
                                                    next ){
   debug( "#parseUserId" );
-  var idParam = req.params._id;
+  const idParam = req.params._id;
   if( ( !idParam || "me" === idParam ) && req.user ){
     req.params._id = req.user.id;
   }
