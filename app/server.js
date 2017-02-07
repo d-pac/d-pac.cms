@@ -86,9 +86,7 @@ keystone.init( {
     email: "no-reply@d-pac.be"
   },
   "api disable": env.API_DISABLE || '',
-  "dev env": ( typeof env.DEV_ENV !== "undefined" )
-    ? ( env.DEV_ENV === "true" )
-    : ("development" === nodeEnv)
+  "dev env": (env.NODE_ENV === "development")
 } );
 
 if( keystone.get( 'dev env' ) ){
@@ -96,6 +94,10 @@ if( keystone.get( 'dev env' ) ){
     console.log( 'Unhandle Promise Rejection: ' + reason );
   } );
 }
+if( keystone.get( 'dev env' ) ){
+  errors.stacks( true );
+}
+
 
 keystone.set( 'email locals', {
   utils: keystone.utils,
@@ -105,10 +107,6 @@ keystone.set( 'email locals', {
 
 if( process.env.DPAC_ADMIN_COLOR ){
   keystone.set( 'admin ui styles', `background-color: ${process.env.DPAC_ADMIN_COLOR};` );
-}
-
-if( keystone.get( 'dev env' ) ){
-  errors.stacks( true );
 }
 
 keystone.isDisabled = function( op ){
