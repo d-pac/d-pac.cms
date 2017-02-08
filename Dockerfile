@@ -1,12 +1,11 @@
-FROM mhart/alpine-node:6.5.0
+FROM node:6.9.5
 MAINTAINER Camille Reynders
 
 ENV DOCKERIZE_VERSION 0.2.0
 ENV YARN_VERSION 0.19.1
-ENV PATH=/home/dpac/node_modules/.bin:/usr/bin:/usr/local/bin:`yarn global bin`:$PATH
+ENV PATH=/home/dpac/node_modules/.bin:/usr/bin:/usr/local/bin:$PATH
 
 ADD .ssh /root/.ssh
-RUN apk add --update openssh
 RUN ssh-keyscan -t rsa bitbucket.org >> /root/.ssh/known_hosts
 
 ADD package.json /tmp/package.json
@@ -14,17 +13,16 @@ ADD package.json /tmp/package.json
 # Solves "Unable to locally verify the issuer's authority." with github.com
 # See https://bugs.alpinelinux.org/issues/5376
 # Also installs other necessary dependencies
-RUN apk upgrade libssl1.0 --update-cache \
-    && apk add --no-cache --virtual .build-deps \
-        wget ca-certificates git make gcc g++ python curl \
-    && curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $YARN_VERSION
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    && sudo apt-get update && sudo apt-get install yarn
     && wget https://github.com/jwilder/dockerize/releases/download/v$DOCKERIZE_VERSION/dockerize-linux-amd64-v$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v$DOCKERIZE_VERSION.tar.gz \
     && cd /tmp \
     && yarn config set color false \
     && yarn install --production \
-    && yarn cache clean \
-    && apk del .build-deps
+    && yarn cache clean
+
 RUN mkdir -p /home/dpac && mv /tmp/node_modules /home/dpac/
 RUN mv /tmp/package.json /home/dpac/package.json
 RUN mv /tmp/yarn.lock /home/dpac/yarn.lock
