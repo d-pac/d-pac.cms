@@ -6,7 +6,7 @@
     "benchmarked-comparative-selection": "3.0.0",
     "bluebird": "3.4.0",
     "chalk": "1.1.1",
-    "comparative-selection": "3.0.2",
+    "comparative-selection": "3.0.3",
     "connect-mongo": "1.1.0",
     "cors": "2.7.1",
     "d-pac.functions": "1.2.0",
@@ -71,7 +71,7 @@
     "plugins": "0.4.0"
   },
   "optionalDependencies": {
-    "equalviews-comparative-selection": "bitbucket:iminds/equalviews-comparative-selection#v1.0.1",
-    "positioned-comparative-selection": "bitbucket:iminds/positioned-comparative-selection#v1.0.2"
+    "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#v1.0.1",
+    "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#v1.0.2"
   }
 }
