@@ -35,7 +35,10 @@ module.exports.retrieveMedia = function( req,
           ;
         res.sendFile( path.resolve( filePath ), callback );
       } )
-        .catch( ( err )=>P.reject( new Error( 'Could not read file' ) ) );
+        .catch( ( err )=>{
+          console.error(err);
+          return P.reject( new Error( 'Could not read file',  ) );
+        } );
     } )
     .catch( ( err )=>{
       console.error( err );
