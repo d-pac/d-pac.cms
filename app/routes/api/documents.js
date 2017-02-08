@@ -8,6 +8,7 @@ const base = new Controller( service );
 const errors = require( "errors" );
 const path = require( 'path' );
 const P = require( 'bluebird' );
+const constants = require('../../models/helpers/constants');
 
 module.exports = base.mixin();
 
@@ -29,10 +30,7 @@ module.exports.retrieveMedia = function( req,
         return P.reject( new Error( 'Incorrrect extension' ) );
       }
       return P.fromCallback( function( callback ){
-        const filePath = document.file.path.indexOf( document.file.filename ) < 0
-            ? path.join( document.file.path, document.file.filename )
-            : document.file.path
-          ;
+        const filePath = path.join( constants.directories.documents, document.file.filename );
         res.sendFile( path.resolve( filePath ), callback );
       } )
         .catch( ( err )=>{
