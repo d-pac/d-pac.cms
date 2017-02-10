@@ -20,11 +20,15 @@ function getConfig(){
   if( module.exports.config ){
     return P.resolve( module.exports.config );
   }
-  return propsParser.parseAsync( path.resolve( __dirname, '../.env.' + TEST_ENV ), { path: true } )
+  return propsParser.parseAsync( path.resolve( __dirname, '../env/.env.' + TEST_ENV ), { path: true } )
     .then( function( config ){
       debug( '.env configuration - load completed' );
       config.API_URL = config.ROOT_URL + '/api';
       module.exports.config = config;
+    } )
+    .catch( function( err ){
+      debug( 'ERR:', err );
+      throw err;
     } );
 }
 
@@ -69,25 +73,28 @@ function destroyDatabase(){
 function resetDatabase(){
   debug( 'database - reset requested' );
   return P.map( _.values( module.exports.app.lists ), function( list ){
-      return list.model.remove( {} );
-    }, { concurrency: 1 } )
+    return list.model.remove( {} );
+  }, { concurrency: 1 } )
     .then( function( lists ){
       debug( 'database - reset completed' );
     } );
 }
 
 getConfig()
-    .then( getApp )
-    .then( destroyDatabase )
-    .then( function(){
-      debug( 'application - startup requested' );
-      return new P( function( resolve ){
-        debug( 'application - startup completed' );
-        module.exports.app.start( resolve );
-      } );
-    } )
-    .then( run )
-    .catch( run );
+  .then( getApp )
+  .then( destroyDatabase )
+  .then( function(){
+    debug( 'application - startup requested' );
+    return new P( function( resolve ){
+      debug( 'application - startup completed' );
+      module.exports.app.start( resolve );
+    } );
+  } )
+  .then( run )
+  .catch( function( err ){
+    debug( 'Error occurred:', err );
+    run( err );
+  } );
 
 after( function( done ){
   destroyDatabase().then( done );

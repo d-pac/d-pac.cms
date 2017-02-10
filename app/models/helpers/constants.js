@@ -26,10 +26,10 @@ var constants = module.exports = {
 };
 
 module.exports.directories = {
-  bulk: 'app/uploads/bulk',
-  reports: 'app/reports',
-  documents: 'app/uploads/media',
-  archive: 'app/archive'
+  bulk: process.env.DIR_USER + "/bulk",
+  reports: process.env.DIR_USER + "/reports",
+  documents: process.env.DIR_USER + "/media",
+  archive: process.env.DIR_USER + "/archive"
 };
 
 module.exports.roles = {
