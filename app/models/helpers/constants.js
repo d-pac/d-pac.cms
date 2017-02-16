@@ -26,10 +26,10 @@ var constants = module.exports = {
 };
 
 module.exports.directories = {
-  bulk: process.env.DIR_USER + "/bulk",
-  reports: process.env.DIR_USER + "/reports",
-  documents: process.env.DIR_USER + "/media",
-  archive: process.env.DIR_USER + "/archive"
+  bulk: keystone.get("user directory") + "/bulk",
+  reports: keystone.get("user directory") + "/reports",
+  documents: keystone.get("user directory") + "/media",
+  archive: keystone.get("user directory") + "/archive"
 };
 
 module.exports.roles = {
