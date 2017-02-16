@@ -57,6 +57,7 @@
   "scripts": {
     "prestart": "dockerize -wait tcp://mongo:27017 ",
     "start": "node app/server.js",
+    "start:dev": "node app/server.js",
     "test": "yarn run test:units && yarn run test:integration",
     "test:units": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/units/**/*.spec.js -R spec --bail --timeout 60000",
     "test:e2e": "NODE_ENV=test DEBUG=dpac:tests* mocha tests/e2e/*.test.js -R spec --delay --bail --timeout 60000",
