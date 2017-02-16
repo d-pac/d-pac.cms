@@ -20,7 +20,7 @@ function getConfig(){
   if( module.exports.config ){
     return P.resolve( module.exports.config );
   }
-  return propsParser.parseAsync( path.resolve( __dirname, '../env/.env.' + TEST_ENV ), { path: true } )
+  return propsParser.parseAsync( path.resolve( __dirname, '../.env.' + TEST_ENV ), { path: true } )
     .then( function( config ){
       debug( '.env configuration - load completed' );
       config.API_URL = config.ROOT_URL + '/api';
