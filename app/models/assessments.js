@@ -416,7 +416,7 @@ require( './helpers/setupList' )( Assessment )
       ]
     }
   } )
-  .emit( 'actions' )
+  .emit( 'actions', 'state' )
   .validate( {
     uiCopy: [
       function( value ){
