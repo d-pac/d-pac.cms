@@ -1,15 +1,16 @@
 'use strict';
 
 const _ = require( 'lodash' );
-var P = require( 'bluebird' );
-var scheduler = require( 'node-schedule' );
-var keystone = require( 'keystone' );
+const P = require( 'bluebird' );
+const scheduler = require( 'node-schedule' );
+const keystone = require( 'keystone' );
+
 const assessmentsService = require( '../services/assessments' );
 const representationsService = require( '../services/representations' );
 const usersService = require( '../services/users' );
 const comparisonsService = require( '../services/comparisons' );
-var statsService = require( '../services/stats' );
-var constants = require( '../models/helpers/constants' );
+const statsService = require( '../services/stats' );
+const constants = require( '../models/helpers/constants' );
 
 function activateScheduledAssessments(){
   return assessmentsService.list( {
@@ -22,6 +23,7 @@ function activateScheduledAssessments(){
     console.log( 'Scheduler: auto-publishing assessment', assessment.name );
     assessment.state = constants.assessmentStates.PUBLISHED;
     assessment.save();
+    return null; // we want this to be non-blocking
   } );
 }
 
@@ -37,14 +39,13 @@ function completeScheduledAssessments(){
     assessment.state = constants.assessmentStates.COMPLETED;
     assessment.schedule.active = false;
     assessment.save();
+    return null; // we want this to be non-blocking
   } );
 }
 
 function doAssessmentActions(){
   return activateScheduledAssessments()
-    .then( function(){
-      return completeScheduledAssessments();
-    } );
+    .then( completeScheduledAssessments );
 }
 
 function calculateStats( assessment ){
@@ -102,6 +103,14 @@ module.exports.init = function(){
       } );
     done();//call immediately, we don't want to wait on this!
   } );
+
+  assessmentsService.collection.events.on('change:state', function( doc, diff, done ){
+    if(doc.state===constants.assessmentStates.COMPLETED){
+      calculateStats( doc ).asCallback( done );
+    }else{
+      done();
+    }
+  });
 
   assessmentsService.collection.events.on( 'change:actions', ( doc,
                                                                diff,
