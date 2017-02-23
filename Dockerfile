@@ -31,6 +31,5 @@ RUN mv /tmp/package.json /home/dpac/package.json
 RUN mv /tmp/yarn.lock /home/dpac/yarn.lock
 
 ADD app /home/dpac/app/
-ADD .env /home/dpac/.env
 WORKDIR /home/dpac
 ENTRYPOINT ["yarn", "start"]
