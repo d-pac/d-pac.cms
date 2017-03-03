@@ -1,8 +1,8 @@
 'use strict';
 
-var _ = require( 'lodash' );
-var P = require( 'bluebird' );
-var csv = P.promisifyAll( require( "fast-csv" ) );
+const _ = require( 'lodash' );
+const P = require( 'bluebird' );
+const csv = P.promisifyAll( require( "fast-csv" ) );
 
 module.exports.jsonToCSV = function jsonToCSV( data,
                                                opts ){

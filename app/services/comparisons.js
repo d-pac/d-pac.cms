@@ -1,16 +1,16 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.comparisons" );
-var keystone = require( "keystone" );
-var _ = require( "lodash" );
-var P = require( "bluebird" );
+const debug = require( "debug" )( "dpac:services.comparisons" );
+const keystone = require( "keystone" );
+const _ = require( "lodash" );
+const P = require( "bluebird" );
 const benchmark = require( '../lib/benchmark' );
 
-var collection = keystone.list( "Comparison" );
-var Service = require( "./helpers/Service" );
-var assessmentsService = require( './assessments' );
-var representationsService = require( './representations' );
+const collection = keystone.list( "Comparison" );
+const Service = require( "./helpers/Service" );
+const assessmentsService = require( './assessments' );
+const representationsService = require( './representations' );
 
-var base = new Service( collection );
+const base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.listPopulated = ( opts ) =>{
@@ -92,10 +92,10 @@ module.exports.create = function( opts ){
         const representations = results.representations;
         const comparisons = results.comparisons;
         const assessment = results.assessment;
-        var data;
-        var plainComparisons = JSON.parse( JSON.stringify( comparisons ) );
-        var plainRepresentations = JSON.parse( JSON.stringify( representations ) );
-        var plainAssessment = JSON.parse( JSON.stringify( assessment ) );
+        let data;
+        const plainComparisons = JSON.parse( JSON.stringify( comparisons ) );
+        const plainRepresentations = JSON.parse( JSON.stringify( representations ) );
+        const plainAssessment = JSON.parse( JSON.stringify( assessment ) );
         b.snap( 'Objectified models' );
         try{
           data = require( assessment.algorithm ).select( {
@@ -153,7 +153,7 @@ module.exports.create = function( opts ){
 };
 
 module.exports.listRepresentationsForComparisons = function( comparisons ){
-  var ids = _.reduce( comparisons, function( memo,
+  const ids = _.reduce( comparisons, function( memo,
                                              comparison ){
     return memo.concat( _.values( _.pick( comparison.representations, "a", "b", "c", "d" ) ) );
   }, [] );

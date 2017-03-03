@@ -1,12 +1,12 @@
 "use strict";
 
-var debug = require( "debug" )( "dpac:services.timelogs" );
-var keystone = require( "keystone" );
-var collection = keystone.list( "Timelog" );
-var _ = require( 'lodash' );
+const debug = require( "debug" )( "dpac:services.timelogs" );
+const keystone = require( "keystone" );
+const collection = keystone.list( "Timelog" );
+const _ = require( 'lodash' );
 
-var Service = require( "./helpers/Service" );
-var base = new Service( collection );
+const Service = require( "./helpers/Service" );
+const base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.list = function list( opts ){

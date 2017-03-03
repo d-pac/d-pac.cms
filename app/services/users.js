@@ -1,16 +1,16 @@
 "use strict";
 
-var keystone = require( "keystone" );
-var _ = require( "lodash" );
-var debug = require( "debug" )( "dpac:services.users" );
-var collection = keystone.list( "User" );
-var Service = require( "./helpers/Service" );
-var assessmentsService = require( "./assessments" );
-var comparisonsService = require( "./comparisons" );
-var notesService = require( './notes' );
-var constants = require('../models/helpers/constants');
+const keystone = require( "keystone" );
+const _ = require( "lodash" );
+const debug = require( "debug" )( "dpac:services.users" );
+const collection = keystone.list( "User" );
+const Service = require( "./helpers/Service" );
+const assessmentsService = require( "./assessments" );
+const comparisonsService = require( "./comparisons" );
+const notesService = require( './notes' );
+const constants = require('../models/helpers/constants');
 
-var base = new Service( collection );
+const base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.listAssessments = function listAssessments( role,
@@ -22,7 +22,7 @@ module.exports.listAssessments = function listAssessments( role,
         : "assessments"
     } ) )
     .then( function( user ){
-      var ids = _.reduce( user.assessments.toJSON(), function( memo,
+      const ids = _.reduce( user.assessments.toJSON(), function( memo,
                                                                assessmentIds ){
         //no need to filter: duplicate id's get automatically consolidated by mongoose
         return memo.concat( assessmentIds );
@@ -72,7 +72,7 @@ module.exports.listForAssessments = function listForAssessments( role,
     .exec()
     .filter( function( user ){
       return !!_.find( assessmentIds, function( assessmentId ){
-        var found = false;
+        let found = false;
         if( role === 'assessor' || role === 'both' ){
           found = found || user.assessments.assessor.indexOf( assessmentId ) > -1;
         }

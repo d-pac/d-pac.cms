@@ -1,12 +1,12 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.assessments" );
-var _ = require( "lodash" );
+const debug = require( "debug" )( "dpac:services.assessments" );
+const _ = require( "lodash" );
 
-var keystone = require( "keystone" );
-var collection = keystone.list( "Assessment" );
-var Service = require( "./helpers/Service" );
-var constants = require("../models/helpers/constants");
-var base = new Service( collection );
+const keystone = require( "keystone" );
+const collection = keystone.list( "Assessment" );
+const Service = require( "./helpers/Service" );
+const constants = require("../models/helpers/constants");
+const base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.listPublished = function listPublished( opts ){

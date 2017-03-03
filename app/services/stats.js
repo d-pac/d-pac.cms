@@ -1,34 +1,34 @@
 'use strict';
 
-var _ = require( 'lodash' );
-var keystone = require( 'keystone' );
-var async = require( 'async' );
-var debug = require( "debug" )( "dpac:services.stats" );
-var estimate = require( 'estimating-rasch-model' );
-var P = require( 'bluebird' );
-var diff = require( 'deep-diff' ).diff;
-var usersService = require( './users' );
-var comparisonsService = require( './comparisons' );
-var representationsService = require( './representations' );
-var timelogsService = require( './timelogs' );
-var fns = require( 'd-pac.functions' );
+const _ = require( 'lodash' );
+const keystone = require( 'keystone' );
+const async = require( 'async' );
+const debug = require( "debug" )( "dpac:services.stats" );
+const estimate = require( 'estimating-rasch-model' );
+const P = require( 'bluebird' );
+const diff = require( 'deep-diff' ).diff;
+const usersService = require( './users' );
+const comparisonsService = require( './comparisons' );
+const representationsService = require( './representations' );
+const timelogsService = require( './timelogs' );
+const fns = require( 'd-pac.functions' );
 
-var getAbility = _.partialRight( _.get, [ 'ability', 'value' ] );
-var getSE = function( item ){
-  var se = _.get( item, [ 'ability', 'se' ], 0 );
+const getAbility = _.partialRight( _.get, [ 'ability', 'value' ] );
+const getSE = function( item ){
+  const se = _.get( item, [ 'ability', 'se' ], 0 );
   if( se > 3 ){
     return 3;
   }
   return se;
 };
-var getReliability = fns.pm.reliabilityFunctor( getAbility, getSE );
+const getReliability = fns.pm.reliabilityFunctor( getAbility, getSE );
 
 module.exports = {
   estimate: function( representations,
                       comparisons ){
     debug( "#estimate" );
-    var representationDocs, representationObjs;
-    var comparisonDocs, comparisonObjs;
+    let representationDocs, representationObjs;
+    let comparisonDocs, comparisonObjs;
     if( _.isArray( representations ) ){
       representationDocs = representations;
       representationObjs = JSON.parse( JSON.stringify( representationDocs ) );
@@ -45,8 +45,8 @@ module.exports = {
       comparisonObjs = comparisons.objects;
     }
 
-    var succeed;
-    var promise = new P( function( resolve/*,
+    let succeed;
+    const promise = new P( function( resolve/*,
                                    reject*/ ){
       succeed = resolve;
     } );
@@ -58,17 +58,17 @@ module.exports = {
         console.log( err, err.stack );
         //return fail( err );
       }
-      var toRanks = _.filter( representationObjs, function( representation ){
+      const toRanks = _.filter( representationObjs, function( representation ){
         return representation.rankType === "to rank";
       } );
 
-      var saveQueue = [];
+      const saveQueue = [];
 
       _.forEach( toRanks, function( representationObj ){
-        var doc = _.find( representationDocs, function( representationDoc ){
+        const doc = _.find( representationDocs, function( representationDoc ){
           return representationDoc.id.toString() === representationObj._id;
         } );
-        var diffObj = diff( JSON.parse( JSON.stringify( doc.ability ) ), representationObj.ability );
+        const diffObj = diff( JSON.parse( JSON.stringify( doc.ability ) ), representationObj.ability );
         if( diffObj ){
           console.log( "Differences for", representationObj.name, ":", diffObj );
           _.forEach( representationObj.ability, function( value,
@@ -97,10 +97,10 @@ module.exports = {
 
   estimateForAssessment: function( assessmentId ){
     debug( "#estimateForAssessment" );
-    var getComparisons = keystone.list( "Comparison" ).model.find( { assessment: assessmentId } );
-    var getRepresentations = keystone.list( "Representation" ).model.find( { assessment: assessmentId } );
+    const getComparisons = keystone.list( "Comparison" ).model.find( { assessment: assessmentId } );
+    const getRepresentations = keystone.list( "Representation" ).model.find( { assessment: assessmentId } );
 
-    var self = this;
+    const self = this;
     return P.join( getComparisons.exec(), getRepresentations.exec(), function( comparisonDocs,
                                                                                representationDocs ){
       return self.estimate( representationDocs, comparisonDocs );
@@ -108,7 +108,7 @@ module.exports = {
   },
 
   statsForAssessment: function( assessment ){
-    var assessmentId = assessment.id;
+    const assessmentId = assessment.id;
     return P.props( {
         assessors: usersService.listForAssessments( 'assessor', [ assessmentId ] ),
         comparisons: comparisonsService.listForAssessments( {}, [ assessmentId ] ),
@@ -122,7 +122,7 @@ module.exports = {
         return P.props( docs );
       } )
       .then( function( docs ){
-        var totals = {
+        const totals = {
           reliability: getReliability( docs.toRankRepresentations ),
           assessorsNum: docs.assessors.length,
           comparisonsNum: docs.comparisons.length,
@@ -132,15 +132,15 @@ module.exports = {
             return memo + timelog.duration;
           }, 0 )
         };
-        var byRepresentation = _.reduce( docs.comparisons, function( memo,
+        const byRepresentation = _.reduce( docs.comparisons, function( memo,
                                                                      comparison ){
-          var aId = comparison.representations.a.toString();
-          var bId = comparison.representations.b.toString();
+          const aId = comparison.representations.a.toString();
+          const bId = comparison.representations.b.toString();
           _.set( memo, [ aId, 'comparisonsNum' ], _.get( memo, [ aId, 'comparisonsNum' ], 0 ) + 1 );
           _.set( memo, [ bId, 'comparisonsNum' ], _.get( memo, [ bId, 'comparisonsNum' ], 0 ) + 1 );
           return memo;
         }, {} );
-        var averages = {};
+        const averages = {};
         if(totals.representationsNum > 0){
           averages.comparisonsPerRepresentation= (totals.comparisonsNum / totals.representationsNum) * 2;
           averages.durationPerRepresentation= totals.duration / totals.representationsNum;

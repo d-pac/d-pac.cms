@@ -1,6 +1,6 @@
 'use strict';
-var keystone = require( "keystone" );
-var P = require( 'bluebird' );
+const keystone = require( "keystone" );
+const P = require( 'bluebird' );
 
 module.exports = {
   //todo: promisify
@@ -36,7 +36,7 @@ module.exports = {
   sendMessage: function( message ){
     return new P( function( resolve,
                             reject ){
-      var mail = new keystone.Email( {
+      const mail = new keystone.Email( {
         templateName: 'message'
       } );
       return mail.send( message, function( err,

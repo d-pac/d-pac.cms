@@ -1,8 +1,8 @@
 "use strict";
-// var debug = require( "debug" )( "dpac:services.organizations" );
+// const debug = require( "debug" )( "dpac:services.organizations" );
 
-var keystone = require( "keystone" );
-var collection = keystone.list( "Organization" );
-var Service = require( "./helpers/Service" );
-var base = new Service( collection );
+const keystone = require( "keystone" );
+const collection = keystone.list( "Organization" );
+const Service = require( "./helpers/Service" );
+const base = new Service( collection );
 module.exports = base.mixin();

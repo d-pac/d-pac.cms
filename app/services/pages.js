@@ -1,10 +1,10 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.pages" );
-var _ = require( "lodash" );
-var keystone = require( "keystone" );
-var collection = keystone.list( "Page" );
-var Service = require( "./helpers/Service" );
-var base = new Service( collection );
+const debug = require( "debug" )( "dpac:services.pages" );
+const _ = require( "lodash" );
+const keystone = require( "keystone" );
+const collection = keystone.list( "Page" );
+const Service = require( "./helpers/Service" );
+const base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.list = function list( opts ){

@@ -1,21 +1,21 @@
 'use strict';
 
-var _ = require( 'lodash' );
-var keystone = require( 'keystone' );
-var P = require( 'bluebird' );
-var path = require( 'path' );
-var exec = P.promisify( require( 'child_process' ).exec );
-var moment = require( 'moment' );
-var url = require( 'url' );
+const _ = require( 'lodash' );
+const keystone = require( 'keystone' );
+const P = require( 'bluebird' );
+const path = require( 'path' );
+const exec = P.promisify( require( 'child_process' ).exec );
+const moment = require( 'moment' );
+const url = require( 'url' );
 
-var comparisonsService = require( '../services/comparisons' );
-var representationsService = require( '../services/representations' );
-var assessmentsService = require( '../services/assessments' );
-var constants = require( '../models/helpers/constants' );
+const comparisonsService = require( '../services/comparisons' );
+const representationsService = require( '../services/representations' );
+const assessmentsService = require( '../services/assessments' );
+const constants = require( '../models/helpers/constants' );
 
-var Representation = keystone.list( 'Representation' );
+const Representation = keystone.list( 'Representation' );
 
-var dumpCommandTpl = _.template( 'mongodump ' +
+const dumpCommandTpl = _.template( 'mongodump ' +
   '--host {{host}} ' +
   '--db {{db}} ' +
   "--out '{{out}}' " +
@@ -86,14 +86,14 @@ module.exports.deleteAssessment = function deleteAssessment( assessment ){
 };
 
 module.exports.archiveAssessment = function archiveAssessment( assessment ){
-  var uriObj = url.parse( keystone.get( 'mongo' ), false, true );
-  var baseArgs = {
+  const uriObj = url.parse( keystone.get( 'mongo' ), false, true );
+  const baseArgs = {
     host: uriObj.host,
     db: uriObj.pathname.substring( 1 ),
     out: path.resolve( path.join( constants.directories.archive, assessment.name
       + '-' + moment().format( 'YYYYMMDD-HHmmss' ) ) )
   };
-  var result = '';
+  let result = '';
   return comparisonsService.list( {
       assessment: assessment.id
     } )
@@ -106,7 +106,7 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       };
     } )
     .then( function( comparisonIds ){
-      var command = dumpCommandTpl( _.defaults( {}, baseArgs, {
+      const command = dumpCommandTpl( _.defaults( {}, baseArgs, {
         collection: 'timelogs',
         query: JSON.stringify( {
           comparison: { $in: comparisonIds }
@@ -120,7 +120,7 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } );
     } )
     .then( function(){
-      var command = dumpCommandTpl( _.defaults( {}, baseArgs, {
+      const command = dumpCommandTpl( _.defaults( {}, baseArgs, {
         collection: 'assessments',
         query: JSON.stringify( {
           _id: { $oid: assessment.id }
@@ -134,7 +134,7 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } );
     } )
     .then( function(){
-      var command = dumpCommandTpl( _.defaults( {}, baseArgs, {
+      const command = dumpCommandTpl( _.defaults( {}, baseArgs, {
         collection: 'representations',
         query: JSON.stringify( {
           assessment: { $oid: assessment.id }
@@ -148,7 +148,7 @@ module.exports.archiveAssessment = function archiveAssessment( assessment ){
       } );
     } )
     .then( function(){
-      var command = dumpCommandTpl( _.defaults( {}, baseArgs, {
+      const command = dumpCommandTpl( _.defaults( {}, baseArgs, {
         collection: 'comparisons',
         query: JSON.stringify( {
           assessment: { $oid: assessment.id }

@@ -1,9 +1,9 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.notes" );
-var keystone = require( "keystone" );
-var collection = keystone.list( "Note" );
-var Service = require( "./helpers/Service" );
-var base = new Service( collection );
+const debug = require( "debug" )( "dpac:services.notes" );
+const keystone = require( "keystone" );
+const collection = keystone.list( "Note" );
+const Service = require( "./helpers/Service" );
+const base = new Service( collection );
 module.exports = base.mixin();
 
 module.exports.listByDocuments = function listByDocuments(opts, documentIds){

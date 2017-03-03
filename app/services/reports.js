@@ -1,15 +1,15 @@
 "use strict";
-var keystone = require( "keystone" );
-var _ = require( "lodash" );
-var P = require( 'bluebird' );
-var moment = require( 'moment' );
+const keystone = require( "keystone" );
+const _ = require( "lodash" );
+const P = require( 'bluebird' );
+const moment = require( 'moment' );
 
-var Comparison = keystone.list( "Comparison" );
-var Representation = keystone.list( "Representation" );
-var assessmentsService = require( './assessments' );
-var timelogsService = require( './timelogs' );
-var phasesService = require( './phases' );
-var constants = require( '../models/helpers/constants' );
+const Comparison = keystone.list( "Comparison" );
+const Representation = keystone.list( "Representation" );
+const assessmentsService = require( './assessments' );
+const timelogsService = require( './timelogs' );
+const phasesService = require( './phases' );
+const constants = require( '../models/helpers/constants' );
 
 const phaseConfigsMap = _.reduce( constants.phases, function( memo,
                                                               phaseConfig ){
@@ -17,12 +17,12 @@ const phaseConfigsMap = _.reduce( constants.phases, function( memo,
   return memo;
 }, {} );
 
-var UNDEFINED = "N/A";
-var TRUE = 1;
-var FALSE = 0;
+const UNDEFINED = "N/A";
+const TRUE = 1;
+const FALSE = 0;
 
 module.exports.listRepresentationsForAssessmentIds = function listRepresentationsForAssessmentIds( assessmentIds ){
-  var q = Representation.model
+  let q = Representation.model
     .find()
     .populate( 'document', 'name' )
     .populate( 'assessment', 'name' );
@@ -38,7 +38,7 @@ module.exports.listRepresentationsForAssessmentIds = function listRepresentation
 };
 
 function getComparisonsList( assessmentIds ){
-  var p = Comparison.model
+  let p = Comparison.model
     .find()
     .populate( "assessor" )
     .deepPopulate( [
@@ -53,7 +53,7 @@ function getComparisonsList( assessmentIds ){
 
 function createMap( memo,
                     item ){
-  var id = item.id.toString();
+  const id = item.id.toString();
   memo[ id ] = item;
   return memo;
 }
@@ -65,8 +65,8 @@ function getPhasesMap(){
 }
 
 function getAssessmentsMap( assessmentIds ){
-  var opts = { state: { $ne: constants.assessmentStates.ARCHIVED } };
-  var p = (assessmentIds.length)
+  const opts = { state: { $ne: constants.assessmentStates.ARCHIVED } };
+  const p = (assessmentIds.length)
     ? assessmentsService.listById( assessmentIds, opts )
     : assessmentsService.list( opts );
   return p.reduce( createMap, {} );
@@ -78,8 +78,8 @@ function getTimelogsMap( comparisonIds/*,
     .listForComparisonIds( comparisonIds )
     .reduce( function( memo,
                        timelog ){
-      var comparisonId = timelog.comparison.toString();
-      var phaseId = timelog.phase.toString();
+      const comparisonId = timelog.comparison.toString();
+      const phaseId = timelog.phase.toString();
       _.set( memo, [ comparisonId, phaseId ], timelog.duration );
       return memo;
     }, {} );
@@ -90,9 +90,9 @@ function createComparisonsReportData( phasesMap,
                                       comparisonsList ){
   return function( timelogsMap ){
     return _.map( comparisonsList, function( comparisonModel ){
-      var comparisonId = comparisonModel.id.toString();
-      var assessmentId = _.get( comparisonModel, 'assessment', '' ).toString();
-      var assessment = assessmentsMap[ assessmentId ];
+      const comparisonId = comparisonModel.id.toString();
+      const assessmentId = _.get( comparisonModel, 'assessment', '' ).toString();
+      let assessment = assessmentsMap[ assessmentId ];
       if( !assessment ){
         assessment = {
           name: assessmentId,
@@ -100,7 +100,7 @@ function createComparisonsReportData( phasesMap,
           enableTimeLogging: true
         };
       }
-      var output = {
+      let output = {
         comparison: comparisonModel._rid,
         assessment: assessment.name,
         assessor: _.get( comparisonModel, [ 'assessor', 'email' ], UNDEFINED ),
