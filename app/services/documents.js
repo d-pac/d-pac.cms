@@ -1,8 +1,8 @@
 "use strict";
 const debug = require( "debug" )( "dpac:services.documents" );
 const P = require( 'bluebird' );
-const fs = require( 'fs' );
-P.promisify( fs.rename );
+const mv = P.promisify(require('mv'));
+
 const path = require( 'path' );
 
 const keystone = require( "keystone" );
@@ -20,7 +20,7 @@ module.exports.create = function( opts ){
       const source = opts.file.source;
       const filename = path.basename( source );
       opts.file.path = constants.directories.documents;
-      return fs.renameAsync( source, path.resolve( opts.file.path, filename ) );
+      return mv( source, path.resolve( opts.file.path, filename ) );
     } )
       .catch( ( err )=>P.reject( err ) );
 
@@ -38,7 +38,7 @@ module.exports.update = function( opts ){
       const source = opts.file.source;
       const filename = path.basename( source );
       opts.file.path = constants.directories.documents;
-      return fs.renameAsync( source, path.resolve( opts.file.path, filename ) );
+      return mv( source, path.resolve( opts.file.path, filename ) );
     } )
       .catch( ( err )=>P.reject( err ) );
 

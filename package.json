@@ -33,6 +33,7 @@
     "mongoose": "4.4.4",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
+    "mv": "^2.1.1",
     "node-dir": "0.1.11",
     "node-schedule": "1.0.0",
     "proxyquire": "1.7.4",
