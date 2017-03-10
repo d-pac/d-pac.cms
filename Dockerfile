@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install apt-transport-https \
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v$DOCKERIZE_VERSION.tar.gz
 
 ADD package.json /tmp/package.json
+ADD yarn.lock /tmp/yarn.lock
 RUN cd /tmp \
     && yarn config set color false \
     && yarn config set loglevel verbose \
