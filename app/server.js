@@ -86,7 +86,7 @@ keystone.init( {
     email: "no-reply@d-pac.be"
   },
   "api disable": env.API_DISABLE || '',
-  "dev env": (env.NODE_ENV === "development"),
+  "dev env": (env.NODE_ENV !== "production"),
   "user directory": process.env.DIR_USER || "app/uploads"
 } );
 
