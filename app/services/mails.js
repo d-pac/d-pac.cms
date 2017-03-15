@@ -48,19 +48,10 @@ module.exports = {
       }, callback);
   },
   sendMessage: function (message) {
-    return new P(function (resolve,
-                           reject) {
-      const mail = new Mailer({
-        templateName: 'message'
-      });
-      return mail.send(message, function (err,
-                                          result) {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(result);
-      });
+    const mail = new Mailer({
+      templateName: 'message'
     });
+    return P.fromCallback(callback => mail.send(message, callback));
   }
 };
 
