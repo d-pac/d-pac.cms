@@ -1,15 +1,15 @@
 'use strict';
 
-var keystone = require( 'keystone' );
-var crypto = require( 'crypto' );
-var async = require( 'async' );
-var moment = require( 'moment' );
+const keystone = require( 'keystone' );
+const async = require( 'async' );
+const moment = require( 'moment' );
 
 const utils = require( 'keystone-utils' );
+const createToken = require('./createToken');
 
 exports.init = function(){
-  var mongoose = keystone.mongoose;
-  var Reset = new mongoose.Schema( {
+  const mongoose = keystone.mongoose;
+  const Reset = new mongoose.Schema( {
     token: {
       type: String,
       index: true
@@ -37,7 +37,7 @@ exports.init = function(){
 
 exports.attemptResetMail = function( lookup,
                                      next ){
-  var User = keystone.list( keystone.get( 'user model' ) );
+  const User = keystone.list( keystone.get( 'user model' ) );
   if( 'string' === typeof lookup.email ){
     // match email address
     const emailRegExp = new RegExp('^' + utils.escapeRegExp(lookup.email) + '$', 'i');
@@ -63,7 +63,7 @@ exports.verifyResetToken = function( token,
                                      next ){
   async.waterfall( [
     function( callback ){
-      var mongoose = keystone.mongoose,
+      const mongoose = keystone.mongoose,
         Reset = mongoose.model( 'App_Auth' );
       Reset.findOne( { token: token } ).exec( function( err,
                                                         reset ){
@@ -104,7 +104,7 @@ exports.verifyResetToken = function( token,
     },
     function( reset,
               callback ){
-      var User = keystone.list( keystone.get( 'user model' ) );
+      const User = keystone.list( keystone.get( 'user model' ) );
       User.model.findById( reset.id, function( err,
                                                user ){
         callback( err, {
@@ -118,12 +118,12 @@ exports.verifyResetToken = function( token,
 
 exports.sendResetPassword = function( callback ){
 
-  var expires = moment().add( 1, 'hour' );
-  var token = crypto.randomBytes( 32 ).toString( 'base64' );
-  var nonce = crypto.randomBytes( 32 ).toString( 'base64' );
-  var user = this;
-  var Reset = keystone.mongoose.model( 'App_Auth' );
-  var data = {
+  const expires = moment().add( 1, 'hour' );
+  const token = createToken();
+  const nonce = createToken();
+  const user = this;
+  const Reset = keystone.mongoose.model( 'App_Auth' );
+  const data = {
     token: token,
     expires: expires,
     nonce: nonce,
@@ -161,12 +161,12 @@ exports.sendResetPassword = function( callback ){
 exports.sendInvite = function( from,
                                callback ){
 from = from || keystone.get( "mail admin" );
-  var expires = moment().add( 1, 'month' );
-  var token = crypto.randomBytes( 32 ).toString( 'base64' );
-  var nonce = crypto.randomBytes( 32 ).toString( 'base64' );
-  var user = this;
-  var Invite = keystone.mongoose.model( 'App_Auth' );
-  var data = {
+  const expires = moment().add( 1, 'month' );
+  const token = createToken();
+  const nonce = createToken();
+  const user = this;
+  const Invite = keystone.mongoose.model( 'App_Auth' );
+  const data = {
     token: token,
     expires: expires,
     nonce: nonce,
