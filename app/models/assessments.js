@@ -1,17 +1,19 @@
 "use strict";
 
-const _ = require( 'lodash' );
-const keystone = require( "keystone" );
+const _ = require('lodash');
+const keystone = require("keystone");
 const Types = keystone.Field.Types;
-const constants = require( "./helpers/constants" );
-const plugins = require( "../lib/pluginsScrobbler" );
-const fs = require( 'fs' );
-const path = require( 'path' );
+const constants = require("./helpers/constants");
+const plugins = require("../lib/pluginsScrobbler");
+const fs = require('fs');
+const path = require('path');
 
-const Assessment = new keystone.List( "Assessment", {
+const moment = require('moment');
+
+const Assessment = new keystone.List("Assessment", {
   track: true,
   defaultSort: "order"
-} );
+});
 
 Assessment.defaultColumns = "name, " +
   "title, " +
@@ -20,8 +22,8 @@ Assessment.defaultColumns = "name, " +
   "parent";
 
 //we need to do this, since keystone doesn't allow Mixed types
-Assessment.schema.add( { stats: { byRepresentation: keystone.mongoose.Schema.Types.Mixed } } );
-Assessment.schema.methods.reset = function(){
+Assessment.schema.add({stats: {byRepresentation: keystone.mongoose.Schema.Types.Mixed}});
+Assessment.schema.methods.reset = function () {
   this.stats.averages.comparisonsPerAssessor = null;
   this.stats.averages.comparisonsPerRepresentation = null;
   this.stats.averages.durationPerAssessor = null;
@@ -32,10 +34,19 @@ Assessment.schema.methods.reset = function(){
   return this;
 };
 
+Assessment.schema.methods.clone = function () {
+  const clone = _.omit( this.toJSON(), [
+    '_id', 'feature', 'stage', 'cache', 'stats', 'parent'
+  ] );
+  clone.name += ' (Copy)';
+  return clone;
+};
+
 // Assessment.schema.virtual( 'limits' ).get(  );
 
-require( './helpers/setupList' )( Assessment )
-  .add( {
+
+require('./helpers/setupList')(Assessment)
+  .add({
 
       name: {
         type: Types.Text,
@@ -55,7 +66,7 @@ require( './helpers/setupList' )( Assessment )
       algorithm: {
         type: Types.Select,
         label: "Selection algorithm",
-        options: plugins.list( "select" ),
+        options: plugins.list("select"),
         initial: true,
         required: true
       },
@@ -67,45 +78,87 @@ require( './helpers/setupList' )( Assessment )
         many: true,
         initial: true
       },
-
-    },
-    'Publication',
-    {
       state: {
         type: Types.Select,
         options: constants.assessmentStates.list,
-        default: constants.assessmentStates.DRAFT,
+        default: constants.assessmentStates.ACTIVE,
         index: true
       },
 
-      schedule: {
-        active: {
-          type: Boolean,
-          default: false,
-          label: "Activate schedule"
-        },
-        begin: {
-          type: Types.Date,
-          label: "Begin date",
-          note: "Automatically sets assessment to 'published' on this date (at 0:01)." +
-          "<br/>Leave blank to disable automatic publication.",
-          required: false,
-          dependsOn: {
-            "schedule.active": true
+    },
+    'Scheduling',
+    {
+      feature: {
+        uploads: {
+          enabled: {
+            type: Boolean,
+            note: "When unticked assessees will NOT be able to upload files themselves",
+            default: true
+          },
+          begin: {
+            type: Types.Datetime,
+            default: Date.now,
+            dependsOn: {
+              "feature.uploads.enabled": true
+            }
+          },
+          end: {
+            type: Types.Datetime,
+            default: null,
+            note: "When left blank, uploads will automatically close when comparisons begins",
+            dependsOn: {
+              "feature.uploads.enabled": true
+            }
           }
         },
-        end: {
-          type: Types.Date,
-          label: "End date",
-          note: "Automatically sets assessment to 'archived' on this date (at 0:01 the next day)." +
-          "<br/>Leave blank to disable automatic archiving.",
-          required: false,
-          dependsOn: {
-            "schedule.active": true
+        comparisons: {
+          enabled: {
+            type: Boolean,
+            default: true,
+            note: "Cannot be unticked; always enabled",
+            noedit: true
+          },
+          begin: {
+            type: Types.Datetime,
+            default: Date.now,
+            dependsOn: {
+              "feature.comparisons.enabled": true
+            }
+          },
+          end: {
+            type: Types.Datetime,
+            default: null,
+            note: "When left blank, comparisons will automatically close when results begin",
+            dependsOn: {
+              "feature.comparisons.enabled": true
+            }
           }
-        }
+        },
+        results: {
+          enabled: {
+            type: Boolean,
+            note: "When unticked assessees and assessors will NOT be able to view the results",
+            default: true
+          },
+          begin: {
+            type: Types.Datetime,
+            default: Date.now,
+            dependsOn: {
+              "feature.results.enabled": true
+            }
+          },
+          end: {
+            type: Types.Datetime,
+            default: null,
+            note: "When left blank, results will stay open forever",
+            dependsOn: {
+              "feature.results.enabled": true
+            }
+          }
+        },
       },
-
+    },
+    "Hierarchy", {
       parent: {
         type: Types.Relationship,
         label: "After",
@@ -113,8 +166,9 @@ require( './helpers/setupList' )( Assessment )
         required: false,
         many: false,
         initial: false,
-        note: "Allows you to set up a chain of assessments. " +
-        "(Assessors won't be presented with this assessment until the referenced assessment is finished)."
+        note: `Allows you to set up a chain of assessments. <br/>
+        Assessors won't be presented with this assessment until they have completed all their comparisons for the 
+        selected assessment.`
       },
 
     },
@@ -148,7 +202,7 @@ require( './helpers/setupList' )( Assessment )
             "comparisons.dimension": 'representation'
           },
           watch: 'comparisons.dimension',
-          value: function(){
+          value: function () {
             return (this.comparisons.dimension === 'assessor')
               ? 0
               : this.comparisons.perRepresentation;
@@ -163,7 +217,7 @@ require( './helpers/setupList' )( Assessment )
             "comparisons.dimension": 'assessor'
           },
           watch: 'comparisons.dimension',
-          value: function(){
+          value: function () {
             return (this.comparisons.dimension === 'representation')
               ? 0
               : this.comparisons.perAssessor;
@@ -200,17 +254,17 @@ require( './helpers/setupList' )( Assessment )
         label: "Middle box size",
         note: "expressed as a percentage [!]",
         default: 30,
-        dependsOn:{
+        dependsOn: {
           algorithm: 'positioned-comparative-selection'
         },
       },
 
-      minimumReliability:{
+      minimumReliability: {
         type: Types.Number,
         label: "Required minimum reliability",
         note: "[0;1]",
         default: .7,
-        dependsOn:{
+        dependsOn: {
           algorithm: 'positioned-comparative-selection'
         },
       },
@@ -236,20 +290,7 @@ require( './helpers/setupList' )( Assessment )
         default: true
       },
 
-      enableUploads: {
-        type: Types.Boolean,
-        label: "Enable assessee uploads",
-        note: "Allows assessees to upload a representation for this assessment",
-        default: true
-      },
-
       results: {
-        enable: {
-          type: Types.Boolean,
-          label: "Results: enable viewing",
-          note: "Results will only be viewable when available <strong>and</strong> this is checked.",
-          default: true
-        },
         assessees: {
           viewRepresentations: {
             type: Types.Boolean,
@@ -286,7 +327,7 @@ require( './helpers/setupList' )( Assessment )
         lang: 'json',
         label: 'UI texts',
         note: 'Must be valid json, please check with <a href="http://jsonlint.com/">jsonlint</a>',
-        default: fs.readFileSync( path.join( __dirname, 'json', 'uiTextDefaults.json' ) )
+        default: fs.readFileSync(path.join(__dirname, 'json', 'uiTextDefaults.json'))
         // default: JSON.stringify( require( './json/uiTextDefaults.json' ), null, 2 )
       },
     }, "Stats (dynamic)", {
@@ -363,39 +404,39 @@ require( './helpers/setupList' )( Assessment )
           note: 'Triggers calculation of assessment stats.',
           default: false
         },
-        calculateMiddleBox:{
+        calculateMiddleBox: {
           type: Types.Boolean,
           label: '(Re-)calculate middle box',
           note: 'Triggers (re-)calculation of middle box representations',
           default: false,
-          dependsOn:{
+          dependsOn: {
             algorithm: 'positioned-comparative-selection'
           },
         }
       }
-    } )
-  .virtualize( {
+    })
+  .virtualize({
     limits: {
-      get: function(){
+      get: function () {
         const assessment = this.toObject();
-        if( !assessment.comparisons ){
+        if (!assessment.comparisons) {
           return {};
         }
         let pA = assessment.comparisons.perAssessor || 0;
         let pR = assessment.comparisons.perRepresentation || 0;
-        const rN = _.get( assessment, [ 'cache', 'representationsNum' ], 0 );
-        const aN = _.get( assessment, [ 'cache', 'assessorsNum' ], 0 );
-        switch( assessment.comparisons.dimension ){
+        const rN = _.get(assessment, ['cache', 'representationsNum'], 0);
+        const aN = _.get(assessment, ['cache', 'assessorsNum'], 0);
+        switch (assessment.comparisons.dimension) {
           case 'representation':
             pA = (rN * pR) / (2 * aN );
-            if( !_.isFinite( pA ) ){
+            if (!_.isFinite(pA)) {
               pA = 0;
             }
             break;
           case 'assessor':
           default:
             pR = pA * 2 * aN / rN;
-            if( !_.isFinite( pR ) ){
+            if (!_.isFinite(pR)) {
               pR = 0;
             }
             break;
@@ -406,7 +447,7 @@ require( './helpers/setupList' )( Assessment )
             perAssessor: Math.ceil(pA),
             perRepresentation: Math.ceil(pR)
           },
-          assessorsNum: _.get( assessment, [ 'assessors', 'minimum' ], 0 ),
+          assessorsNum: _.get(assessment, ['assessors', 'minimum'], 0),
           minimumReliability: assessment.minimumReliability || 0
         };
       },
@@ -414,29 +455,29 @@ require( './helpers/setupList' )( Assessment )
         'comparisons.perAssessor', 'comparisons.perRepresentation', 'comparisons.dimension', 'cache.representationsNum',
         'cache.assessorNum', 'assessors.minimum', 'minimumReliability'
       ]
-    }
-  } )
-  .emit( 'actions', 'state' )
-  .validate( {
+    },
+  })
+  .emit('actions', 'state')
+  .validate({
     uiCopy: [
-      function( value ){
-        var isValid = true;
-        try{
-          JSON.parse( value );
-        } catch( err ) {
+      function (value) {
+        let isValid = true;
+        try {
+          JSON.parse(value);
+        } catch (err) {
           isValid = false;
         }
         return isValid;
       }, '"UI texts" contains invalid JSON'
     ],
     middleBoxSize: [
-      function(value){
+      function (value) {
         return value >= 0 && value <= 100;
       }, "Middle box size must be expressed as a percentage [0;100]"
     ]
-  } )
-  .retain( "track" )
-  .relate( {
+  })
+  .retain("track")
+  .relate({
     path: "representations",
     ref: "Representation",
     refPath: "assessment",
@@ -466,6 +507,6 @@ require( './helpers/setupList' )( Assessment )
     ref: "Assessment",
     refPath: "parent",
     label: "Next"
-  } )
+  })
   .register();
 

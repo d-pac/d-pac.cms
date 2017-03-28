@@ -65,13 +65,9 @@ function executeAction( action ){
   switch( action.actionType ){
     case "clone":
       return p.then( function( assessment ){
-        const clone = _.omit( assessment.toJSON(), [
-          '_id', 'state', 'schedule', 'stage', 'cache', 'stats', 'parent'
-        ] );
-        clone.name += ' (Copy)';
         return P.props( {
           source: assessment,
-          clone: assessmentsService.create( clone )
+          clone: assessmentsService.create( assessment.clone() )
         } );
       } )
         .then( function( assessments ){

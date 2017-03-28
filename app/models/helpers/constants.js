@@ -49,8 +49,7 @@ module.exports.roles = {
 module.exports.roles.list = [ module.exports.roles.ASSESSOR, module.exports.roles.ASSESSEE, module.exports.roles.PAM ];
 
 module.exports.assessmentStates = {
-  DRAFT: "draft",
-  PUBLISHED: "published",
+  ACTIVE: "active",
   COMPLETED: "completed",
   ARCHIVED: "archived",
 };
