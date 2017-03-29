@@ -1,5 +1,6 @@
 "use strict";
 
+const {get} = require('lodash');
 const debug = require( "debug" )( "dpac:api.representations" );
 
 const service = require( "../../services/representations" );
@@ -10,6 +11,21 @@ const base = new Controller( service );
 const documentsService = require( '../../services/documents' );
 
 module.exports = base.mixin();
+
+module.exports.list = function (req, res, next) {
+  base.handleResult(base.list(req)
+    .map(function (representation) {
+      representation = representation.toJSON();
+      const owners = get(representation, ["document", "owner"], []);
+      const match = owners.some(function (owner) {
+        return owner.equals(req.user._id);
+      });
+      if(! match){
+        delete representation.document.originalName;
+      }
+      return representation;
+    }), res, next, { depopulate: false });
+};
 
 module.exports.retrieve = ( req,
                             res,
