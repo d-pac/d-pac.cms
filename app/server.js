@@ -3,31 +3,33 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 
-var mongoose = require( 'mongoose' );
+const mongoose = require( 'mongoose' );
 mongoose.Promise = require( 'bluebird' );
 
-var _ = require( 'lodash' );
-var grappling = require( 'grappling-hook' );
+const _ = require( 'lodash' );
+const grappling = require( 'grappling-hook' );
 
-var konfy = require( "konfy" );
+const konfy = require( "konfy" );
 konfy.load();
 
 // Require keystone
-var keystone = require( "keystone" );
+const keystone = require( "keystone" );
 keystone.importer( __dirname )( "patches" );
 
-var errors = require( "errors" );
+const errors = require( "errors" );
 
-var nodeEnv = process.env.NODE_ENV || "development";
+const getSafeBoolean = require('./lib/getSafeBoolean');
+
+const nodeEnv = process.env.NODE_ENV || "development";
 
 keystone.hooks = grappling.create( { strict: false } );
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
-var env = process.env;
-var pkg = require( "../package.json" );
-var appversion = process.env.APP_VERSION_LABEL || pkg.version;
+const env = process.env;
+const pkg = require( "../package.json" );
+const appversion = process.env.APP_VERSION_LABEL || pkg.version;
 
 keystone.auth = require( './lib/auth' );
 
@@ -87,7 +89,9 @@ keystone.init( {
   },
   "api disable": env.API_DISABLE || '',
   "dev env": (env.NODE_ENV !== "production"),
-  "user directory": process.env.DIR_USER || "app/uploads"
+  "user directory": process.env.DIR_USER || "app/uploads",
+  "feature disable passwordresets": getSafeBoolean(process.env.FEATURE_DISABLE_PASSWORDRESETS),
+  "feature enable anonymous": getSafeBoolean(process.env.FEATURE_ENABLE_ANONYMOUS),
 } );
 
 if( keystone.get( 'dev env' ) ){

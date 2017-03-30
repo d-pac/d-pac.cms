@@ -10,7 +10,7 @@ const sinon = require('sinon');
 
 const subject = require('../../../app/lib/createToken');
 
-describe.only('/lib/createToken', function () {
+describe('/lib/createToken', function () {
   describe('spec', () => {
     it('should run', () => expect(true).to.be.true());
   });

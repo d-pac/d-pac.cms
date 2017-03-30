@@ -15,11 +15,16 @@ const Assessment = new keystone.List("Assessment", {
   defaultSort: "order"
 });
 
-Assessment.defaultColumns = "name, " +
+let defaultColumns = "name, " +
   "title, " +
   "algorithm, " +
   "state, " +
   "parent";
+if (keystone.get('feature enable anonymous')) {
+  defaultColumns += ", enableAnonymousLogins";
+}
+
+Assessment.defaultColumns = defaultColumns;
 
 //we need to do this, since keystone doesn't allow Mixed types
 Assessment.schema.add({stats: {byRepresentation: keystone.mongoose.Schema.Types.Mixed}});
@@ -35,17 +40,14 @@ Assessment.schema.methods.reset = function () {
 };
 
 Assessment.schema.methods.clone = function () {
-  const clone = _.omit( this.toJSON(), [
+  const clone = _.omit(this.toJSON(), [
     '_id', 'feature', 'stage', 'cache', 'stats', 'parent'
-  ] );
+  ]);
   clone.name += ' (Copy)';
   return clone;
 };
 
-// Assessment.schema.virtual( 'limits' ).get(  );
-
-
-require('./helpers/setupList')(Assessment)
+const AssessmentList = require('./helpers/setupList')(Assessment)
   .add({
 
       name: {
@@ -269,6 +271,20 @@ require('./helpers/setupList')(Assessment)
         },
       },
 
+      results: {
+        assessees: {
+          viewRepresentations: {
+            type: Types.Boolean,
+            label: "Results: allow assessees to view other representations",
+            default: true
+          },
+          viewRanking: {
+            type: Types.Boolean,
+            label: "Results: allow assessees to view the ranking",
+            default: true
+          }
+        }
+      },
       enableTimeLogging: {
         type: Types.Boolean,
         label: "Enable time logging",
@@ -290,131 +306,132 @@ require('./helpers/setupList')(Assessment)
         default: true
       },
 
-      results: {
-        assessees: {
-          viewRepresentations: {
-            type: Types.Boolean,
-            label: "Results: allow assessees to view other representations",
-            default: true
-          },
-          viewRanking: {
-            type: Types.Boolean,
-            label: "Results: allow assessees to view the ranking",
-            default: true
-          }
-        }
-      }
 
-    }, "Texts", {
-      assignments: {
-        assessor: {
-          type: Types.Html,
-          label: "Assessor assignment",
-          wysiwyg: true,
-          height: 400
-        },
+    });
 
-        assessee: {
-          type: Types.Html,
-          label: "Assessee assignment",
-          wysiwyg: true,
-          height: 400
-        }
+if (keystone.get('feature enable anonymous')) {
+  AssessmentList.add({
+    enableAnonymousLogins: {
+      type: Types.Boolean,
+      label: "Enable anonymous logins",
+      note: `Wil automatically register any user as a 'guest' and immediately allow him to make comparisons for this
+        assessment.`,
+      default: false
+    },
+  });
+}
+
+
+AssessmentList.add("Texts", {
+  assignments: {
+    assessor: {
+      type: Types.Html,
+      label: "Assessor assignment",
+      wysiwyg: true,
+      height: 400
+    },
+
+    assessee: {
+      type: Types.Html,
+      label: "Assessee assignment",
+      wysiwyg: true,
+      height: 400
+    }
+  },
+
+  uiCopy: {
+    type: Types.Code,
+    lang: 'json',
+    label: 'UI texts',
+    note: 'Must be valid json, please check with <a href="http://jsonlint.com/">jsonlint</a>',
+    default: fs.readFileSync(path.join(__dirname, 'json', 'uiTextDefaults.json'))
+    // default: JSON.stringify( require( './json/uiTextDefaults.json' ), null, 2 )
+  },
+}, "Stats (dynamic)", {
+  cache: {
+    representationsNum: {
+      type: Types.Number,
+      default: 0,
+      noedit: true,
+      label: "Total number of (to rank) representations"
+    },
+    comparisonsNum: {
+      type: Types.Number,
+      default: 0,
+      noedit: true,
+      label: "Total number of comparisons"
+    },
+    assessorsNum: {
+      type: Types.Number,
+      default: 0,
+      noedit: true,
+      label: "Total number of assessors"
+    }
+  }
+
+}, "Stats (manual)", {
+  stats: {
+    averages: {
+      durationPerRepresentation: {
+        type: Types.Number,
+        noedit: true,
+        label: "Average duration per representation (in seconds)"
       },
-
-      uiCopy: {
-        type: Types.Code,
-        lang: 'json',
-        label: 'UI texts',
-        note: 'Must be valid json, please check with <a href="http://jsonlint.com/">jsonlint</a>',
-        default: fs.readFileSync(path.join(__dirname, 'json', 'uiTextDefaults.json'))
-        // default: JSON.stringify( require( './json/uiTextDefaults.json' ), null, 2 )
+      durationPerAssessor: {
+        type: Types.Number,
+        noedit: true,
+        label: "Average duration per assessor (in seconds)"
       },
-    }, "Stats (dynamic)", {
-      cache: {
-        representationsNum: {
-          type: Types.Number,
-          default: 0,
-          noedit: true,
-          label: "Total number of (to rank) representations"
-        },
-        comparisonsNum: {
-          type: Types.Number,
-          default: 0,
-          noedit: true,
-          label: "Total number of comparisons"
-        },
-        assessorsNum: {
-          type: Types.Number,
-          default: 0,
-          noedit: true,
-          label: "Total number of assessors"
-        }
-      }
-
-    }, "Stats (manual)", {
-      stats: {
-        averages: {
-          durationPerRepresentation: {
-            type: Types.Number,
-            noedit: true,
-            label: "Average duration per representation (in seconds)"
-          },
-          durationPerAssessor: {
-            type: Types.Number,
-            noedit: true,
-            label: "Average duration per assessor (in seconds)"
-          },
-          comparisonsPerAssessor: {
-            type: Types.Number,
-            noedit: true,
-            label: "Average number of comparisons per assessor"
-          },
-          comparisonsPerRepresentation: {
-            type: Types.Number,
-            noedit: true,
-            label: "Average number of comparisons per representation"
-          },
-        },
-        totals: {
-          duration: {
-            type: Types.Number,
-            noedit: true,
-            label: "Total duration of all comparisons (in seconds)"
-          },
-          reliability: {
-            type: Types.Number,
-            noedit: true,
-            label: "Reliability"
-          },
-        },
-        lastRun: {
-          type: Types.Datetime,
-          noedit: true,
-          label: "Last calculation ran at:",
-          format: 'DD/MM/YYYY, HH:mm:ss'
-        }
+      comparisonsPerAssessor: {
+        type: Types.Number,
+        noedit: true,
+        label: "Average number of comparisons per assessor"
       },
+      comparisonsPerRepresentation: {
+        type: Types.Number,
+        noedit: true,
+        label: "Average number of comparisons per representation"
+      },
+    },
+    totals: {
+      duration: {
+        type: Types.Number,
+        noedit: true,
+        label: "Total duration of all comparisons (in seconds)"
+      },
+      reliability: {
+        type: Types.Number,
+        noedit: true,
+        label: "Reliability"
+      },
+    },
+    lastRun: {
+      type: Types.Datetime,
+      noedit: true,
+      label: "Last calculation ran at:",
+      format: 'DD/MM/YYYY, HH:mm:ss'
+    }
+  },
 
-    }, "Actions", {
-      actions: {
-        calculate: {
-          type: Types.Boolean,
-          label: 'Calculate (manual stats)',
-          note: 'Triggers calculation of assessment stats.',
-          default: false
-        },
-        calculateMiddleBox: {
-          type: Types.Boolean,
-          label: '(Re-)calculate middle box',
-          note: 'Triggers (re-)calculation of middle box representations',
-          default: false,
-          dependsOn: {
-            algorithm: 'positioned-comparative-selection'
-          },
-        }
-      }
-    })
+}, "Actions", {
+  actions: {
+    calculate: {
+      type: Types.Boolean,
+      label: 'Calculate (manual stats)',
+      note: 'Triggers calculation of assessment stats.',
+      default: false
+    },
+    calculateMiddleBox: {
+      type: Types.Boolean,
+      label: '(Re-)calculate middle box',
+      note: 'Triggers (re-)calculation of middle box representations',
+      default: false,
+      dependsOn: {
+        algorithm: 'positioned-comparative-selection'
+      },
+    }
+  }
+})
   .virtualize({
     limits: {
       get: function () {
