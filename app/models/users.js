@@ -36,7 +36,7 @@ User.schema.plugin( require( "./helpers/autoinc" ).plugin, {
   startAt: 1
 } );
 
-if(!process.env.FEATURE_DISABLE_PASSWORDRESETS){
+if(! keystone.get('feature disable passwordresets')){
   User.schema.methods.sendResetPassword = keystone.auth.sendResetPassword;
 }
 

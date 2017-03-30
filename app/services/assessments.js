@@ -21,3 +21,9 @@ module.exports.retrieveLean = function retrieveLean(opts) {
   debug('retrieveLean');
   return base.retrieve(opts).lean().exec();
 };
+
+
+module.exports.listLean = function listLean(opts) {
+  debug('listLean');
+  return base.list(opts).lean().exec();
+};
