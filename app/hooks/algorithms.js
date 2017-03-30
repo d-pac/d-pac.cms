@@ -7,6 +7,7 @@ const _ = require( 'lodash' );
 const keystone = require( 'keystone' );
 const handleHook = require( './helpers/handleHook' );
 const mailsService = require( '../services/mails' );
+const constants = require('../models/helpers/constants');
 
 const messageHandlers = {
   'assessor-stage-completed': function( data ){
@@ -18,7 +19,7 @@ const messageHandlers = {
   },
 
   'assessment-completed': function( data ){
-    data.assessment.state = 'completed';
+    data.assessment.state = constants.assessmentStates.COMPLETED;
     data.assessment.save();
   },
 };

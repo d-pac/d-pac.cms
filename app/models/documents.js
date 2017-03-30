@@ -129,6 +129,12 @@ require( './helpers/setupList' )( Document )
       get: function(){
         return getAnon( this );
       }
+    },
+    originalName: {
+      get: function () {
+        return this.file.originalname;
+      },
+      depends: ['file']
     }
   } )
   .relate( {
