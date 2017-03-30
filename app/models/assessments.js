@@ -100,7 +100,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           begin: {
             type: Types.Datetime,
             default: Date.now,
-            utc: true,
+            format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.uploads.enabled": true
             }
@@ -108,7 +108,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           end: {
             type: Types.Datetime,
             default: null,
-            utc: true,
+            format: "DD/MM/YYYY HH:mm",
             note: "When left blank, uploads will automatically close when comparisons begins",
             dependsOn: {
               "feature.uploads.enabled": true
@@ -125,7 +125,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           begin: {
             type: Types.Datetime,
             default: Date.now,
-            utc: true,
+            format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.comparisons.enabled": true
             }
@@ -133,7 +133,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           end: {
             type: Types.Datetime,
             default: null,
-            utc: true,
+            format: "DD/MM/YYYY HH:mm",
             note: "When left blank, comparisons will automatically close when results begin",
             dependsOn: {
               "feature.comparisons.enabled": true
@@ -149,7 +149,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           begin: {
             type: Types.Datetime,
             default: Date.now,
-            utc: true,
+            format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.results.enabled": true
             }
@@ -158,7 +158,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
             type: Types.Datetime,
             default: null,
             note: "When left blank, results will stay open forever",
-            utc: true,
+            format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.results.enabled": true
             }
