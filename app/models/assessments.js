@@ -100,6 +100,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           begin: {
             type: Types.Datetime,
             default: Date.now,
+            utc: true,
             dependsOn: {
               "feature.uploads.enabled": true
             }
@@ -107,6 +108,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           end: {
             type: Types.Datetime,
             default: null,
+            utc: true,
             note: "When left blank, uploads will automatically close when comparisons begins",
             dependsOn: {
               "feature.uploads.enabled": true
@@ -123,6 +125,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           begin: {
             type: Types.Datetime,
             default: Date.now,
+            utc: true,
             dependsOn: {
               "feature.comparisons.enabled": true
             }
@@ -130,6 +133,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           end: {
             type: Types.Datetime,
             default: null,
+            utc: true,
             note: "When left blank, comparisons will automatically close when results begin",
             dependsOn: {
               "feature.comparisons.enabled": true
@@ -145,6 +149,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           begin: {
             type: Types.Datetime,
             default: Date.now,
+            utc: true,
             dependsOn: {
               "feature.results.enabled": true
             }
@@ -153,6 +158,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
             type: Types.Datetime,
             default: null,
             note: "When left blank, results will stay open forever",
+            utc: true,
             dependsOn: {
               "feature.results.enabled": true
             }
