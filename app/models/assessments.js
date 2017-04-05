@@ -99,7 +99,7 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           },
           begin: {
             type: Types.Datetime,
-            default: Date.now,
+            default: moment,
             format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.uploads.enabled": true
@@ -124,7 +124,9 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           },
           begin: {
             type: Types.Datetime,
-            default: Date.now,
+            default: function(){
+              return moment().add(1, 'd');
+            },
             format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.comparisons.enabled": true
@@ -148,7 +150,9 @@ const AssessmentList = require('./helpers/setupList')(Assessment)
           },
           begin: {
             type: Types.Datetime,
-            default: Date.now,
+            default: function(){
+              return moment().add(2, 'd');
+            },
             format: "DD/MM/YYYY HH:mm",
             dependsOn: {
               "feature.results.enabled": true
@@ -413,7 +417,7 @@ AssessmentList.add("Texts", {
     },
     lastRun: {
       type: Types.Datetime,
-      noedit: true,
+      noedit: !keystone.get( 'dev env' ),
       label: "Last calculation ran at:",
       format: 'DD/MM/YYYY, HH:mm:ss'
     }
