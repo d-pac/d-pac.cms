@@ -3,7 +3,7 @@ FROM node:6.9.5
 MAINTAINER Camille Reynders
 
 ENV DOCKERIZE_VERSION 0.2.0
-ENV YARN_VERSION 0.19.1
+ENV YARN_VERSION 0.21.3
 ENV PATH=/home/dpac/node_modules/.bin:/usr/bin:/usr/local/bin:$PATH
 
 ADD .ssh /root/.ssh
