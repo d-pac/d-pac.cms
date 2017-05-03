@@ -34,7 +34,6 @@ const appversion = process.env.APP_VERSION_LABEL || pkg.version;
 keystone.auth = require( './lib/auth' );
 
 const clientUrl = env.CLIENT_URL || env.ROOT_URL + '/tool';
-
 keystone.init( {
 
   "name": "d-pac",
@@ -93,6 +92,7 @@ keystone.init( {
   "feature disable passwordresets": getSafeBoolean(process.env.FEATURE_DISABLE_PASSWORDRESETS),
   "feature enable anonymous": getSafeBoolean(process.env.FEATURE_ENABLE_ANONYMOUS),
 } );
+
 
 if( keystone.get( 'dev env' ) ){
   process.on( 'unhandledRejection', ( reason ) =>{
