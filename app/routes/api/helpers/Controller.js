@@ -43,6 +43,7 @@ _.assignIn( Controller.prototype, {
     });
     function handle( result ){
       if( result ){
+        console.log("result type", typeof result);
         if( result.toJSON ){
           result = result.toJSON( { depopulate: opts.depopulate } );
         }

@@ -10,7 +10,7 @@ const Service = require( "./helpers/Service" );
 const assessmentsService = require( './assessments' );
 const representationsService = require( './representations' );
 
-const base = new Service( collection );
+const base = new Service( collection, debug );
 module.exports = base.mixin();
 
 module.exports.listPopulated = ( opts ) =>{

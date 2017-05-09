@@ -26,22 +26,9 @@ if (keystone.get('feature enable anonymous')) {
 
 Assessment.defaultColumns = defaultColumns;
 
-//we need to do this, since keystone doesn't allow Mixed types
-Assessment.schema.add({stats: {byRepresentation: keystone.mongoose.Schema.Types.Mixed}});
-Assessment.schema.methods.reset = function () {
-  this.stats.averages.comparisonsPerAssessor = null;
-  this.stats.averages.comparisonsPerRepresentation = null;
-  this.stats.averages.durationPerAssessor = null;
-  this.stats.averages.durationPerRepresentation = null;
-  this.stats.totals.duration = null;
-  this.stats.totals.reliability = null;
-  this.stats.lastRun = null;
-  return this;
-};
-
 Assessment.schema.methods.clone = function () {
   const clone = _.omit(this.toJSON(), [
-    '_id', 'feature', 'stage', 'cache', 'stats', 'parent'
+    '_id', 'feature', 'stage', 'cache', 'parent'
   ]);
   clone.name += ' (Copy)';
   return clone;
@@ -363,7 +350,7 @@ AssessmentList.add("Texts", {
     default: fs.readFileSync(path.join(__dirname, 'json', 'uiTextDefaults.json'))
     // default: JSON.stringify( require( './json/uiTextDefaults.json' ), null, 2 )
   },
-}, "Stats (dynamic)", {
+}, "Totals", {
   cache: {
     representationsNum: {
       type: Types.Number,
@@ -383,60 +370,16 @@ AssessmentList.add("Texts", {
       noedit: true,
       label: "Total number of assessors"
     }
-  }
-
-}, "Stats (manual)", {
-  stats: {
-    averages: {
-      durationPerRepresentation: {
-        type: Types.Number,
-        noedit: true,
-        label: "Average duration per representation (in seconds)"
-      },
-      durationPerAssessor: {
-        type: Types.Number,
-        noedit: true,
-        label: "Average duration per assessor (in seconds)"
-      },
-      comparisonsPerAssessor: {
-        type: Types.Number,
-        noedit: true,
-        label: "Average number of comparisons per assessor"
-      },
-      comparisonsPerRepresentation: {
-        type: Types.Number,
-        noedit: true,
-        label: "Average number of comparisons per representation"
-      },
-    },
-    totals: {
-      duration: {
-        type: Types.Number,
-        noedit: true,
-        label: "Total duration of all comparisons (in seconds)"
-      },
-      reliability: {
-        type: Types.Number,
-        noedit: true,
-        label: "Reliability"
-      },
-    },
-    lastRun: {
-      type: Types.Datetime,
-      noedit: !keystone.get('dev env'),
-      label: "Last calculation ran at:",
-      format: 'DD/MM/YYYY, HH:mm:ss'
-    }
   },
-
+}, "Calculations", {
+  hasCalculations: {
+    type: Boolean,
+    noedit: !keystone.get('dev env'),
+    label: "Has this assessment already been calculated?",
+    default: false
+  },
 }, "Actions", {
   actions: {
-    calculate: {
-      type: Types.Boolean,
-      label: 'Calculate (manual stats)',
-      note: 'Triggers calculation of assessment stats.',
-      default: false
-    },
     calculateMiddleBox: {
       type: Types.Boolean,
       label: '(Re-)calculate middle box',

@@ -107,6 +107,10 @@ exports.handleError = function( err,
                                 next ){
   console.error( "dpac:api.middleware#handleError", err.message );
 
+  if(keystone.get('dev env')){
+    console.log(err.stack);
+  }
+
   if( utils.isHttpError( err ) ){
     return res.apiError( err );
   }

@@ -6,7 +6,7 @@ const keystone = require("keystone");
 const collection = keystone.list("Assessment");
 const Service = require("./helpers/Service");
 const constants = require("../models/helpers/constants");
-const base = new Service(collection);
+const base = new Service(collection, debug);
 module.exports = base.mixin();
 
 module.exports.listPublished = function listPublished(opts) {
@@ -27,3 +27,5 @@ module.exports.listLean = function listLean(opts) {
   debug('listLean');
   return base.list(opts).lean().exec();
 };
+
+

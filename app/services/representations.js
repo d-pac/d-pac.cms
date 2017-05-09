@@ -5,12 +5,11 @@ const _ = require( "lodash" );
 const documentsService = require( './documents' );
 const collection = keystone.list( "Representation" );
 const Service = require( "./helpers/Service" );
-const base = new Service( collection );
+const base = new Service( collection, debug );
 const constants = require( '../models/helpers/constants' );
 module.exports = base.mixin();
 
 module.exports.list = function list( opts ){
-  debug( "list" );
   return base.list( opts )
     .populate( "document" )
     .exec();
