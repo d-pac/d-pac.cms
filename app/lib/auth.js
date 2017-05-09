@@ -118,7 +118,7 @@ exports.verifyResetToken = function( token,
 
 exports.sendResetPassword = function( callback ){
 
-  const expires = moment().add( 1, 'hour' );
+  const expires = moment().add( 7, 'days' );
   const token = createToken();
   const nonce = createToken();
   const user = this;
