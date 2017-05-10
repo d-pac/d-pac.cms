@@ -71,6 +71,8 @@ require( './helpers/setupList' )( Message )
     },
     schedule: {
       type: Types.Datetime,
+      dateFormat: "DD/MM/YYYY",
+      timeFormat: "HH:mm",
       label: "When",
       note: "Scheduled messages are sent in discrete bulks, i.e. account for a delay of up to 30 minutes.",
       required: false,
