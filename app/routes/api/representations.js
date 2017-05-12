@@ -1,19 +1,20 @@
 "use strict";
 
 const {get} = require('lodash');
-const debug = require( "debug" )( "dpac:api.representations" );
+const debug = require("debug")("dpac:api.representations");
 
-const service = require( "../../services/representations" );
-const Controller = require( "./helpers/Controller" );
+const service = require("../../services/representations");
+const Controller = require("./helpers/Controller");
 const mime = require('mime');
-const base = new Controller( service );
+const base = new Controller(service);
 
-const documentsService = require( '../../services/documents' );
+const documentsService = require('../../services/documents');
+const errors = require('errors');
 
 module.exports = base.mixin();
 
 function getMimetype(filename) {
-  return mime.lookup( filename );
+  return mime.lookup(filename);
 }
 
 module.exports.list = function (req, res, next) {
@@ -24,23 +25,23 @@ module.exports.list = function (req, res, next) {
       const match = owners.some(function (owner) {
         return owner.equals(req.user._id);
       });
-      if(! match){
+      if (!match) {
         delete representation.document.originalName;
       }
       return representation;
-    }), res, next, { depopulate: false });
+    }), res, next, {depopulate: false});
 };
 
-module.exports.retrieve = ( req,
-                            res,
-                            next ) =>{
-  base.handleResult( base.retrieve( req ), res, next, { depopulate: false } );
+module.exports.retrieve = (req,
+                           res,
+                           next) => {
+  base.handleResult(base.retrieve(req), res, next, {depopulate: false});
 };
 
-module.exports.create = ( req,
-                          res,
-                          next )=>{
-  debug( '#create' );
+module.exports.create = (req,
+                         res,
+                         next) => {
+  debug('#create');
   /*
    req.files.file: {
    buffer,
@@ -55,36 +56,46 @@ module.exports.create = ( req,
    */
   const file = req.files.file;
   let created;
-
-  base.handleResult( documentsService.create( {
-      owner: req.user.id,
-      file: {
-        source: file.path,
-        filetype: getMimetype(file.originalname),
-        filename: file.name,
-        originalname: file.originalname,
-        size: file.size
-      }
-    } )
-    .then( ( document )=>{
-      created = document;
-      return service.create( {
-        assessment: req.body.assessment,
-        document: document.id
-      } );
-    } )
-    .then( ( representation )=>{
-      representation.document = created;
-      return representation;
-    } )
-    , res, next, { depopulate: false } );
+  base.handleResult(
+    service.listForUser(req.user.id)
+      .then(function (representations) {
+        const found = representations.some((representation) => representation.assessment.toString() === req.body.assessment);
+        if (found) {
+          throw new errors.Http403Error("only one upload per assessee");
+        }
+        return null;
+      })
+      .then(function () {
+        return documentsService.create({
+          owner: req.user.id,
+          file: {
+            source: file.path,
+            filetype: getMimetype(file.originalname),
+            filename: file.name,
+            originalname: file.originalname,
+            size: file.size
+          }
+        });
+      })
+      .then((document) => {
+        created = document;
+        return service.create({
+          assessment: req.body.assessment,
+          document: document.id
+        });
+      })
+      .then((representation) => {
+        representation.document = created;
+        return representation;
+      })
+    , res, next, {depopulate: false});
 };
 
-module.exports.update = function( req,
+module.exports.update = function (req,
                                   res,
-                                  next ){
+                                  next) {
   const file = req.files.file;
-  base.handleResult( documentsService.update( {
+  base.handleResult(documentsService.update({
       _id: req.body.document,
       file: {
         source: file.path,
@@ -93,15 +104,15 @@ module.exports.update = function( req,
         originalname: file.originalname,
         size: file.size
       }
-    } )
-    .then( ( /*document*/ )=>{
-      return service.retrieve( {
-        _id: req.params._id
-      } );
-    } )
-    .then( ( representation )=>{
-      representation.markModified( 'document' );
-      return representation.save();
-    } )
-    , res, next, { depopulate: false } );
+    })
+      .then((/*document*/) => {
+        return service.retrieve({
+          _id: req.params._id
+        });
+      })
+      .then((representation) => {
+        representation.markModified('document');
+        return representation.save();
+      })
+    , res, next, {depopulate: false});
 };
