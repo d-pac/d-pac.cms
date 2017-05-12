@@ -5,12 +5,16 @@ const debug = require( "debug" )( "dpac:api.representations" );
 
 const service = require( "../../services/representations" );
 const Controller = require( "./helpers/Controller" );
-const path = require('path');
+const mime = require('mime');
 const base = new Controller( service );
 
 const documentsService = require( '../../services/documents' );
 
 module.exports = base.mixin();
+
+function getMimetype(filename) {
+  return mime.lookup( filename );
+}
 
 module.exports.list = function (req, res, next) {
   base.handleResult(base.list(req)
@@ -56,7 +60,7 @@ module.exports.create = ( req,
       owner: req.user.id,
       file: {
         source: file.path,
-        filetype: file.mimetype,
+        filetype: getMimetype(file.originalname),
         filename: file.name,
         originalname: file.originalname,
         size: file.size
@@ -84,7 +88,7 @@ module.exports.update = function( req,
       _id: req.body.document,
       file: {
         source: file.path,
-        filetype: file.mimetype,
+        filetype: getMimetype(file.originalname),
         filename: file.name,
         originalname: file.originalname,
         size: file.size
