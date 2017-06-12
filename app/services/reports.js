@@ -24,7 +24,13 @@ const FALSE = 0;
 module.exports.listRepresentationsForAssessmentIds = function listRepresentationsForAssessmentIds( assessmentIds ){
   let q = Representation.model
     .find()
-    .populate( 'document', 'name' )
+    .populate( {
+      path:'document',
+      populate: {
+        path: 'owner',
+        model: 'User'
+      }
+    } )
     .populate( 'assessment', 'name' );
   if( assessmentIds ){
     if( _.isString( assessmentIds ) ){
@@ -186,6 +192,9 @@ module.exports.listRepresentations = function listRepresentations( assessmentIds
       return {
         assessment: _.get( representationModel, [ 'assessment', 'name' ], '' ),
         name: _.get( representationModel, [ 'document', 'name' ], '' ),
+        owner: _.get(representationModel, ['document', 'owner'], []).map(function (user) {
+          return _.get(user, ["name","first"]) + " " + _.get(user, ["name", "last"]);
+        }),
         ability: _.get( representationModel, [ 'ability', 'value' ], UNDEFINED ),
         se: _.get( representationModel, [ 'ability', 'se' ], UNDEFINED ),
         rankType: representationModel.rankType || UNDEFINED

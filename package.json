@@ -30,7 +30,7 @@
     "mkdir-p": "0.0.7",
     "moment": "2.11.2",
     "moment-range": "2.1.0",
-    "mongoose": "4.4.4",
+    "mongoose": "4.5",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
     "mv": "^2.1.1",
