@@ -1104,21 +1104,13 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@2.10.2:
+bluebird@2.10.2, bluebird@^2.10.2:
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.10.2.tgz#024a5517295308857f14f91f1106fc3b555f446b"
-
-bluebird@2.9.26:
-  version "2.9.26"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.9.26.tgz#362772ea4d09f556a4b9f3b64c2fd136e87e3a55"
 
 bluebird@3.4.0, "bluebird@>= 2.0", bluebird@^3.0.6:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.4.0.tgz#28b847935a8bb56d7ff1c7eba3631b09d5a49b24"
-
-bluebird@^2.10.2:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.6"
@@ -1317,17 +1309,13 @@ browserify@^14.0.0:
     vm-browserify "~0.0.1"
     xtend "^4.0.0"
 
-bson@0.4.21:
-  version "0.4.21"
-  resolved "https://registry.yarnpkg.com/bson/-/bson-0.4.21.tgz#b8eae38c5aa94f7b8e64e8cfed0f42e58308ed95"
-
 bson@~0.2:
   version "0.2.22"
   resolved "https://registry.yarnpkg.com/bson/-/bson-0.2.22.tgz#fcda103f26d0c074d5a52d50927db80fd02b4b39"
   dependencies:
     nan "~1.8"
 
-bson@~0.4.21, bson@~0.4.23:
+bson@~0.4.23:
   version "0.4.23"
   resolved "https://registry.yarnpkg.com/bson/-/bson-0.4.23.tgz#e65a2e3c7507ffade4109bc7575a76e50f8da915"
 
@@ -3308,9 +3296,9 @@ homedir@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/homedir/-/homedir-0.6.0.tgz#2b21db66bf08a6db38249a3eff52d7d18706af1e"
 
-hooks-fixed@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/hooks-fixed/-/hooks-fixed-1.1.0.tgz#0e8c15336708e6611185fe390b44687dd5230dbb"
+hooks-fixed@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hooks-fixed/-/hooks-fixed-1.2.0.tgz#0d2772d4d7d685ff9244724a9f0b5b2559aac96b"
 
 hooks@0.2.1:
   version "0.2.1"
@@ -3832,9 +3820,9 @@ juice@^1.10.0:
     util-deprecate "^1.0.2"
     web-resource-inliner "1.2.1"
 
-kareem@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/kareem/-/kareem-1.0.1.tgz#7805d215bb53214ec3af969a1d0b1f17e3e7b95c"
+kareem@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/kareem/-/kareem-1.1.3.tgz#0877610d8879c38da62d1dbafde4e17f2692f041"
 
 kerberos@0.0.11:
   version "0.0.11"
@@ -4402,11 +4390,11 @@ moment@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.6.0.tgz#0765b72b841dd213fa91914c0f6765122719f061"
 
-mongodb-core@1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-1.3.1.tgz#c504b45e42300741ebf0b4b1d12d3c1073994588"
+mongodb-core@1.3.18:
+  version "1.3.18"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-1.3.18.tgz#90684b3b7c7356d65ae356391d30b0f248804c7a"
   dependencies:
-    bson "~0.4.21"
+    bson "~0.4.23"
     require_optional "~1.0.0"
 
 mongodb-core@1.3.21:
@@ -4444,12 +4432,12 @@ mongodb@1.4.38:
     kerberos "0.0.11"
     readable-stream latest
 
-mongodb@2.1.6:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.1.6.tgz#ebeec407dd72ec1d79f161ddb3e9b1c89fd49380"
+mongodb@2.1.18:
+  version "2.1.18"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.1.18.tgz#28d40b515b2be4d5a69ffdd4c535f0df432e4097"
   dependencies:
     es6-promise "3.0.2"
-    mongodb-core "1.3.1"
+    mongodb-core "1.3.18"
     readable-stream "1.0.31"
 
 "mongodb@>= 1.2.0 <2.2.0":
@@ -4470,18 +4458,18 @@ mongoose-deep-populate@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/mongoose-deep-populate/-/mongoose-deep-populate-3.0.0.tgz#8100d0698b2211c646a6e92441a666d444171fa0"
 
-mongoose@4.4.4:
-  version "4.4.4"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.4.4.tgz#d3a2d966d77c4c9808fec66d569e2b883c586b54"
+mongoose@4.5:
+  version "4.5.10"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.5.10.tgz#6c109119e7b274b4e53e2f092176e4c7db7eccd6"
   dependencies:
     async "1.5.2"
-    bson "0.4.21"
-    hooks-fixed "1.1.0"
-    kareem "1.0.1"
-    mongodb "2.1.6"
+    bson "~0.4.23"
+    hooks-fixed "1.2.0"
+    kareem "1.1.3"
+    mongodb "2.1.18"
     mpath "0.2.1"
     mpromise "0.5.5"
-    mquery "1.6.3"
+    mquery "1.11.0"
     ms "0.7.1"
     muri "1.1.0"
     regexp-clone "0.0.1"
@@ -4546,11 +4534,11 @@ mquery@1.10.0:
     regexp-clone "0.0.1"
     sliced "0.0.5"
 
-mquery@1.6.3:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/mquery/-/mquery-1.6.3.tgz#7c02bfb7e49c8012cece1556c5e65fef61f3c8e5"
+mquery@1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/mquery/-/mquery-1.11.0.tgz#e0c65dedb1037edbf6cfb88262e777fee23551d9"
   dependencies:
-    bluebird "2.9.26"
+    bluebird "2.10.2"
     debug "2.2.0"
     regexp-clone "0.0.1"
     sliced "0.0.5"
