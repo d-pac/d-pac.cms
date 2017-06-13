@@ -1,5 +1,7 @@
 "use strict";
 
+const keystone = require('keystone');
+
 const {get} = require('lodash');
 const debug = require("debug")("dpac:api.representations");
 
@@ -56,6 +58,13 @@ module.exports.create = (req,
    */
   const file = req.files.file;
   let created;
+  const locked = keystone.uploadLocks || {};
+  const lockId = req.user.id + "-" + req.body.assessment;
+  if(locked[lockId]){
+    return base.handleResult(new errors.Http403Error("processing user upload for this assessment"), res, next, {depopulate: false});
+  }
+  locked[lockId] = true;
+  keystone.uploadLocks = locked;
   base.handleResult(
     service.listForUser(req.user.id)
       .then(function (representations) {
@@ -87,6 +96,10 @@ module.exports.create = (req,
       .then((representation) => {
         representation.document = created;
         return representation;
+      })
+      .finally(()=>{
+        delete keystone.uploadLocks[lockId];
+        return null;
       })
     , res, next, {depopulate: false});
 };
