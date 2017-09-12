@@ -14,13 +14,7 @@ const timelogsService = require('./timelogs');
 const fns = require('d-pac.functions');
 
 const getAbility = _.partialRight(_.get, ['ability', 'value']);
-const getSE = function (item) {
-  const se = _.get(item, ['ability', 'se'], 0);
-  if (se > 3) {
-    return 3;
-  }
-  return se;
-};
+const getSE = _.partialRight(_.get, ['ability', 'se']);
 const getReliability = fns.pm.reliabilityFunctor(getAbility, getSE);
 
 module.exports = {
