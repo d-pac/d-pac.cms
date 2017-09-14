@@ -371,13 +371,6 @@ AssessmentList.add("Texts", {
       label: "Total number of assessors"
     }
   },
-}, "Calculations", {
-  hasCalculations: {
-    type: Boolean,
-    noedit: !keystone.get('dev env'),
-    label: "Has this assessment already been calculated?",
-    default: false
-  },
 }, "Actions", {
   actions: {
     calculateMiddleBox: {

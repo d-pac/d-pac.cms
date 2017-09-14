@@ -74,10 +74,6 @@ function updateAssessorsNum(assessmentIds) {
   });
 }
 
-function updateHasCalculations(assessmentId, value) {
-  return P.fromCallback((done) => Assessment.model.update({_id: assessmentId}, {hasCalculations: value}, done));
-}
-
 module.exports.init = function () {
   keystone.post('updates', function (done) {
     calculateStatsForScheduled();
@@ -103,11 +99,4 @@ module.exports.init = function () {
   User.schema.post('remove',
     (user) => updateAssessorsNum(user.assessments.assessor || []));
 
-  Stat.events.on('changed:assessment', (stat, diff) => {
-    updateHasCalculations(diff.original, false)
-      .then(()=>updateHasCalculations(diff.updated, true));
-  });
-  Stat.schema.pre('remove', function(next){
-    updateHasCalculations(this.assessment.toString(), false).then(next);
-  });
 };
