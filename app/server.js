@@ -160,6 +160,7 @@ keystone.set( "nav", {
     "messages",
   ],
   "data": [
+    "stats",
     "reports",
     "comparisons",
     "notes",
