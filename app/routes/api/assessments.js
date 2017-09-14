@@ -1,8 +1,9 @@
 "use strict";
 
-// var debug = require( "debug" )( "dpac:api.assessments" );
+// const debug = require( "debug" )( "dpac:api.assessments" );
 
-var service = require( "../../services/assessments" );
-var Controller = require( "./helpers/Controller" );
-var base = new Controller( service );
+const service = require( "../../services/assessments" );
+const Controller = require( "./helpers/Controller" );
+const base = new Controller( service );
 module.exports = base.mixin();
+

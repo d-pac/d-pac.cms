@@ -6,7 +6,7 @@ const collection = keystone.list( "Timelog" );
 const _ = require( 'lodash' );
 
 const Service = require( "./helpers/Service" );
-const base = new Service( collection );
+const base = new Service( collection, debug );
 module.exports = base.mixin();
 
 module.exports.list = function list( opts ){

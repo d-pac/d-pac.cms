@@ -1,122 +1,113 @@
 'use strict';
+const debug = require("debug")("dpac:hooks.assessments");
 
 const _ = require('lodash');
 const P = require('bluebird');
-const scheduler = require('node-schedule');
+//const scheduler = require('node-schedule');
 const keystone = require('keystone');
+const moment = require('moment');
 
 const assessmentsService = require('../services/assessments');
+const Assessment = assessmentsService.collection;
+
 const representationsService = require('../services/representations');
+const Representation = representationsService.collection;
+
 const usersService = require('../services/users');
+const User = usersService.collection;
+
 const comparisonsService = require('../services/comparisons');
+const Comparison = comparisonsService.collection;
+
 const statsService = require('../services/stats');
+const Stat = statsService.collection;
 const constants = require('../models/helpers/constants');
 
 
-function calculateStats(assessment) {
-  return statsService.estimateForAssessment(assessment.id)
-    .then(function () {
-      return statsService.statsForAssessment(assessment);
-    })
-    .then(function (stats) {
-      assessment.actions.calculate = false;
-      assessment.stats = stats;
-      assessment.stats.lastRun = Date.now();
-      return assessment;
-    });
-}
-
-function recalculateStats(assessmentId) {
-  return assessmentsService.retrieve({_id: assessmentId})
-    .then(function (assessment) {
-      if (_.get(assessment, ["stats", "lastRun"], false)) {
-        return calculateStats(assessment)
-          .then(function (assessment) {
-            return assessment.save();
-          });
-      }
-      return null;
-    });
+function calculateStats(assessmentId) {
+  return statsService.calculateForAssessmentId(assessmentId);
 }
 
 function calculateStatsForScheduled() {
+  const now = moment();
   return assessmentsService.list({
     state: constants.assessmentStates.ACTIVE,
     'feature.results.enabled': true,
     'feature.results.begin': {
-      $lte: new Date()
-    },
-    'stats.lastRun': null
-  }).each(function (assessment) {
-    console.log('Scheduler: auto-calculating assessment', assessment.name);
-    return calculateStats(assessment)
-      .then(function (assessment) {
-        return assessment.save();
-      });
-  });
+      $lte: now.toDate()
+    }
+  })
+  // .then((list)=>list)
+    .each(function (assessment) {
+      debug('Scheduler: auto-calculating assessment', assessment.name);
+      return calculateStats(assessment.id);
+    })
+    .then((list) => {
+      debug(`Auto-calculated ${list.length} assessments`);
+    });
 }
 
 function updateComparisonsNum(assessmentIds) {
   return P.each(assessmentIds, (assessmentId) => {
-    return comparisonsService.count({
-      assessment: assessmentId
-    })
-      .then((n) => {
-        return assessmentsService.collection.model.update({_id: assessmentId}, {'cache.comparisonsNum': n});
-      });
+    return comparisonsService.count({assessment: assessmentId})
+      .then((n) => Assessment.model.update({_id: assessmentId}, {'cache.comparisonsNum': n}))
+      .then(() => statsService.setDirty(assessmentId))
+      ;
   });
 }
 
 function updateRepresentationsNum(assessmentIds) {
   return P.each(assessmentIds, (assessmentId) => {
-    return representationsService.countToRanks({
-      assessment: assessmentId
-    })
-      .then((n) => {
-        return assessmentsService.collection.model.update({_id: assessmentId}, {'cache.representationsNum': n});
-      });
+    return representationsService.countToRanks({assessment: assessmentId})
+      .then((n) => Assessment.model.update({_id: assessmentId}, {'cache.representationsNum': n}))
+      .then(() => statsService.setDirty(assessmentId))
+      ;
   });
 }
 
 function updateAssessorsNum(assessmentIds) {
   return P.each(assessmentIds, (assessmentId) => {
     return usersService.countInAssessment('assessor', assessmentId)
-      .then((n) => {
-        return assessmentsService.collection.model.update({_id: assessmentId}, {'cache.assessorsNum': n});
-      });
+      .then((n) => Assessment.model.update({_id: assessmentId}, {'cache.assessorsNum': n}))
+      .then(() => statsService.setDirty(assessmentId))
+      ;
   });
+}
+
+function updateHasCalculations(assessmentId, value) {
+  return P.fromCallback((done) => Assessment.model.update({_id: assessmentId}, {hasCalculations: value}, done));
 }
 
 module.exports.init = function () {
   keystone.post('updates', function (done) {
-    scheduler.scheduleJob('* * * * *', calculateStatsForScheduled);
     calculateStatsForScheduled();
     done();//call immediately, we don't want to wait on this!
   });
 
-  assessmentsService.collection.events.on('change:actions', (doc,
-                                                             diff,
-                                                             done) => {
-    if (_.get(doc, ['actions', 'calculate'], false)) {
-      calculateStats(doc).asCallback(done);
-    } else {
-      done();
-    }
+  Comparison.events.on('changed:assessment',
+    (comparison) => updateComparisonsNum([comparison.assessment]));
+  Comparison.events.on('changed:data.selection',
+    comparison => statsService.setDirty(comparison.assessment));
+  Comparison.schema.post('remove',
+    (comparison) => updateComparisonsNum([comparison.assessment]));
+
+  Representation.events.on('changed:assessment',
+    (representation) => updateRepresentationsNum([representation.assessment]));
+  Representation.events.on('changed:rankType',
+    (representation) => updateRepresentationsNum([representation.assessment]));
+  Representation.schema.post('remove',
+    (representation) => updateRepresentationsNum([representation.assessment]));
+
+  User.events.on('changed:assessments.assessor',
+    (user, diff) => updateAssessorsNum(_.xor(diff.original, diff.updated)));
+  User.schema.post('remove',
+    (user) => updateAssessorsNum(user.assessments.assessor || []));
+
+  Stat.events.on('changed:assessment', (stat, diff) => {
+    updateHasCalculations(diff.original, false)
+      .then(()=>updateHasCalculations(diff.updated, true));
   });
-
-  comparisonsService.collection.events.on('changed:assessment', (comparison) => updateComparisonsNum([comparison.assessment]));
-  comparisonsService.collection.events.on('changed:data.selection', comparison => recalculateStats(comparison.assessment));
-  comparisonsService.collection.schema.post('remove', (comparison) => updateComparisonsNum([comparison.assessment]));
-
-  representationsService.collection.events.on('changed:assessment', (representation) => updateRepresentationsNum([representation.assessment]));
-  representationsService.collection.events.on('changed:rankType', (representation) => updateRepresentationsNum([representation.assessment]));
-  representationsService.collection.schema.post('remove', (representation) => updateRepresentationsNum([representation.assessment]));
-
-  usersService.collection.events.on('changed:assessments.assessor', (user,
-                                                                     diff) => {
-    return updateAssessorsNum(_.xor(diff.original, diff.updated));
-  });
-  usersService.collection.schema.post('remove', (user) => {
-    return updateAssessorsNum(user.assessments.assessor || []);
+  Stat.schema.pre('remove', function(next){
+    updateHasCalculations(this.assessment.toString(), false).then(next);
   });
 };

@@ -1,22 +1,22 @@
 "use strict";
-var debug = require( "debug" )( "dpac:services.helpers.Service" );
 
-var _ = require( "lodash" );
-var deepExtend = require( "deep-extend" );
+const _ = require( "lodash" );
+const deepExtend = require( "deep-extend" );
 
-function Service( collection ){
+function Service( collection, debug ){
   this.collection = collection;
+  this.debug = debug;
 }
 
 _.assignIn( Service.prototype, {
   mixin: function( receiver ){
-    var methods = _.omit( _.keys( Service.prototype ), "mixin" );
-    var service = this;
+    const methods = _.omit( _.keys( Service.prototype ), "mixin" );
+    const service = this;
     receiver = receiver || {};
     _.forEach( methods, function( methodName ){
       receiver[ methodName ] = function(){
-        var args = _.toArray( arguments );
-        var result = service[ methodName ].apply( service, args );
+        const args = _.toArray( arguments );
+        let result = service[ methodName ].apply( service, args );
         if( result && _.isFunction( result.exec ) ){
           result = result.exec();
         }
@@ -28,18 +28,18 @@ _.assignIn( Service.prototype, {
   },
 
   count: function count( opts ){
-    debug( '#count', opts );
+    this.debug( '#count', opts );
     return this.collection.model.count( opts );
   },
   list: function list( opts ){
-    debug( "#list", opts );
+    this.debug( "#list", opts );
     return this.collection.model
       .find( opts );
   },
 
   listById: function listById( ids,
                                opts ){
-    debug( "#listById" );
+    this.debug( "#listById" );
     if( _.isString( ids ) ){
       ids = [ ids ];
     }
@@ -53,19 +53,19 @@ _.assignIn( Service.prototype, {
   },
 
   retrieve: function( opts ){
-    debug( "#retrieve" );
+    this.debug( "#retrieve" );
     return this.collection.model
       .findById( opts._id, opts.fields, _.omit( opts, [ 'fields', '_id' ] ) );
   },
 
   create: function( opts ){
-    debug( "#create", opts );
+    this.debug( "#create", opts );
     return this.collection.model.create( opts );
   },
 
   update: function( promise,
                     opts ){
-    debug( "#update" );
+    this.debug( "#update" );
     if( 2 > arguments.length ){
       opts = promise;
       promise = this.retrieve( opts ).exec();
@@ -83,8 +83,8 @@ _.assignIn( Service.prototype, {
   },
 
   remove: function( opts ){
-    debug( "#remove" );
-    var promise = this.retrieve( opts ).exec();
+    this.debug( "#remove" );
+    const promise = this.retrieve( opts ).exec();
     promise.exec = function(){
       return this.then( ( doc )=>{
         if( doc ){

@@ -10,7 +10,7 @@ const comparisonsService = require("./comparisons");
 const notesService = require('./notes');
 const constants = require('../models/helpers/constants');
 
-const base = new Service(collection);
+const base = new Service(collection, debug);
 module.exports = base.mixin();
 
 module.exports.createAnonymous = function registerAnonymous() {

@@ -25,7 +25,7 @@ function comparisonSelectionChanged( comparison, diff, done ){
     .then( function( assessment ){
       //TODO: we need to extract this out here, and move it to the benchmark algorithm, with a hook or something
       if( assessment.algorithm === 'benchmarked-comparative-selection' && assessment.stage === 1 ){
-        return statsService.estimateForAssessment( assessment.id );
+        return statsService.estimateForAssessmentId( assessment.id );
       }
     } )
     .asCallback(done);

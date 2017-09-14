@@ -100,12 +100,6 @@ exports = module.exports = function (app) {
     .all(apiMw.setIdParamToUser)
     .get(api.users.listAssessments);
 
-  app.route(apiRoot + "/user/assessments/:role")
-    .all(apiMw.setType('assessments', 'multiple'))
-    .all(apiMw.requireUser)
-    .all(apiMw.setIdParamToUser)
-    .get(api.users.listAssessments);
-
   app.route(apiRoot + "/user/comparisons")
     .all(apiMw.setType('comparisons', 'multiple'))
     .all(apiMw.requireUser)
@@ -127,6 +121,11 @@ exports = module.exports = function (app) {
     .all(apiMw.requireUser)
     .all(apiMw.setIdParamToUser)
     .get(api.users.listRepresentations);
+
+  app.route(apiRoot + "/stats/:assessmentId")
+    .all(apiMw.setType('stats', 'single'))
+    .all(apiMw.requireUser)
+    .get(api.stats.retrieve);
 
   app.route(apiRoot + "/phases")
     .all(apiMw.setType('phases', 'multiple'))

@@ -9,7 +9,7 @@ const keystone = require( "keystone" );
 const constants = require( "../models/helpers/constants" );
 const collection = keystone.list( "Document" );
 const Service = require( "./helpers/Service" );
-const base = new Service( collection );
+const base = new Service( collection, debug );
 module.exports = base.mixin();
 
 module.exports.create = function( opts ){
