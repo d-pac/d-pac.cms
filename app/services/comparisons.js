@@ -58,7 +58,7 @@ module.exports.listForRepresentation = function listForRepresentation( represent
 module.exports.create = function( opts ){
   debug( '#create', opts );
   const b = benchmark( true, keystone.get( 'dev env' ) );
-  const cache = {
+  const memo = {
     representations: null,
     comparisons: null,
     assessment: null
@@ -71,22 +71,22 @@ module.exports.create = function( opts ){
       if(representations.length < 2){
         throw new Error( 'assessment-incorrectly-configured' );
       }
-      cache.representations = representations;
+      memo.representations = representations;
       return this.listLean( {
         assessment: opts.assessment
       } );
     } )
     .then( ( comparisons )=>{
       b.snap( 'retrieved comparisons' );
-      cache.comparisons = comparisons;
+      memo.comparisons = comparisons;
       return assessmentsService.retrieve( {
         _id: opts.assessment
       } );
     } )
     .then( ( assessment )=>{
       b.snap( 'retrieved assessment' );
-      cache.assessment = assessment;
-      return cache;
+      memo.assessment = assessment;
+      return memo;
     } )
     .then( function( results ){
         const representations = results.representations;

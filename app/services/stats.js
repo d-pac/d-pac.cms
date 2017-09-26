@@ -45,7 +45,6 @@ module.exports.calculateForAssessmentId = function(assessmentId) {
       let p;
       if (!statDoc) {
         p = this.create({assessment: assessmentId});
-        //TODO: statDoc.assessment is NOT populated, i.e. it must be checked otherwise
       } else if (statDoc.isUpToDate) {
         return statDoc;
       } else {

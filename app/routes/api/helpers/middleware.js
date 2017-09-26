@@ -1,7 +1,23 @@
 "use strict";
-const _ = require( "lodash" );
+const {
+  isArray,
+  map: _map,
+  toArray,
+  forEach: _forEach,
+  set: _set,
+  get: _get, difference
+} = require( "lodash" );
+
+const {
+  Http400Error,
+  Http401Error,
+  Http403Error,
+  Http404Error,
+  Http422Error,
+  Http500Error
+} = require( "errors" );
+
 const keystone = require( "keystone" );
-const errors = require( "errors" );
 const debug = require( "debug" )( "dpac:api.middleware" );
 const cors = require( "cors" );
 const utils = require( "./utils" );
@@ -41,7 +57,7 @@ exports.initAPI = function initAPI( req,
       errors = status;
       status = errors.status || 500;
     }
-    if( !_.isArray( errors ) ){
+    if( ! isArray( errors ) ){
       errors = [ errors ];
     }
     res.apiResponse( status, { errors: errors } );
@@ -71,7 +87,7 @@ exports.requireUser = function( req,
   let output;
 
   if( !req.user ){
-    output = new errors.Http401Error( {
+    output = new Http401Error( {
       explanation: "You need to be logged in."
     } );
   }
@@ -86,16 +102,16 @@ exports.requireAdmin = function( req,
   let output;
 
   if( !req.user.isAdmin ){
-    output = new errors.Http401Error();
+    output = new Http401Error();
   }
 
   return next( output );
 };
 
 function parseValidationErrors( err ){
-  const messages = _.map( err.errors, "message" );
+  const messages = _map( err.errors, "message" );
 
-  return new errors.Http422Error( {
+  return new Http422Error( {
     message: err.message,
     explanation: messages
   } );
@@ -119,12 +135,12 @@ exports.handleError = function( err,
     case "ValidationError":
       return res.apiError( parseValidationErrors( err ) );
     case "CastError":
-      return res.apiError( new errors.Http400Error( {
+      return res.apiError( new Http400Error( {
         explanation: "Invalid id."
       } ) );
     /* falls through */
     default:
-      return res.apiError( new errors.Http500Error( {
+      return res.apiError( new Http500Error( {
         explanation: err.message
       } ) );
   }
@@ -135,7 +151,7 @@ exports.notFound = function notFound( req,
                                       next ){
   debug( "notFound" );
 
-  return res.apiError( new errors.Http404Error() );
+  return res.apiError( new Http404Error() );
 };
 
 exports.requireSelf = function( req,
@@ -148,7 +164,7 @@ exports.requireSelf = function( req,
     return next();
   }
 
-  return next( new errors.Http401Error() );
+  return next( new Http401Error() );
 };
 
 exports.verifyCSRF = function( req,
@@ -160,7 +176,7 @@ exports.verifyCSRF = function( req,
     return next();
   }
 
-  return next( new errors.Http403Error( {
+  return next( new Http403Error( {
     reason: "Failed CSRF authentication"
   } ) );
 };
@@ -171,7 +187,7 @@ exports.methodNotAllowed = function methodNotAllowed( req,
   debug( "#methodNotAllowed" );
   //return next( new errors.Http405Error() );
   // we're gonna hide behind a 404
-  return next( new errors.Http404Error() );
+  return next( new Http404Error() );
 };
 
 exports.createCors = function(){
@@ -193,10 +209,10 @@ exports.createCors = function(){
 exports.requireParams = function(){
   let args;
 
-  if( 1 === arguments.length && _.isArray( arguments[ 0 ] ) ){
+  if( 1 === arguments.length && isArray( arguments[ 0 ] ) ){
     args = arguments[ 0 ];
   } else {
-    args = _.toArray( arguments );
+    args = toArray( arguments );
   }
 
   return function( req,
@@ -204,14 +220,14 @@ exports.requireParams = function(){
                    next ){
     debug( "#verifyRequiredParam" );
     const missing = [];
-    _.forEach( args, function( paramName ){
+    _forEach( args, function( paramName ){
       if( "undefined" === typeof req.params[ paramName ] ){
         missing.push( paramName );
       }
     } );
 
     if( missing.length ){
-      return next( new errors.Http400Error( {
+      return next( new Http400Error( {
         explanation: "Missing parameters: '" + missing.join( "', '" ) + "'"
       } ) );
     }
@@ -237,7 +253,7 @@ module.exports.setType = ( name,
   return ( req,
            res,
            next ) =>{
-    _.set( res, [ 'locals', 'type' ], {
+    _set( res, [ 'locals', 'type' ], {
       name: name,
       quantity: quantity
     } );
@@ -248,8 +264,8 @@ module.exports.setType = ( name,
 module.exports.sendData = ( req,
                             res,
                             next ) =>{
-  const type = _.get( res, [ 'locals', 'type' ], {} );
-  const results = _.get( res, [ 'locals', 'results' ] );
+  const type = _get( res, [ 'locals', 'type' ], {} );
+  const results = _get( res, [ 'locals', 'results' ] );
   let status = 200;
   let payload;
   if( !results ){
@@ -267,7 +283,7 @@ module.exports.sendData = ( req,
     }
     payload = {
       data: data,
-      included: _.difference( results, requestedResults )
+      included: difference( results, requestedResults )
     };
   }
 

@@ -4,6 +4,14 @@ const service = require("../../services/stats");
 const assessmentsService = require('../../services/assessments');
 const Controller = require("./helpers/Controller");
 const base = new Controller(service);
+
+
+const queries = {
+  progress: function () {
+
+  }
+};
+
 module.exports = base.mixin();
 
 function calculateStats(assessmentId) {
@@ -19,5 +27,13 @@ function calculateStats(assessmentId) {
 module.exports.retrieve = function (req, res, next) {
 
   const assessmentId = req.params.assessmentId;
-  base.handleResult(calculateStats(assessmentId), res, next);
+  const q = req.query.q;
+  const p = calculateStats(assessmentId);
+  if (q) {
+    const f = queries[q];
+    if (f) {
+      p.then(f);
+    }
+  }
+  base.handleResult(p, res, next);
 };
