@@ -53,8 +53,7 @@
     "supertest": "1.1.0"
   },
   "engines": {
-    "node": "4.2.1",
-    "npm": "3.5.3"
+    "node": "6.9.5"
   },
   "scripts": {
     "prestart": "dockerize -wait tcp://mongo:27017 ",

@@ -81,6 +81,12 @@ const StatsList = require('./helpers/setupList')(Stat)
           noedit: true,
           label: "Reliability"
         },
+        participatoryAssessorsNum: {
+          type: Types.Number,
+          default: 0,
+          noedit: true,
+          label: "Total number of participatory assessors"
+        }
       }
     }
   }, "Actions", {
