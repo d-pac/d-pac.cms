@@ -107,22 +107,28 @@ module.exports = {
 
   statsForAssessmentId: function (assessmentId) {
     return P.props({
-      assessors: usersService.listForAssessments('assessor', [assessmentId]),
       comparisons: comparisonsService.listForAssessments({}, [assessmentId]),
       toRankRepresentations: representationsService.list({
         assessment: assessmentId,
         rankType: "to rank"
       })
     })
-      .then(function (docs) {
+      .then(function retrieveAssessors(docs) {
+        const assessorIds = _.groupBy(docs.comparisons, (comparison)=>{
+          return comparison.assessor.toString();
+        });
+        docs.assessors = usersService.listById(_.keys(assessorIds));
+        return P.props(docs);
+      })
+      .then(function retrieveTimelogs (docs) {
         docs.timelogs = timelogsService.listForComparisonIds(_.map(docs.comparisons, '_id'));
         return P.props(docs);
       })
-      .then(function (docs) {
+      .then(function calculateStats(docs) {
         const r = getReliability(docs.toRankRepresentations);
         const totals = {
           reliability: (!isNaN(r)) ? r : null,
-          assessorsNum: docs.assessors.length,
+          participatoryAssessorsNum: docs.assessors.length,
           comparisonsNum: docs.comparisons.length,
           representationsNum: docs.toRankRepresentations.length,
           duration: _.reduce(docs.timelogs, function (memo,
@@ -143,9 +149,9 @@ module.exports = {
           averages.comparisonsPerRepresentation = (totals.comparisonsNum / totals.representationsNum) * 2;
           averages.durationPerRepresentation = totals.duration / totals.representationsNum;
         }
-        if (totals.assessorsNum > 0) {
-          averages.comparisonsPerAssessor = totals.comparisonsNum / totals.assessorsNum;
-          averages.durationPerAssessor = totals.duration / totals.assessorsNum;
+        if (totals.participatoryAssessorsNum > 0) {
+          averages.comparisonsPerAssessor = totals.comparisonsNum / totals.participatoryAssessorsNum;
+          averages.durationPerAssessor = totals.duration / totals.participatoryAssessorsNum;
         }
         return {
           totals: totals,
