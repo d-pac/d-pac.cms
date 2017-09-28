@@ -15,6 +15,12 @@ module.exports.list = function list( opts ){
     .exec();
 };
 
+module.exports.listLean = function listLean(opts){
+  return base.list(opts)
+    .lean()
+    .exec();
+};
+
 module.exports.listByDocuments = function( documents,
                                            opts ){
   const ids = documents.map( ( document ) =>{

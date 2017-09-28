@@ -86,6 +86,18 @@ const StatsList = require('./helpers/setupList')(Stat)
           default: 0,
           noedit: true,
           label: "Total number of participatory assessors"
+        },
+        toRankRepresentationsNum: {
+          type: Types.Number,
+          default: 0,
+          noedit: true,
+          label: "Total number of 'to rank' representations"
+        },
+        completedComparisonsNum: {
+          type: Types.Number,
+          default: 0,
+          noedit: true,
+          label: "Total number of completed comparisons"
         }
       }
     }
