@@ -15,7 +15,7 @@
     "deep-diff": "0.3.3",
     "deep-extend": "0.4.1",
     "errors": "0.3.0",
-    "estimating-rasch-model": "^2.0.6",
+    "estimating-rasch-model": "3.0.2",
     "extract-zip": "1.4.1",
     "fast-csv": "1.0.0",
     "forever": "0.15.3",
