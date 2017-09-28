@@ -20,6 +20,7 @@ const comparisonsService = require('../services/comparisons');
 const Comparison = comparisonsService.collection;
 
 const statsService = require('../services/stats');
+const Stat = statsService.collection;
 const constants = require('../models/helpers/constants');
 
 
@@ -46,6 +47,15 @@ function calculateStatsForScheduled() {
     });
 }
 
+function updateComparisonsNum(assessmentIds) {
+  return P.each(assessmentIds, (assessmentId) => {
+    return comparisonsService.count({assessment: assessmentId})
+      .then((n) => Assessment.model.update({_id: assessmentId}, {'cache.comparisonsNum': n}))
+      .then(() => statsService.setDirty(assessmentId))
+      ;
+  });
+}
+
 function updateRepresentationsNum(assessmentIds) {
   return P.each(assessmentIds, (assessmentId) => {
     return representationsService.countToRanks({assessment: assessmentId})
@@ -70,8 +80,12 @@ module.exports.init = function () {
     done();//call immediately, we don't want to wait on this!
   });
 
+  Comparison.events.on('changed:assessment',
+    (comparison) => updateComparisonsNum([comparison.assessment]));
   Comparison.events.on('changed:data.selection',
     comparison => statsService.setDirty(comparison.assessment));
+  Comparison.schema.post('remove',
+    (comparison) => updateComparisonsNum([comparison.assessment]));
 
   Representation.events.on('changed:assessment',
     (representation) => updateRepresentationsNum([representation.assessment]));

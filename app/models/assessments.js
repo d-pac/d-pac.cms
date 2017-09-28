@@ -352,18 +352,23 @@ AssessmentList.add("Texts", {
   },
 }, "Totals", {
   cache: {
-    //used for calculating the "limits", see "virtualize" here below
     representationsNum: {
       type: Types.Number,
       default: 0,
       noedit: true,
       label: "Total number of (to rank) representations"
     },
+    comparisonsNum: {
+      type: Types.Number,
+      default: 0,
+      noedit: true,
+      label: "Total number of comparisons"
+    },
     assessorsNum: {
       type: Types.Number,
       default: 0,
       noedit: true,
-      label: "Total number of (invited) assessors"
+      label: "Total number of assessors"
     }
   },
 }, "Actions", {
