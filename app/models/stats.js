@@ -12,6 +12,7 @@ Stat.defaultColumns = "assessment, lastRun";
 
 //we need to do this, since keystone doesn't allow Mixed types
 Stat.schema.add({stats: {byRepresentation: keystone.mongoose.Schema.Types.Mixed}});
+Stat.schema.add({stats: {byAssessor: keystone.mongoose.Schema.Types.Mixed}});
 Stat.schema.methods.reset = function () {
   this.averages.comparisonsPerAssessor = null;
   this.averages.comparisonsPerRepresentation = null;
