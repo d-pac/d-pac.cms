@@ -138,7 +138,6 @@ exports = module.exports = function (app) {
   app.route(apiRoot + "/pages/:slug")
     .all(apiMw.setType('pages', 'multiple'))
     .get(api.pages.retrieve);
-
   app.route(apiRoot + "/representations")
     .all(apiMw.requireUser)
     .get(apiMw.setType('representations', 'multiple'))
@@ -168,6 +167,10 @@ exports = module.exports = function (app) {
       ],
       controller: api.assessments
     });
+  app.route(apiRoot + "/assessments/:_id/:role")
+    .all(apiMw.setType('users', 'multiple'))
+    .get(api.users.listByRole);
+
 
   registerDefaultRoutes(apiRoot + "/documents",
     app, {
