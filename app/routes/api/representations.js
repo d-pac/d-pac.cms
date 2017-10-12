@@ -11,6 +11,7 @@ const mime = require('mime');
 const base = new Controller(service);
 
 const documentsService = require('../../services/documents');
+const usersService = require('../../services/users');
 const errors = require('errors');
 
 module.exports = base.mixin();
@@ -24,10 +25,28 @@ module.exports.list = function (req, res, next) {
     .map(function (representation) {
       representation = representation.toJSON();
       const owners = get(representation, ["document", "owner"], []);
-      const match = owners.some(function (owner) {
+      let match = owners.some(function (owner) {
         return owner.equals(req.user._id);
       });
+
+      let qFilter = get(req, ['query', 'filter'], '');
+      if (qFilter) {
+        try {
+          qFilter = JSON.parse(qFilter);
+        } catch (err) {
+          debug('Error: filter is not JSON parseable', qFilter);
+        }
+      }
       if (!match) {
+        if (qFilter.assessment) {
+          return usersService.isPAM(req.user._id, qFilter.assessment)
+            .then((isPAM) => {
+              if (!isPAM) {
+                delete representation.document.originalName;
+              }
+              return representation;
+            });
+        }
         delete representation.document.originalName;
       }
       return representation;
@@ -60,7 +79,7 @@ module.exports.create = (req,
   let created;
   const locked = keystone.uploadLocks || {};
   const lockId = req.user.id + "-" + req.body.assessment;
-  if(locked[lockId]){
+  if (locked[lockId]) {
     return base.handleResult(new errors.Http403Error("processing user upload for this assessment"), res, next, {depopulate: false});
   }
   locked[lockId] = true;
@@ -97,7 +116,7 @@ module.exports.create = (req,
         representation.document = created;
         return representation;
       })
-      .finally(()=>{
+      .finally(() => {
         delete keystone.uploadLocks[lockId];
         return null;
       })

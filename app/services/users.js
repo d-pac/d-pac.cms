@@ -112,3 +112,11 @@ module.exports.countInAssessment = function countInAssessment(role,
       return users.length;
     });
 };
+
+module.exports.isPAM = function(userId, assessmentId){
+  return this.retrieve({_id: userId})
+    .then((doc)=>{
+      const obj = JSON.parse(JSON.stringify(doc));
+      return obj.assessments.pam.indexOf(assessmentId)>-1;
+    });
+};
