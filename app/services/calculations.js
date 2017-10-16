@@ -53,6 +53,16 @@ function convertComparison(comparison) {
   };
 }
 
+function getInfit(item) {
+  return item.infit;
+}
+
+function setInfit(item, infit) {
+  item.rawInfit = item.infit;
+  item.infit = infit;
+  return item;
+}
+
 module.exports = {
   estimate: function (representations,
                       comparisons) {
@@ -123,6 +133,8 @@ module.exports = {
         const r = getReliability(toRanks);
         const a = new comparisonMisfitAccessor(representationsByID);
         let aggregated = misfits(docs.comparisons, a);
+        fns.stat.standardize(_.values(aggregated.byRepresentation), getInfit, setInfit);
+        fns.stat.standardize(_.values(aggregated.byAssessor), getInfit, setInfit);
         aggregated.totals = {
           reliability: (!isNaN(r)) ? r : null,
           participatoryAssessorsNum: docs.assessors.length,

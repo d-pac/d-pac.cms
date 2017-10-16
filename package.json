@@ -9,7 +9,7 @@
     "comparative-selection": "3.0.3",
     "connect-mongo": "1.1.0",
     "cors": "2.7.1",
-    "d-pac.functions": "1.2.0",
+    "d-pac.functions": "2.1.0",
     "d-pac.misfits": "^1.2.0",
     "d-pac.plugins-spec": "0.5.0",
     "debug": "2.2.0",
