@@ -1,87 +1,91 @@
 "use strict";
 
-var debug = require( "debug" )( "dpac:api.users" );
-var _ = require( 'lodash' );
-var errors = require( 'errors' );
-var keystone = require( 'keystone' );
+var debug = require("debug")("dpac:api.users");
+var _ = require('lodash');
+var errors = require('errors');
+var keystone = require('keystone');
 
-var service = require( "../../services/users" );
-var notesService = require( '../../services/notes' );
-var representationsService = require( '../../services/representations' );
+var service = require("../../services/users");
+var notesService = require('../../services/notes');
+var representationsService = require('../../services/representations');
 
-var Controller = require( "./helpers/Controller" );
-var base = new Controller( service );
+var Controller = require("./helpers/Controller");
+var base = new Controller(service);
 module.exports = base.mixin();
 
-module.exports.listAssessments = function( req,
+module.exports.listAssessments = function (req,
                                            res,
-                                           next ){
-  debug( "#listAssessments" );
-  base.handleResult( service.listAssessments( req.params.role, {
+                                           next) {
+  debug("#listAssessments");
+  base.handleResult(service.listAssessments(req.params.role, {
     _id: req.params._id
-  } ), res, next );
+  }), res, next);
 };
 
-module.exports.includeUser = ( req,
-                               res,
-                               next ) =>{
-  base.handleResult( req.user, res, next );
+module.exports.includeUser = (req,
+                              res,
+                              next) => {
+  base.handleResult(req.user, res, next);
 };
 
-module.exports.listIncompleteComparisons = function( req,
+module.exports.listIncompleteComparisons = function (req,
                                                      res,
-                                                     next ){
-  debug( "#listComparisons" );
+                                                     next) {
+  debug("#listComparisons");
 
-  return base.handleResult( service.listIncompleteComparisons( {
+  return base.handleResult(service.listIncompleteComparisons({
     _id: req.params._id
-  } ), res, next );
+  }), res, next);
 };
 
-module.exports.listNotes = function( req,
+module.exports.listNotes = function (req,
                                      res,
-                                     next ){
-  debug( "#listNotes" );
-  base.handleResult( service.listNotes( {
+                                     next) {
+  debug("#listNotes");
+  base.handleResult(service.listNotes({
     _id: req.params._id
-  } ), res, next );
+  }), res, next);
 };
 
 //TODO: this really has no place here, should be moved to representations.js?
-module.exports.includeNotes = ( req,
-                                res,
-                                next ) =>{
-  debug( '#includeNotes' );
-  const documents = base.getResultsByType( res, 'representations' ).map( ( representation ) =>{
-    return _.get( representation, [ 'document', '_id' ] );
-  } );
-  base.handleResult( notesService.listByDocuments( {
+module.exports.includeNotes = (req,
+                               res,
+                               next) => {
+  debug('#includeNotes');
+  const documents = base.getResultsByType(res, 'representations').map((representation) => {
+    return _.get(representation, ['document', '_id']);
+  });
+  base.handleResult(notesService.listByDocuments({
     author: req.params._id
-  }, documents ), res, next );
+  }, documents), res, next);
 };
 
-module.exports.update = function( req,
+module.exports.update = function (req,
                                   res,
-                                  next ){
+                                  next) {
   let result;
-  if( keystone.isDisabled( 'save_account' ) ){
-    result = new errors.Http403Error( {
+  if (keystone.isDisabled('save_account')) {
+    result = new errors.Http403Error({
       message: "Not Allowed",
       explanation: 'account modification disabled'
-    } );
-  } else if( req.body.password !== req.body.password_confirm ){
-    result = new errors.Http422Error( { explanation: 'passwords do not match' } );
+    });
+  } else if (req.body.password !== req.body.password_confirm) {
+    result = new errors.Http422Error({explanation: 'passwords do not match'});
   } else {
-    result = base.update( req );
+    result = base.update(req);
   }
-  base.handleResult( result, res, next );
+  base.handleResult(result, res, next);
 
 };
 
-module.exports.listRepresentations = function( req,
+module.exports.listRepresentations = function (req,
                                                res,
-                                               next ){
+                                               next) {
 
-  base.handleResult( representationsService.listForUser(req.params._id), res, next );
+  base.handleResult(representationsService.listForUser(req.params._id), res, next);
 
+};
+
+module.exports.listByRole = function (req, res, next) {
+  base.handleResult(service.listForAssessments(req.params.role, [req.params._id]), res, next);
 };

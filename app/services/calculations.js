@@ -2,15 +2,15 @@
 
 const _ = require('lodash');
 const keystone = require('keystone');
-const async = require('async');
 const debug = require("debug")("dpac:services.calculations");
 const rasch = require('estimating-rasch-model');
 const P = require('bluebird');
-const diff = require('deep-diff').diff;
 const usersService = require('./users');
 const comparisonsService = require('./comparisons');
 const representationsService = require('./representations');
 const timelogsService = require('./timelogs');
+const misfits = require('d-pac.misfits');
+const comparisonMisfitAccessor = require('./helpers/comparisonMisfitAccessor');
 
 const fns = require('d-pac.functions');
 
@@ -99,7 +99,7 @@ module.exports = {
 
   statsForAssessmentId: function (assessmentId) {
     return P.props({
-      comparisons: comparisonsService.listLean({assessment:assessmentId, 'data.selection': {$ne: null}}),
+      comparisons: comparisonsService.listLean({assessment: assessmentId, 'data.selection': {$ne: null}}),
       representations: representationsService.listLean({
         assessment: assessmentId
       })
@@ -114,9 +114,16 @@ module.exports = {
         return P.props(docs);
       })
       .then(function calculateStats(docs) {
-        const toRanks = docs.representations.filter((r)=>r.rankType==="to rank");
+        const representationsByID = docs.representations.reduce((m, r) => {
+          m[r._id.toString()] = r;
+          return m;
+        }, {});
+
+        const toRanks = docs.representations.filter((r) => r.rankType === "to rank");
         const r = getReliability(toRanks);
-        const totals = {
+        const a = new comparisonMisfitAccessor(representationsByID);
+        let aggregated = misfits(docs.comparisons, a);
+        aggregated.totals = {
           reliability: (!isNaN(r)) ? r : null,
           participatoryAssessorsNum: docs.assessors.length,
           completedComparisonsNum: docs.comparisons.length,
@@ -126,28 +133,26 @@ module.exports = {
             return memo + timelog.duration;
           }, 0)
         };
-        const byRepresentation = _.reduce(docs.comparisons, function (memo,
-                                                                      comparison) {
+
+        docs.comparisons.forEach(function (comparison) {
+          const memo = aggregated;
           const aId = comparison.representations.a;
           const bId = comparison.representations.b;
-          _.set(memo, [aId, 'comparisonsNum'], _.get(memo, [aId, 'comparisonsNum'], 0) + 1);
-          _.set(memo, [bId, 'comparisonsNum'], _.get(memo, [bId, 'comparisonsNum'], 0) + 1);
+          _.set(memo, ['byRepresentation', aId, 'comparisonsNum'], _.get(memo, ['byRepresentation', aId, 'comparisonsNum'], 0) + 1);
+          _.set(memo, ['byRepresentation', bId, 'comparisonsNum'], _.get(memo, ['byRepresentation', bId, 'comparisonsNum'], 0) + 1);
+          _.set(memo, ['byAssessor', comparison.assessor, 'comparisonsNum'], _.get(memo, ['byAssessor', comparison.assessor, 'comparisonsNum'], 0) + 1);
           return memo;
-        }, {});
-        const averages = {};
+        });
+        aggregated.averages = {};
         if (docs.representations.length > 0) {
-          averages.comparisonsPerRepresentation = (totals.completedComparisonsNum / docs.representations.length) * 2;
-          averages.durationPerRepresentation = totals.duration / docs.representations.length;
+          aggregated.averages.comparisonsPerRepresentation = (aggregated.totals.completedComparisonsNum / docs.representations.length) * 2;
+          aggregated.averages.durationPerRepresentation = aggregated.totals.duration / docs.representations.length;
         }
-        if (totals.participatoryAssessorsNum > 0) {
-          averages.comparisonsPerAssessor = totals.completedComparisonsNum / totals.participatoryAssessorsNum;
-          averages.durationPerAssessor = totals.duration / totals.participatoryAssessorsNum;
+        if (aggregated.totals.participatoryAssessorsNum > 0) {
+          aggregated.averages.comparisonsPerAssessor = aggregated.totals.completedComparisonsNum / aggregated.totals.participatoryAssessorsNum;
+          aggregated.averages.durationPerAssessor = aggregated.totals.duration / aggregated.totals.participatoryAssessorsNum;
         }
-        return {
-          totals: totals,
-          averages: averages,
-          byRepresentation: byRepresentation
-        };
+        return aggregated;
       });
   },
 };
