@@ -19,7 +19,7 @@ function cloneRepresentations( source,
     .mapSeries( ( representation )=>{
       const source = representation.toJSON();
       const clone = _.omit( source, [
-        '_id', 'name', 'title', 'assessment', 'compared', 'ability', 'closeTo'
+        '_id', 'name', 'title', 'assessment', 'ability', 'closeTo'
       ] );
       clone.assessment = target.id;
       if( clone.rankType === 'benchmark' ){
