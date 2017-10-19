@@ -3,8 +3,8 @@
 const P = require( 'bluebird' );
 var _ = require( 'lodash' );
 var keystone = require( 'keystone' );
-var algorithm = require( 'benchmarked-comparative-selection' );
-
+// var algorithm = require( 'benchmarked-comparative-selection' );
+//
 var statsService = require( '../services/stats' );
 var assessmentsService = require( '../services/assessments' );
 
@@ -31,7 +31,7 @@ function comparisonSelectionChanged( comparison, diff, done ){
     .asCallback(done);
 }
 
-module.exports.init = function(){
-  keystone.hooks.post('plugin.message', pluginMessage);
-  keystone.list( 'Comparison' ).events.on( 'change:data.selection', comparisonSelectionChanged );
-};
+// module.exports.init = function(){
+//   keystone.hooks.post('plugin.message', pluginMessage);
+//   keystone.list( 'Comparison' ).events.on( 'change:data.selection', comparisonSelectionChanged );
+// };

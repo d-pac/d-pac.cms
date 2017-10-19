@@ -3,7 +3,6 @@
   "version": "0.18.1",
   "dependencies": {
     "async": "1.5.2",
-    "benchmarked-comparative-selection": "3.0.0",
     "bluebird": "3.4.0",
     "chalk": "1.1.1",
     "comparative-selection": "^6.0.0",
