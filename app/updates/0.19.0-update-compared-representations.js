@@ -18,9 +18,14 @@ module.exports = function (done) {
       return Object.keys(representations);
     })
     .then(function (repIds) {
+      log(`Updating ${repIds.length} representations...`);
       return P.resolve(representationsService.collection.model
-        .update({_id: {$in: repIds}}, {isInComparison: true})
+        .update({_id: {$in: repIds}}, {isInComparison: true}, {multi:true})
       );
+    })
+    .then(function () {
+      log('Done.');
+      return null;
     })
     .asCallback(done);
 };
