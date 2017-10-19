@@ -18,41 +18,6 @@ const getAbility = _.partialRight(_.get, ['ability', 'value']);
 const getSE = _.partialRight(_.get, ['ability', 'se']);
 const getReliability = fns.pm.reliabilityFunctor(getAbility, getSE);
 
-/**
- *
- * @param {Object[]} representation
- * @param {string} representation._id - id of the item
- * @param {string} representation.ranktype - ["ranked", "to rank", "benchmark"]
- * @param {Object} [representation.ability]
- * @param {number} [representation.ability.value] - the ability
- * @param {number} [representation.ability.se] - the standard error
- */
-function convertRepresentation(representation) {
-  return {
-    id: representation._id,
-    ability: _.get(representation, ["ability", "value"], null),
-    se: _.get(representation, ["ability", "se"], null),
-    ranked: (representation.rankType !== "to rank")
-  };
-}
-
-/**
- *
- * @param {Object} comparison
- * @param {Object} comparison.data
- * @param {string} comparison.data.selection - ID of the selected item
- * @param {Object} comparison.representations
- * @param {string} comparison.representations.a - ID for the "A" item
- * @param {string} comparison.representations.b - ID for the "B" item
- */
-function convertComparison(comparison) {
-  return {
-    selected: _.get(comparison, ["data", "selection"], null),
-    itemA: comparison.representations.a,
-    itemB: comparison.representations.b
-  };
-}
-
 function getInfit(item) {
   return item.infit;
 }
@@ -68,22 +33,24 @@ module.exports = {
                       comparisons) {
     debug("#estimate");
 
-    const lookup = {
-      representationVOs: {},
-      representationDocs: {}
+    const representationsMap = {
+      docs: {},
+      vos: {}
     };
-    representations.forEach((doc) => {
-      const obj = convertRepresentation(JSON.parse(JSON.stringify(doc)));
-      lookup.representationDocs[obj.id] = doc;
-      lookup.representationVOs[obj.id] = obj;
-    });
 
-    const comparisonVOs = JSON.parse(JSON.stringify(comparisons)).map(convertComparison);
+    representations.reduce((memo, r) => {
+      memo.docs[r.id] = r;
+      memo.vos[r.id] = r.toVO();
+      return memo;
+    }, representationsMap);
 
-    return P.try(() => rasch.estimate(comparisonVOs, lookup.representationVOs))
+    return P.try(() => rasch.estimate({
+      items: representationsMap.vos,
+      comparisons: comparisons.map(comparisonsService.collection.toVO)
+    }))
       .then(function (estimatesMap) {
         return _.map(estimatesMap, (estimate) => {
-          const representation = lookup.representationDocs[estimate.id];
+          const representation = representationsMap.docs[estimate.id];
           representation.ability.value = estimate.ability;
           representation.ability.se = estimate.se;
           return representation;

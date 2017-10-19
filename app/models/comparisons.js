@@ -1,46 +1,71 @@
 "use strict";
-var _ = require( "lodash" );
-var keystone = require( "keystone" );
-var Types = keystone.Field.Types;
+const _ = require("lodash");
+const keystone = require("keystone");
+const Types = keystone.Field.Types;
 
-var constants = require( "./helpers/constants" );
+const constants = require("./helpers/constants");
 
-var format = "DD/MM/YYYY HH:mm:ss";
+const format = "DD/MM/YYYY HH:mm:ss";
 
-var Comparison = new keystone.List( "Comparison", {
+const Comparison = new keystone.List("Comparison", {
   map: {
     name: "_rid"
   },
   track: true,
-  nocreate: !keystone.get( 'dev env' ),
+  nocreate: !keystone.get('dev env'),
   noedit: false,
   schema: {
     minimize: false
   }
-} );
+});
 
 Comparison.api = {
-  creatable: [ "assessment", 'assessor' ],
-  editable: [ 'phase', 'data', 'completed' ]
+  creatable: ["assessment", 'assessor'],
+  editable: ['phase', 'data', 'completed']
 };
 
-var data = {};
+Comparison.toVO = function (docOrObj) {
+  const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
+  return {
+    id: obj._id,
+    a: obj.representations.a,
+    b: obj.representations.b,
+    selected: obj.data.selection,
+    owner: obj.assessor
+  };
+};
 
-_.forEach( constants.phases, function( phase ){
-  data[ phase.slug ] = phase.field;
-} );
+Comparison.fromVO = function (vo) {
+  return {
+    _id: vo.id,
+    representations: {
+      a: vo.a,
+      b: vo.b,
+    }
+  };
+};
 
-Comparison.schema.plugin( require( "./helpers/autoinc" ).plugin, {
+Comparison.schema.methods.toVO = function () {
+  return Comparison.toVO(this);
+};
+
+const data = {};
+
+_.forEach(constants.phases, function (phase) {
+  data[phase.slug] = phase.field;
+});
+
+Comparison.schema.plugin(require("./helpers/autoinc").plugin, {
   model: "Comparison",
   field: "_rid",
   startAt: 1
-} );
+});
 
-Comparison.schema.plugin( require( "mongoose-deep-populate" )( keystone.mongoose ) );
+Comparison.schema.plugin(require("mongoose-deep-populate")(keystone.mongoose));
 
 Comparison.defaultColumns = "name, assessor, representations.a, representations.b, createdAt, selectionMadeAt";
-require( './helpers/setupList' )( Comparison )
-  .add( "Connections", {
+require('./helpers/setupList')(Comparison)
+  .add("Connections", {
 
     assessment: {
       type: Types.Relationship,
@@ -87,9 +112,9 @@ require( './helpers/setupList' )( Comparison )
     selectionMadeAt: {
       type: Types.Datetime,
       format: format,
-      noedit: !keystone.get( "dev env" ),
+      noedit: !keystone.get("dev env"),
       watch: "data.selection",
-      value: function(){
+      value: function () {
         return Date.now();
       }
     },
@@ -101,13 +126,13 @@ require( './helpers/setupList' )( Comparison )
 
   }, "Assessor data", {
     data: data,
-  } )
-  .emit( 'assessment', 'data.selection' )
-  .retain( "track" )
-  .relate( {
+  })
+  .emit('assessment', 'data.selection')
+  .retain("track")
+  .relate({
     path: "timelogs",
     ref: "Timelog",
     refPath: "comparison",
     label: "Timelogs"
-  } )
+  })
   .register();

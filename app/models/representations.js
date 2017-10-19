@@ -11,6 +11,32 @@ const Representation = new keystone.List("Representation", {
 });
 Representation.defaultColumns = "name, rankType|120, ability.value|200, ability.se|200, middleBox|40";
 
+Representation.toVO = function (docOrObj) {
+  const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
+
+  return {
+    id: obj._id,
+    ability: obj.ability.value,
+    se: obj.ability.value,
+    ranked: obj.rankType !== "to rank",
+    middle: obj.middleBox
+  };
+};
+
+Representation.fromVO = function (vo) {
+  return {
+    _id: vo.id,
+    ability: {
+      value: vo.ability,
+      se: vo.se
+    }
+  };
+};
+
+Representation.schema.methods.toVO = function () {
+  return Representation.toVO(this);
+};
+
 Representation.schema.methods.compareWith = function (other) {
   this.compared.push(other._id);
   other.compared.push(this._id);
@@ -26,10 +52,10 @@ Representation.schema.methods.uncompareWith = function (other) {
   return P.all([this.save(), other.save()]);
 };
 
-Representation.schema.methods.reset = function(){
+Representation.schema.methods.reset = function () {
   this.compared = [];
   // this.middleBox = false;
-  if(this.rankType===constants.TO_RANK){
+  if (this.rankType === constants.TO_RANK) {
     this.ability.value = null;
     this.ability.se = null;
   }
