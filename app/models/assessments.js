@@ -23,8 +23,20 @@ let defaultColumns = "name, " +
 if (keystone.get('feature enable anonymous')) {
   defaultColumns += ", enableAnonymousLogins";
 }
-
 Assessment.defaultColumns = defaultColumns;
+
+Assessment.toVO = function (docOrObj) {
+  const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
+  return {
+    maxComparisonsPerItem: obj.limits.comparisonsNum.perRepresentation,
+    maxComparisonsForUser: obj.limits.comparisonsNum.perAssessor,
+    minReliability: obj.limits.minimumReliability
+  };
+};
+
+Assessment.schema.methods.toVO = function(){
+  return Assessment.toVO(this);
+};
 
 Assessment.schema.methods.clone = function () {
   const clone = _.omit(this.toJSON(), [
