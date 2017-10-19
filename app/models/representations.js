@@ -9,7 +9,7 @@ const P = require("bluebird");
 const Representation = new keystone.List("Representation", {
   track: true
 });
-Representation.defaultColumns = "name, rankType|120, ability.value|200, ability.se|200, middleBox|40";
+Representation.defaultColumns = "name, rankType|120, ability.value|200, ability.se|200, isInComparison|40";
 
 Representation.toVO = function (docOrObj) {
   const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
