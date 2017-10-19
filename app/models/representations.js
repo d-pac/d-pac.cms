@@ -37,23 +37,7 @@ Representation.schema.methods.toVO = function () {
   return Representation.toVO(this);
 };
 
-Representation.schema.methods.compareWith = function (other) {
-  this.compared.push(other._id);
-  other.compared.push(this._id);
-  return P.all([this.save(), other.save()]);
-};
-
-Representation.schema.methods.uncompareWith = function (other) {
-  const ti = this.compared.indexOf(other.id);
-  this.compared.splice(ti, 1);
-  const oi = other.compared.indexOf(this.id);
-  other.compared.splice(oi, 1);
-
-  return P.all([this.save(), other.save()]);
-};
-
 Representation.schema.methods.reset = function () {
-  this.compared = [];
   // this.middleBox = false;
   if (this.rankType === constants.TO_RANK) {
     this.ability.value = null;
@@ -125,15 +109,6 @@ require('./helpers/setupList')(Representation)
       }
     },
 
-    compared: {
-      type: Types.Relationship,
-      ref: "Representation",
-      many: true,
-      noedit: true,
-      default: [],
-      label: "Compared to"
-    },
-
     middleBox: {
       type: Types.Boolean,
       noedit: true,
@@ -156,6 +131,13 @@ require('./helpers/setupList')(Representation)
       }
     },
 
+  }, "Automatic", {
+    isInComparison: {
+      type: Boolean,
+      default: false,
+      label: "In comparison",
+      note: "Automatically set when this representation is used in a comparison"
+    }
   })
   .emit("assessment", "rankType")
   .validate({
@@ -169,14 +151,6 @@ require('./helpers/setupList')(Representation)
         return !(this.rankType === constants.BENCHMARK && this.ability.se === null); //eslint-disable-line no-invalid-this
       }, "Representations of `rankType` 'benchmark' aren't allowed to have ability SE's of `null`"
     ]
-  })
-  .virtualize({
-    comparedNum: {
-      get: function () {
-        return _.get(this, 'compared', []).length;
-      },
-      depends: ['compared']
-    }
   })
   .retain("track")
   .relate({
