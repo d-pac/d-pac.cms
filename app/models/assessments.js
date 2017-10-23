@@ -438,7 +438,7 @@ AssessmentList.add("Texts", {
       ]
     },
   })
-  .emit('actions', 'state')
+  .emit('actions', 'state', 'name')
   .validate({
     uiCopy: [
       function (value) {

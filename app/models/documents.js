@@ -137,6 +137,7 @@ require( './helpers/setupList' )( Document )
       depends: ['file']
     }
   } )
+  .emit("name")
   .relate( {
     path: "representations",
     ref: "Representation",

@@ -139,7 +139,7 @@ require('./helpers/setupList')(Representation)
       note: "Automatically set when this representation is used in a comparison"
     }
   })
-  .emit("assessment", "rankType")
+  .emit("assessment", "rankType", "document")
   .validate({
     "ability.value": [
       function () {

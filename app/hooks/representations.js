@@ -14,7 +14,7 @@ function setIsInComparison(comparison) {
     _id: {
       $in: [comparison.representations.a, comparison.representations.b]
     }
-  }, {isInComparison:true}, { multi: true }));
+  }, {isInComparison: true}, {multi: true}));
 }
 
 function removeRepresentationsForDocument(document) {
@@ -24,35 +24,56 @@ function removeRepresentationsForDocument(document) {
     .mapSeries((representation) => representation.remove());
 }
 
-function renameRepresentation(representation) {
-  if (representation.__original
-    && representation.assessment.equals(representation.__original.assessment)
-    && representation.document.equals(representation.__original.document)) {
-    return P.resolve(representation);
-  }
-
-  return P.props({
-    assessment: assessmentsService.retrieve({_id: representation.assessment}),
-    document: documentsService.retrieve({_id: representation.document})
-  })
-    .then((values) => {
-      representation.name = assessmentsService.getName(values.assessment) + " - " + documentsService.getName(values.document);
-      return representation;
-    });
-}
-
-function updateRepresentationNames(document) {
+function updateRepresentationNamesForDocument(document, diff, done) {
+  // the document.name is also automatically created, so we won't be using diff here
+  let docName = document.name;
   return representationsService.list({
     document: document.id
   })
-    .mapSeries((representation) => representation.save());
+    .mapSeries((representation) => {
+      return assessmentsService.retrieveLean({
+        _id: representation.assessment
+      })
+        .then((assessment)=>{
+          representation.name = assessment.name + " - " + docName;
+          return representation.save();
+        });
+    })
+    .asCallback(done);
+}
+
+function updateRepresentationNamesForAssessment(assessment, diff, done) {
+  return representationsService.list({
+    assessment: assessment.id
+  })
+    .mapSeries((representation) => {
+      representation.name = assessment.name + " - " + representation.document.name;
+      return representation.save();
+    })
+    .asCallback(done);
+}
+
+function setRepresentationName(representation, diff, done){
+  return P.props({
+    document: documentsService.retrieve({_id:representation.document}),
+    assessment: assessmentsService.retrieveLean({_id: representation.assessment})
+  })
+    .then((values)=>{
+      representation.name = values.assessment.name + " - " + values.document.name;
+      return representation;
+    })
+    .asCallback(done);
 }
 
 module.exports.init = function () {
-  keystone.list('Representation').schema.pre('save', handleHook(renameRepresentation));
+
+  // keystone.list('Representation').schema.pre('save', handleHook(renameRepresentation));
+  keystone.list('Representation').events.on('change:document', setRepresentationName);
+  keystone.list('Representation').events.on('change:assessment', setRepresentationName);
 
   keystone.list('Comparison').schema.post('save', handleHook(setIsInComparison));
 
-  keystone.list('Document').schema.post('save', handleHook(updateRepresentationNames));
+  keystone.list('Assessment').events.on('changed:name', updateRepresentationNamesForAssessment);
+  keystone.list('Document').events.on('changed:name', updateRepresentationNamesForDocument);
   keystone.list('Document').schema.pre('remove', handleHook(removeRepresentationsForDocument));
 };
