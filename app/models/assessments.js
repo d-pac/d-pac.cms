@@ -40,7 +40,7 @@ Assessment.schema.methods.toVO = function(){
 
 Assessment.schema.methods.clone = function () {
   const clone = _.omit(this.toJSON(), [
-    '_id', 'feature', 'stage', 'cache', 'parent'
+    '_id', 'stage', 'cache', 'parent'
   ]);
   clone.name += ' (Copy)';
   return clone;
