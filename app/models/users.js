@@ -1,14 +1,14 @@
 'use strict';
 
-var _ = require( 'lodash' );
-var keystone = require( "keystone" );
-var Types = keystone.Field.Types;
+const _ = require( 'lodash' );
+const keystone = require( "keystone" );
+const Types = keystone.Field.Types;
 
 /**
  * Users
  * =====
  */
-var User = new keystone.List( "User" );
+const User = new keystone.List( "User" );
 User.defaultColumns = "name, anonymized, email, isAdmin";
 
 function hasAssessmentId( arr,
@@ -110,6 +110,12 @@ require( './helpers/setupList' )( User )
       type: Boolean,
       label: "Can access Keystone",
       default: false
+    }
+  }, "Login", {
+    lastLogin: {
+      type: Types.Datetime,
+      default: null,
+      noedit: true
     }
   }, "Actions", {
     actions: {

@@ -1,0 +1,14 @@
+extends /layouts/default
+
+block body-contents
+	h1 Welcome to #{brand} #{user.name.first},
+	p Thank you for registering.
+	p From now on you can login on #{host} with #{user.email} and your password
+	p.text-larger Click the button below to login
+	p &nbsp;
+	+button({
+		url: host,
+		label: 'Start using' + brand
+	})
+	p &nbsp;
+	p.text-muted If you cannot click the link above please visit #{host + invite.url}

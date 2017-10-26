@@ -47,6 +47,14 @@ module.exports = {
         }
       }, callback);
   },
+
+  sendWelcome(user){
+    const mail = new Mailer({
+      templateName: 'welcome-user'
+    });
+    return P.fromCallback(callback => mail.send({user:user}, callback));
+  },
+
   sendMessage: function (message) {
     const mail = new Mailer({
       templateName: 'message'

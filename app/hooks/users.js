@@ -6,6 +6,7 @@ const P = require( 'bluebird' );
 const handleHook = require( './helpers/handleHook' );
 const usersService = require( '../services/users' );
 const constants = require( '../models/helpers/constants' );
+const mailsService = require('../services/mails');
 
 function removeAssessmentFromUsers( assessment ){
   const query = [];
@@ -52,8 +53,19 @@ function sendInvite( user ){
   return P.resolve(); //won't wait on mail
 }
 
+function updateLoginStamp(user){
+  if(!user.lastLogin){
+    //send welcome mail
+    mailsService.sendWelcome(user);
+  }
+  user.lastLogin = Date.now();
+  user.save();
+  return null; //no need to wait for any of this shizzle
+}
+
 module.exports.init = function(){
   keystone.list( 'Assessment' ).schema.pre( 'remove', handleHook( removeAssessmentFromUsers ) );
 
   keystone.list( 'User' ).schema.pre( 'save', handleHook( sendInvite ) );
+  keystone.post("signin", handleHook(updateLoginStamp));
 };
