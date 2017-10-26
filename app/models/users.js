@@ -9,7 +9,7 @@ const Types = keystone.Field.Types;
  * =====
  */
 const User = new keystone.List( "User" );
-User.defaultColumns = "name, anonymized, email, isAdmin";
+User.defaultColumns = "name, anonymized, email, lastLogin, isAdmin";
 
 function hasAssessmentId( arr,
                           needleId ){
