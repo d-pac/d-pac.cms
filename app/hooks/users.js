@@ -60,7 +60,7 @@ function updateLoginStamp(user){
   }
   user.lastLogin = Date.now();
   user.save();
-  return null; //no need to wait for any of this shizzle
+  return P.resolve(); //no need to wait for any of this shizzle
 }
 
 module.exports.init = function(){
