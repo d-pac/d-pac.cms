@@ -107,6 +107,7 @@ if( keystone.get( 'dev env' ) ){
 keystone.set( 'email locals', {
   utils: keystone.utils,
   host: keystone.get( 'root url' ),
+  brand: keystone.get('brand'),
   logo_src: keystone.get( 'root url' ) + keystone.get( "signin logo" )
 } );
 
