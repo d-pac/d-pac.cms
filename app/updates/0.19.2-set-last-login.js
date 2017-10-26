@@ -7,35 +7,15 @@ const comparisonsService = require('../services/comparisons');
 const log = _.partial(console.log, require('path').basename(__filename) + ':');
 
 module.exports = function (done) {
-  // comparisonsService.listLean({})
-  //   .then((comparisons) => {
-  //     const representations = {};
-  //     comparisons.forEach((comparison) => {
-  //       const a = _.get(comparison, ["representations", "a"], "none").toString();
-  //       const b = _.get(comparison, ["representations", "b"], "none").toString();
-  //       representations[a] = true;
-  //       representations[b] = true;
-  //     });
-  //     return Object.keys(representations);
-  //   })
-  //   .then(function (repIds) {
-  //     log(`Updating ${repIds.length} representations...`);
-  //     return P.resolve(representationsService.collection.model
-  //       .update({_id: {$in: repIds}}, {isInComparison: true}, {multi:true})
-  //     );
-  //   })
-  //   .then(function () {
-  //     log('Done.');
-  //     return null;
-  //   })
-  //   .asCallback(done);
   const userIds = {};
   const db = keystone.get("session options").store.db;
   const cursor = db.collection('app_sessions').find();
   P.fromCallback((callback) => {
     cursor.forEach((doc) => {
-      userIds[JSON.parse(doc.session).userId] = true;
-      console.log('foo', JSON.parse(doc.session).userId);
+      const session = JSON.parse(doc.session);
+      if(session.userId){
+        userIds[session.userId] = true;
+      }
     }, callback);
   })
     .then(() => comparisonsService.listLean())
