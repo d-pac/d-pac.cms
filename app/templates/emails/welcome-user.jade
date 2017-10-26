@@ -1,0 +1,14 @@
+extends /layouts/default
+
+block body-contents
+	h1 Welcome to #{brand} #{user.name.first},
+	p Thank you for registering.
+	p From now on you can login on #[a(href="#{host}") #{host}] with #{user.email} and your password
+	p.text-larger Click the button below to login
+	p &nbsp;
+	+button({
+		url: signin,
+		label: 'Start using ' + brand
+	})
+	p &nbsp;
+	p.text-muted If you cannot click the link above please visit #{signin}

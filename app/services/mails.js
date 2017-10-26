@@ -47,11 +47,32 @@ module.exports = {
         }
       }, callback);
   },
+
+  sendWelcome(user) {
+    const mail = new Mailer({
+      templateName: 'welcome-user'
+    });
+    return P.fromCallback(callback => mail.send({
+      user: user,
+      from: keystone.get("mail noreply"),
+      to: user.email,
+      subject: "Welcome to " + keystone.get("brand"),
+      signin: keystone.get("root url") + keystone.get("signin url")
+    }, callback))
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
   sendMessage: function (message) {
     const mail = new Mailer({
       templateName: 'message'
     });
-    return P.fromCallback(callback => mail.send(message, callback));
+    return P.fromCallback(callback => mail.send(message, callback))
+      .catch((err) => {
+        console.log(err);
+      });
+
   }
 };
 
