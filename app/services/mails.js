@@ -52,7 +52,12 @@ module.exports = {
     const mail = new Mailer({
       templateName: 'welcome-user'
     });
-    return P.fromCallback(callback => mail.send({user: user}, callback))
+    return P.fromCallback(callback => mail.send({
+      user: user,
+      from: keystone.get("mail noreply"),
+      to: user.email,
+      subject: "Welcome to " + keystone.get("brand")
+    }, callback))
       .catch((err) => {
         console.log(err);
       });
