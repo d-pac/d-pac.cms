@@ -56,7 +56,8 @@ module.exports = {
       user: user,
       from: keystone.get("mail noreply"),
       to: user.email,
-      subject: "Welcome to " + keystone.get("brand")
+      subject: "Welcome to " + keystone.get("brand"),
+      signin: keystone.get("root url") + keystone.get("signin url")
     }, callback))
       .catch((err) => {
         console.log(err);
