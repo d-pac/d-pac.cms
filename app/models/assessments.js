@@ -26,7 +26,7 @@ if (keystone.get('feature enable anonymous')) {
 Assessment.defaultColumns = defaultColumns;
 
 Assessment.toVO = function (docOrObj) {
-  const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
+  const obj = JSON.parse(JSON.stringify(docOrObj));
   return {
     maxComparisonsPerItem: obj.limits.comparisonsNum.perRepresentation,
     maxComparisonsForUser: obj.limits.comparisonsNum.perAssessor,
