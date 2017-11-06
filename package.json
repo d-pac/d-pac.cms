@@ -1,6 +1,6 @@
 {
   "name": "d-pac.cms",
-  "version": "0.19.4",
+  "version": "0.19.5",
   "dependencies": {
     "async": "1.5.2",
     "bluebird": "3.4.0",
