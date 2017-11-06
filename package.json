@@ -5,7 +5,7 @@
     "async": "1.5.2",
     "bluebird": "3.4.0",
     "chalk": "1.1.1",
-    "comparative-selection": "^6.0.0",
+    "comparative-selection": "6.0.3",
     "connect-mongo": "1.1.0",
     "cors": "2.7.1",
     "d-pac.functions": "2.1.0",

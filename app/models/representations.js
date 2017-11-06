@@ -12,7 +12,7 @@ const Representation = new keystone.List("Representation", {
 Representation.defaultColumns = "name, rankType|120, ability.value|200, ability.se|200, isInComparison|40";
 
 Representation.toVO = function (docOrObj) {
-  const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
+  const obj = JSON.parse(JSON.stringify(docOrObj));
 
   return {
     id: obj._id,

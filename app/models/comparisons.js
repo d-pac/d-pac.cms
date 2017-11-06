@@ -25,7 +25,7 @@ Comparison.api = {
 };
 
 Comparison.toVO = function (docOrObj) {
-  const obj = (docOrObj.id) ? JSON.parse(JSON.stringify(docOrObj)) : docOrObj;
+  const obj = JSON.parse(JSON.stringify(docOrObj));
   return {
     id: obj._id,
     a: obj.representations.a,
