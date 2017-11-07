@@ -2356,9 +2356,9 @@ envify@^3.0.0:
     jstransform "^11.0.3"
     through "~2.3.4"
 
-"equalviews-comparative-selection@git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#v3.0.0":
-  version "3.0.0"
-  resolved "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#00487eb73340c8a039f114239a5c827128d741da"
+"equalviews-comparative-selection@git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#v3.0.1":
+  version "3.0.1"
+  resolved "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#8f40517a85f6652736b34c036918a3088d71d589"
 
 errno@^0.1.1:
   version "0.1.4"
