@@ -4991,9 +4991,9 @@ portfinder@^1.0.3:
     debug "^2.2.0"
     mkdirp "0.5.x"
 
-"positioned-comparative-selection@git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#v2.0.0":
-  version "2.0.0"
-  resolved "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#d453fd306496cb2f8fdb75c5112297bd0bc32a8d"
+"positioned-comparative-selection@git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#v2.0.1":
+  version "2.0.1"
+  resolved "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#9be9eef9fabf612622d41ce664359039fe652567"
   dependencies:
     d-pac.functions "^2.1.0"
 
