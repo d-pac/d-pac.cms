@@ -38,13 +38,13 @@ Document.schema.pre( "save", function( callback ){
     }
   } else {
     //text-only document
-    this.name = this.title;
+    this.name = this.title || getAnon(this);
   }
 
   callback();
 } );
 
-Document.defaultColumns = [ "name", "title", "owner", "href|40%", "ext" ];
+Document.defaultColumns = [ "name", "title", "anonymized", "owner", "href|40%", "ext" ];
 
 require( './helpers/setupList' )( Document )
   .add(
@@ -55,6 +55,13 @@ require( './helpers/setupList' )( Document )
         noedit: true,
         note: "Not shown in tool. Purely for administrative purposes. " +
         "Uses the value of 'title' for text-only documents, or the original file name"
+      },
+
+      title: {
+        type: Types.Text,
+        required: false,
+        initial: true,
+        note: "The title as shown in the tool, both when comparing and in the results. If left blank an anonimized title will be generated"
       },
 
       owner: {
@@ -125,7 +132,7 @@ require( './helpers/setupList' )( Document )
       },
       depends: [ "file" ]
     },
-    title: {
+    anonymized: {
       get: function(){
         return getAnon( this );
       }
