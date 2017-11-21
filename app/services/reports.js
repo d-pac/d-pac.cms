@@ -192,6 +192,8 @@ module.exports.listRepresentations = function listRepresentations( assessmentIds
       return {
         assessment: _.get( representationModel, [ 'assessment', 'name' ], '' ),
         name: _.get( representationModel, [ 'document', 'name' ], '' ),
+        title: _.get(representationModel, ["title"], ''),
+        text: _.get(representationModel, ['document', "text"], ''),
         owner: _.get(representationModel, ['document', 'owner'], []).map(function (user) {
           return _.get(user, ["name","first"]) + " " + _.get(user, ["name", "last"]);
         }),
