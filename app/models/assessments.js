@@ -45,6 +45,12 @@ Assessment.schema.methods.clone = function () {
   clone.name += ' (Copy)';
   return clone;
 };
+Assessment.schema.methods.reset = function () {
+  this.cache.comparisonsNum=0;
+  return this;
+};
+
+
 
 const AssessmentList = require('./helpers/setupList')(Assessment)
   .add({
