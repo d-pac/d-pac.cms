@@ -31,6 +31,9 @@ Document.schema.plugin( require( "./helpers/autoinc" ).plugin, {
 } );
 
 Document.schema.pre( "save", function( callback ){
+  if(!this.title){
+    this.title = getAnon(this);
+  }
   if( this.file.size > 0 ){
     this.name = path.basename( this.file.originalname, this.ext );
     if( allowedTypes.indexOf( this.ext ) < 0 ){
@@ -38,7 +41,7 @@ Document.schema.pre( "save", function( callback ){
     }
   } else {
     //text-only document
-    this.name = this.title || getAnon(this);
+    this.name = this.title;
   }
 
   callback();
