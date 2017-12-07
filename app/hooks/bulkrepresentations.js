@@ -277,7 +277,7 @@ function handleFiles(bulkupload) {
     });
 }
 
-function handleTexts(bulkupload) {
+function handleManualTexts(bulkupload) {
   const documents = bulkupload.assessment.reduce(function (memo,
                                                            assessmentId) {
     const documents = bulkupload.texts.map(function (text) {
@@ -297,6 +297,38 @@ function handleTexts(bulkupload) {
       return null;
     })
     .catch(err => P.reject(err));
+}
+
+
+function handleCSVTexts(bulkupload) {
+  const csvFile = _.get(bulkupload, ['csvfile', 'filename'], false);
+  // const csvFile = bulkupload.csvfile.filename;
+  const opts = {
+    path: path.resolve(constants.directories.bulk, csvFile)
+  };
+  return convertersService.textsCSVtoJSON(opts)
+    .then(function (textObjects) {
+      return bulkupload.assessment.reduce(function (memo, assessmentId) {
+        const documents = textObjects.map(function (textObj) {
+          return new Document.model(Object.assign({
+            representation: true,
+            assessment: assessmentId
+          }, textObj));
+        });
+        memo.push(...documents);
+        return memo;
+      }, []);
+    })
+    .then(function (documents) {
+      return P.mapSeries(documents, (doc) => doc.save());
+    })
+    .then(function (results) {
+      return fsutils.cleanup([opts.path]);
+    })
+    .then(function (results) {
+      bulkupload.completed=true;
+      return null;
+    });
 }
 
 function handleJIRA(bulkupload) {
@@ -345,8 +377,11 @@ function bulkrepresentationSavedHandler(bulkupload) {
     case "files":
       p = handleFiles(bulkupload);
       break;
-    case "texts":
-      p = handleTexts(bulkupload);
+    case "texts-manual":
+      p = handleManualTexts(bulkupload);
+      break;
+    case "texts-csv":
+      p = handleCSVTexts(bulkupload);
       break;
     case "jira":
       p = handleJIRA(bulkupload);

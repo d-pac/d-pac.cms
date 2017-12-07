@@ -45,11 +45,15 @@ require('./helpers/setupList')(Bulkrepresentation)
       options: [
         {
           value: "files",
-          label: "Files"
+          label: "Media Files"
         },
         {
-          value: "texts",
-          label: "Texts"
+          value: "texts-manual",
+          label: "Texts (manual)"
+        },
+        {
+          value: "texts-csv",
+          label: "Texts (CSV)"
         },
         {
           value: "jira",
@@ -62,7 +66,7 @@ require('./helpers/setupList')(Bulkrepresentation)
     texts: {
       type: Types.TextArray,
       label: 'Text-only representations',
-      dependsOn: {bulktype: 'texts'},
+      dependsOn: {bulktype: 'texts-manual'},
       default: []
     },
     zipfile: {
@@ -80,7 +84,8 @@ require('./helpers/setupList')(Bulkrepresentation)
       dest: constants.directories.bulk,
       label: "CSV File",
       allowedTypes: ["text/csv", "application/vnd.ms-excel"],
-      dependsOn: {bulktype: "jira"}
+      note: "Format JIRA: use JIRA export tool<br/>Format texts: &lt;title&gt;;&lt;description&gt;",
+      dependsOn: {bulktype: ["jira", "texts-csv"]}
     },
     conflicts: {
       type: Types.Select,

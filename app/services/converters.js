@@ -71,3 +71,26 @@ module.exports.jiraCSVtoJSON = function jiraCSVtoJSON(opts) {
       });
   });
 };
+
+module.exports.textsCSVtoJSON = function textsCSVtoJSON(opts) {
+  const output = [];
+  return new P(function (resolve, reject) {
+    csv.fromPath(opts.path, {
+      delimiter: ";",
+      headers: ["title", "description"]
+    })
+      .on("data", function (obj) {
+        // console.log(data);
+        output.push({
+          title: obj.title,
+          text: obj.description
+        });
+      })
+      .on("end", function () {
+        resolve(output);
+      })
+      .on("error", function (err) {
+        reject(err);
+      });
+  });
+};
