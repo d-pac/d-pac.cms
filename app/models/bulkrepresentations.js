@@ -1,35 +1,35 @@
 "use strict";
 
-const keystone = require( "keystone" );
+const keystone = require("keystone");
 const Types = keystone.Field.Types;
-const constants = require( './helpers/constants' );
+const constants = require('./helpers/constants');
 
-const Bulkrepresentation = new keystone.List( "Bulkrepresentation", {
+const Bulkrepresentation = new keystone.List("Bulkrepresentation", {
   map: {
     name: "_rid"
   },
   track: true,
   defaultSort: '-_rid',
-  nodelete: !keystone.get( 'dev env' ),
+  nodelete: !keystone.get('dev env'),
   autocreate: true,
   plural: "Bulk Representations",
   singular: "Bulk Representation",
   label: "Bulk Representations",
-} );
+});
 
 Bulkrepresentation.defaultColumns = "name, title, createdAt, createdBy, completed";
 
-Bulkrepresentation.schema.plugin( require( "./helpers/autoinc" ).plugin, {
+Bulkrepresentation.schema.plugin(require("./helpers/autoinc").plugin, {
   model: "Bulkrepresentation",
   field: "_rid",
   startAt: 1
-} );
+});
 
-require( './helpers/setupList' )( Bulkrepresentation )
-  .add( {
+require('./helpers/setupList')(Bulkrepresentation)
+  .add({
     title: {
       type: Types.Text,
-      default:'',
+      default: '',
       label: "Title",
       note: "For administrative use only",
     },
@@ -50,6 +50,10 @@ require( './helpers/setupList' )( Bulkrepresentation )
         {
           value: "texts",
           label: "Texts"
+        },
+        {
+          value: "jira",
+          label: "JIRA"
         }
       ],
       default: "files",
@@ -69,7 +73,14 @@ require( './helpers/setupList' )( Bulkrepresentation )
         "application/octet-stream"
       ],
       note: "Zipfiles can be really large, i.e. this could take a LOOOOOOONG time!",
-      dependsOn: { bulktype: "files" }
+      dependsOn: {bulktype: "files"}
+    },
+    csvfile: {
+      type: Types.LocalFile,
+      dest: constants.directories.bulk,
+      label: "CSV File",
+      allowedTypes: ["text/csv", "application/vnd.ms-excel"],
+      dependsOn: {bulktype: "jira"}
     },
     conflicts: {
       type: Types.Select,
@@ -88,14 +99,14 @@ require( './helpers/setupList' )( Bulkrepresentation )
       default: constants.REUSE,
       note: "What needs to be done in case files with the same name already exist.",
       label: "Conflict resolution",
-      dependsOn: { bulktype: "files" }
+      dependsOn: {bulktype: "files"}
     },
     jsonfile: {
       type: Types.LocalFile,
       dest: constants.directories.bulk,
-      allowedTypes: [ "application/json", "application/octet-stream" ],
+      allowedTypes: ["application/json", "application/octet-stream"],
       note: "Optional. JSON file with representation data.",
-      dependsOn: { bulktype: "files" }
+      dependsOn: {bulktype: "files"}
     },
     log: {
       type: Types.Html,
@@ -108,5 +119,5 @@ require( './helpers/setupList' )( Bulkrepresentation )
       default: false,
       noedit: true
     }
-  } )
+  })
   .register();
