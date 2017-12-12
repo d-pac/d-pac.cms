@@ -20,6 +20,8 @@ const errors = require( "errors" );
 
 const getSafeBoolean = require('./lib/getSafeBoolean');
 
+const transactionService = require('./services/transactions');
+
 const nodeEnv = process.env.NODE_ENV || "development";
 
 keystone.hooks = grappling.create( { strict: false } );
@@ -129,6 +131,7 @@ require( './lib/pluginsScrobbler' ).init( pkg );
 
 keystone.import( "models" );
 
+
 // Setup common locals for your templates. The following are required for the
 // bundled templates and layouts. Any runtime locals (that should be set uniquely
 // for each request) should be added to ./routes/middleware.js
@@ -191,6 +194,8 @@ if( !module.parent ){
   keystone.start( {
     onMount: ()=>{
       keystone.auth.init();
+      //initialize transactions
+      transactionService.init(`${keystone.get('mongo')}-admin`);
     },
     onStart: ()=>{
       console.log( '---Started---' );
