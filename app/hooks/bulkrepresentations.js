@@ -19,7 +19,7 @@ const convertersService = require('../services/converters');
 function updateDocument(document,
                         fileData,
                         opts) {
-  document.title = path.basename(fileData.filename, path.extname(fileData.filename));
+  // document.title = path.basename(fileData.filename, path.extname(fileData.filename));
   document.file = {
     filename: fileData.filename,
     originalname: fileData.originalname || fileData.filename,
@@ -27,7 +27,6 @@ function updateDocument(document,
     size: fileData.stats.size,
     filetype: mime.lookup(fileData.filename)
   };
-  document.host = 'local';
   return document;
 }
 
