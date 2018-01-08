@@ -35,6 +35,9 @@ function updateRepresentationNamesForDocument(document, diff, done) {
         _id: representation.assessment
       })
         .then((assessment)=>{
+          if(! assessment){
+            return null;
+          }
           representation.name = assessment.name + " - " + docName;
           return representation.save();
         });
