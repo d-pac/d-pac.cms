@@ -35,6 +35,10 @@ module.exports.init = function (mongoURI) {
 };
 
 module.exports.log = function (payload) {
+  if(!db){
+    //not initialised yet, just skip
+    return null;
+  }
   const Model =db.model(modelName);
   const document = new Model();
   document.set(Object.assign({createdAt: Date.now()}, payload));

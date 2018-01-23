@@ -194,11 +194,11 @@ if( !module.parent ){
   keystone.start( {
     onMount: ()=>{
       keystone.auth.init();
-      //initialize transactions
-      transactionService.init(`${keystone.get('mongo')}-admin`);
     },
     onStart: ()=>{
       console.log( '---Started---' );
+      //initialize transactions
+      transactionService.init(`${keystone.get('mongo')}-admin`);
     }
   } );
 }
