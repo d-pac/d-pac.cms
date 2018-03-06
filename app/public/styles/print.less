@@ -1,15 +1,17 @@
 @import "bootstrap/bootstrap.less";
 
-@media print {
-  h2 {
-    color: #00b3ee;
-    font-size: larger;
-  }
+h2 {
+  font-size: large;
+}
 
-  table td {
-    border-bottom-style: solid;
-    border-bottom-width: thin;
-  }
+table td {
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+}
+
+td.th{
+  font-weight: bold;
+  font-size: larger;
 }
 
 @media screen {
@@ -18,5 +20,6 @@
   }
   .print-preview, .print-preview * {
     visibility: visible;
+    margin: 20px;
   }
 }
