@@ -1,0 +1,22 @@
+@import "bootstrap/bootstrap.less";
+
+@media print {
+  h2 {
+    color: #00b3ee;
+    font-size: larger;
+  }
+
+  table td {
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+  }
+}
+
+@media screen {
+  body * {
+    visibility: hidden;
+  }
+  .print-preview, .print-preview * {
+    visibility: visible;
+  }
+}

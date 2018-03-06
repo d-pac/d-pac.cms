@@ -12,3 +12,12 @@ module.exports.listByRepresentations = ( opts, representationIds ) =>{
       .where( "representation" ).in( representationIds )
       .exec();
 };
+
+module.exports.listLeanByRepresentations = ( opts, representationIds ) =>{
+  debug( '#listByRepresentations', opts );
+  return base.list( opts )
+    .where( "representation" ).in( representationIds )
+    .populate('author')
+    .lean()
+    .exec();
+};
