@@ -122,25 +122,26 @@ exports.handleError = function( err,
                                 res,
                                 next ){
   console.error( "dpac:api.middleware#handleError", err.message );
+  const handler = (res.apiError) ? res.apiError : next;
 
   if(keystone.get('dev env')){
     console.log(err.stack);
   }
 
   if( utils.isHttpError( err ) ){
-    return res.apiError( err );
+    return handler( err );
   }
 
   switch( err.name ){
     case "ValidationError":
-      return res.apiError( parseValidationErrors( err ) );
+      return handler( parseValidationErrors( err ) );
     case "CastError":
-      return res.apiError( new Http400Error( {
+      return handler( new Http400Error( {
         explanation: "Invalid id."
       } ) );
     /* falls through */
     default:
-      return res.apiError( new Http500Error( {
+      return handler( new Http500Error( {
         explanation: err.message
       } ) );
   }

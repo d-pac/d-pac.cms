@@ -54,6 +54,7 @@ exports = module.exports = function (app) {
   //app.get( "/blog/:category?", routes.views.blog );
   //app.get( "/blog/post/:post", routes.views.post );
   app.get('/content/:page', routes.views.page);
+  app.get('/assessments/:assessmentId/feedback', routes.views.feedback);
   app.all("/contact", routes.views.contact);
 
   app.all(keystone.get('signin url'), routes.views.signin);

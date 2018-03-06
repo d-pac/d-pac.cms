@@ -1,0 +1,28 @@
+extends ../layouts/print
+
+block content
+	if data.representationsList.length <= 0
+		div.print-preview
+			p Geen feedback
+	else
+		div
+			table(width='100%')
+				each representation in data.representationsList
+					tr
+						td(colspan=3) 
+							h2 #{representation.document.title}
+					tr
+						td(class='th') Beoordelaar
+						td(class='th') Positief
+						td(class='th') Negatief
+					each item in data.feedbackByRepresentation[representation._id]
+						tr
+							td(width='140px') beoordelaar-#{item.author._rid}
+							td #{item.positive}
+							td #{item.negative}
+block js
+	if data.representationsList.length > 0
+		script.
+			window.addEventListener('load', function() {
+				window.print();
+			});

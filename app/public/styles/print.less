@@ -1,0 +1,25 @@
+@import "bootstrap/bootstrap.less";
+
+h2 {
+  font-size: large;
+}
+
+table td {
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+}
+
+td.th{
+  font-weight: bold;
+  font-size: larger;
+}
+
+@media screen {
+  body * {
+    visibility: hidden;
+  }
+  .print-preview, .print-preview * {
+    visibility: visible;
+    margin: 20px;
+  }
+}
