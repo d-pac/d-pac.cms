@@ -21,7 +21,7 @@ module.exports = function (req,
   }
 
   let p;
-  if (user.isPamFor(q.assessment)) {
+  if (user.isPamFor(q.assessment) || user.isAssessorFor(q.assessment)) {
     p = representationsService.list(q);
   } else if (user.isAssesseeFor(q.assessment)) {
     p = representationsService.listForUser(user.id, q);
