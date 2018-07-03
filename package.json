@@ -1,6 +1,6 @@
 {
   "name": "d-pac.cms",
-  "version": "0.19.10",
+  "version": "0.19.11",
   "dependencies": {
     "async": "1.5.2",
     "bluebird": "3.4.0",
@@ -30,7 +30,7 @@
     "mkdir-p": "0.0.7",
     "moment": "2.11.2",
     "moment-range": "2.1.0",
-    "mongoose": "4.5", 
+    "mongoose": "4.5",
     "mongoose-auto-increment": "5.0.1",
     "mongoose-deep-populate": "3.0.0",
     "mv": "^2.1.1",
