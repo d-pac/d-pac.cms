@@ -332,9 +332,11 @@ function handleCSVTexts(bulkupload) {
 
 function handleJIRA(bulkupload) {
   const csvFile = _.get(bulkupload, ['csvfile', 'filename'], false);
+  const columns = _.get(bulkupload, ['columns'], '').split(',');
   // const csvFile = bulkupload.csvfile.filename;
   const opts = {
-    path: path.resolve(constants.directories.bulk, csvFile)
+    path: path.resolve(constants.directories.bulk, csvFile),
+    columns
   };
   return convertersService.jiraCSVtoJSON(opts)
     .then(function (jiraObjects) {

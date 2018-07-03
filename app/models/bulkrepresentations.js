@@ -113,6 +113,11 @@ require('./helpers/setupList')(Bulkrepresentation)
       note: "Optional. JSON file with representation data.",
       dependsOn: {bulktype: "files"}
     },
+    columns: {
+      type: Types.Text,
+      note: "The field names separated by a comma",
+      dependsOn: {bulktype: "jira"}
+    },
     log: {
       type: Types.Html,
       wysiwyg: true,
