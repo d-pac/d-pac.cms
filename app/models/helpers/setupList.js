@@ -188,7 +188,7 @@ module.exports = function( list ){
         "links.self": function(){
           var a = keystone.get( "api root" ) || "/";
           var b = list.plural.toLocaleLowerCase();
-          var c = this[ builder.get( 'idField' ) ].toString();
+          var c = (this[ builder.get( 'idField' ) ] || "").toString();
           return path.join( a, b, c );
         }
       } );
