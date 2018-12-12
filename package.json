@@ -15,7 +15,7 @@
     "deep-diff": "0.3.3",
     "deep-extend": "0.4.1",
     "errors": "0.3.0",
-    "estimating-rasch-model": "5.0.0",
+    "estimating-rasch-model": "5.1.0",
     "extract-zip": "1.4.1",
     "fast-csv": "1.0.0",
     "forever": "0.15.3",
@@ -74,6 +74,6 @@
   },
   "optionalDependencies": {
     "equalviews-comparative-selection": "git+ssh://git@bitbucket.org/iminds/equalviews-comparative-selection.git#v3.0.1",
-    "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#v2.0.1"
+    "positioned-comparative-selection": "git+ssh://git@bitbucket.org/iminds/positioned-comparative-selection.git#v2.1.0"
   }
 }
